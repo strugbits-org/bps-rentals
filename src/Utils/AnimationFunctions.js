@@ -1,0 +1,152 @@
+"use client";
+export const AnimationFunction = () => {
+  if (typeof window !== "undefined") {
+    document.body.classList.add("page-leave-active");
+    setTimeout(() => {
+      document.body.classList.remove("page-leave-active");
+      document.body.classList.add("page-enter-active");
+    }, 900);
+  }
+};
+
+let page;
+let cleanPage;
+if (typeof window !== "undefined") {
+  page =
+    window.location.pathname.trim() === "/"
+      ? "home"
+      : window.location.pathname.substring(1);
+  cleanPage = page.split("/")[0].trim();
+}
+
+export const initAnimations = () => {
+  if (typeof window !== "undefined") {
+    setTimeout(() => {
+      const customEvent = new Event("customInitScript");
+      document.querySelector(".initScript").dispatchEvent(customEvent);
+    }, 400);
+  }
+};
+
+export const initializeCanvasTrigger = () => {
+  if (typeof window !== "undefined") {
+    setTimeout(() => {
+      const customEvent = new Event("customInit");
+      document.querySelector(".initializeCanvas").dispatchEvent(customEvent);
+    }, 200);
+  }
+};
+
+export const initializeCanvasAddToCart = () => {
+  if (typeof window !== "undefined") {
+    setTimeout(() => {
+      const customEvent = new Event("reloadModal");
+      document.querySelector(".addToCart").dispatchEvent(customEvent);
+    }, 200);
+  }
+};
+
+export const resetSlideIndex = () => {
+  if (typeof window !== "undefined") {
+    document
+      .querySelectorAll(".swiper-container.reset-slide-enabled")
+      .forEach((x) => x.swiper?.slideTo(0));
+  }
+};
+
+export const updatedWatched = () => {
+  if (typeof window !== "undefined") {
+    setTimeout(() => {
+      document.querySelector(".updateWatched").click();
+    }, 200);
+  }
+};
+
+export const markPageLoaded = (watched = true) => {
+  if (typeof window !== "undefined") {
+    setTimeout(() => window.scrollTo({ top: 0 }), 200);
+    initAnimations();
+    if (watched) updatedWatched();
+    const isFirstLoadDone = document.body.classList.contains("first-load-done");
+    if (isFirstLoadDone) {
+      pageLoadEnd();
+    } else {
+      firstLoadAnimation();
+    }
+  }
+};
+
+export const firstLoadAnimation = async () => {
+  for (let i = 0; i <= 100; i++) {
+    await new Promise(resolve => setTimeout(resolve, 2));
+    if (i % 10 === 0) changeProgress(i);
+  }
+  document.body.dataset.load = "first-leaving";
+  setTimeout(() => {
+    document.body.dataset.load = "first-done";
+    document.body.classList.add("first-load-done");
+    document.body.classList.remove("overflow-hidden");
+    document.getElementById("loader").classList.add("hidden");
+  }, 1200);
+};
+
+export const pageLoadStart = () => {
+  if (typeof window !== "undefined") {
+    closeModals();
+    document.body.classList.add("page-leave-active");
+  }
+};
+export const pageLoadEnd = () => {
+  if (typeof window !== "undefined") {
+    window.scrollTo({ top: 0 });
+    const body = document.body;
+    body.classList.replace("page-leave-active", "page-enter-active");
+    setTimeout(() => {
+      body.classList.remove("page-enter-active");
+    }, 900);
+  }
+};
+
+export const changeProgress = (percent) => {
+  if (typeof window !== "undefined") {
+    document.body.style.setProperty("--percentage", percent / 100);
+    document.body.style.setProperty("--percentage2", `${percent}%`);
+    const elProg = document.querySelector("[data-load-progress]");
+    if (elProg) elProg.dataset.loadProgress = percent;
+  }
+};
+
+export const closeModals = () => {
+  if (typeof window !== "undefined") {
+    setTimeout(() => {
+      document.querySelector(".closeModals").click();
+    }, 200);
+  }
+};
+
+export const _closeModals = () => {
+  if (typeof window !== "undefined") {
+    const modal_group = document.querySelectorAll("modal-group");
+    if (modal_group)
+      modal_group.forEach((modal) => {
+        if (modal.classList.contains("active")) {
+          modal.close();
+        }
+      });
+
+    document.body.setAttribute("data-form-cart-state", "");
+    const filterModal = document.querySelector(".container-filter-products");
+    if (filterModal) {
+      filterModal?.classList.remove("active");
+    }
+  }
+};
+export const getPageName = () => {
+  if (typeof window !== "undefined") {
+    const page =
+      window.location.pathname.trim() === "/"
+        ? "home"
+        : location.pathname.substring(1);
+    return page.split("/")[0].trim();
+  }
+};
