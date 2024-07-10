@@ -8326,7 +8326,10 @@ var require_app2 = __commonJS({
       return offsetTop;
     }
     function accordionGsap(list, toggle = true) {
-      if (!list) list = document;
+      let isAnimating = false;
+      
+      if (!list)
+        list = document;
       let toggleItems = list.querySelectorAll(":scope > .accordion-item");
       toggleItems = Array.prototype.slice.call(toggleItems);
       const updateAccordionSize = (element) => {
@@ -8337,7 +8340,7 @@ var require_app2 = __commonJS({
           gsapWithCSS.from(content, 0.6, {
             height: newHeight,
             immediateRender: false,
-            ease: Power1.easeInOut,
+            ease: Power1.easeInOut
           });
         }
       };
@@ -8350,55 +8353,60 @@ var require_app2 = __commonJS({
             gsapWithCSS.from(content, 0.6, {
               height: 0,
               immediateRender: false,
-              ease: Power1.easeOut,
+              ease: Power1.easeOut
             });
           }
           header.addEventListener("click", function () {
+            if (isAnimating) return;
+            
             let content = element.querySelector(":scope > .accordion-content");
             if (element.classList.contains("active")) {
               element.removeActive();
+              isAnimating = true;
+              element.style.pointerEvents = "none";
               gsapWithCSS.to(content, 0.6, {
                 height: 0,
                 immediateRender: false,
                 ease: Power1.easeOut,
+                onComplete: function () {
+                  isAnimating = false;
+                  element.style.pointerEvents = "auto";
+                }
               });
             } else {
               if (toggle) {
-                let lastActives = list.querySelectorAll(
-                  ":scope > .accordion-item.active"
-                );
+                let lastActives = list.querySelectorAll(":scope > .accordion-item.active");
                 lastActives.forEach((lastActive) => {
                   lastActive.removeActive();
-                  let content2 = lastActive.querySelector(
-                    ":scope > .accordion-content"
-                  );
+                  let content2 = lastActive.querySelector(":scope > .accordion-content");
                   gsapWithCSS.to(content2, 0.6, {
                     height: 0,
                     immediateRender: false,
-                    ease: Power1.easeOut,
+                    ease: Power1.easeOut
                   });
                 });
               }
               element.addActive();
+              isAnimating = true;
+              element.style.pointerEvents = "none";
               gsapWithCSS.set(content, { height: "auto" });
               gsapWithCSS.from(content, 0.6, {
                 height: 0,
                 immediateRender: false,
                 ease: Power1.easeInOut,
                 onComplete: function () {
-                  let parentAccordion =
-                    header.parentNode.parentNode.closest(".accordion-item");
+                  isAnimating = false;
+                  element.style.pointerEvents = "auto";
+                  let parentAccordion = header.parentNode.parentNode.closest(".accordion-item");
                   if (parentAccordion) {
-                    let parentContent = parentAccordion.querySelector(
-                      ":scope > .accordion-content"
-                    );
+                    let parentContent = parentAccordion.querySelector(":scope > .accordion-content");
                     gsapWithCSS.to(parentContent, 0.6, {
                       height: "auto",
                       immediateRender: false,
-                      ease: Power1.easeInOut,
+                      ease: Power1.easeInOut
                     });
                   }
-                },
+                }
               });
             }
           });
@@ -8414,7 +8422,7 @@ var require_app2 = __commonJS({
         clickOutsideEl = document,
         clickOutsideCallback = null,
         clickToggle = false,
-        allowMultipleActive = false,
+        allowMultipleActive = false
       } = options ? options : {};
       if (clickOutsideEl != document) {
         clickOutsideEl = toElementArray(clickOutsideEl)[0];
@@ -8914,6 +8922,7 @@ var require_app2 = __commonJS({
     });
     gsapWithCSS$1.registerPlugin(ScrollTrigger$1);
     function sticky() {
+      console.log("sticky");
       let stickies = document.querySelectorAll(
         "[data-sticky='']:not(.js-running)"
       );
@@ -9764,19 +9773,18 @@ var require_app2 = __commonJS({
       copyLink();
       login();
       categoryMenu();
-      if (document.querySelector(".accordion-list-studios")) {
+      if (document.querySelector(".accordion-list-studios:not(.js-running)")) {
         if (screen.isDesktop) {
           accordion(".accordion-list-studios .accordion-item", {
             clickToggle: true,
-            allowMultipleActive: false,
+            allowMultipleActive: false
           });
         } else {
-          document
-            .querySelectorAll(".accordion-list-studios")
-            .forEach((element) => {
-              accordionGsap(element);
-            });
+          document.querySelectorAll(".accordion-list-studios").forEach((element) => {
+            accordionGsap(element);
+          });
         }
+        document.querySelector(".accordion-list-studios").classList.add("js-running");
       }
     }
     // whenContainerReady();0
