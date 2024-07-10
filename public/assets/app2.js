@@ -8922,10 +8922,10 @@ var require_app2 = __commonJS({
     });
     gsapWithCSS$1.registerPlugin(ScrollTrigger$1);
     function sticky() {
-      console.log("sticky");
       let stickies = document.querySelectorAll(
-        "[data-sticky='']:not(.js-running)"
+        "[data-sticky]:not(.js-running)"
       );
+      console.log("stickies", stickies);
       stickies.forEach((element) => {
         element.classList.add("js-running");
         if (!screen.isDesktop && element.dataset.stickyNoMobile !== void 0) {
@@ -8955,6 +8955,7 @@ var require_app2 = __commonJS({
             return `bottom-=${offsetSum} top`;
           };
         }
+        console.log("came here!!!!");
         ScrollTrigger$1.create({
           trigger,
           endTrigger,
