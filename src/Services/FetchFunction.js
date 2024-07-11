@@ -17,7 +17,7 @@ export const getDataFetchFunction = async (payload) => {
 
     const options = {};
 
-    const authCollections = ["AboutUsSectionDetails"];
+    const authCollections = ["RentalsHomeHero"];
 
     const isValid = authCollections.includes(dataCollectionId);
     const wixClient = await createWixClient();

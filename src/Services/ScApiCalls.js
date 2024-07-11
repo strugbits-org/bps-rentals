@@ -5,7 +5,7 @@ import getDataFetchFunction from "./FetchFunction";
 export const getHomeHeroSectionData = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "AboutUsSectionDetails",
+      dataCollectionId: "RentalsHomeHero",
       includeReferencedItems: null,
       returnTotalCount: null,
       contains: null,
