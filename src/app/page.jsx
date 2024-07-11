@@ -1,8 +1,8 @@
 import HomePage from "@/components/Home/Index";
-import { getHomeHeaderData } from "@/Services/ScApiCalls";
+import { getHomeHeroSectionData } from "@/Services/ScApiCalls";
 
 export default async function Page() {
-  const [homeHeaderData] = await Promise.all([getHomeHeaderData()]);
-  console.log(homeHeaderData, "homeHeaderData>>");
+  const [homeHeroSectionData] = await Promise.all([getHomeHeroSectionData()]);
+  console.log(homeHeroSectionData, "homeHeroSectionData>>");
   return <HomePage />;
 }

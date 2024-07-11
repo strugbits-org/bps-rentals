@@ -2,10 +2,10 @@
 
 import getDataFetchFunction from "./FetchFunction";
 
-export const getHomeHeaderData = async () => {
+export const getHomeHeroSectionData = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "HomePageContentF1",
+      dataCollectionId: "RentalsHomeHero",
       includeReferencedItems: null,
       returnTotalCount: null,
       contains: null,
@@ -15,6 +15,7 @@ export const getHomeHeaderData = async () => {
       hasSome: null,
       skip: null,
     });
+    console.log(response, "response>>");
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
     } else {

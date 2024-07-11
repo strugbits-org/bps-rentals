@@ -17,7 +17,7 @@ export const getDataFetchFunction = async (payload) => {
 
     const options = {};
 
-    const authCollections = ["HomePageContentF1"];
+    const authCollections = ["RentalsHomeHero"];
 
     const isValid = authCollections.includes(dataCollectionId);
     const wixClient = await createWixClient();
@@ -113,6 +113,7 @@ export const getDataFetchFunction = async (payload) => {
         });
       }
     }
+    console.log(data, "data>>");
     return data;
   } catch (error) {
     console.log(error);
