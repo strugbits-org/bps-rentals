@@ -5887,6 +5887,7 @@ ScrollTrigger$1.revert = function(soft, media) {
   return _revertAll(!soft, media);
 };
 ScrollTrigger$1.create = function(vars, animation) {
+  console.log("yesssssssssssssssssss create");
   return new ScrollTrigger$1(vars, animation);
 };
 ScrollTrigger$1.refresh = function(safe) {
