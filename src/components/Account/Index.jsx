@@ -1,30 +1,40 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import AnimateLink from "../Common/AnimateLink";
 
-const links = [
-  { name: "My Account", icon: "icon-account", href: "/my-account" },
-  {
-    name: "Saved Products",
-    icon: "icon-saved",
-    href: "/my-account-saved-products",
-  },
-  {
-    name: "Quotes History",
-    icon: "icon-history",
-    href: "/my-account-quotes-history",
-  },
-  {
-    name: "Change Password",
-    icon: "icon-change",
-    href: "/my-account-change-password",
-  },
-];
-
 const Account = ({ children }) => {
+  const links = [
+    { name: "My Account", icon: "icon-account", href: "/my-account" },
+    {
+      name: "Saved Products",
+      icon: "icon-saved",
+      href: "/my-account-saved-products",
+    },
+    {
+      name: "Quotes History",
+      icon: "icon-history",
+      href: "/my-account-quotes-history",
+    },
+    {
+      name: "Change Password",
+      icon: "icon-change",
+      href: "/my-account-change-password",
+    },
+  ];
+  
+  const pathname = usePathname();
+  const accountSections = {
+    '/my-account': 'section-my-account',
+    '/my-account-saved-products': 'section-saved-products',
+    '/my-account-quotes-history': 'section-quotes-history',
+    '/my-account-change-password': 'section-change-password',
+  };
+  const activeSection = accountSections[pathname] || '';
+
   return (
     <>
-      <section className="my-account-intro section-my-account">
+      <section className={`my-account-intro ${activeSection}`}>
         <div className="menu-my-account" data-sticky data-trigger="parent" data-sticky-no-mobile
           data-offset="#header">
           <div className="container-my-account">
