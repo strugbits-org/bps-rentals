@@ -17,7 +17,7 @@ export const getDataFetchFunction = async (payload) => {
 
     const options = {};
 
-    const authCollections = ["RentalsHomeHero"];
+    const authCollections = ["AboutUsSectionDetails"];
 
     const isValid = authCollections.includes(dataCollectionId);
     const wixClient = await createWixClient();
@@ -25,6 +25,7 @@ export const getDataFetchFunction = async (payload) => {
     if (dataCollectionId && !isValid) {
       return { error: "Unauthorized", status: 401 };
     }
+
     const apiKey = process.env.APIKEY;
     const auth = await apiAuth(apiKey, dataCollectionId);
 
@@ -38,7 +39,6 @@ export const getDataFetchFunction = async (payload) => {
     if (returnTotalCount) options.returnTotalCount = returnTotalCount;
 
     let data = wixClient.items.queryDataItems(options);
-
     if (contains?.length === 2) {
       data = data.contains(contains[0], contains[1]);
     }
@@ -78,7 +78,6 @@ export const getDataFetchFunction = async (payload) => {
     }
 
     data = await data.find();
-
     if (limit == "infinite") {
       let items = data._items;
       while (items.length < data._totalCount) {
@@ -113,7 +112,6 @@ export const getDataFetchFunction = async (payload) => {
         });
       }
     }
-    console.log(data, "data>>");
     return data;
   } catch (error) {
     console.log(error);

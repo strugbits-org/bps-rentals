@@ -5,7 +5,7 @@ import getDataFetchFunction from "./FetchFunction";
 export const getHomeHeroSectionData = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeHero",
+      dataCollectionId: "AboutUsSectionDetails",
       includeReferencedItems: null,
       returnTotalCount: null,
       contains: null,
@@ -15,7 +15,6 @@ export const getHomeHeroSectionData = async () => {
       hasSome: null,
       skip: null,
     });
-    console.log(response, "response>>");
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
     } else {
