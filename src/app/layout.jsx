@@ -23,6 +23,7 @@ import {
   getFooterLinksData,
   getSocialLinksData,
 } from "@/Services/FooterApis";
+import { getMarketsData } from "@/Services/HomeApis";
 
 export const metadata = {
   title: "BPS Rentals",
@@ -38,6 +39,7 @@ export default async function RootLayout({ children }) {
     footerLinksData,
     socialLinksData,
     addressesData,
+    marketsData,
   ] = await Promise.all([
     getLoginModalContent(),
     getCreateAccountModalContent(),
@@ -46,6 +48,7 @@ export default async function RootLayout({ children }) {
     getFooterLinksData(),
     getSocialLinksData(),
     getAddressesData(),
+    getMarketsData(),
   ]);
   return (
     <>
@@ -83,6 +86,7 @@ export default async function RootLayout({ children }) {
             loginModalContent={loginModalContent}
             createAccountModalContent={createAccountModalContent}
             forgotPasswordModalContent={forgotPasswordModalContent}
+            marketsData={marketsData}
           />
           <CookiesConsent />
           <Wrapper>

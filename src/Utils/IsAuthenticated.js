@@ -72,7 +72,9 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
     "RentalsFooterLinks",
     "RentalsSocialMediaLinks",
     "RentalsAddresses",
-    "RentalsHomeSectionsTitles"
+    "RentalsHomeSectionsTitles",
+    "RentalsMyAccountPage",
+    "RentalsChangePasswordPage",
   ];
 
   // Allow unauthenticated access for certain collections
