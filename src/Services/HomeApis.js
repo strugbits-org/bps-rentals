@@ -34,10 +34,10 @@ export const getHomeHeroSectionContent = async () => {
   }
 };
 
-export const getHomeNewArrivalSectionContent = async () => {
+export const getNewArrivalSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeNewArrivals"
+      dataCollectionId: "RentalsHomeNewArrivals",
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -53,7 +53,7 @@ export const getHomeNewArrivalSectionContent = async () => {
 export const getHomeHotTrendsSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeHotTrends"
+      dataCollectionId: "RentalsHomeHotTrends",
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -66,10 +66,10 @@ export const getHomeHotTrendsSectionContent = async () => {
   }
 };
 
-export const getHomeStudioSectionContent = async () => {
+export const getStudioSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeStudios"
+      dataCollectionId: "RentalsHomeStudios",
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -82,10 +82,10 @@ export const getHomeStudioSectionContent = async () => {
   }
 };
 
-export const getHomeDreamBigSectionContent = async () => {
+export const getDreamBigSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeDreamBig"
+      dataCollectionId: "RentalsHomeDreamBig",
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];

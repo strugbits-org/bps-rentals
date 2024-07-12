@@ -1,11 +1,11 @@
 import HomePage from "@/components/Home/Index";
 import {
-  getHomeDreamBigSectionContent,
+  getDreamBigSectionContent,
   getHomeHeroSectionContent,
   getHomeHotTrendsSectionContent,
-  getHomeNewArrivalSectionContent,
+  getNewArrivalSectionContent,
   getHomePageContent,
-  getHomeStudioSectionContent,
+  getStudioSectionContent,
   getMarketsData,
   getStudiosData,
 } from "@/Services/HomeApis";
@@ -23,10 +23,10 @@ export default async function Page() {
   ] = await Promise.all([
     getHomePageContent(),
     getHomeHeroSectionContent(),
-    getHomeNewArrivalSectionContent(),
+    getNewArrivalSectionContent(),
     getHomeHotTrendsSectionContent(),
-    getHomeStudioSectionContent(),
-    getHomeDreamBigSectionContent(),
+    getStudioSectionContent(),
+    getDreamBigSectionContent(),
     getStudiosData(),
     getMarketsData(),
   ]);

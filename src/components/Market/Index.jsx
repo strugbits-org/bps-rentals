@@ -9,7 +9,13 @@ import NewArrival from "../Common/Sections/NewArrivalSection";
 import Highlights from "../Common/Sections/HighlightsSection";
 import AnimateLink from "../Common/AnimateLink";
 
-const MarketPage = () => {
+const MarketPage = ({
+  newArrivalSectionContent,
+  studioSectionContent,
+  dreamBigSectionContent,
+  studiosData,
+  marketsData,
+}) => {
   useEffect(() => {
     setTimeout(() => {
       markPageLoaded();
@@ -207,7 +213,7 @@ const MarketPage = () => {
           </div>
         </div>
       </section>
-      <NewArrival />
+      <NewArrival content={newArrivalSectionContent} />
       <Highlights />
       <section className="section-slider-banner">
         <div className="slider-banner" data-aos="d:loop">
@@ -357,9 +363,10 @@ const MarketPage = () => {
         </div>
       </section>
 
-      <Markets />
-      <Studios />
-      <DreamBig />
+      <Markets marketsData={marketsData} />
+      <Studios content={studioSectionContent} studiosData={studiosData} />
+      <DreamBig content={dreamBigSectionContent} />
+
       <LetsGetSocial />
     </>
   );
