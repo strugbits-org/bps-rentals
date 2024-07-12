@@ -1,6 +1,6 @@
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 
-const DreamBig = ({ pageContent }) => {
+const DreamBig = ({ content }) => {
   return (
     <section className="section-dream-big">
       <div className="container-fluid">
@@ -8,7 +8,7 @@ const DreamBig = ({ pageContent }) => {
           <div className="col-lg-4 offset-lg-4 column-1">
             <div className="container-img no-phone">
               {/* src={generateImageURL({
-                  wix_url: pageContent.titleImage,
+                  wix_url: content.titleImage,
                   w: "1356",
                   h: "953",
                   fit: "fill",
@@ -16,7 +16,7 @@ const DreamBig = ({ pageContent }) => {
                 })} */}
               <img
                 src={generateImageURL({
-                  wix_url: pageContent.titleImage,
+                  wix_url: content.titleImage,
                   w: "1356",
                   h: "953",
                   fit: "fill",
@@ -28,7 +28,7 @@ const DreamBig = ({ pageContent }) => {
             <div className="container-img no-desktop no-tablet">
               <img
                 src={generateImageURL({
-                  wix_url: pageContent.mobileTitleImage,
+                  wix_url: content.mobileTitleImage,
                   w: "434",
                   h: "773",
                   fit: "fill",
@@ -49,7 +49,7 @@ const DreamBig = ({ pageContent }) => {
                 class="btn-blue"
                 data-cursor-style="off"
               >
-                <span>{pageContent && pageContent.buttonLabel}</span>
+                <span>{content && content.buttonLabel}</span>
                 <i className="icon-arrow-right-2"></i>
               </btn-modal-open>
               <p
@@ -60,8 +60,8 @@ const DreamBig = ({ pageContent }) => {
                 data-end="center center"
                 //   className="flex-center"
               >
-                {pageContent && pageContent.description1} <br />
-                {pageContent && pageContent.description2}
+                {content && content.description1} <br />
+                {content && content.description2}
               </p>
             </div>
           </div>

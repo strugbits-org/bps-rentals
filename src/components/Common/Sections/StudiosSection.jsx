@@ -1,7 +1,7 @@
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 
-const Studios = ({ pageContent, studiosData }) => {
+const Studios = ({ content, studiosData }) => {
   return (
     <section className="section-studios">
       <div className="container-fluid">
@@ -11,7 +11,7 @@ const Studios = ({ pageContent, studiosData }) => {
               className="fs--90 fs-tablet-40 blue-1 split-chars"
               data-aos="d:loop"
             >
-              {pageContent && pageContent.title}
+              {content && content.title}
             </h2>
           </div>
           <div className="col-lg-5 col-md-6 offset-lg-5 column-2">
@@ -19,7 +19,7 @@ const Studios = ({ pageContent, studiosData }) => {
               className="fs--40 fs-mobile-18 text"
               data-aos="fadeIn .6s ease-in-out .4s, d:loop"
             >
-              {pageContent && pageContent.description}
+              {content && content.description}
             </p>
           </div>
         </div>

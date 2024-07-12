@@ -4,6 +4,7 @@ import {
   getHomeHeroSectionContent,
   getHomeHotTrendsSectionContent,
   getHomeNewArrivalSectionContent,
+  getHomePageContent,
   getHomeStudioSectionContent,
   getMarketsData,
   getStudiosData,
@@ -11,6 +12,7 @@ import {
 
 export default async function Page() {
   const [
+    homePageContent,
     homeHeroSectionContent,
     homeNewArrivalSectionContent,
     homeHotTrendsSectionContent,
@@ -19,6 +21,7 @@ export default async function Page() {
     studiosData,
     marketsData,
   ] = await Promise.all([
+    getHomePageContent(),
     getHomeHeroSectionContent(),
     getHomeNewArrivalSectionContent(),
     getHomeHotTrendsSectionContent(),
@@ -29,6 +32,7 @@ export default async function Page() {
   ]);
   return (
     <HomePage
+      pageContent={homePageContent}
       heroSectionContent={homeHeroSectionContent}
       newArrivalSectionContent={homeNewArrivalSectionContent}
       hotTrendsSectionContent={homeHotTrendsSectionContent}

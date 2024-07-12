@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import LetsGetSocial from "./Common/Sections/SocialSection";
-import { markPageLoaded } from "@/utils/AnimationFunctions";
+import { markPageLoaded } from "@/Utils/AnimationFunctions";
 
 // const renderTextWithDecorations = (textData) => {
 //   if (!textData.decorations || textData.decorations.length === 0) {

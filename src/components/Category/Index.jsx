@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { markPageLoaded } from "../../utils/AnimationFunctions";
+import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import Markets from "../Common/Sections/MarketSection";
 import Studios from "../Common/Sections/StudiosSection";
 import DreamBig from "../Common/Sections/DreamBigSection";

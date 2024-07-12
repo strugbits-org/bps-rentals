@@ -1,7 +1,7 @@
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 
-const NewArrival = ({ pageContent }) => {
+const NewArrival = ({ content }) => {
   return (
     <section className="section-new-arrivals white-1">
       <div className="container-text pt-tablet-105 pt-phone-185 z-3">
@@ -9,13 +9,13 @@ const NewArrival = ({ pageContent }) => {
           className="d-block fs--40 fs-tablet-30 fs-phone-25 fw-600"
           data-aos="fadeIn .6s ease-in-out-cubic 0s, d:loop"
         >
-          {pageContent && pageContent.title}
+          {content && content.title}
         </span>
         <span
           className="d-block fs--80 fs-mobile-60 fw-600 pt-lg-15 pt-tablet-25 pt-phone-20 split-words"
           data-aos="d:loop"
         >
-          {pageContent && pageContent.tagline}
+          {content && content.tagline}
         </span>
         <AnimateLink
           to={`/category/${"123"}`}
@@ -23,7 +23,7 @@ const NewArrival = ({ pageContent }) => {
           data-cursor-style="off"
           data-aos="fadeIn .6s ease-in-out .3s, d:loop"
         >
-          <span>{pageContent && pageContent.buttonLabel}</span>
+          <span>{content && content.buttonLabel}</span>
           <i className="icon-arrow-right"></i>
         </AnimateLink>
       </div>
@@ -35,7 +35,7 @@ const NewArrival = ({ pageContent }) => {
       >
         <img
           src={generateImageURL({
-            wix_url: pageContent.backgroundImage,
+            wix_url: content.backgroundImage,
             w: "1336",
             h: "568",
             fit: "fill",

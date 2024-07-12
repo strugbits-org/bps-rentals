@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { pageLoadEnd, pageLoadStart } from "../../utils/AnimationFunctions";
+import { pageLoadEnd, pageLoadStart } from "@/Utils/AnimationFunctions";
 
 const AnimateLink = ({ to, children, className, target, attributes }) => {
   const router = useRouter();

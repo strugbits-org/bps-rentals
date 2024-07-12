@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { markPageLoaded } from "../../utils/AnimationFunctions";
+import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import SnapShots from "./SnapShotsSection";
 import MatchItWith from "./MatchItWithSection";
 import LetsGetSocial from "../Common/Sections/SocialSection";

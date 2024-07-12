@@ -1,4 +1,4 @@
-const { isAuthenticated } = require('./isAuthenticated');
+const { isAuthenticated } = require('./IsAuthenticated');
 
 async function handleAuthentication(req) {
     try {

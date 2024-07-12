@@ -2,18 +2,10 @@
 
 import getDataFetchFunction from "./FetchFunction";
 
-export const getHomeHeroSectionContent = async () => {
+export const getHomePageContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeHero",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: null,
-      ne: null,
-      hasSome: null,
-      skip: null,
+      dataCollectionId: "RentalsHomeSectionsTitles"
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -21,7 +13,23 @@ export const getHomeHeroSectionContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    console.error("Error fetching HomePageContent data:", error);
+    return [];
+  }
+};
+
+export const getHomeHeroSectionContent = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "RentalsHomeHero"
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data)[0];
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching HomeHeroSectionContent data:", error);
     return [];
   }
 };
@@ -29,15 +37,7 @@ export const getHomeHeroSectionContent = async () => {
 export const getHomeNewArrivalSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeNewArrivals",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: null,
-      ne: null,
-      hasSome: null,
-      skip: null,
+      dataCollectionId: "RentalsHomeNewArrivals"
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -45,7 +45,7 @@ export const getHomeNewArrivalSectionContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    console.error("Error fetching HomeNewArrivalSectionContent data:", error);
     return [];
   }
 };
@@ -53,15 +53,7 @@ export const getHomeNewArrivalSectionContent = async () => {
 export const getHomeHotTrendsSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeHotTrends",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: null,
-      ne: null,
-      hasSome: null,
-      skip: null,
+      dataCollectionId: "RentalsHomeHotTrends"
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -69,7 +61,7 @@ export const getHomeHotTrendsSectionContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    console.error("Error fetching HomeHotTrendsSectionContent data:", error);
     return [];
   }
 };
@@ -77,15 +69,7 @@ export const getHomeHotTrendsSectionContent = async () => {
 export const getHomeStudioSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeStudios",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: null,
-      ne: null,
-      hasSome: null,
-      skip: null,
+      dataCollectionId: "RentalsHomeStudios"
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -93,7 +77,7 @@ export const getHomeStudioSectionContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    console.error("Error fetching HomeStudioSectionContent data:", error);
     return [];
   }
 };
@@ -101,15 +85,7 @@ export const getHomeStudioSectionContent = async () => {
 export const getHomeDreamBigSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeDreamBig",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: null,
-      ne: null,
-      hasSome: null,
-      skip: null,
+      dataCollectionId: "RentalsHomeDreamBig"
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -117,7 +93,7 @@ export const getHomeDreamBigSectionContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    console.error("Error fetching HomeDreamBigSectionContent data:", error);
     return [];
   }
 };
@@ -125,15 +101,7 @@ export const getHomeDreamBigSectionContent = async () => {
 export const getStudiosData = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "StudiosSection",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: null,
-      ne: null,
-      hasSome: null,
-      skip: null,
+      dataCollectionId: "StudiosSection"
     });
     if (response && response._items) {
       return response._items
@@ -143,7 +111,7 @@ export const getStudiosData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    console.error("Error fetching StudiosData data:", error);
     return [];
   }
 };
@@ -151,15 +119,7 @@ export const getStudiosData = async () => {
 export const getMarketsData = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "MarketSection",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: null,
-      ne: null,
-      hasSome: null,
-      skip: null,
+      dataCollectionId: "MarketSection"
     });
     if (response && response._items) {
       return response._items
@@ -169,7 +129,7 @@ export const getMarketsData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    console.error("Error fetching MarketsData data:", error);
     return [];
   }
 };
