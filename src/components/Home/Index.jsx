@@ -12,7 +12,6 @@ import BannerHome from "./BannerHome";
 import BestSellersHome from "./BestSellersHome";
 
 const HomePage = ({
-  pageContent,
   heroSectionContent,
   newArrivalSectionContent,
   hotTrendsSectionContent,

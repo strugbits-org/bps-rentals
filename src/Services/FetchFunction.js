@@ -32,6 +32,7 @@ export const getDataFetchFunction = async (payload) => {
       "RentalsFooterLinks",
       "RentalsSocialMediaLinks",
       "RentalsAddresses",
+      "RentalsHomeSectionsTitles"
     ];
 
     const isValid = authCollections.includes(dataCollectionId);
