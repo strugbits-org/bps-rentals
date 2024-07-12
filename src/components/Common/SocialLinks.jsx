@@ -1,37 +1,18 @@
 import AnimateLink from "./AnimateLink";
 
-const SocialLinks = () => {
+const SocialLinks = ({ data }) => {
   return (
     <ul className="list-social-media">
-      {/* {[1, 2, 3, 4].map((index) => {
+      {data.map((data, index) => {
+        const { iconClass, link } = data;
         return (
           <li key={index}>
-            <AnimateLink to="/#" target="_blank" rel="noopener noreferrer">
-              <i className="icon-facebook"></i>
+            <AnimateLink to={link} target="_blank" rel="noopener noreferrer">
+              <i className={iconClass}></i>
             </AnimateLink>
           </li>
         );
-      })} */}
-      <li>
-        <AnimateLink to="/#" target="_blank" rel="noopener noreferrer">
-          <i className="icon-facebook"></i>
-        </AnimateLink>
-      </li>
-      <li>
-        <AnimateLink to="/#" target="_blank" rel="noopener noreferrer">
-          <i className="icon-instagram"></i>
-        </AnimateLink>
-      </li>
-      <li>
-        <AnimateLink to="/#" target="_blank" rel="noopener noreferrer">
-          <i className="icon-x"></i>
-        </AnimateLink>
-      </li>
-      <li>
-        <AnimateLink to="/#" target="_blank" rel="noopener noreferrer">
-          <i className="icon-linkedin"></i>
-        </AnimateLink>
-      </li>
+      })}
     </ul>
   );
 };

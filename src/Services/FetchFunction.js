@@ -28,6 +28,10 @@ export const getDataFetchFunction = async (payload) => {
       "RentalsLoginModal",
       "RentalsCreateAccountModal",
       "RentalsResetPasswordModal",
+      "RentalsFooter",
+      "RentalsFooterLinks",
+      "RentalsSocialMediaLinks",
+      "RentalsAddresses",
     ];
 
     const isValid = authCollections.includes(dataCollectionId);

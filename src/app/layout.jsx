@@ -17,6 +17,12 @@ import {
   getForgotPasswordModalContent,
   getLoginModalContent,
 } from "@/Services/NavbarApis";
+import {
+  getAddressesData,
+  getFooterContent,
+  getFooterLinksData,
+  getSocialLinksData,
+} from "@/Services/FooterApis";
 
 export const metadata = {
   title: "BPS Rentals",
@@ -28,10 +34,18 @@ export default async function RootLayout({ children }) {
     loginModalContent,
     createAccountModalContent,
     forgotPasswordModalContent,
+    footerContent,
+    footerLinksData,
+    socialLinksData,
+    addressesData,
   ] = await Promise.all([
     getLoginModalContent(),
     getCreateAccountModalContent(),
     getForgotPasswordModalContent(),
+    getFooterContent(),
+    getFooterLinksData(),
+    getSocialLinksData(),
+    getAddressesData(),
   ]);
   return (
     <>
@@ -73,7 +87,12 @@ export default async function RootLayout({ children }) {
           <CookiesConsent />
           <Wrapper>
             <main>{children}</main>
-            <Footer />
+            <Footer
+              footerContent={footerContent}
+              footerLinksData={footerLinksData}
+              socialLinksData={socialLinksData}
+              addressesData={addressesData}
+            />
           </Wrapper>
           <StudiosFixedMenu />
           <CartModal />
