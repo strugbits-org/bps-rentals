@@ -14,7 +14,12 @@ const links = [
   "Lighting",
   "F&B Rentals",
 ];
-const Navbar = () => {
+const Navbar = ({
+  loginModalContent,
+  createAccountModalContent,
+  forgotPasswordModalContent,
+}) => {
+  console.log(forgotPasswordModalContent.title, "forgotPasswordModalContent>>");
   return (
     <>
       <div className="cursor-wrapper" id="wrapper-cursor">
@@ -350,13 +355,17 @@ const Navbar = () => {
                         Create Account
                       </span>
                       <span className="text-forgot-password fs-lg-60 fs-mobile-40 fw-600">
-                        Reset password
+                        Reset Password
                       </span>
                     </div>
                     <div className="wrapper-form mt-lg-65 mt-mobile-35">
-                      <Login />
-                      <CreateAccount />
-                      <ForgotPassword />
+                      <Login loginModalContent={loginModalContent} />
+                      <CreateAccount
+                        createAccountModalContent={createAccountModalContent}
+                      />
+                      <ForgotPassword
+                        forgotPasswordModalContent={forgotPasswordModalContent}
+                      />
                     </div>
                   </div>
                 </div>

@@ -1,8 +1,41 @@
 import HomePage from "@/components/Home/Index";
-import { getHomeHeroSectionData } from "@/Services/ScApiCalls";
+import {
+  getHomeDreamBigSectionContent,
+  getHomeHeroSectionContent,
+  getHomeHotTrendsSectionContent,
+  getHomeNewArrivalSectionContent,
+  getHomeStudioSectionContent,
+  getMarketsData,
+  getStudiosData,
+} from "@/Services/HomeApis";
 
 export default async function Page() {
-  const [homeHeroSectionData] = await Promise.all([getHomeHeroSectionData()]);
-  console.log(homeHeroSectionData, "RentalsHomeHero>>");
-  return <HomePage />;
+  const [
+    homeHeroSectionContent,
+    homeNewArrivalSectionContent,
+    homeHotTrendsSectionContent,
+    homeStudioSectionContent,
+    homeDreamBigSectionContent,
+    studiosData,
+    marketsData,
+  ] = await Promise.all([
+    getHomeHeroSectionContent(),
+    getHomeNewArrivalSectionContent(),
+    getHomeHotTrendsSectionContent(),
+    getHomeStudioSectionContent(),
+    getHomeDreamBigSectionContent(),
+    getStudiosData(),
+    getMarketsData(),
+  ]);
+  return (
+    <HomePage
+      heroSectionContent={homeHeroSectionContent}
+      newArrivalSectionContent={homeNewArrivalSectionContent}
+      hotTrendsSectionContent={homeHotTrendsSectionContent}
+      studioSectionContent={homeStudioSectionContent}
+      dreamBigSectionContent={homeDreamBigSectionContent}
+      studiosData={studiosData}
+      marketsData={marketsData}
+    />
+  );
 }

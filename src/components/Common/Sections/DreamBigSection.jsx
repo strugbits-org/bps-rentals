@@ -1,14 +1,41 @@
-const DreamBig = () => {
+import { generateImageURL } from "@/Utils/GenerateImageURL";
+
+const DreamBig = ({ pageContent }) => {
   return (
     <section className="section-dream-big">
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-4 offset-lg-4 column-1">
             <div className="container-img no-phone">
-              <img src="/images/dream-big.jpg" className=" " />
+              {/* src={generateImageURL({
+                  wix_url: pageContent.titleImage,
+                  w: "1356",
+                  h: "953",
+                  fit: "fill",
+                  q: "95",
+                })} */}
+              <img
+                src={generateImageURL({
+                  wix_url: pageContent.titleImage,
+                  w: "1356",
+                  h: "953",
+                  fit: "fill",
+                  q: "95",
+                })}
+                className=" "
+              />
             </div>
             <div className="container-img no-desktop no-tablet">
-              <img src="/images/dream-big-mobile.jpg" className=" " />
+              <img
+                src={generateImageURL({
+                  wix_url: pageContent.mobileTitleImage,
+                  w: "434",
+                  h: "773",
+                  fit: "fill",
+                  q: "95",
+                })}
+                className=" "
+              />
             </div>
             <div
               data-parallax
@@ -22,7 +49,7 @@ const DreamBig = () => {
                 class="btn-blue"
                 data-cursor-style="off"
               >
-                <span>Let’s Craft Magic Together</span>
+                <span>{pageContent && pageContent.buttonLabel}</span>
                 <i className="icon-arrow-right-2"></i>
               </btn-modal-open>
               <p
@@ -33,9 +60,8 @@ const DreamBig = () => {
                 data-end="center center"
                 //   className="flex-center"
               >
-                Click the button to start the journey. <br />
-                Contact us and let's turn your ideas into extraordinary
-                experiences.
+                {pageContent && pageContent.description1} <br />
+                {pageContent && pageContent.description2}
               </p>
             </div>
           </div>

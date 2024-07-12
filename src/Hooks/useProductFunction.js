@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { resetSlideIndex } from "@/Utils/AnimationFunctions";
-import { getProductSnapShots, getProductVariants } from "@/Services/ScApiCalls";
+import { getProductSnapShots, getProductVariants } from "@/Services/HomeApis";
 
 const useProductFunctions = (index, product, variantData) => {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);

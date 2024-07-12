@@ -57,7 +57,18 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
   if (!apiKey) {
     throw new Error("Unauthorized: No api key provided");
   }
-  const unAuthCollections = ["RentalsHomeHero"];
+  const unAuthCollections = [
+    "RentalsHomeHero",
+    "RentalsHomeNewArrivals",
+    "RentalsHomeStudios",
+    "RentalsHomeHotTrends",
+    "RentalsHomeDreamBig",
+    "StudiosSection",
+    "MarketSection",
+    "RentalsLoginModal",
+    "RentalsCreateAccountModal",
+    "RentalsResetPasswordModal",
+  ];
 
   // Allow unauthenticated access for certain collections
   if (unAuthCollections.includes(dataCollectionId)) {

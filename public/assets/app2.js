@@ -2309,7 +2309,6 @@ var require_app2 = __commonJS({
     }
     const pageName$5 = "home";
     function main$5() {
-      console.log("main5");
 
       sliderBestSellers();
       sliderHighlights();
@@ -8925,7 +8924,6 @@ var require_app2 = __commonJS({
       let stickies = document.querySelectorAll(
         "[data-sticky]:not(.js-running)"
       );
-      console.log("stickies", stickies);
       stickies.forEach((element) => {
         element.classList.add("js-running");
         if (!screen.isDesktop && element.dataset.stickyNoMobile !== void 0) {
@@ -8955,7 +8953,6 @@ var require_app2 = __commonJS({
             return `bottom-=${offsetSum} top`;
           };
         }
-        console.log("came here!!!!");
         ScrollTrigger$1.create({
           trigger,
           endTrigger,
@@ -9802,7 +9799,6 @@ var require_app2 = __commonJS({
       manualModalClose();
     });
     // document.querySelector(".initScript").addEventListener("click", () => {
-    //   console.log("called>>>>>>");
     //   whenContainerReady();
     //   if (!firstLoad) {
     //     closeSearch();
@@ -9812,7 +9808,6 @@ var require_app2 = __commonJS({
       .querySelector(".initScript")
       .addEventListener("customInitScript", () => {
         window.scrollTo({ top: 0, behavior: "instant" });
-        console.log("init clicked ");
         whenContainerReady();
       });
 

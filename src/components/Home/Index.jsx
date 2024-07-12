@@ -8,9 +8,19 @@ import Highlights from "../Common/Sections/HighlightsSection";
 import DreamBig from "../Common/Sections/DreamBigSection";
 import { HotTrendsHome } from "../Common/Sections/HotTrendsSection";
 import NewArrival from "../Common/Sections/NewArrivalSection";
-import { markPageLoaded } from "@/utils/AnimationFunctions";
+import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { generateImageURL } from "@/Utils/GenerateImageURL";
 
-const HomePage = () => {
+const HomePage = ({
+  heroSectionContent,
+  newArrivalSectionContent,
+  hotTrendsSectionContent,
+  studioSectionContent,
+  dreamBigSectionContent,
+  studiosData,
+  marketsData,
+}) => {
+
   useEffect(() => {
     markPageLoaded();
   }, []);
@@ -26,7 +36,7 @@ const HomePage = () => {
                     className="fs-lg-90 fs-mobile-60 lh-100 fw-600 split-words"
                     data-aos="d:loop"
                   >
-                    Learn what our team can do for your brand
+                    {heroSectionContent && heroSectionContent.mainTitle}
                   </h3>
                 </div>
                 <div
@@ -36,7 +46,13 @@ const HomePage = () => {
                   data-translate-y="70vh"
                 >
                   <img
-                    src="/images/banner-our-team.jpg"
+                    src={generateImageURL({
+                      wix_url: heroSectionContent.backgroundImage,
+                      w: "1336",
+                      h: "581",
+                      fit: "fill",
+                      q: "95",
+                    })}
                     className=" "
                     data-aos="fadeIn
                         1.2s ease-out-cubic 0s, d:loop"
@@ -53,16 +69,16 @@ const HomePage = () => {
             <div className="col-lg-4 offset-lg-1">
               <div className="container-text pt-lg-65 pt-tablet-25 pt-phone-40">
                 <h2 className="fs--60 fw-600 split-chars" data-aos="d:loop">
-                  Best Sellers
+                  {heroSectionContent && heroSectionContent.subTitle}
                 </h2>
                 <p
                   className="d-block fs--40 fs-mobile-18 fw-600 lh-140 pt-10 pt-phone-10"
                   data-aos="fadeIn .8s ease-in-out .4s, d:loop"
                 >
-                  ask our team
+                  {heroSectionContent && heroSectionContent.firstDescription}
+
                   <br />
-                  Take a look at our exceptional products and start shopping
-                  today!
+                  {heroSectionContent && heroSectionContent.secondDescription}
                 </p>
                 <AnimateLink
                   to={`/category/${"123"}`}
@@ -70,7 +86,10 @@ const HomePage = () => {
                   data-cursor-style="off"
                   data-aos="d:fadeIn .6s ease-in-out .6s, m:fadeIn .6s ease-in-out 0s, d:loop"
                 >
-                  <span>Dicover Favorites</span>
+                  <span>
+                    {" "}
+                    {heroSectionContent && heroSectionContent.buttonLabel}
+                  </span>
                   <i className="icon-arrow-right"></i>
                 </AnimateLink>
               </div>
@@ -216,12 +235,12 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      <NewArrival />
+      <NewArrival pageContent={newArrivalSectionContent} />
       <Highlights />
-      <HotTrendsHome />
-      <Markets />
-      <Studios />
-      <DreamBig />
+      <HotTrendsHome pageContent={hotTrendsSectionContent} />
+      <Markets marketsData={marketsData} />
+      <Studios pageContent={studioSectionContent} studiosData={studiosData} />
+      <DreamBig pageContent={dreamBigSectionContent} />
       <LetsGetSocial />
     </>
   );

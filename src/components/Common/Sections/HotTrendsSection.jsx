@@ -1,6 +1,7 @@
+import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 
-export const HotTrendsHome = () => {
+export const HotTrendsHome = ({ pageContent }) => {
   return (
     <section className="section-hot-trends white-1">
       <div className="container-fluid">
@@ -10,19 +11,25 @@ export const HotTrendsHome = () => {
               className="d-block fs--40 fs--mobile-25 fw-600"
               data-aos="fadeIn .6s ease-in-out 0s, d:loop"
             >
-              Hot Trends
+              {pageContent && pageContent.title}
             </span>
             <h2
               className="fs--90 fs-tablet-40 fs-phone-60 lh-100 fw-600 pt-lg-35 pt-tablet-10 pt-phone-20 section-title split-words"
               data-aos="d:loop"
             >
-              Modern elegant to elevate your celebration
+              {pageContent && pageContent.tagline}
             </h2>
           </div>
           <div className="col-12">
             <div className="container-img bg-img">
               <img
-                src="/images/hot-trends.jpg"
+                src={generateImageURL({
+                  wix_url: pageContent.backgroundImage,
+                  w: "1374",
+                  h: "547",
+                  fit: "fill",
+                  q: "95",
+                })}
                 className=" "
                 data-parallax
                 data-translate-x-from="10vw"
@@ -39,7 +46,7 @@ export const HotTrendsHome = () => {
               className="btn-blue mt-lg-50 mt-mobile-20"
               data-cursor-style="off"
             >
-              <span>Show Now</span>
+              <span> {pageContent && pageContent.buttonLabel}</span>
               <i className="icon-arrow-right"></i>
             </AnimateLink>
           </div>

@@ -1,4 +1,4 @@
-const ForgotPassword = () => {
+const ForgotPassword = ({ forgotPasswordModalContent }) => {
   return (
     <div className="container-forgot-password d-none">
       <div className="container-password">
@@ -13,7 +13,10 @@ const ForgotPassword = () => {
               value="[Forgot Password]"
             />
             <div className="container-input col-12">
-              <label for="forgot-password-login-email">Email</label>
+              <label for="forgot-password-login-email">
+                {forgotPasswordModalContent &&
+                  forgotPasswordModalContent.emailFieldLabel}
+              </label>
               <input
                 id="forgot-password-login-email"
                 name="email"
@@ -24,7 +27,10 @@ const ForgotPassword = () => {
             </div>
             <div className="container-submit col-12 mt-mobile-10">
               <button type="submit" className="bt-submit btn-blue w-100">
-                <span>Send</span>
+                <span>
+                  {forgotPasswordModalContent &&
+                    forgotPasswordModalContent.sendButtonLabel}
+                </span>
               </button>
             </div>
           </form>
