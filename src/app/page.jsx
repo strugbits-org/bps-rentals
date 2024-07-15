@@ -5,10 +5,13 @@ import {
 } from "@/Services/HomeApis";
 
 import {
+  fetchInstaFeed,
   getDreamBigSectionContent,
   getHotTrendsSectionContent,
   getMarketsData,
   getNewArrivalSectionContent,
+  getSocialSectionBlogs,
+  getSocialSectionDetails,
   getStudiosData,
   getStudioSectionContent,
 } from "@/Services/SectionsApis";
@@ -23,6 +26,9 @@ export default async function Page() {
     homeDreamBigSectionContent,
     studiosData,
     marketsData,
+    socialSectionDetails,
+    socialSectionBlogs,
+    instaFeed
   ] = await Promise.all([
     getHomePageContent(),
     getHomeHeroSectionContent(),
@@ -32,6 +38,9 @@ export default async function Page() {
     getDreamBigSectionContent(),
     getStudiosData(),
     getMarketsData(),
+    getSocialSectionDetails(),
+    getSocialSectionBlogs(),
+    fetchInstaFeed(),
   ]);
 
   return (
@@ -44,6 +53,9 @@ export default async function Page() {
       dreamBigSectionContent={homeDreamBigSectionContent}
       studiosData={studiosData}
       marketsData={marketsData}
+      socialSectionDetails={socialSectionDetails}
+      socialSectionBlogs={socialSectionBlogs}
+      instaFeed={instaFeed}
     />
   );
 }

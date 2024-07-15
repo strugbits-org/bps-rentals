@@ -13,6 +13,7 @@
     "@wix/ecom": "^1.0.646",
     "@wix/members": "^1.0.89",
     "@wix/sdk": "^1.12.0",
+    "instafeed-node-js": "^0.1.4",
     "jsonwebtoken": "^9.0.2",
     "next": "14.2.4",
     "react": "^18",

@@ -2,6 +2,7 @@ import "./globals.css";
 import Wrapper from "@/components/Layout/Wrapper";
 import "../../public/assets/utils.css";
 import "../../public/assets/app.css";
+import "../../public/assets/custom.css";
 import Loader from "@/components/Common/Loader";
 import CustomScripts from "@/Services/CustomScripts";
 import Footer from "@/components/Layout/Footer";

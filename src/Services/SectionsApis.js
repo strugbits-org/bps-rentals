@@ -1,3 +1,4 @@
+import { instafeed, refreshToken } from "instafeed-node-js";
 import getDataFetchFunction from "./FetchFunction";
 
 export const getNewArrivalSectionContent = async () => {
@@ -44,7 +45,6 @@ export const getStudioSectionContent = async () => {
     }
   } catch (error) {
     console.error("Error fetching HomeStudioSectionContent data:", error);
-    return [];
   }
 };
 
@@ -99,3 +99,50 @@ export const getMarketsData = async () => {
     return [];
   }
 };
+
+
+export const getSocialSectionBlogs = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "BlogProductData",
+      "includeReferencedItems": ["blogRef"],
+      "limit": 9
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data)
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error(error, "error occured");
+    return [];
+  }
+}
+
+export const getSocialSectionDetails = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      "dataCollectionId": "SocialSectionDetails"
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data)[0];
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching SocialSectionDetails:", error);
+  }
+}
+
+export const fetchInstaFeed = async () => {
+  try {
+    const response = await instafeed({ access_token: process.env.INSTA_ACCESS_TOKEN, requestedCount: 24 });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  } finally {
+    refreshToken({ access_token: process.env.INSTA_ACCESS_TOKEN });
+  };
+}
