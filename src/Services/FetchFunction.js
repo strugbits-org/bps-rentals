@@ -26,6 +26,7 @@ export const getDataFetchFunction = async (payload) => {
       "Footer",
       "ContactDetails",
       "SocialLinks",
+      "ContactUsContent",
       "FooterNavigationMenu",
       "StudiosSection",
       "MarketSection",

@@ -7869,7 +7869,7 @@ var require_app2 = __commonJS({
     );
     function Parallax() {
       let parallaxes = document.querySelectorAll(
-        '[data-parallax=""]:not(.js-running), [data-parallax-top=""]:not(.js-running)'
+        '[data-parallax]:not(.js-running), [data-parallax-top]:not(.js-running)'
       );
       let mm = gsapWithCSS$1.matchMedia();
       window.addEventListener("orientationchange", function () {

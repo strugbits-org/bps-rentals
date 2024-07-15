@@ -66,6 +66,7 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
     "Footer",
     "ContactDetails",
     "SocialLinks",
+    "ContactUsContent",
     "FooterNavigationMenu",
     "StudiosSection",
     "MarketSection",

@@ -21,11 +21,13 @@ import {
 } from "@/Services/NavbarApis";
 import {
   getContactData,
+  getContactUsContent,
   getFooterData,
   getFooterNavigationMenu,
   getSocialLinks,
 } from "@/Services/FooterApis";
 import { getMarketsData } from "@/Services/SectionsApis";
+import ContactUsModal from "@/components/Lightbox/modalComponents/ContactUsModal";
 
 export const metadata = {
   title: "BPS Rentals",
@@ -41,6 +43,7 @@ export default async function RootLayout({ children }) {
     contactData,
     socialLinks,
     navigationMenu,
+    contactUsContent,
     marketsData,
     allCategoriesData,
   ] = await Promise.all([
@@ -51,6 +54,7 @@ export default async function RootLayout({ children }) {
     getContactData(),
     getSocialLinks(),
     getFooterNavigationMenu(),
+    getContactUsContent(),
     getMarketsData(),
     getAllCategoriesData(),
   ]);
@@ -101,7 +105,8 @@ export default async function RootLayout({ children }) {
           </Wrapper>
           <StudiosFixedMenu />
           <CartModal />
-          <ContactFormModal />
+          <ContactUsModal contactUsContent={contactUsContent} contactData={contactData} socialLinks={socialLinks} />
+          {/* <ContactFormModal /> */}
           <QuoteViewModal />
           <QuoteConfirmedModal />
         </body>

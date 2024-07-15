@@ -24,10 +24,7 @@ const HomePage = ({
   socialSectionBlogs,
   instaFeed
 }) => {
-
-  useEffect(() => {
-    markPageLoaded();
-  }, []);
+  
   return (
     <>
       <BannerHome content={heroSectionContent} />
