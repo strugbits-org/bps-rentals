@@ -1,4 +1,4 @@
-import { generateImageURL, getFullSvgURL } from "@/Utils/GenerateImageURL";
+import { getFullSvgURL } from "@/Utils/GenerateImageURL";
 import Addresses from "../Common/Addresses";
 import AnimateLink from "../Common/AnimateLink";
 import SocialLinks from "../Common/SocialLinks";
@@ -9,7 +9,6 @@ const Footer = ({
   socialLinksData,
   addressesData,
 }) => {
-  console.log(addressesData, "addressesData>>>");
   return (
     <footer id="footer" className="footer" data-cursor-style="off">
       <div className="container-fluid">
@@ -168,7 +167,7 @@ const Footer = ({
               </div>
             </div>
             <div className="container-address mt-lg-145 mt-phone-115">
-              <Addresses data={addressesData}/>
+              <Addresses data={addressesData} />
             </div>
           </div>
         </div>

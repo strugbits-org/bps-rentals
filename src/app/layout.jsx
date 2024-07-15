@@ -23,7 +23,7 @@ import {
   getFooterLinksData,
   getSocialLinksData,
 } from "@/Services/FooterApis";
-import { getMarketsData } from "@/Services/HomeApis";
+import { getMarketsData } from "@/Services/SectionsApis";
 
 export const metadata = {
   title: "BPS Rentals",

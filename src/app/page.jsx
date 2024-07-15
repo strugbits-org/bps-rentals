@@ -1,14 +1,17 @@
 import HomePage from "@/components/Home/Index";
 import {
-  getDreamBigSectionContent,
   getHomeHeroSectionContent,
-  getHomeHotTrendsSectionContent,
-  getNewArrivalSectionContent,
   getHomePageContent,
-  getStudioSectionContent,
-  getMarketsData,
-  getStudiosData,
 } from "@/Services/HomeApis";
+
+import {
+  getDreamBigSectionContent,
+  getHotTrendsSectionContent,
+  getMarketsData,
+  getNewArrivalSectionContent,
+  getStudiosData,
+  getStudioSectionContent,
+} from "@/Services/SectionsApis";
 
 export default async function Page() {
   const [
@@ -24,7 +27,7 @@ export default async function Page() {
     getHomePageContent(),
     getHomeHeroSectionContent(),
     getNewArrivalSectionContent(),
-    getHomeHotTrendsSectionContent(),
+    getHotTrendsSectionContent(),
     getStudioSectionContent(),
     getDreamBigSectionContent(),
     getStudiosData(),

@@ -1,7 +1,6 @@
 import Disclaimer from "./Disclaimer";
 
 const Login = ({ loginModalContent }) => {
-  console.log(loginModalContent, "loginModalContent>>>");
   return (
     <div className="container-sign-in">
       <div className="container-sign-in">

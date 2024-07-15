@@ -1,11 +1,12 @@
 import MarketPage from "@/components/Market/Index";
 import {
   getDreamBigSectionContent,
-  getNewArrivalSectionContent,
-  getStudioSectionContent,
   getMarketsData,
+  getNewArrivalSectionContent,
   getStudiosData,
-} from "@/Services/HomeApis";
+  getStudioSectionContent,
+} from "@/Services/SectionsApis";
+
 
 export default async function Page() {
   const [
