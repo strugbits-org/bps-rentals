@@ -37,6 +37,7 @@ export const getDataFetchFunction = async (payload) => {
       "RentalsMyAccountPage",
       "RentalsChangePasswordPage",
       "F1CategoriesStructure",
+      "BPSCatalogStructure",
     ];
 
     const isValid = authCollections.includes(dataCollectionId);

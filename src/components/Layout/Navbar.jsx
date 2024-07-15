@@ -22,6 +22,7 @@ const Navbar = ({
   marketsData,
   categoriesData,
 }) => {
+  console.log(categoriesData, "categoriesData>>");
   return (
     <>
       <div className="cursor-wrapper" id="wrapper-cursor">
@@ -166,20 +167,21 @@ const Navbar = ({
                         <i className="icon-arrow-down"></i>
                       </button>
                     </li>
-                    {links.map((data, index) => {
-                      // const { name, mainMedia, slug } = data.parentCollection;
-                      return (
-                        <li key={index} className="no-mobile">
-                          <AnimateLink
-                            to={`/category/${data}`}
-                            className="header-link"
-                            data-menu-close
-                          >
-                            <span data-letter="New">{data}</span>
-                          </AnimateLink>
-                        </li>
-                      );
-                    })}
+                    {categoriesData &&
+                      categoriesData.slice(0, 6).map((data, index) => {
+                        const { name, mainMedia, slug } = data.parentCollection;
+                        return (
+                          <li key={index} className="no-mobile">
+                            <AnimateLink
+                              to={`/category/${slug}`}
+                              className="header-link"
+                              data-menu-close
+                            >
+                              <span data-letter="New">{name}</span>
+                            </AnimateLink>
+                          </li>
+                        );
+                      })}
 
                     <li className="btn-submenu-categories">
                       <button

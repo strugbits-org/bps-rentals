@@ -77,6 +77,7 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
     "RentalsMyAccountPage",
     "RentalsChangePasswordPage",
     "F1CategoriesStructure",
+    "BPSCatalogStructure",
   ];
 
   // Allow unauthenticated access for certain collections
