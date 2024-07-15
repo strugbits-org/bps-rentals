@@ -9,7 +9,6 @@ const CreateAccount = ({ createAccountModalContent }) => {
           className="form-account form-create-account "
           data-redirect="my-account.html"
         >
-          <input type="hidden" name="subject" value="[account]" />
           <div className="container-input col-md-12">
             <label for="create-account-first-name">
               {createAccountModalContent &&

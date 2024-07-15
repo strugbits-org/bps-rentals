@@ -73,3 +73,24 @@ export const getForgotPasswordModalContent = async () => {
     return [];
   }
 };
+
+//Category Apis
+export const getAllCategoriesData = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "F1CategoriesStructure",
+      includeReferencedItems: ["parentCollection", "level2Collections", "f1Collections"],
+      limit: 50
+    });
+    if (response && response._items) {
+      const categoriesData = response._items.map((x) => x.data);
+      const filteredData = categoriesData.filter((x) => x.parentCollection.slug !== "all-products");
+      return filteredData;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching all categories:", error);
+    return [];
+  }
+};

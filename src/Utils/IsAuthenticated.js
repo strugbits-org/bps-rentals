@@ -78,6 +78,7 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
     "DreamBigSection",
     "RentalsMyAccountPage",
     "RentalsChangePasswordPage",
+    "F1CategoriesStructure",
   ];
 
   // Allow unauthenticated access for certain collections

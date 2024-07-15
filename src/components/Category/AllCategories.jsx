@@ -1,6 +1,7 @@
+import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
 
-const AllCategories = () => {
+const AllCategories = ({ categoriesData }) => {
   return (
     <div
       className="submenu-categories submenu"
@@ -15,24 +16,35 @@ const AllCategories = () => {
           </button>
         </div>
         <ul className="list-submenu-categories list-submenu font-submenu">
-          {[1, 2, 3, 4, 5].map((index) => {
+          {categoriesData.map((data, index) => {
+            const { name, mainMedia, slug } = data.parentCollection;
             return (
               <li key={index} className="list-item">
                 <AnimateLink
-                  to={`/category/${index || "123"}`}
+                  to={`/category/${slug}`}
                   className="category-link"
                   data-cursor-style="view"
                   data-menu-close
                 >
                   <div className="container-img">
                     <img
-                      src="/images/chairs/bristol-chair-color-4.webp"
+                      src={generateImageURL({
+                        wix_url: mainMedia,
+                        w: "99",
+                        h: "99",
+                        fit: "fill",
+                        q: "95",
+                      })}
                       className=" "
                     />
+                    {/* <img
+                      src="/images/chairs/bristol-chair-color-4.webp"
+                      className=" "
+                    /> */}
                   </div>
                   <div className="container-text pt-15">
                     <h3 className="fs--21 fw-600 blue-1 text-center title-project split-words">
-                      New
+                      {name}
                     </h3>
                   </div>
                 </AnimateLink>

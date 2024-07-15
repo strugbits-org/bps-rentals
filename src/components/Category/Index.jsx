@@ -63,7 +63,7 @@ const productColors = [
   "Yellow",
   "Multicolor",
 ];
-const CategoryPage = () => {
+const CategoryPage = ({ pageContent, marketsData }) => {
   useEffect(() => {
     setTimeout(() => {
       markPageLoaded();
@@ -696,7 +696,7 @@ const CategoryPage = () => {
           </div>
         </div>
       </section>
-      <Markets />
+      <Markets pageContent={pageContent} marketsData={marketsData} />
       <LetsGetSocial />
     </>
   );

@@ -66,7 +66,6 @@ const Footer = ({
                 </div>
                 <div className="container-newsletter mt-mobile-25">
                   <form className="form-newsletter">
-                    <input type="hidden" name="assunto" value="[newsletter]" />
                     <div className="container-input">
                       <label for="newsletter-email">
                         {footerContent &&
@@ -117,7 +116,7 @@ const Footer = ({
                     const { title, link, order } = data;
                     if (order == 1) {
                       return (
-                        <li className="list-item">
+                        <li key={index} className="list-item">
                           <button
                             data-set-submenu="services"
                             className="link-footer-menu"
@@ -141,7 +140,7 @@ const Footer = ({
                     const { title, link, order } = data;
                     if (order == 7) {
                       return (
-                        <li className="list-item">
+                        <li key={index} className="list-item">
                           <btn-modal-open
                             class="link-footer-menu"
                             group="modal-contact"

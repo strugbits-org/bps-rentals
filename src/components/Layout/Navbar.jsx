@@ -20,6 +20,7 @@ const Navbar = ({
   createAccountModalContent,
   forgotPasswordModalContent,
   marketsData,
+  categoriesData,
 }) => {
   return (
     <>
@@ -166,10 +167,11 @@ const Navbar = ({
                       </button>
                     </li>
                     {links.map((data, index) => {
+                      // const { name, mainMedia, slug } = data.parentCollection;
                       return (
                         <li key={index} className="no-mobile">
                           <AnimateLink
-                            to={`/category/${index}`}
+                            to={`/category/${data}`}
                             className="header-link"
                             data-menu-close
                           >
@@ -326,9 +328,9 @@ const Navbar = ({
                 </div>
               </div>{" "}
               {/* All categories */}
-              <AllCategories />
+              <AllCategories categoriesData={categoriesData} />
               {/* Search */}
-              <SearchModal />
+              <SearchModal marketsData={marketsData} />
               {/* User Authentication */}
               <div
                 className="submenu-login submenu"

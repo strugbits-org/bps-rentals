@@ -38,6 +38,7 @@ export const getDataFetchFunction = async (payload) => {
       "DreamBigSection",
       "RentalsMyAccountPage",
       "RentalsChangePasswordPage",
+      "F1CategoriesStructure",
     ];
 
     const isValid = authCollections.includes(dataCollectionId);
