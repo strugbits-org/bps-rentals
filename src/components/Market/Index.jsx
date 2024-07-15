@@ -4,7 +4,6 @@ import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import Markets from "../Common/Sections/MarketSection";
 import Studios from "../Common/Sections/StudiosSection";
 import DreamBig from "../Common/Sections/DreamBigSection";
-import LetsGetSocial from "../Common/Sections/SocialSection";
 import NewArrival from "../Common/Sections/NewArrivalSection";
 import Highlights from "../Common/Sections/HighlightsSection";
 import AnimateLink from "../Common/AnimateLink";
@@ -366,8 +365,6 @@ const MarketPage = ({
       <Markets marketsData={marketsData} />
       <Studios content={studioSectionContent} studiosData={studiosData} />
       <DreamBig content={dreamBigSectionContent} />
-
-      <LetsGetSocial />
     </>
   );
 };

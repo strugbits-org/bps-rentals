@@ -26,9 +26,6 @@ export default async function Page() {
     homeDreamBigSectionContent,
     studiosData,
     marketsData,
-    socialSectionDetails,
-    socialSectionBlogs,
-    instaFeed
   ] = await Promise.all([
     getHomePageContent(),
     getHomeHeroSectionContent(),
@@ -37,10 +34,7 @@ export default async function Page() {
     getStudioSectionContent(),
     getDreamBigSectionContent(),
     getStudiosData(),
-    getMarketsData(),
-    getSocialSectionDetails(),
-    getSocialSectionBlogs(),
-    fetchInstaFeed(),
+    getMarketsData()
   ]);
 
   return (
@@ -53,9 +47,6 @@ export default async function Page() {
       dreamBigSectionContent={homeDreamBigSectionContent}
       studiosData={studiosData}
       marketsData={marketsData}
-      socialSectionDetails={socialSectionDetails}
-      socialSectionBlogs={socialSectionBlogs}
-      instaFeed={instaFeed}
     />
   );
 }

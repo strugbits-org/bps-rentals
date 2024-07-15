@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import LetsGetSocial from "./Common/Sections/SocialSection";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 
 // const renderTextWithDecorations = (textData) => {
@@ -305,7 +304,6 @@ const TermsAndCondition = ({ data }) => {
           </div>
         </div>
       </section>
-      <LetsGetSocial />
     </>
   );
 };

@@ -2,11 +2,6 @@
 import { useEffect } from "react";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import Markets from "../Common/Sections/MarketSection";
-import Studios from "../Common/Sections/StudiosSection";
-import DreamBig from "../Common/Sections/DreamBigSection";
-import LetsGetSocial from "../Common/Sections/SocialSection";
-import NewArrival from "../Common/Sections/NewArrivalSection";
-import Highlights from "../Common/Sections/HighlightsSection";
 import AnimateLink from "../Common/AnimateLink";
 import { HotTrendsCategory } from "../Common/Sections/HotTrendsSection";
 
@@ -697,7 +692,6 @@ const CategoryPage = ({ pageContent, marketsData }) => {
         </div>
       </section>
       <Markets pageContent={pageContent} marketsData={marketsData} />
-      <LetsGetSocial />
     </>
   );
 };

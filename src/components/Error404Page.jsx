@@ -1,7 +1,5 @@
 "use client";
 
-import LetsGetSocial from "./Common/Sections/SocialSection";
-
 const Error404Page = () => {
   return (
     <>
@@ -18,7 +16,6 @@ const Error404Page = () => {
           </span>
         </div>
       </section>
-      <LetsGetSocial />
     </>
   );
 };

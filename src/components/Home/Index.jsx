@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import LetsGetSocial, { SocialSection } from "../Common/Sections/SocialSection";
+import { SocialSection } from "../Common/Sections/SocialSection";
 import Studios from "../Common/Sections/StudiosSection";
 import Markets from "../Common/Sections/MarketSection";
 import Highlights from "../Common/Sections/HighlightsSection";
@@ -19,11 +19,13 @@ const HomePage = ({
   studioSectionContent,
   dreamBigSectionContent,
   studiosData,
-  marketsData,
-  socialSectionDetails,
-  socialSectionBlogs,
-  instaFeed
+  marketsData
 }) => {
+
+  useEffect(() => {
+    markPageLoaded();
+  }, [])
+  
   
   return (
     <>
@@ -35,8 +37,6 @@ const HomePage = ({
       <Markets pageContent={pageContent} marketsData={marketsData} />
       <Studios content={studioSectionContent} studiosData={studiosData} />
       <DreamBig content={dreamBigSectionContent} />
-      <SocialSection data={socialSectionDetails} posts={socialSectionBlogs} insta_feed={instaFeed} />
-      {/* <LetsGetSocial /> */}
     </>
   );
 };

@@ -26,8 +26,9 @@ import {
   getFooterNavigationMenu,
   getSocialLinks,
 } from "@/Services/FooterApis";
-import { getMarketsData } from "@/Services/SectionsApis";
+import { fetchInstaFeed, getMarketsData, getSocialSectionBlogs, getSocialSectionDetails } from "@/Services/SectionsApis";
 import ContactUsModal from "@/components/Lightbox/modalComponents/ContactUsModal";
+import { SocialSection } from "@/components/Common/Sections/SocialSection";
 
 export const metadata = {
   title: "BPS Rentals",
@@ -46,6 +47,9 @@ export default async function RootLayout({ children }) {
     contactUsContent,
     marketsData,
     allCategoriesData,
+    socialSectionDetails,
+    socialSectionBlogs,
+    instaFeed
   ] = await Promise.all([
     getLoginModalContent(),
     getCreateAccountModalContent(),
@@ -57,6 +61,9 @@ export default async function RootLayout({ children }) {
     getContactUsContent(),
     getMarketsData(),
     getAllCategoriesData(),
+    getSocialSectionDetails(),
+    getSocialSectionBlogs(),
+    fetchInstaFeed(),
   ]);
 
   return (
@@ -100,7 +107,10 @@ export default async function RootLayout({ children }) {
           />
           <CookiesConsent />
           <Wrapper>
-            <main>{children}</main>
+            <main>
+              {children}
+              <SocialSection data={socialSectionDetails} posts={socialSectionBlogs} insta_feed={instaFeed} />
+            </main>
             <Footer menu={navigationMenu} footerData={footerData} contactData={contactData} socialLinks={socialLinks} />
           </Wrapper>
           <StudiosFixedMenu />

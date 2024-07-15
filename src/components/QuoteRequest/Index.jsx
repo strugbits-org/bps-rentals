@@ -1,7 +1,6 @@
 "use client";
 import { useEffect } from "react";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
-import LetsGetSocial from "../Common/Sections/SocialSection";
 
 const QuoteRequestPage = () => {
   useEffect(() => {
@@ -244,7 +243,6 @@ const QuoteRequestPage = () => {
           </div>
         </div>
       </section>
-      <LetsGetSocial />
     </>
   );
 };

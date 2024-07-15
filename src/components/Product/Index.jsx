@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import SnapShots from "./SnapShotsSection";
 import MatchItWith from "./MatchItWithSection";
-import LetsGetSocial from "../Common/Sections/SocialSection";
 import AnimateLink from "../Common/AnimateLink";
 
 const ProductPage = () => {
@@ -1512,8 +1511,6 @@ const ProductPage = () => {
           </div>
         </div>
       </section>
-
-      <LetsGetSocial />
     </>
   );
 };
