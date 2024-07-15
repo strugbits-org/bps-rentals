@@ -1,4 +1,3 @@
-import AnimateLink from "../Common/AnimateLink";
 import Disclaimer from "./Disclaimer";
 
 const Login = ({ loginModalContent }) => {
@@ -52,7 +51,7 @@ const Login = ({ loginModalContent }) => {
               <button type="submit" className="bt-submit btn-blue w-100">
                 <span>
                   {" "}
-                  {loginModalContent && loginModalContent.passwordFieldLabel}
+                  {loginModalContent && loginModalContent.signInButtonLabel}
                 </span>
               </button>
             </div>

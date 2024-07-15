@@ -1,3 +1,4 @@
+import { generateImageURL } from "@/Utils/GenerateImageURL";
 import CreateAccount from "../Authentication/CreateAccount";
 import ForgotPassword from "../Authentication/ForgotPassword";
 import Login from "../Authentication/Login";
@@ -18,8 +19,8 @@ const Navbar = ({
   loginModalContent,
   createAccountModalContent,
   forgotPasswordModalContent,
+  marketsData,
 }) => {
-  console.log(forgotPasswordModalContent.title, "forgotPasswordModalContent>>");
   return (
     <>
       <div className="cursor-wrapper" id="wrapper-cursor">
@@ -279,11 +280,12 @@ const Navbar = ({
                     </button>
                   </div>
                   <ul className="list-submenu-market list-submenu list-projects font-submenu">
-                    {[1, 2, 3, 4].map((index) => {
+                    {marketsData.map((data, index) => {
+                      const { slug, cardname, marketTags, image } = data;
                       return (
                         <li key={index} className="list-item">
                           <AnimateLink
-                            to="/market"
+                            to={`/market/${slug}`}
                             className="market-link project-link"
                             data-cursor-style="view"
                           >
@@ -292,24 +294,28 @@ const Navbar = ({
                               data-cursor-style="view"
                             >
                               <img
-                                src="/images/lib/06_desktop.jpg"
+                                src={generateImageURL({
+                                  wix_url: image,
+                                  w: "296",
+                                  h: "855",
+                                  fit: "fill",
+                                  q: "95",
+                                })}
                                 className=" "
                               />
                             </div>
                             <div className="container-text">
                               <h3 className="title-project split-words">
-                                Corporate
+                                {cardname}
                               </h3>
                               <ul className="list-tags">
-                                <li>
-                                  <span>Personal</span>
-                                </li>
-                                <li>
-                                  <span>Wedding</span>
-                                </li>
-                                <li>
-                                  <span>Milestone event</span>
-                                </li>
+                                {marketTags.map((data, index) => {
+                                  return (
+                                    <li key={index}>
+                                      <span>{data}</span>
+                                    </li>
+                                  );
+                                })}
                               </ul>
                             </div>
                           </AnimateLink>

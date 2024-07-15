@@ -2,10 +2,10 @@
 
 import getDataFetchFunction from "./FetchFunction";
 
-export const getHomePageContent = async () => {
+export const getMyAccountPageContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeSectionsTitles"
+      dataCollectionId: "RentalsMyAccountPage",
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -13,15 +13,15 @@ export const getHomePageContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching HomePageContent data:", error);
+    console.error("Error fetching RentalsMyAccountPage data:", error);
     return [];
   }
 };
 
-export const getHomeHeroSectionContent = async () => {
+export const getChangePasswordPageContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeHero",
+      dataCollectionId: "RentalsChangePasswordPage",
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -29,7 +29,7 @@ export const getHomeHeroSectionContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching HomeHeroSectionContent data:", error);
+    console.error("Error fetching RentalsChangePasswordPage data:", error);
     return [];
   }
 };
