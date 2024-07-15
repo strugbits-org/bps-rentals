@@ -1,14 +1,9 @@
-import { getFullSvgURL } from "@/Utils/GenerateImageURL";
-import Addresses from "../Common/Addresses";
+import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
-import SocialLinks from "../Common/SocialLinks";
+import Newsletter from "../Common/NewsLetter";
+import { CustomButton } from "../Common/CustomButton";
 
-const Footer = ({
-  footerContent,
-  footerLinksData,
-  socialLinksData,
-  addressesData,
-}) => {
+const Footer = ({ menu, footerData, contactData, socialLinks }) => {
   return (
     <footer id="footer" className="footer" data-cursor-style="off">
       <div className="container-fluid">
@@ -17,7 +12,7 @@ const Footer = ({
             <div className="container-logo">
               <div data-parallax data-end="bottom bottom" className="z-3">
                 <img
-                  src={getFullSvgURL(footerContent.bLogo)}
+                  src={generateImageURL({ wix_url: footerData && footerData.logo1, original: true })}
                   className="img-b z-3"
                 />
               </div>
@@ -30,7 +25,7 @@ const Footer = ({
                 className="z-2"
               >
                 <img
-                  src={getFullSvgURL(footerContent.pLogo)}
+                  src={generateImageURL({ wix_url: footerData && footerData.logo2, original: true })}
                   className="img-p z-2"
                 />
               </div>
@@ -43,139 +38,81 @@ const Footer = ({
                 className="z-1"
               >
                 <img
-                  src={getFullSvgURL(footerContent.sLogo)}
+                  src={generateImageURL({ wix_url: footerData && footerData.logo3, original: true })}
                   className="img-s z-1"
                 />
               </div>
             </div>
             <h2 className="fs--60 fs-mobile-50 title-footer white-1 mt-lg-170 mt-mobile-20">
-              {footerContent && footerContent.heading}
+              {footerData && footerData.heading}
             </h2>
           </div>
           <div className="col-lg-5 column-2 pt-lg-65 pt-mobile-50">
             <div className="wrapper-newsletter-menu">
-              <div className="container-newsletter" data-form-container>
-                <div className="container-text">
-                  <h3 className="fs-25 white-1">
-                    {" "}
-                    {footerContent && footerContent.newsletterHeading}:
-                  </h3>
-                  <p className="fs--16 fs-phone-15 font-2 white-1 mt-5">
-                    {footerContent && footerContent.newsletterDescription}
-                  </p>
-                </div>
-                <div className="container-newsletter mt-mobile-25">
-                  <form className="form-newsletter">
-                    <div className="container-input">
-                      <label for="newsletter-email">
-                        {footerContent &&
-                          footerContent.newsletterInputPlaceholder}
-                      </label>
-                      <input
-                        id="newsletter-email"
-                        name="email"
-                        type="email"
-                        required
-                      />
-                    </div>
-                    <div className="container-submit">
-                      <button type="submit" className="bt-submit">
-                        <span className="submit-text">
-                          {footerContent && footerContent.newsletterButtonLabel}
-                        </span>
-                      </button>
-                    </div>
-                  </form>
-                  <h3
-                    className="feedback-newsletter white-1"
-                    data-aos="fadeIn"
-                    data-form-success
-                  >
-                    Success!
-                  </h3>
-                  <h3
-                    className="feedback-newsletter white-1"
-                    data-aos="fadeIn"
-                    data-form-error
-                  >
-                    Error, Try again!
-                  </h3>
-                </div>
-              </div>
-              <div className="container-footer-menu">
+              <Newsletter data={footerData} />
+              <div className="container-footer-menu mt-lg-165 mt-tablet-55 mt-phone-125">
                 <ul className="list-footer-menu">
-                  <li className="list-item">
-                    <button
-                      data-set-submenu="services"
-                      className="link-footer-menu"
-                    >
-                      <span>Services</span>
-                    </button>
-                  </li>
-                  {footerLinksData.slice(1, 4).map((data, index) => {
-                    const { title, link, order } = data;
-                    if (order == 1) {
-                      return (
-                        <li key={index} className="list-item">
-                          <button
-                            data-set-submenu="services"
-                            className="link-footer-menu"
-                          >
-                            <span>{title}</span>
-                          </button>
-                        </li>
-                      );
-                    } else {
-                      return (
-                        <li key={index} className="list-item">
-                          <AnimateLink to={link} className="link-footer-menu">
-                            <span>{title}</span>
-                          </AnimateLink>
-                        </li>
-                      );
-                    }
-                  })}
-
-                  {footerLinksData.slice(4, 10).map((data, index) => {
-                    const { title, link, order } = data;
-                    if (order == 7) {
-                      return (
-                        <li key={index} className="list-item">
-                          <btn-modal-open
-                            class="link-footer-menu"
-                            group="modal-contact"
-                          >
-                            <span>{title}</span>
-                          </btn-modal-open>
-                        </li>
-                      );
-                    } else {
-                      return (
-                        <li key={index} className="list-item">
-                          <AnimateLink to={link} className="link-footer-menu">
-                            <span>{title}</span>
-                          </AnimateLink>
-                        </li>
-                      );
-                    }
+                  {menu.map((item) => {
+                    return (
+                      <li key={item._id} className="list-item">
+                        <CustomButton
+                          customClasses={"link-footer-menu"}
+                          data={{
+                            label: item.title,
+                            action: item.action
+                          }}
+                        >
+                        </CustomButton>
+                      </li>
+                    )
                   })}
                   <li className="list-item item-social-media">
-                    <SocialLinks data={socialLinksData} />
+                    <ul className="list-social-media">
+                      {socialLinks.map((item, index) => (
+                        <li key={index}>
+                          <AnimateLink to={item.link} target="_blank"
+                            attributes={{
+                              "rel": "noopener noreferrer"
+                            }}>
+                            <i className={item.icon}></i>
+                          </AnimateLink>
+                        </li>
+                      ))}
+                    </ul>
                   </li>
                 </ul>
               </div>
             </div>
             <div className="container-address mt-lg-145 mt-phone-115">
-              <Addresses data={addressesData} />
+              <ul className="list-address">
+                {contactData.map((data, index) => {
+                  return (
+
+                    <li key={index}>
+                      <h3 className="city">{data && data.city}</h3>
+                      <address>
+                        {data && data.address1} <br />
+                        {data && data.address2} <br />
+                        {data && data.address3}
+                      </address>
+                      <div className="phones">
+                        <AnimateLink to={`tel:${data && data.phone1}`} target={"_blank"}>
+                          <span>{data && data.phone1}</span>
+                        </AnimateLink>
+                        <AnimateLink to={`tel:${data && data.phone2}`} target={"_blank"}>
+                          <span>{data && data.phone2}</span>
+                        </AnimateLink>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </div>
         </div>
         <div className="row row-2 mt-lg-80 mt-mobile-45">
           <div className="col-lg-12 column-1">
-            <p className="fs--14 font-2 white-1">
-              © BLUEPRINT STUDIOS. ALL RIGHTS RESERVED. - If it’s not
-              remarkable, it’s invisible is a trademark of blueprint studios.
-            </p>
+            <p className="fs--14 font-2 white-1">{footerData && footerData.copyright}</p>
           </div>
         </div>
       </div>

@@ -20,10 +20,10 @@ import {
   getLoginModalContent,
 } from "@/Services/NavbarApis";
 import {
-  getAddressesData,
-  getFooterContent,
-  getFooterLinksData,
-  getSocialLinksData,
+  getContactData,
+  getFooterData,
+  getFooterNavigationMenu,
+  getSocialLinks,
 } from "@/Services/FooterApis";
 import { getMarketsData } from "@/Services/SectionsApis";
 
@@ -37,20 +37,20 @@ export default async function RootLayout({ children }) {
     loginModalContent,
     createAccountModalContent,
     forgotPasswordModalContent,
-    footerContent,
-    footerLinksData,
-    socialLinksData,
-    addressesData,
+    footerData,
+    contactData,
+    socialLinks,
+    navigationMenu,
     marketsData,
     allCategoriesData,
   ] = await Promise.all([
     getLoginModalContent(),
     getCreateAccountModalContent(),
     getForgotPasswordModalContent(),
-    getFooterContent(),
-    getFooterLinksData(),
-    getSocialLinksData(),
-    getAddressesData(),
+    getFooterData(),
+    getContactData(),
+    getSocialLinks(),
+    getFooterNavigationMenu(),
     getMarketsData(),
     getAllCategoriesData(),
   ]);
@@ -97,12 +97,7 @@ export default async function RootLayout({ children }) {
           <CookiesConsent />
           <Wrapper>
             <main>{children}</main>
-            <Footer
-              footerContent={footerContent}
-              footerLinksData={footerLinksData}
-              socialLinksData={socialLinksData}
-              addressesData={addressesData}
-            />
+            <Footer menu={navigationMenu} footerData={footerData} contactData={contactData} socialLinks={socialLinks} />
           </Wrapper>
           <StudiosFixedMenu />
           <CartModal />

@@ -9,16 +9,6 @@ export const AnimationFunction = () => {
   }
 };
 
-let page;
-let cleanPage;
-if (typeof window !== "undefined") {
-  page =
-    window.location.pathname.trim() === "/"
-      ? "home"
-      : window.location.pathname.substring(1);
-  cleanPage = page.split("/")[0].trim();
-}
-
 export const initAnimations = () => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
@@ -91,8 +81,10 @@ export const markPageLoaded = (watched = true) => {
 
 export const firstLoadAnimation = async () => {
   for (let i = 0; i <= 100; i++) {
-    await new Promise(resolve => setTimeout(resolve, 2));
-    if (i % 10 === 0) changeProgress(i);
+    await new Promise(resolve => setTimeout(resolve, 1));
+    if (i % 25 === 0) {
+      changeProgress(i);
+    }
   }
   document.body.dataset.load = "first-leaving";
   setTimeout(() => {

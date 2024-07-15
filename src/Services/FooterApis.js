@@ -2,18 +2,10 @@
 
 import getDataFetchFunction from "./FetchFunction";
 
-export const getFooterContent = async () => {
+export const getFooterData = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsFooter",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: null,
-      ne: null,
-      hasSome: null,
-      skip: null,
+      "dataCollectionId": "Footer"
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -21,85 +13,54 @@ export const getFooterContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
-    return [];
+    console.error("Error fetching FooterData:", error);
   }
-};
+}
 
-export const getFooterLinksData = async () => {
+export const getContactData = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsFooterLinks",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: null,
-      ne: null,
-      hasSome: null,
-      skip: null,
+      "dataCollectionId": "ContactDetails"
     });
     if (response && response._items) {
-      return response._items
-        .map((x) => x.data)
-        .sort((a, b) => a.order - b.order);
+      return response._items.map((x) => x.data);
     } else {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    console.error("Error fetching ContactDetails:", error);
     return [];
   }
-};
+}
 
-export const getSocialLinksData = async () => {
+export const getSocialLinks = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsSocialMediaLinks",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: null,
-      ne: null,
-      hasSome: null,
-      skip: null,
+      "dataCollectionId": "SocialLinks",
     });
     if (response && response._items) {
-      return response._items
-        .map((x) => x.data)
-        .sort((a, b) => a.order - b.order);
+      return response._items.map((x) => x.data).sort((a, b) => a.orderNumber - b.orderNumber);
     } else {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    console.error("Error fetching SocialLinks:", error);
     return [];
   }
-};
+}
 
-export const getAddressesData = async () => {
+export const getFooterNavigationMenu = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsAddresses",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: null,
-      ne: null,
-      hasSome: null,
-      skip: null,
+      "dataCollectionId": "FooterNavigationMenu"
     });
     if (response && response._items) {
-      return response._items
-        .map((x) => x.data)
-        .sort((a, b) => a.order - b.order);
+      return response._items.filter(x => !x.data.isHidden).map((x) => x.data).sort((a, b) => a.orderNumber - b.orderNumber);
     } else {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    console.error("Error fetching FooterNavigationMenu:", error);
     return [];
   }
-};
+}

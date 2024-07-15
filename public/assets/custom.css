@@ -35,7 +35,52 @@
         max-height: 40vh !important;
     }
 }
+
 .insta-feed::-webkit-scrollbar-thumb,
 .list-blog-lets-get-social::-webkit-scrollbar-thumb {
     cursor: pointer;
+}
+
+.container-contact.form-success:not(.formError) .form-contact {
+    opacity: 0.2;
+    pointer-events: none;
+    -webkit-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+    -moz-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+    -ms-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+    -o-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+    transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+    transition-delay: 0s;
+}
+
+.container-newsletter.form-success .form-newsletter {
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.container-newsletter.form-success .feedback-newsletter {
+    position: absolute;
+    top: 55%;
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--white-1);
+}
+
+.container-newsletter.form-success .feedback-newsletter {
+    position: absolute;
+    top: auto;
+    right: auto;
+    bottom: -3rem;
+    left: 0;
+    color: var(--white-1);
+}
+
+.container-newsletter.formError .feedback-newsletter {
+    position: absolute;
+    top: auto;
+    right: auto;
+    bottom: -3rem;
+    left: 0;
+    color: var(--white-1);
 }
