@@ -16,8 +16,8 @@ const AllCategories = ({ categoriesData }) => {
           </button>
         </div>
         <ul className="list-submenu-categories list-submenu font-submenu">
-          {categoriesData.map((data, index) => {
-            const { name, mainMedia, slug } = data.parentCollection;
+          {categoriesData.slice(6).map((data, index) => {
+            const { name, mainMedia, slug } = data.categoryName;
             return (
               <li key={index} className="list-item">
                 <AnimateLink

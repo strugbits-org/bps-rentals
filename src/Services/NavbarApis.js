@@ -78,20 +78,19 @@ export const getForgotPasswordModalContent = async () => {
 export const getAllCategoriesData = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "BPSCatalogStructure",
-      includeReferencedItems: ["parentCollection"],
-      eq: [
-        {
-          key: "hideMenu",
-          value: true,
-        },
-      ],
+      dataCollectionId: "HeaderCategoryMenu",
+      includeReferencedItems: ["categoryName"],
+      // eq: [
+      //   {
+      //     key: "hideMenu",
+      //     value: true,
+      //   },
+      // ],
     });
     if (response && response._items) {
       const categoriesData = response._items
         .map((x) => x.data)
-        .sort((a, b) => a.displayOrder - b.displayOrder);
-      // const filteredData = categoriesData.filter((x) => x.parentCollection.slug !== "all-products");
+        .sort((a, b) => a.order - b.order);
       return categoriesData;
     } else {
       throw new Error("Response does not contain _items");
