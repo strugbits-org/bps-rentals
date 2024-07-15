@@ -6,7 +6,6 @@ const Login = ({ loginModalContent }) => {
       <div className="container-sign-in">
         <div className="wrapper-form-sign-in" data-form-sign-in-container>
           <form action="/my-account" className="form-sign-in form-base">
-            <input type="hidden" name="login" value="[Login]" />
             <div className="container-input col-12">
               <label for="login-email">
                 {loginModalContent && loginModalContent.emailFieldLabel}

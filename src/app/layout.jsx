@@ -13,6 +13,7 @@ import QuoteViewModal from "@/components/Common/Modals/QuoteViewModal";
 import QuoteConfirmedModal from "@/components/Common/Modals/QuoteConfirmedModal";
 import StudiosFixedMenu from "@/components/Common/StudiosFixedMenu";
 import {
+  getAllCategoriesData,
   getCreateAccountModalContent,
   getForgotPasswordModalContent,
   getLoginModalContent,
@@ -40,6 +41,7 @@ export default async function RootLayout({ children }) {
     socialLinksData,
     addressesData,
     marketsData,
+    allCategoriesData,
   ] = await Promise.all([
     getLoginModalContent(),
     getCreateAccountModalContent(),
@@ -49,7 +51,9 @@ export default async function RootLayout({ children }) {
     getSocialLinksData(),
     getAddressesData(),
     getMarketsData(),
+    getAllCategoriesData(),
   ]);
+
   return (
     <>
       <CustomScripts />
@@ -87,6 +91,7 @@ export default async function RootLayout({ children }) {
             createAccountModalContent={createAccountModalContent}
             forgotPasswordModalContent={forgotPasswordModalContent}
             marketsData={marketsData}
+            categoriesData={allCategoriesData}
           />
           <CookiesConsent />
           <Wrapper>

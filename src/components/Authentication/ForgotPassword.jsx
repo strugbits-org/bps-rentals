@@ -7,11 +7,7 @@ const ForgotPassword = ({ forgotPasswordModalContent }) => {
             className="form-forgot-password form-base"
             data-redirect="my-account.html"
           >
-            <input
-              type="hidden"
-              name="forgot_password"
-              value="[Forgot Password]"
-            />
+            <input type="hidden" name="forgot_password" />
             <div className="container-input col-12">
               <label for="forgot-password-login-email">
                 {forgotPasswordModalContent &&

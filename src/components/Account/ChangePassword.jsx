@@ -21,7 +21,6 @@ const ChangePassword = ({ changePasswordPageContent }) => {
       >
         <div class="container-password" data-form-container>
           <form class="form-password form-password">
-            <input type="hidden" name="subject" value="[password]" />
             <div class="container-input container-input-password col-lg-12">
               <label for="login-password-old">
                 {" "}

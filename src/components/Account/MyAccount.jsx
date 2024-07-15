@@ -51,7 +51,6 @@ const MyAccount = ({ myAccountPageContent }) => {
             className="form-account form-my-account"
             data-redirect="my-account.html"
           >
-            <input type="hidden" name="subject" value="[account]" />
             <div className="container-input col-md-6">
               <label for="account-first-name">
                 {" "}
