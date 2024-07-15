@@ -27,7 +27,7 @@ const Studios = ({ content, studiosData }) => {
           <div className="col-lg-12">
             <ul className="accordion-list-studios" data-aos="d:loop">
               {studiosData &&
-                studiosData.slice(1).map((data, index) => {
+                studiosData.map((data, index) => {
                   const { cardName, cardDescription, image } = data;
                   return (
                     <li key={index} className="accordion-item">
@@ -54,9 +54,9 @@ const Studios = ({ content, studiosData }) => {
                         </div>
                         <div className="container-accordion-text">
                           <p className="accordion-text">{cardDescription}</p>
-                          <AnimateLink 
-                          to="/"
-                          // to={`/services/${data.slug}`}
+                          <AnimateLink
+                            to="/"
+                            // to={`/services/${data.slug}`}
                           >
                             <span>See more</span>
                             <i className="icon-arrow-right"></i>
