@@ -2,7 +2,7 @@ import { generateImageURL } from "@/Utils/GenerateImageURL";
 import { CustomButton } from "../CustomButton";
 
 const DreamBig = ({ content }) => {
-  console.log("content", content);
+
   return (
     <section className="section-dream-big">
       <div className="container-fluid">

@@ -61,12 +61,25 @@ export const updatedWatched = () => {
     }, 200);
   }
 };
-
+export const loadPinterest = () => {
+  if (typeof window !== 'undefined') {
+    setTimeout(() => {
+      const script = document.createElement("script");
+      script.async = true;
+      script.type = "text/javascript";
+      script.dataset.pinBuild = "doBuild";
+      script.src = "//assets.pinterest.com/js/pinit.js";
+      document.body.appendChild(script);
+      if (window.doBuild) window.doBuild();
+    }, 1000);
+  }
+};
 export const markPageLoaded = (watched = true) => {
   if (typeof window !== "undefined") {
     setTimeout(() => window.scrollTo({ top: 0 }), 200);
     initAnimations();
     if (watched) updatedWatched();
+    setTimeout(loadPinterest, 1000);
     const isFirstLoadDone = document.body.classList.contains("first-load-done");
     if (isFirstLoadDone) {
       pageLoadEnd();

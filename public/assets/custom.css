@@ -1,0 +1,41 @@
+.list-pinterest>span {
+    min-width: 100% !important;
+    max-width: 100% !important;
+    display: flex;
+}
+
+.list-pinterest>span>span:nth-child(1) {
+    display: none;
+}
+
+.list-pinterest>span>span:nth-child(3) {
+    display: none;
+}
+
+.insta-feed,
+.list-blog-lets-get-social {
+    height: 100% !important;
+    max-height: 55vh !important;
+    overflow-x: hidden;
+}
+
+.list-pinterest>span>span:nth-child(2) {
+    height: 100% !important;
+    max-height: 55vh !important;
+    width: 100%;
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1600px) {
+    .list-pinterest>span>span:nth-child(2) {
+        max-height: 40vh !important;
+    }
+
+    .insta-feed,
+    .list-blog-lets-get-social {
+        max-height: 40vh !important;
+    }
+}
+.insta-feed::-webkit-scrollbar-thumb,
+.list-blog-lets-get-social::-webkit-scrollbar-thumb {
+    cursor: pointer;
+}

@@ -29,6 +29,8 @@ export const getDataFetchFunction = async (payload) => {
       "RentalsCreateAccountModal",
       "RentalsResetPasswordModal",
       "RentalsFooter",
+      "SocialSectionDetails",
+      "BlogProductData",
       "RentalsFooterLinks",
       "RentalsSocialMediaLinks",
       "RentalsAddresses",
