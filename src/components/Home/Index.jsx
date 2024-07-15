@@ -12,6 +12,7 @@ import BannerHome from "./BannerHome";
 import BestSellersHome from "./BestSellersHome";
 
 const HomePage = ({
+  pageContent,
   heroSectionContent,
   newArrivalSectionContent,
   hotTrendsSectionContent,
@@ -29,9 +30,9 @@ const HomePage = ({
       <BannerHome content={heroSectionContent}/>
       <BestSellersHome content={heroSectionContent}/>
       <NewArrival content={newArrivalSectionContent} />
-      <Highlights />
+      <Highlights pageContent={pageContent} />
       <HotTrendsHome content={hotTrendsSectionContent} />
-      <Markets marketsData={marketsData} />
+      <Markets pageContent={pageContent} marketsData={marketsData} />
       <Studios content={studioSectionContent} studiosData={studiosData} />
       <DreamBig content={dreamBigSectionContent} />
       <LetsGetSocial />

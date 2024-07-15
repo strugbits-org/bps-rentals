@@ -1,5 +1,6 @@
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
+import { CustomButton } from "../CustomButton";
 
 export const HotTrendsHome = ({ content }) => {
   return (
@@ -41,14 +42,19 @@ export const HotTrendsHome = ({ content }) => {
             className="col-lg-5 offset-lg-1 pos-relative z-2 column-btn"
             data-aos="fadeIn .6s ease-in-out 0s, d:loop"
           >
-            <AnimateLink
-              to={`/category/${"123"}`}
-              className="btn-blue mt-lg-50 mt-mobile-20"
-              data-cursor-style="off"
+            <CustomButton
+              customClasses={"btn-blue mt-lg-50 mt-mobile-20"}
+              data={{
+                label: content.buttonLabel,
+                action: content.buttonAction
+              }}
+              attributes={{
+                "data-cursor-style": "off",
+              }}
             >
-              <span> {content && content.buttonLabel}</span>
-              <i className="icon-arrow-right"></i>
-            </AnimateLink>
+              {content && content.buttonLabel}
+
+            </CustomButton>
           </div>
         </div>
       </div>

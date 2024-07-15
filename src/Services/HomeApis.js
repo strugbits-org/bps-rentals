@@ -85,8 +85,9 @@ export const getHomeStudioSectionContent = async () => {
 export const getHomeDreamBigSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeDreamBig"
+      dataCollectionId: "DreamBigSection"
     });
+    console.log("response.......", response);
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
     } else {

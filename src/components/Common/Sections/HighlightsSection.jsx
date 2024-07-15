@@ -1,6 +1,7 @@
 import AnimateLink from "../AnimateLink";
 
-const Highlights = () => {
+const Highlights = ({pageContent}) => {
+
   return (
     <section className="section-highlights">
       <div className="container-fluid">
@@ -10,7 +11,7 @@ const Highlights = () => {
               className="fs--60 fs-phone-40 blue-1 text-center split-words"
               data-aos="d:loop"
             >
-              Highlights
+              {pageContent && pageContent.highlightsSectionTitle}
             </h2>
             <div className="slider-highlights mt-lg-95 mt-tablet-55 mt-phone-35">
               <div className="swiper-container">

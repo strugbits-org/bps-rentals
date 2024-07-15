@@ -1,7 +1,8 @@
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 
-const Markets = ({ marketsData }) => {
+const Markets = ({ pageContent, marketsData }) => {
+
   return (
     <section className="section-markets">
       <div className="container-fluid">
@@ -11,7 +12,7 @@ const Markets = ({ marketsData }) => {
               className="fs--60 fs-phone-40 blue-1 text-center split-chars"
               data-aos="d:loop"
             >
-              Markets
+              {pageContent && pageContent.marketSectionTitle}
             </h2>
           </div>
           <div className="col-12 mt-lg-50 mt-tablet-40 mt-phone-35">

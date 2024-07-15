@@ -54,7 +54,10 @@ const Studios = ({ content, studiosData }) => {
                         </div>
                         <div className="container-accordion-text">
                           <p className="accordion-text">{cardDescription}</p>
-                          <AnimateLink to="/">
+                          <AnimateLink 
+                          to="/"
+                          // to={`/services/${data.slug}`}
+                          >
                             <span>See more</span>
                             <i className="icon-arrow-right"></i>
                           </AnimateLink>

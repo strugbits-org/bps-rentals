@@ -30,6 +30,7 @@ export default async function Page() {
     getStudiosData(),
     getMarketsData(),
   ]);
+
   return (
     <HomePage
       pageContent={homePageContent}
