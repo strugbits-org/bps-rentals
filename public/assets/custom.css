@@ -84,3 +84,17 @@
     left: 0;
     color: var(--white-1);
 }
+.container-newsletter.letter-success .form-newsletter {
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.container-newsletter.letter-success .feedback-newsletter {
+    position: absolute;
+    top: 55%;
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--white-1);
+}

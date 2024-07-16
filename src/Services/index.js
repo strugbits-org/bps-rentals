@@ -2,7 +2,7 @@
 
 export const postForm = async (name, payload) => {
     try {
-      const response = await fetch(`/corporate/post-data/${name}`, {
+      const response = await fetch(`http://localhost:3000/api/post-form/${name}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
