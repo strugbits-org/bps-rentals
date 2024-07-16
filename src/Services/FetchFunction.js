@@ -97,14 +97,10 @@ export const getDataFetchFunction = async (payload) => {
       data = data.limit(50);
     }
 
-    if (
-      ne &&
-      ne.length === 2 &&
-      ne !== "null" &&
-      ne[0] !== null &&
-      ne[1] !== null
-    ) {
-      data = data.ne(ne[0], ne[1]);
+    if (ne && ne.length > 0 && ne !== "null") {
+      ne.forEach((filter) => {
+        data = data.ne(filter.key, filter.value);
+      });
     }
 
     data = await data.find();

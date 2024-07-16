@@ -9,7 +9,7 @@ export default async function Page() {
     getMarketsData(),
     fetchProducts(),
   ]);
-  console.log(products, "products>>");
+
   return (
     <CategoryPage
       pageContent={homePageContent}

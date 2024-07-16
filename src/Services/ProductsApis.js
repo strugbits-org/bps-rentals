@@ -11,15 +11,13 @@ export const fetchProducts = async () => {
         "f1Members",
         "f1Collection",
       ],
-      eq: [
-        {
-          key: "isF1Exclusive",
-          value: false,
-        },
-      ],
       ne: [
         {
           key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
           value: true,
         },
       ],
@@ -29,7 +27,7 @@ export const fetchProducts = async () => {
 
     const response = await getDataFetchFunction(payload);
     if (response && response._items) {
-      return response._items.map((x) => x.data).slice(20, 26);
+      return response._items.map((x) => x.data);
     } else {
       throw new Error("Response does not contain _items");
     }

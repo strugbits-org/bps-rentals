@@ -81,7 +81,7 @@ const ProductCard = ({
                         w: "218",
                         h: "218",
                         fit: "fill",
-                        q: "95",
+                        q: "20",
                       })}
                       className=" "
                     />
@@ -116,7 +116,7 @@ const ProductCard = ({
                             w: "22",
                             h: "22",
                             fit: "fill",
-                            q: "95",
+                            q: "75",
                           })}
                           data-preload
                           className="media"
