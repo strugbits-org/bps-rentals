@@ -86,6 +86,7 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
     "F1CategoriesStructure",
     "BPSCatalogStructure",
     "HeaderCategoryMenu",
+    "locationFilteredVariant",
   ];
 
   // Allow unauthenticated access for certain collections
