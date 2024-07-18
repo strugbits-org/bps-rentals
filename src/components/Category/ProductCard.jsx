@@ -1,4 +1,4 @@
-import { generateImageURL } from "@/Utils/GenerateImageURL";
+import { generateImageURL, productImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
 import React from "react";
 
@@ -76,12 +76,12 @@ const ProductCard = ({
                     data-default-product-link-active={index === 0}
                   >
                     <img
-                      src={generateImageURL({
+                      src={productImageURL({
                         wix_url: defaultVariantImage,
-                        w: "218",
-                        h: "218",
+                        w: "346",
+                        h: "346",
                         fit: "fill",
-                        q: "20",
+                        q: "80",
                       })}
                       className=" "
                     />
@@ -111,12 +111,12 @@ const ProductCard = ({
                     >
                       <div className="container-img">
                         <img
-                          src={generateImageURL({
+                          src={productImageURL({
                             wix_url: selVariantData.variant.imageSrc,
                             w: "22",
                             h: "22",
                             fit: "fill",
-                            q: "75",
+                            q: "90",
                           })}
                           data-preload
                           className="media"

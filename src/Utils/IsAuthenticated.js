@@ -64,6 +64,7 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
     "RentalsHomeHotTrends",
     "RentalsHomeDreamBig",
     "Footer",
+    "colorFilterCache",
     "ContactDetails",
     "SocialLinks",
     "ContactUsContent",

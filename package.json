@@ -12,6 +12,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@wix/data": "^1.0.121",
     "@wix/ecom": "^1.0.646",
+    "@wix/forms": "^1.0.102",
     "@wix/members": "^1.0.89",
     "@wix/sdk": "^1.12.0",
     "instafeed-node-js": "^0.1.4",

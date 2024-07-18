@@ -7,6 +7,7 @@ import { HotTrendsCategory } from "../Common/Sections/HotTrendsSection";
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import ProductCard from "./ProductCard";
 import { BannerOurTeam } from "../Common/Sections/BannerOurTeam";
+import { fetchFilteredProducts } from "@/Services/ProductsApis";
 
 const categoryFilter = [
   "All",
@@ -21,31 +22,14 @@ const categoryFilter = [
   "Lighting",
 ].map((name) => ({ name, href: "/products" }));
 
-const productColors = [
-  "Black",
-  "Brown",
-  "Gold",
-  "Grey",
-  "Pink",
-  "Red",
-  "White",
-  "Yellow",
-  "Multicolor",
-];
-const CategoryPage = ({ pageContent, marketsData, products }) => {
+const CategoryPage = ({ pageContent, marketsData, colorsData, categoriesData, selectedCategoryData, products }) => {
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [totalCount, setTotalCount] = useState(products.totalCount);
+  const pageSize = 18;
+  console.log("products count", totalCount);
+  console.log("products count", products.items.length);
+  console.log("categories data", categoriesData);
 
-  // console.log("products", products);
-  console.log("products", products.length);
-  const pageSize = 6;
-  const [filteredProducts, setFilteredProducts] = useState(products);
-  const [pageLimit, setPageLimit] = useState(pageSize);
-
-
-  useEffect(() => {
-    setTimeout(() => {
-      markPageLoaded();
-    }, 1000);
-  }, []);
   const [selectedVariants, setSelectedVariants] = useState({});
 
   const handleVariantSelection = (productIndex, variant) => {
@@ -62,54 +46,84 @@ const CategoryPage = ({ pageContent, marketsData, products }) => {
     }));
   };
 
+  const handleSeeMore = async () => {
+    const categoryId = selectedCategoryData?.parentCollection?._id || selectedCategoryData?._id;
+    const response = await fetchFilteredProducts({ pageSize, skip: filteredProducts.length, categories: [categoryId] });
+    console.log("response111111", response);
+    setFilteredProducts((prev) => [
+      ...prev,
+      ...response.items,
+    ]);
+    updatedWatched();
+  };
+
+  const setInitialValues = () => {
+    console.log("setInitialValues");
+    setFilteredProducts(products.items);
+    setTotalCount(products.totalCount);
+  }
+
+  useEffect(() => {
+    setInitialValues();
+    markPageLoaded();
+  }, []);
+
   return (
     <>
       <section className="section-category-content section-category-fixed-pin">
         <div className="container-fluid">
           <div className="row pos-relative">
-            <div className="col-12">
-              <h1
-                className="d-block section-category-title fs--60 fw-600 pb-lg-50 pb-tablet-20 pb-phone-30 split-words"
-                data-aos
-              >
-                Chairs
-              </h1>
-            </div>
-            <div className="col-12 col-tablet-6 z-6">
-              <div className="container-category-filter pb-lg-60 pb-mobile-40">
-                <div
-                  className="blog-tags dropdown-tags"
-                  data-parent-tag
-                  data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                >
-                  <button
-                    className="btn-tag-mobile no-desktop"
-                    data-set-tag="blog"
+            {selectedCategoryData && (
+              <>
+                <div className="col-12">
+                  <h1
+                    className="d-block section-category-title fs--60 fw-600 pb-lg-50 pb-tablet-20 pb-phone-30 split-words"
+                    data-aos
                   >
-                    <span>All Categories</span>
-                    <i className="icon-arrow-down"></i>
-                  </button>
-                  <div className="list-dropdown" data-get-tag="blog">
-                    <div className="container-wrapper-list">
-                      <div className="wrapper-list">
-                        <ul className="list-blog-tags list-dropdown-tags">
-                          {[...Array(7)].map((_, index) => (
-                            <li key={index}>
-                              <AnimateLink
-                                to={`/category/${index || "123"}`}
-                                className="blog-btn-tag"
-                              >
-                                <span>Accent Chairs</span>
-                              </AnimateLink>
-                            </li>
-                          ))}
-                        </ul>
+                    {selectedCategoryData.parentCollection ? selectedCategoryData.parentCollection.name : selectedCategoryData.name}
+                  </h1>
+                </div>
+                {selectedCategoryData.parentCollection && (
+                  <>
+                    <div className="col-12 col-tablet-6 z-6">
+                      <div className="container-category-filter pb-lg-60 pb-mobile-40">
+                        <div
+                          className="blog-tags dropdown-tags"
+                          data-parent-tag
+                          data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                        >
+                          <button
+                            className="btn-tag-mobile no-desktop"
+                            data-set-tag="blog"
+                          >
+                            <span>All Categories</span>
+                            <i className="icon-arrow-down"></i>
+                          </button>
+                          <div className="list-dropdown" data-get-tag="blog">
+                            <div className="container-wrapper-list">
+                              <div className="wrapper-list">
+                                <ul className="list-blog-tags list-dropdown-tags">
+                                  {selectedCategoryData.level2Collections.filter(x => x._id).map((item, index) => (
+                                    <li key={index}>
+                                      <AnimateLink
+                                        to={`/category/${item.slug}`}
+                                        className="blog-btn-tag"
+                                      >
+                                        <span>{item.name}</span>
+                                      </AnimateLink>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  </>
+                )}
+              </>
+            )}
             <div className="col-lg-2 col-tablet-6 z-7">
               <div
                 className="category-menu"
@@ -136,11 +150,13 @@ const CategoryPage = ({ pageContent, marketsData, products }) => {
                           styleClass="container-list order-mobile-2"
                           items={["San Francisco", "New York", "Los Angeles"]}
                         />
-                        <FilterSection
-                          title="Colors"
-                          styleClass="container-list order-mobile-1"
-                          items={productColors}
-                        />
+                        {colorsData && (
+                          <FilterSection
+                            title="Colors"
+                            styleClass="container-list order-mobile-1"
+                            items={colorsData.colors}
+                          />
+                        )}
                       </form>
                     </div>
                   </div>
@@ -151,8 +167,10 @@ const CategoryPage = ({ pageContent, marketsData, products }) => {
               <div className="product-list-wrapper container-wrapper-list">
                 <ul className="product-list grid-lg-33 grid-tablet-50 grid-list">
                   {products &&
-                    filteredProducts.slice(0, pageLimit).map((data, index) => {
+                    filteredProducts.map((data, index) => {
                       const { product, variantData } = data;
+                      const productsCount = filteredProducts;
+                      const isLastProduct = index === productsCount - 1;
                       return (
                         <>
                           <ProductCard
@@ -166,21 +184,31 @@ const CategoryPage = ({ pageContent, marketsData, products }) => {
                             handleVariantSelection={handleVariantSelection}
                             handleImageHover={handleImageHover}
                           />
-                          {(index === 8 || filteredProducts.length < 9) && <HotTrendsCategory />}
-                          {(index === 17 || filteredProducts.length < 18) && <BannerOurTeam />}
+                          {index === 5 && (
+                            <HotTrendsCategory />
+                          )}
+                          {index === 11 && (
+                            <BannerOurTeam />
+                          )}
 
                         </>
                       );
                     })}
                 </ul>
-                {pageLimit < filteredProducts.length && (
+                {filteredProducts.length === 0 && (
+                  <h6
+                    className="fs--40 text-center split-words mt-90"
+                    data-aos="d:loop"
+                  >
+                    No Products Found
+                  </h6>
+                )}
+                {/* {products.totalCount < filteredProducts.length && ( */}
+                {filteredProducts.length < totalCount && (
                   <div className="flex-center">
                     <button
                       className="btn-border-blue mt-90"
-                      onClick={() => {
-                        setPageLimit((prev) => prev + pageSize);
-                        updatedWatched();
-                      }}
+                      onClick={handleSeeMore}
                       data-aos="fadeIn .6s ease-in-out 0s, d:loop"
                     >
                       <span>See more</span>
