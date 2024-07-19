@@ -74,8 +74,24 @@ export const getForgotPasswordModalContent = async () => {
   }
 };
 
+export const getFilterLocations = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "FilterLocations",
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data);
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching FilterLocations data:", error);
+    return [];
+  }
+};
+
 //Category Apis
-export const getAllCategoriesData = async () => {
+export const getNavbarCategoriesData = async () => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "HeaderCategoryMenu",

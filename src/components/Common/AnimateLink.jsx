@@ -30,7 +30,7 @@ const AnimateLink = ({ to, children, className, target, attributes }) => {
 
   return (
     <Link
-      href={to}
+      href={to || ""}
       target={target}
       className={className}
       onClick={delayedRedirect}

@@ -32,6 +32,7 @@ export const getDataFetchFunction = async (payload) => {
       "StudiosSection",
       "MarketSection",
       "RentalsLoginModal",
+      "FilterLocations",
       "RentalsCreateAccountModal",
       "RentalsResetPasswordModal",
       "RentalsFooter",
@@ -85,6 +86,7 @@ export const getDataFetchFunction = async (payload) => {
         data = data.hasSome(filter.key, filter.values);
       });
     }
+
 
     if (skip && skip !== "null") {
       data = data.skip(skip);

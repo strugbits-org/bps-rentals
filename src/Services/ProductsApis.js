@@ -1,22 +1,8 @@
 "use server"
 import getDataFetchFunction from "./FetchFunction";
 
-export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTerm = "", categories = [], colors = [], slug = null }) => {
+export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTerm = "", categories = [], location = "NT", colors = [], slug = null }) => {
   try {
-    const hasSome = [];
-    if (categories.length !== 0) {
-      hasSome.push({
-        key: "subCategory",
-        values: categories
-      });
-    }
-    if (colors.length !== 0) {
-      hasSome.push({
-        key: "colors",
-        values: colors
-      });
-    }
-
     const payload = {
       dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: [
@@ -26,6 +12,8 @@ export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTer
         "f1Members",
         "f1Collection"
       ],
+      eq: [],
+      hasSome: [],
       ne: [
         {
           key: "hidden",
@@ -36,11 +24,33 @@ export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTer
           value: true,
         },
       ],
-      hasSome: hasSome,
       returnTotalCount: true,
       limit: pageSize,
       skip: skip,
     };
+
+
+    if (location) {
+      payload.eq.push({
+        key: "location",
+        value: location
+      });
+    }
+
+
+    if (categories.length !== 0) {
+      payload.hasSome.push({
+        key: "subCategory",
+        values: categories
+      });
+    }
+    if (colors.length !== 0) {
+      payload.hasSome.push({
+        key: "colors",
+        values: colors
+      });
+    }
+
 
     const response = await getDataFetchFunction(payload);
     if (response && response._items) {
@@ -50,6 +60,7 @@ export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTer
     }
   } catch (error) {
     console.error("Error fetching products:", error);
+    return { items: [], totalCount: 0 };
   }
 };
 export const fetchAllCategoriesData = async () => {

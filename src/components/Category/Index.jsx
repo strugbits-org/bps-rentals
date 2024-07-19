@@ -7,6 +7,7 @@ import { HotTrendsCategory } from "../Common/Sections/HotTrendsSection";
 import ProductCard from "./ProductCard";
 import { BannerOurTeam } from "../Common/Sections/BannerOurTeam";
 import { fetchFilteredProducts } from "@/Services/ProductsApis";
+import { useCookies } from "react-cookie";
 
 const categoryFilter = [
   "All",
@@ -22,11 +23,13 @@ const categoryFilter = [
 ].map((name) => ({ name, href: "/products" }));
 
 const CategoryPage = ({ pageContent, marketsData, colorsData, categoriesData, selectedCategoryData, products }) => {
+  
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [totalCount, setTotalCount] = useState();
   const [loading, setLoading] = useState(false);
+  const [cookies, setCookie] = useCookies(["location"]);
   const pageSize = 18;
-  // console.log("products total count", totalCount);
+  console.log("products total count", totalCount);
   // console.log("products count", products.items.length);
   // console.log("categories data", categoriesData);
 
@@ -66,7 +69,7 @@ const CategoryPage = ({ pageContent, marketsData, colorsData, categoriesData, se
   };
 
   const setInitialValues = () => {
-    console.log("setInitialValues");
+    // console.log("setInitialValues");
     setFilteredProducts(products.items);
     setTotalCount(products.totalCount);
   }
@@ -77,6 +80,11 @@ const CategoryPage = ({ pageContent, marketsData, colorsData, categoriesData, se
       markPageLoaded();
     }, 200);
   }, []);
+
+  // useEffect(() => {
+  //   console.log("HEllllllllllloooooooooooooooooooooo", cookies.location);
+  // }, [cookies])
+  
 
   return (
     <>

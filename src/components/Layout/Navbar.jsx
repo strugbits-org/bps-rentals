@@ -5,9 +5,10 @@ import AllCategories from "../Category/AllCategories";
 import AnimateLink from "../Common/AnimateLink";
 import SearchModal from "../Common/Modals/SearchModal";
 import MarketModal from "../Common/Modals/MarketModal";
-import { getCategorySlug } from "@/Utils/Utils";
+import { LocationsFilter } from "../Common/LocationsFilter";
 
 const Navbar = ({
+  locations,
   loginModalContent,
   createAccountModalContent,
   forgotPasswordModalContent,
@@ -39,25 +40,7 @@ const Navbar = ({
                   <i className="icon-logo"></i>
                 </AnimateLink>
                 <ul className="header-info-list no-desktop">
-                  <li className="local-item accordion-item">
-                    <div className="accordion-header">
-                      <i className="icon-pin"></i>
-                      <span>National</span>
-                    </div>
-                    <div className="accordion-content">
-                      <ul>
-                        {["San Francisco", "Las Vegas", "Nacional"].map(
-                          (data, index) => {
-                            return (
-                              <li key={index}>
-                                <AnimateLink to="/#">{data}</AnimateLink>
-                              </li>
-                            );
-                          }
-                        )}
-                      </ul>
-                    </div>
-                  </li>
+                  <LocationsFilter locations={locations} />
                   <li className="search-item no-mobile">
                     <button
                       className="link-search"
@@ -214,25 +197,7 @@ const Navbar = ({
                     </li>
                   </ul>
                   <ul className="header-info-list no-mobile">
-                    <li className="local-item accordion-item">
-                      <div className="accordion-header">
-                        <i className="icon-pin"></i>
-                        <span>National</span>
-                      </div>
-                      <div className="accordion-content">
-                        <ul>
-                          {["San Francisco", "Las Vegas", "Nacional"].map(
-                            (data, index) => {
-                              return (
-                                <li key={index}>
-                                  <AnimateLink to="/#">{data}</AnimateLink>
-                                </li>
-                              );
-                            }
-                          )}
-                        </ul>
-                      </div>
-                    </li>
+                    <LocationsFilter locations={locations} />
                     <li className="search-item no-mobile">
                       <button
                         className="link-search"

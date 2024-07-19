@@ -14,10 +14,11 @@ import QuoteViewModal from "@/components/Common/Modals/QuoteViewModal";
 import QuoteConfirmedModal from "@/components/Common/Modals/QuoteConfirmedModal";
 import StudiosFixedMenu from "@/components/Common/StudiosFixedMenu";
 import {
-  getAllCategoriesData,
+  getNavbarCategoriesData,
   getCreateAccountModalContent,
   getForgotPasswordModalContent,
   getLoginModalContent,
+  getFilterLocations,
 } from "@/Services/NavbarApis";
 import {
   getContactData,
@@ -37,6 +38,7 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   const [
+    filterLocations,
     loginModalContent,
     createAccountModalContent,
     forgotPasswordModalContent,
@@ -51,6 +53,7 @@ export default async function RootLayout({ children }) {
     socialSectionBlogs,
     instaFeed
   ] = await Promise.all([
+    getFilterLocations(),
     getLoginModalContent(),
     getCreateAccountModalContent(),
     getForgotPasswordModalContent(),
@@ -60,7 +63,7 @@ export default async function RootLayout({ children }) {
     getFooterNavigationMenu(),
     getContactUsContent(),
     getMarketsData(),
-    getAllCategoriesData(),
+    getNavbarCategoriesData(),
     getSocialSectionDetails(),
     getSocialSectionBlogs(),
     fetchInstaFeed(),
@@ -99,6 +102,7 @@ export default async function RootLayout({ children }) {
           <span className="stickyAnimationTrigger d-none"></span>
           <Loader />
           <Navbar
+            locations={filterLocations}
             loginModalContent={loginModalContent}
             createAccountModalContent={createAccountModalContent}
             forgotPasswordModalContent={forgotPasswordModalContent}

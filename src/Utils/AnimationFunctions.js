@@ -155,3 +155,9 @@ export const getPageName = () => {
     return page.split("/")[0].trim();
   }
 };
+export const closeLocationsDropdown = () => {
+  if (typeof window !== "undefined") {
+    const activeDropdown = document.querySelector(".accordion-item.active .accordion-header.custom-close");
+    if (activeDropdown) activeDropdown.click();
+  }
+};
