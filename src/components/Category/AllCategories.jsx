@@ -17,11 +17,12 @@ const AllCategories = ({ categoriesData }) => {
         </div>
         <ul className="list-submenu-categories list-submenu font-submenu">
           {categoriesData.slice(6).map((data, index) => {
-            const { name, mainMedia, slug } = data.categoryName;
+            const { name, mainMedia } = data.categoryName;
+            const slug = data.categoryName['link-copy-of-category-name-2'];
             return (
               <li key={index} className="list-item">
                 <AnimateLink
-                  to={`/category/${slug}`}
+                  to={slug}
                   className="category-link"
                   data-cursor-style="view"
                   data-menu-close

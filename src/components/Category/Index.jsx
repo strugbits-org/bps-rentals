@@ -4,7 +4,6 @@ import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
 import Markets from "../Common/Sections/MarketSection";
 import AnimateLink from "../Common/AnimateLink";
 import { HotTrendsCategory } from "../Common/Sections/HotTrendsSection";
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import ProductCard from "./ProductCard";
 import { BannerOurTeam } from "../Common/Sections/BannerOurTeam";
 import { fetchFilteredProducts } from "@/Services/ProductsApis";
@@ -24,11 +23,12 @@ const categoryFilter = [
 
 const CategoryPage = ({ pageContent, marketsData, colorsData, categoriesData, selectedCategoryData, products }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [totalCount, setTotalCount] = useState(products.totalCount);
+  const [totalCount, setTotalCount] = useState();
+  const [loading, setLoading] = useState(false);
   const pageSize = 18;
-  console.log("products count", totalCount);
-  console.log("products count", products.items.length);
-  console.log("categories data", categoriesData);
+  // console.log("products total count", totalCount);
+  // console.log("products count", products.items.length);
+  // console.log("categories data", categoriesData);
 
   const [selectedVariants, setSelectedVariants] = useState({});
 
@@ -47,14 +47,22 @@ const CategoryPage = ({ pageContent, marketsData, colorsData, categoriesData, se
   };
 
   const handleSeeMore = async () => {
-    const categoryId = selectedCategoryData?.parentCollection?._id || selectedCategoryData?._id;
-    const response = await fetchFilteredProducts({ pageSize, skip: filteredProducts.length, categories: [categoryId] });
-    console.log("response111111", response);
-    setFilteredProducts((prev) => [
-      ...prev,
-      ...response.items,
-    ]);
-    updatedWatched();
+    try {
+      setLoading(true);
+      const categoryId = selectedCategoryData?.parentCollection?._id || selectedCategoryData?._id;
+      if (!categoryId) throw "category id is not defined";
+      const response = await fetchFilteredProducts({ pageSize, skip: filteredProducts.length, categories: [categoryId] });
+      setFilteredProducts((prev) => [
+        ...prev,
+        ...response.items,
+      ]);
+      setTotalCount(response.totalCount);
+      updatedWatched();
+    } catch (error) {
+      console.log("error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const setInitialValues = () => {
@@ -65,7 +73,9 @@ const CategoryPage = ({ pageContent, marketsData, colorsData, categoriesData, se
 
   useEffect(() => {
     setInitialValues();
-    markPageLoaded();
+    setTimeout(() => {
+      markPageLoaded();
+    }, 200);
   }, []);
 
   return (
@@ -106,7 +116,7 @@ const CategoryPage = ({ pageContent, marketsData, colorsData, categoriesData, se
                                   {selectedCategoryData.level2Collections.filter(x => x._id).map((item, index) => (
                                     <li key={index}>
                                       <AnimateLink
-                                        to={`/category/${item.slug}`}
+                                        to={item['link-copy-of-category-name-2']}
                                         className="blog-btn-tag"
                                       >
                                         <span>{item.name}</span>
@@ -204,7 +214,7 @@ const CategoryPage = ({ pageContent, marketsData, colorsData, categoriesData, se
                   </h6>
                 )}
                 {/* {products.totalCount < filteredProducts.length && ( */}
-                {filteredProducts.length < totalCount && (
+                {filteredProducts.length < totalCount && !loading && (
                   <div className="flex-center">
                     <button
                       className="btn-border-blue mt-90"
@@ -225,24 +235,26 @@ const CategoryPage = ({ pageContent, marketsData, colorsData, categoriesData, se
   );
 };
 
-const FilterSection = ({ styleClass, title, items }) => (
-  <div className={styleClass}>
-    <h3 className="filter-title">{title}</h3>
-    <div className="list-filter">
-      {items.map((item, index) => (
-        <div key={index} className="container-checkbox list-filter-item">
-          <label className="checkbox-box">
-            <input
-              type="checkbox"
-              name={item.toLowerCase().replace(" ", "_")}
-              value={item}
-            />
-            <span className="checkmark"></span>
-            <span className="filter-tag">{item}</span>
-          </label>
-        </div>
-      ))}
+const FilterSection = ({ styleClass, title, items }) => {
+  return (
+    <div className={styleClass}>
+      <h3 className="filter-title">{title}</h3>
+      <div className="list-filter">
+        {items.map((item, index) => (
+          <div key={index} className="container-checkbox list-filter-item">
+            <label className="checkbox-box">
+              <input
+                type="checkbox"
+              // checked={item.checked || false}
+              // onChange={() => handleValueChange(item.value)}
+              />
+              <span className="checkmark"></span>
+              <span className="filter-tag">{item}</span>
+            </label>
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  )
+};
 export default CategoryPage;

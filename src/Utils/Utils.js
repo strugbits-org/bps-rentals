@@ -42,3 +42,5 @@ export const calculateTotalCartQuantity = (lineItems) => {
 export const setCookie = (key, value) => {
     document.cookie = key + "=" + value + ";";
 }
+
+export const findCategoryData = (data, slug) => (data.find(x => x.parentCollection['link-copy-of-category-name-2'] === slug) || data.find((item) => item.level2Collections.some((x) => x['link-copy-of-category-name-2'] === slug))?.level2Collections.find((x) => x['link-copy-of-category-name-2'] === slug));

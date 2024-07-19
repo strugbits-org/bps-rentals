@@ -4,9 +4,6 @@ import getDataFetchFunction from "./FetchFunction";
 export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTerm = "", categories = [], colors = [], slug = null }) => {
   try {
     const hasSome = [];
-
-    console.log("categories", categories);
-
     if (categories.length !== 0) {
       hasSome.push({
         key: "subCategory",
@@ -64,7 +61,7 @@ export const fetchAllCategoriesData = async () => {
     });
     if (response && response._items) {
       const categoriesData = response._items.map((x) => x.data);
-      const filteredData = categoriesData.filter((x) => x.parentCollection.slug !== "all-products");
+      const filteredData = categoriesData.filter((x) => x._id !== undefined && x.parentCollection.slug !== "all-products");
       return filteredData;
     } else {
       throw new Error("Response does not contain _items");

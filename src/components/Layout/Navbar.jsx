@@ -5,6 +5,7 @@ import AllCategories from "../Category/AllCategories";
 import AnimateLink from "../Common/AnimateLink";
 import SearchModal from "../Common/Modals/SearchModal";
 import MarketModal from "../Common/Modals/MarketModal";
+import { getCategorySlug } from "@/Utils/Utils";
 
 const Navbar = ({
   loginModalContent,
@@ -159,11 +160,12 @@ const Navbar = ({
                     </li>
                     {categoriesData &&
                       categoriesData.slice(0, 6).map((data, index) => {
-                        const { name, slug } = data.categoryName;
+                        const { name } = data.categoryName;
+                        const slug = data.categoryName['link-copy-of-category-name-2'];
                         return (
                           <li key={index} className="no-mobile">
                             <AnimateLink
-                              to={`/category/${slug}`}
+                              to={slug}
                               className="header-link"
                               data-menu-close
                             >
