@@ -98,3 +98,10 @@
     transform: translate(-50%, -50%);
     color: var(--white-1);
 }
+
+.capitalize {
+  text-transform: lowercase;
+}
+.capitalize:first-line {
+  text-transform: capitalize;
+}
