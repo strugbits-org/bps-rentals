@@ -21,8 +21,6 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
   const [enableLocationFilter, setEnableLocationFilter] = useState(false);
   const pageSize = 18;
 
-  console.log("products count", totalCount);
-
   const [selectedVariants, setSelectedVariants] = useState({});
 
   const handleVariantSelection = (productIndex, variant) => {
@@ -55,7 +53,7 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
       setTotalCount(response.totalCount);
       updatedWatched();
     } catch (error) {
-      console.log("error:", error);
+      console.error("Error fetching products:", error);
     } finally {
       setLoading(false);
     }
@@ -79,8 +77,8 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
       setTotalCount(response.totalCount);
       updatedWatched();
     } catch (error) {
-      console.log("error:", error);
-    } finally {
+      console.error("Error fetching more products:", error);
+   } finally {
       setLoading(false);
     }
   };
@@ -92,9 +90,8 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
 
   }
   const handleLocationChange = (data) => {
-    setCookie("location", data.value);
+    setCookie("location", data.value, { path: '/' });
   }
-
   const handleCategoryChange = (data) => {
     const updatedCategories = filterCategories.map(item => item._id === data._id ? { ...item, checked: !item.checked } : item);
     setFilterCategories(updatedCategories);
