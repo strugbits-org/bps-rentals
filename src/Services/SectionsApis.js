@@ -19,9 +19,9 @@ export const getNewArrivalSectionContent = async () => {
 
 export const getHighlightsSection = async (dataCollectionId) => {
   try {
-    const response = await getDataFetchFunction({ dataCollectionId });
+    const response = await getDataFetchFunction({ dataCollectionId, includeReferencedItems: ["product"] });
     if (response && response._items) {
-      return response._items.map((x) => x.data);
+      return response._items.map((x) => x.data).filter(x => x.product._id);
     } else {
       throw new Error("Response does not contain _items");
     }

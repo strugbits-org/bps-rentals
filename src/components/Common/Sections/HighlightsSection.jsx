@@ -1,6 +1,7 @@
+import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 
-const Highlights = ({pageContent,data}) => {
+const Highlights = ({ pageContent, data }) => {
   console.log("data", data);
 
   return (
@@ -17,7 +18,7 @@ const Highlights = ({pageContent,data}) => {
             <div className="slider-highlights mt-lg-95 mt-tablet-55 mt-phone-35">
               <div className="swiper-container">
                 <div className="swiper-wrapper">
-                  {data.map((index) => {
+                  {data && data.map((item, index) => {
                     return (
                       <div key={index} className="swiper-slide">
                         <div className="highlight-content">
@@ -57,7 +58,7 @@ const Highlights = ({pageContent,data}) => {
                             </div>
                             <AnimateLink to="/product" className="link">
                               <div className="container-top">
-                                <h2 className="product-title">Bristol Chair</h2>
+                                <h2 className="product-title">{item.product.name}</h2>
                                 <div className="container-info">
                                   <div className="dimensions">
                                     <span>24”L X 30”W X 37”H</span>
@@ -71,7 +72,13 @@ const Highlights = ({pageContent,data}) => {
                                   data-default-product-link-active
                                 >
                                   <img
-                                    src="/images/chairs/bristol-chair-color-1.webp"
+                                    src={generateImageURL({
+                                      wix_url: item.product.mainMedia,
+                                      w: "328",
+                                      h: "328",
+                                      fit: "fill",
+                                      q: "95",
+                                    })}
                                     className=" "
                                   />
                                 </div>
@@ -144,13 +151,18 @@ const Highlights = ({pageContent,data}) => {
                               <i className="icon-cart"></i>
                             </btn-modal-open>
                           </div>
-                          <AnimateLink to="/product" className="link-highlight">
+                          <AnimateLink to={`product/${item.product.slug}`} className="link-highlight">
                             <div className="container-img bg-blue-1">
                               <img
-                                src="/images/product/highlights.jpg"
+                                src={generateImageURL({
+                                  wix_url: item.featureImage,
+                                  w: "699",
+                                  h: "385",
+                                  fit: "fill",
+                                  q: "95",
+                                })}
                                 className=" "
-                                data-aos="scaleOut
-                                      .8s ease-out-cubic 0s, d:loop"
+                                data-aos="scaleOut .8s ease-out-cubic 0s, d:loop"
                               />
                             </div>
                           </AnimateLink>
