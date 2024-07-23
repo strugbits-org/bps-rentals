@@ -34,12 +34,11 @@ export const isAuthenticated = async (token) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const wixClient = await createWixClient();
-
     const memberData = await wixClient.items
       .queryDataItems({
         dataCollectionId: "membersPassword",
       })
-      .eq("userEmail", decoded?.userEmail)
+      .eq("userEmail", decoded?.email)
       .find();
 
     if (memberData._items.length === 0) {

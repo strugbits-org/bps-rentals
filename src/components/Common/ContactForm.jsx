@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import contactFormSchema from "@/Utils/schema/contact";
 import { postForm } from "@/Services/Index";
+import contactFormSchema from "@/Utils/Schema/Contact";
 
 const ContactForm = ({ data }) => {
   const [loading, setLoading] = useState(false);
