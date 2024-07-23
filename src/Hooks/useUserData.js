@@ -19,12 +19,9 @@ function useUserData() {
   return {
     signedUserData,
     id: signedUserData?._id,
-    email: signedUserData?.email,
+    email: signedUserData?.userEmail,
     firstName: signedUserData?.firstName,
     lastName: signedUserData?.lastName,
-    phone: signedUserData?.phone,
-    company: signedUserData?.company,
-    hospitalityLoc: signedUserData?.hospitalityLoc,
     memberId: signedUserData?.memberId,
   };
 }

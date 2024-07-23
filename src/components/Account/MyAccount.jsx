@@ -1,11 +1,76 @@
 "use client";
-import { useEffect } from "react";
-import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { useEffect, useState } from "react";
+import {
+  markPageLoaded,
+  pageLoadEnd,
+  pageLoadStart,
+} from "@/Utils/AnimationFunctions";
+import useUserData from "@/Hooks/useUserData";
+import { updateProfile } from "@/Services/AuthApis";
 
 const MyAccount = ({ myAccountPageContent }) => {
   useEffect(() => {
     markPageLoaded();
   }, []);
+  const { firstName, lastName, email } = useUserData();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
+  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+  });
+  const [initialData, setInitialData] = useState({
+    firstName: "",
+    lastName: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await updateProfile(formData);
+      if (response?.error) {
+        setErrorMessage(response.message);
+        setErrorMessageVisible(true);
+        return;
+      }
+      setSuccessMessageVisible(true);
+      const userData = JSON.stringify(response.member);
+      document.cookie = `userData=${encodeURIComponent(
+        userData
+      )}; expires=Thu, 01 Jan 2099 00:00:00 UTC; path=/;`;
+      setInitialData(formData);
+    } catch (error) {
+      setErrorMessage("An error occurred. Please try again.");
+      console.error("Error updating profile", error);
+    }
+  };
+
+  const discardChanges = (e) => {
+    e.preventDefault();
+    pageLoadStart();
+    setTimeout(() => {
+      setFormData(initialData);
+      pageLoadEnd();
+    }, 900);
+  };
+
+  useEffect(() => {
+    const userData = {
+      firstName: firstName || "",
+      lastName: lastName || "",
+      // phone: phone || "",
+    };
+    setFormData(userData);
+    setInitialData(userData);
+  }, [firstName, lastName]);
   return (
     <div className="wrapper-account">
       <div className="wrapper-top" data-aos="d:loop">
@@ -40,7 +105,7 @@ const MyAccount = ({ myAccountPageContent }) => {
             {" "}
             {myAccountPageContent && myAccountPageContent.loginEmailLabel}:
           </p>
-          <span className="email">gabriel@petrikor.design</span>
+          <span className="email">{email}</span>
           <p className="font-2 fs--16">
             {" "}
             {myAccountPageContent && myAccountPageContent.loginEmailMessage}
@@ -49,7 +114,7 @@ const MyAccount = ({ myAccountPageContent }) => {
         <div className="container-account" data-form-container>
           <form
             className="form-account form-my-account"
-            data-redirect="my-account.html"
+            onSubmit={handleSubmit}
           >
             <div className="container-input col-md-6">
               <label for="account-first-name">
@@ -59,9 +124,11 @@ const MyAccount = ({ myAccountPageContent }) => {
               </label>
               <input
                 id="account-first-name"
-                name="first_name"
+                name="firstName"
                 type="text"
                 placeholder="Name"
+                value={formData.firstName}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -73,9 +140,11 @@ const MyAccount = ({ myAccountPageContent }) => {
               </label>
               <input
                 id="account-last-name"
-                name="last_name"
+                name="lastName"
                 type="text"
                 placeholder="Last Name"
+                value={formData.lastName}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -88,12 +157,12 @@ const MyAccount = ({ myAccountPageContent }) => {
                 id="account-email"
                 name="email"
                 type="email"
-                placeholder="exemple@myemail.com"
-                required
+                placeholder={email}
+                disabled
               />
             </div>
             <div className="container-input col-md-6">
-              <label for="account-phone">
+              {/* <label for="account-phone">
                 {" "}
                 {myAccountPageContent &&
                   myAccountPageContent.phoneNumberFieldLabel}
@@ -103,13 +172,14 @@ const MyAccount = ({ myAccountPageContent }) => {
                 name="phone"
                 type="tel"
                 placeholder="+1 (415) 000-0000"
+                value={formData.phone}
+                onChange={handleChange}
                 required
-              />
+              /> */}
             </div>
             <div className="container-discard flex-mobile-center order-mobile-2 mt-mobile-15">
-              <a
-                href="my-account.html"
-                type=""
+              <button
+                onClick={discardChanges}
                 className="btn-1 btn-border-blue btn-small btn-discard mr-10"
               >
                 <div className="split-chars">
@@ -118,7 +188,7 @@ const MyAccount = ({ myAccountPageContent }) => {
                       myAccountPageContent.discardButtonLabel}
                   </span>
                 </div>
-              </a>
+              </button>
             </div>
             <div className="container-submit flex-mobile-center order-mobile-1">
               <button type="submit" className="bt-submit btn-2-blue w-lg-100">
@@ -130,12 +200,12 @@ const MyAccount = ({ myAccountPageContent }) => {
               </button>
             </div>
           </form>
-          <h3 data-aos="fadeIn" data-form-error>
+          {/* <h3 data-aos="fadeIn" data-form-error>
             Error, Try again!
           </h3>
           <h3 data-aos="fadeIn" data-form-success>
             Success!
-          </h3>
+          </h3> */}
         </div>
       </div>
     </div>
