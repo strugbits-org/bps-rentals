@@ -1,13 +1,77 @@
-import AnimateLink from "../Common/AnimateLink";
+"use client";
+import { useState } from "react";
 import Disclaimer from "./Disclaimer";
+import { signUpUser } from "@/Services/AuthApis";
 
 const CreateAccount = ({ createAccountModalContent }) => {
+  const [submittingForm, setSubmittingForm] = useState(false);
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (submittingForm) return;
+    setSubmittingForm(true);
+    // setErrorMessageVisible(false);
+    // setSuccessMessageVisible(false);
+
+    try {
+      const userData = {
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirm_password,
+        firstName: formData.first_name,
+        lastName: formData.last_name,
+        company: formData.company,
+        phone: formData.phone,
+        hospitalityLoc: formData.hospitality_space,
+      };
+
+      const response = await signUpUser(userData);
+      if (response?.error) {
+        setMessage(response.message);
+        setErrorMessageVisible(true);
+        return;
+      }
+      console.log(response, "response>>");
+      if (response) {
+        // setMessage("The Account is under approval");
+        // setSuccessMessageVisible(true);
+        // setErrorMessageVisible(false);
+        setFormData({
+          first_name: "",
+          last_name: "",
+          email: "",
+          password: "",
+        });
+      }
+      return response;
+    } catch (error) {
+      console.error("Error:", error);
+      // setMessage("Something Went Wrong");
+      // setSuccessMessageVisible(false);
+      // setErrorMessageVisible(true);
+    } finally {
+      setTimeout(() => {
+        setSubmittingForm(false);
+      }, 1500);
+    }
+  };
   return (
     <div className="container-create-account d-none">
       <div className="container-account" data-form-container>
         <form
           className="form-account form-create-account "
-          data-redirect="my-account.html"
+          onSubmit={handleSubmit}
         >
           <div className="container-input col-md-12">
             <label for="create-account-first-name">
@@ -19,6 +83,8 @@ const CreateAccount = ({ createAccountModalContent }) => {
               name="first_name"
               type="text"
               placeholder="Name"
+              value={formData.first_name}
+              onChange={handleChange}
               required
             />
           </div>
@@ -31,6 +97,8 @@ const CreateAccount = ({ createAccountModalContent }) => {
               id="create-account-last-name"
               name="last_name"
               type="text"
+              value={formData.last_name}
+              onChange={handleChange}
               placeholder="Last Name"
               required
             />
@@ -45,6 +113,8 @@ const CreateAccount = ({ createAccountModalContent }) => {
               name="email"
               type="email"
               placeholder="exemple@myemail.com"
+              value={formData.email}
+              onChange={handleChange}
               required
             />
           </div>
@@ -55,9 +125,11 @@ const CreateAccount = ({ createAccountModalContent }) => {
             </label>
             <input
               id="create-account-phone"
-              name="phone"
-              type="tel"
-              placeholder="+1 (415) 000-0000"
+              name="password"
+              type="password"
+              placeholder="* * * * * *"
+              value={formData.password}
+              onChange={handleChange}
               required
             />
           </div>
@@ -73,12 +145,12 @@ const CreateAccount = ({ createAccountModalContent }) => {
             </button>
           </div>
         </form>
-        <h3 data-aos="fadeIn" data-form-error>
+        {/* <h3 data-aos="fadeIn" data-form-error>
           Error, Try again!
         </h3>
         <h3 data-aos="fadeIn" data-form-success>
           Success!
-        </h3>
+        </h3> */}
       </div>
       <Disclaimer
         textClass="btn-underlined-white"

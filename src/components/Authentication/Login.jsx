@@ -1,10 +1,84 @@
+"use client";
+import { useState } from "react";
 import Disclaimer from "./Disclaimer";
+import { useCookies } from "react-cookie";
+import { signInUser } from "@/Services/AuthApis";
+import { pageLoadStart } from "@/Utils/AnimationFunctions";
+import { useRouter } from "next/navigation";
 
 const Login = ({ loginModalContent }) => {
+  const [cookies, setCookie] = useCookies(["authToken", "userData"]);
+  const [submittingForm, setSubmittingForm] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const router = useRouter();
+  const LoginUser = async (e) => {
+    e.preventDefault();
+    if (submittingForm) return;
+
+    setSubmittingForm(true);
+    // setErrorMessageVisible(false);
+    try {
+      const response = await signInUser({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log(response, "response>>>");
+      if (response?.error) {
+        // setMessage(response.message);
+        // setErrorMessageVisible(true);
+        return;
+      }
+
+      const userToken = response.jwtToken;
+      const userData = JSON.stringify(response.member);
+      setCookie("authToken", userToken, {
+        path: "/",
+        expires: new Date("2099-01-01"),
+      });
+      setCookie("userData", userData, {
+        path: "/",
+        expires: new Date("2099-01-01"),
+      });
+      console.log(userData, "userData>>");
+      const loggedIn = cookies.authToken !== undefined;
+      console.log(loggedIn, "loggedIn>>");
+      if (loggedIn) {
+        pageLoadStart();
+        router.push("/my-account");
+      }
+    } catch (error) {
+      console.log("Error during login:", error);
+      // setMessage("Invalid Credentials!");
+      // setErrorMessageVisible(true);
+    } finally {
+      setTimeout(() => {
+        setSubmittingForm(false);
+      }, 1500);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className="container-sign-in">
       <div className="container-sign-in">
-        <div className="wrapper-form-sign-in" data-form-sign-in-container>
+        <div
+          className="wrapper-form-sign-in"
+          data-form-sign-in-container
+          onSubmit={LoginUser}
+        >
           <form action="/my-account" className="form-sign-in form-base">
             <div className="container-input col-12">
               <label for="login-email">
@@ -14,6 +88,8 @@ const Login = ({ loginModalContent }) => {
                 id="login-email"
                 name="email"
                 type="email"
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="exemple@myemail.com"
                 required
               />
@@ -29,6 +105,8 @@ const Login = ({ loginModalContent }) => {
                 name="password"
                 type="password"
                 placeholder="* * * * * *"
+                value={formData.password}
+                onChange={handleChange}
                 required
               />
               <div className="toggle-password">
@@ -49,7 +127,6 @@ const Login = ({ loginModalContent }) => {
             <div className="container-submit col-12 mt-mobile-10">
               <button type="submit" className="bt-submit btn-blue w-100">
                 <span>
-                  {" "}
                   {loginModalContent && loginModalContent.signInButtonLabel}
                 </span>
               </button>
