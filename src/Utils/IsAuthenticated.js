@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
+
 import { createWixClient } from "./CreateWixClient";
 
-export const isAuthenticated = async (token, dataCollectionId) => {
+export const isAuthenticated = async (token) => {
   try {
     const unAuthCollections = [
       "PrivacyandPolicyPageContentF1",
@@ -36,9 +37,9 @@ export const isAuthenticated = async (token, dataCollectionId) => {
 
     const memberData = await wixClient.items
       .queryDataItems({
-        dataCollectionId: "F1UsersData",
+        dataCollectionId: "membersPassword",
       })
-      .eq("email", decoded?.email)
+      .eq("userEmail", decoded?.userEmail)
       .find();
 
     if (memberData._items.length === 0) {
@@ -48,7 +49,7 @@ export const isAuthenticated = async (token, dataCollectionId) => {
     const user = memberData._items[0].data;
     return user;
   } catch (error) {
-    console.error(error); // Better error handling
+    console.error(error);
     throw new Error(`Unauthorized: ${error.message}`);
   }
 };
@@ -91,9 +92,8 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
     "locationFilteredVariant",
   ];
 
-  // Allow unauthenticated access for certain collections
   if (unAuthCollections.includes(dataCollectionId)) {
-    return true; // Or some appropriate default object for unauthenticated users
+    return true;
   }
 
   if (apiKey.toString() !== process.env.APIKEY) {

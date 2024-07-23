@@ -1,10 +1,62 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { changePassword } from "@/Services/AuthApis";
 
 const ChangePassword = ({ changePasswordPageContent }) => {
-  console.log(changePasswordPageContent, "changePasswordPageContent>>>");
+  const [formData, setFormData] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
+  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const [showPassword, setShowPassword] = useState({
+    oldPassword: false,
+    newPassword: false,
+    confirmNewPassword: false,
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage("");
+
+    try {
+      if (formData.newPassword !== formData.confirmNewPassword) {
+        setErrorMessage("PASSWORDS SHOULD BE MATCHED.");
+        setErrorMessageVisible(true);
+        return;
+      }
+      const response = await changePassword({
+        oldPassword: formData.oldPassword,
+        newPassword: formData.confirmNewPassword,
+      });
+
+      console.log(response, "response>>");
+      if (response?.error) {
+        setErrorMessage(response.message);
+        setErrorMessageVisible(true);
+        return;
+      }
+      setSuccessMessageVisible(true);
+    } catch (err) {
+      setErrorMessage("An error occurred. Please try again.");
+      setErrorMessageVisible(true);
+
+      console.log("Error", err);
+    }
+  };
+
+  const togglePassword = (field) => {
+    setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
   useEffect(() => {
     markPageLoaded();
   }, []);
@@ -20,8 +72,57 @@ const ChangePassword = ({ changePasswordPageContent }) => {
         data-aos="fadeIn .8s ease-in-out .2s, d:loop"
       >
         <div class="container-password" data-form-container>
-          <form class="form-password form-password">
-            <div class="container-input container-input-password col-lg-12">
+          <form class="form-password form-password" onSubmit={handleSubmit}>
+            {[
+              {
+                label:
+                  changePasswordPageContent &&
+                  changePasswordPageContent.enterYourPasswordFieldLabel,
+                name: "oldPassword",
+                id: "login-password-old",
+              },
+              {
+                label:
+                  changePasswordPageContent &&
+                  changePasswordPageContent.enterYourNewPasswordFieldLabel,
+                name: "newPassword",
+                id: "login-password-new-1",
+              },
+              {
+                label:
+                  changePasswordPageContent &&
+                  changePasswordPageContent.confirmYourNewPasswordFieldLabel,
+                name: "confirmNewPassword",
+                id: "login-password-new-2",
+              },
+            ].map(({ label, name, id }) => (
+              <div
+                className="container-input container-input-password col-lg-12"
+                key={id}
+              >
+                <label htmlFor={id}>{label}</label>
+                <input
+                  id={id}
+                  className="password"
+                  name={name}
+                  type={showPassword[name] ? "text" : "password"}
+                  placeholder="* * * * * *"
+                  required
+                  value={formData[name]}
+                  onChange={handleChange}
+                />
+                <div
+                  onClick={() => togglePassword(name)}
+                  className={`toggle-password ${
+                    showPassword[name] ? "show" : ""
+                  }`}
+                >
+                  <i className="icon-password"></i>
+                  <i className="icon-password-hide"></i>
+                </div>
+              </div>
+            ))}
+            {/* <div class="container-input container-input-password col-lg-12">
               <label for="login-password-old">
                 {" "}
                 {changePasswordPageContent &&
@@ -75,7 +176,7 @@ const ChangePassword = ({ changePasswordPageContent }) => {
                 <i class="icon-password"></i>
                 <i class="icon-password-hide"></i>
               </div>
-            </div>
+            </div> */}
             <div class="container-submit flex-mobile-center col-lg-12 mt-lg-50">
               <button type="submit" class="btn-2-blue">
                 <span class="submit-text">

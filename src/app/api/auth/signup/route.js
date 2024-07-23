@@ -1,20 +1,13 @@
-import { createWixClient } from "@/Utils/CreateWixClient";
-import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+
+import { createWixClient } from "@/Utils/CreateWixClient";
 
 export const POST = async (req) => {
   try {
     const body = await req.json();
 
-    const {
-      email,
-      password,
-      firstName,
-      lastName,
-      company,
-      phone,
-      hospitalityLoc,
-    } = body;
+    const { email, password, firstName, lastName } = body;
 
     const wixClient = await createWixClient();
 
@@ -22,7 +15,7 @@ export const POST = async (req) => {
       .queryDataItems({
         dataCollectionId: "membersPassword",
       })
-      .eq("email", email)
+      .eq("userEmail", email)
       .find();
 
     if (memberData._items.length > 0) {
@@ -76,34 +69,28 @@ export const POST = async (req) => {
               data: {
                 firstName,
                 lastName,
-                company,
-                phone,
-                hospitalityLoc,
                 memberId: json.data.items[0]._id,
-                email,
-                password: hashedPassword,
+                userEmail: email,
+                userPassword: hashedPassword,
                 cartId: cartResponse._id,
               },
             },
           });
 
           // Email notification
-          const emailOptions = {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              contactId: "4c14f669-db2d-45c3-aa13-b69108cde0b2",
-              variables: {
-                name: `${firstName} ${lastName}`,
-                email,
-                company,
-                phone,
-                hospitalityLoc,
-              },
-            }),
-          };
+          // const emailOptions = {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          //   body: JSON.stringify({
+          //     contactId: "4c14f669-db2d-45c3-aa13-b69108cde0b2",
+          //     variables: {
+          //       name: `${firstName} ${lastName}`,
+          //       email,
+          //     },
+          //   }),
+          // };
 
           // await fetch(
           //   `${process.env.RENTALS_URL}/registerNotification`,

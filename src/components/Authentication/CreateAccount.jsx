@@ -38,8 +38,9 @@ const CreateAccount = ({ createAccountModalContent }) => {
 
       const response = await signUpUser(userData);
       if (response?.error) {
-        setMessage(response.message);
-        setErrorMessageVisible(true);
+        // setMessage(response.message);
+        // setErrorMessageVisible(true);
+        console.log(response.message, "response.message>>>");
         return;
       }
       console.log(response, "response>>");
@@ -145,12 +146,12 @@ const CreateAccount = ({ createAccountModalContent }) => {
             </button>
           </div>
         </form>
-        {/* <h3 data-aos="fadeIn" data-form-error>
+        <h3 data-aos="fadeIn" data-form-error>
           Error, Try again!
         </h3>
         <h3 data-aos="fadeIn" data-form-success>
           Success!
-        </h3> */}
+        </h3>
       </div>
       <Disclaimer
         textClass="btn-underlined-white"

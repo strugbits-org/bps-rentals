@@ -1,7 +1,8 @@
-import { createWixClient } from "@/Utils/CreateWixClient";
+import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { NextResponse } from "next/server";
+
+import { createWixClient } from "@/Utils/CreateWixClient";
 
 export const POST = async (req) => {
   try {
@@ -12,45 +13,33 @@ export const POST = async (req) => {
 
     const memberData = await wixClient.items
       .queryDataItems({
-        dataCollectionId: "F1UsersData",
+        dataCollectionId: "membersPassword",
       })
-      .eq("email", email)
+      .eq("userEmail", email)
       .find();
 
     if (memberData._items.length > 0) {
       const isMatch = await bcrypt.compare(
         password,
-        memberData._items[0]?.data?.password
+        memberData._items[0]?.data?.userPassword
       );
 
       if (isMatch) {
-        const memberBadges = await wixClient.badges.listBadgesPerMember([
-          memberData._items[0].data.memberId,
-        ]);
-        const badgeFromEnv = process.env.BADGE_ID_PROD;
+        const jwtToken = jwt.sign({ email: email }, process.env.JWT_SECRET, {
+          expiresIn: "30d",
+        });
+        delete memberData._items[0].data.password;
 
-        if (memberBadges?.memberBadgeIds[0]?.badgeIds?.includes(badgeFromEnv)) {
-          const jwtToken = jwt.sign({ email: email }, process.env.JWT_SECRET, {
-            expiresIn: "30d",
-          });
-          delete memberData._items[0].data.password;
-
-          return NextResponse.json(
-            {
-              message: "Login successful",
-              jwtToken,
-              member: {
-                ...memberData._items[0].data,
-              },
+        return NextResponse.json(
+          {
+            message: "Login successful",
+            jwtToken,
+            member: {
+              ...memberData._items[0].data,
             },
-            { status: 200 }
-          );
-        } else {
-          return NextResponse.json(
-            { message: "The account is under approval" },
-            { status: 401 }
-          );
-        }
+          },
+          { status: 200 }
+        );
       } else {
         return NextResponse.json(
           { message: "Invalid email or password" },
