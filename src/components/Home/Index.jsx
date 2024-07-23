@@ -16,7 +16,8 @@ const HomePage = ({
   heroSectionContent,
   newArrivalSectionContent,
   hotTrendsSectionContent,
-  studioSectionContent,
+  highlightsSectionData,
+  homeSectionDetails,
   dreamBigSectionContent,
   studiosData,
   marketsData
@@ -32,10 +33,10 @@ const HomePage = ({
       <BannerHome content={heroSectionContent} />
       <BestSellersHome content={heroSectionContent} />
       <NewArrival content={newArrivalSectionContent} />
-      <Highlights pageContent={pageContent} />
+      <Highlights pageContent={pageContent} data={highlightsSectionData} />
       <HotTrendsHome content={hotTrendsSectionContent} />
       <Markets pageContent={pageContent} marketsData={marketsData} />
-      <Studios content={studioSectionContent} studiosData={studiosData} />
+      <Studios content={homeSectionDetails} studiosData={studiosData} />
       <DreamBig content={dreamBigSectionContent} />
     </>
   );

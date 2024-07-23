@@ -11,7 +11,7 @@ const Studios = ({ content, studiosData }) => {
               className="fs--90 fs-tablet-40 blue-1 split-chars"
               data-aos="d:loop"
             >
-              {content && content.title}
+              {content && content.studioTitle}
             </h2>
           </div>
           <div className="col-lg-5 col-md-6 offset-lg-5 column-2">
@@ -19,7 +19,7 @@ const Studios = ({ content, studiosData }) => {
               className="fs--40 fs-mobile-18 text"
               data-aos="fadeIn .6s ease-in-out .4s, d:loop"
             >
-              {content && content.description}
+              {content && content.studioDescription}
             </p>
           </div>
         </div>

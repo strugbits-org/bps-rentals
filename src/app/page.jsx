@@ -5,15 +5,13 @@ import {
 } from "@/Services/HomeApis";
 
 import {
-  fetchInstaFeed,
   getDreamBigSectionContent,
+  getHighlightsSection,
+  getHomeSectionDetails,
   getHotTrendsSectionContent,
   getMarketsData,
   getNewArrivalSectionContent,
-  getSocialSectionBlogs,
-  getSocialSectionDetails,
   getStudiosData,
-  getStudioSectionContent,
 } from "@/Services/SectionsApis";
 
 export default async function Page() {
@@ -22,7 +20,8 @@ export default async function Page() {
     homeHeroSectionContent,
     homeNewArrivalSectionContent,
     homeHotTrendsSectionContent,
-    homeStudioSectionContent,
+    highlightsSectionData,
+    homeSectionDetails,
     homeDreamBigSectionContent,
     studiosData,
     marketsData,
@@ -31,7 +30,8 @@ export default async function Page() {
     getHomeHeroSectionContent(),
     getNewArrivalSectionContent(),
     getHotTrendsSectionContent(),
-    getStudioSectionContent(),
+    getHighlightsSection("HighlightsProducts"),
+    getHomeSectionDetails(),
     getDreamBigSectionContent(),
     getStudiosData(),
     getMarketsData()
@@ -43,7 +43,8 @@ export default async function Page() {
       heroSectionContent={homeHeroSectionContent}
       newArrivalSectionContent={homeNewArrivalSectionContent}
       hotTrendsSectionContent={homeHotTrendsSectionContent}
-      studioSectionContent={homeStudioSectionContent}
+      highlightsSectionData={highlightsSectionData}
+      homeSectionDetails={homeSectionDetails}
       dreamBigSectionContent={homeDreamBigSectionContent}
       studiosData={studiosData}
       marketsData={marketsData}

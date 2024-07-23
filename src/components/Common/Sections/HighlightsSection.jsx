@@ -1,6 +1,7 @@
 import AnimateLink from "../AnimateLink";
 
-const Highlights = ({pageContent}) => {
+const Highlights = ({pageContent,data}) => {
+  console.log("data", data);
 
   return (
     <section className="section-highlights">
@@ -16,7 +17,7 @@ const Highlights = ({pageContent}) => {
             <div className="slider-highlights mt-lg-95 mt-tablet-55 mt-phone-35">
               <div className="swiper-container">
                 <div className="swiper-wrapper">
-                  {[1, 2, 3, 4, 5, 6].map((index) => {
+                  {data.map((index) => {
                     return (
                       <div key={index} className="swiper-slide">
                         <div className="highlight-content">

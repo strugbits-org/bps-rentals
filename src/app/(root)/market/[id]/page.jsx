@@ -1,34 +1,42 @@
 import MarketPage from "@/components/Market/Index";
 import {
   getDreamBigSectionContent,
+  getHomeSectionDetails,
   getMarketsData,
+  getMarketSection,
   getNewArrivalSectionContent,
+  getPeopleReviewSliderData,
   getStudiosData,
-  getStudioSectionContent,
 } from "@/Services/SectionsApis";
 
 
-export default async function Page() {
+export default async function Page({params}) {
+  const marketSection = await getMarketSection(params.id);
+
   const [
     homeNewArrivalSectionContent,
-    homeStudioSectionContent,
+    homeSectionDetails,
     homeDreamBigSectionContent,
     studiosData,
     marketsData,
+    peopleReviewSliderData
   ] = await Promise.all([
     getNewArrivalSectionContent(),
-    getStudioSectionContent(),
+    getHomeSectionDetails(),
     getDreamBigSectionContent(),
     getStudiosData(),
     getMarketsData(),
+    getPeopleReviewSliderData()
   ]);
   return (
     <MarketPage
+      marketSection={marketSection}
       newArrivalSectionContent={homeNewArrivalSectionContent}
-      studioSectionContent={homeStudioSectionContent}
+      homeSectionDetails={homeSectionDetails}
       dreamBigSectionContent={homeDreamBigSectionContent}
       studiosData={studiosData}
       marketsData={marketsData}
+      peopleReviewSliderData={peopleReviewSliderData}
     />
   );
 }

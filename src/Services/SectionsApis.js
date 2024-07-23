@@ -17,6 +17,20 @@ export const getNewArrivalSectionContent = async () => {
   }
 };
 
+export const getHighlightsSection = async (dataCollectionId) => {
+  try {
+    const response = await getDataFetchFunction({ dataCollectionId });
+    if (response && response._items) {
+      return response._items.map((x) => x.data);
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching HomeHotTrendsSectionContent data:", error);
+    return [];
+  }
+};
+
 export const getHotTrendsSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({
@@ -33,10 +47,10 @@ export const getHotTrendsSectionContent = async () => {
   }
 };
 
-export const getStudioSectionContent = async () => {
+export const getHomeSectionDetails = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeStudios",
+      dataCollectionId: "HomeSectionDetails",
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -44,7 +58,7 @@ export const getStudioSectionContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching HomeStudioSectionContent data:", error);
+    console.error("Error fetching HomeSectionDetails:", error);
   }
 };
 
@@ -64,6 +78,23 @@ export const getDreamBigSectionContent = async () => {
   }
 };
 
+export const getPeopleReviewSliderData = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "PeopleReviewSlider",
+    });
+    if (response && response._items) {
+      return response._items
+        .map((x) => x.data)
+        .sort((a, b) => a.orderNumber - b.orderNumber);
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching StudiosData data:", error);
+    return [];
+  }
+};
 export const getStudiosData = async () => {
   try {
     const response = await getDataFetchFunction({
@@ -99,7 +130,26 @@ export const getMarketsData = async () => {
     return [];
   }
 };
+export const getMarketSection = async (slug) => {
+  try {
+    const response = await getDataFetchFunction({
+      "dataCollectionId": "MarketSection",
+      "includeReferencedItems": ["howWeDoItSections"],
+      "eq": [{
+        key: "slug",
+        value: slug
+      }],
+    });
 
+    if (response && response._items) {
+      return response._items.map((x) => x.data)[0];
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching Market Section data:", error);
+  }
+};
 
 export const getSocialSectionBlogs = async () => {
   try {

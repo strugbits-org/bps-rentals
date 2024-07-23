@@ -7,67 +7,24 @@ import DreamBig from "../Common/Sections/DreamBigSection";
 import NewArrival from "../Common/Sections/NewArrivalSection";
 import Highlights from "../Common/Sections/HighlightsSection";
 import AnimateLink from "../Common/AnimateLink";
+import PeopleReviewSlider from "../Common/Sections/PeopleReviewSlider";
+import { MarketIntroSection } from "./MarketIntroSection";
 
 const MarketPage = ({
+  marketSection,
   newArrivalSectionContent,
-  studioSectionContent,
+  homeSectionDetails,
   dreamBigSectionContent,
   studiosData,
   marketsData,
+  peopleReviewSliderData
 }) => {
   useEffect(() => {
-    setTimeout(() => {
-      markPageLoaded();
-    }, 1000);
+    markPageLoaded();
   }, []);
   return (
     <>
-      <section className="market-intro">
-        <div
-          className="container-fluid pos-relative z-5"
-          data-parallax-top
-          data-translate-y="20rem"
-        >
-          <div className="row">
-            <div className="col-lg-6 offset-lg-3 column-1 white-1">
-              <div className="container-text text-center">
-                <h1
-                  className="fs--90 fs-mobile-60 split-chars"
-                  data-aos="d:loop"
-                >
-                  Wedding Best Sellers
-                </h1>
-                <p
-                  className="fs--40 fs-tablet-40 text text-center mt-lg-10 mt-lg-20 mt-tablet-35 mt-phone-10"
-                  data-aos="fadeInUp .8s ease-out-cubic .5s, d:loop"
-                >
-                  Take a look at our exceptional products and start shopping
-                  today!
-                </p>
-                <div
-                  className="container-arrow no-mobile"
-                  data-aos="fadeIn .6s ease-in-out .2s, d:loop"
-                >
-                  <i className="icon-arrow-down-2"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          className="container-img bg-blue-2"
-          data-parallax-top
-          data-translate-y="20rem"
-          data-scale="1.2"
-        >
-          <img
-            src="/images/market/market-intro.jpg"
-            className=" "
-            data-aos="scaleOut
-        1.2s ease-out-cubic 0s, d:loop"
-          />
-        </div>
-      </section>
+      <MarketIntroSection data={marketSection} />
       <section className="market-products pb-lg-225 pb-tablet-100 pb-phone-170">
         <div className="container-fluid">
           <div className="row">
@@ -271,99 +228,9 @@ const MarketPage = ({
         </div>
       </section>
 
-      <section className="market-heres-what-people-are-saying pt-lg-300 pt-tablet-105 pt-phone-145 pb-lg-130 pb-tablet-100 pb-phone-145 pos-relative">
-        <div className="container-fluid pos-relative z-3">
-          <div className="row">
-            <div className="col-lg-6 offset-lg-3 column-1">
-              <h2
-                className="fs--80 white-1 title text-center split-words"
-                data-aos="d:loop"
-              >
-                Here’s what people are saying.
-              </h2>
-            </div>
-            <div className="col-lg-10 offset-lg-1 mt-lg-120 mt-tablet-100 mt-phone-45">
-              <div className="slider-testimony" data-aos="d:loop">
-                <div className="swiper-container">
-                  <div className="swiper-wrapper">
-                    <div className="swiper-slide">
-                      <div className="wrapper-content">
-                        <div className="container-img">
-                          <img src="/images/lib/06_desktop.jpg" className=" " />
-                        </div>
-                        <div className="container-text">
-                          <p className="testimony">
-                            We partnered with Blueprint Studios to provide our
-                            employees with a virtual halloween experience
-                            instead of hosting an in-person party this year, and
-                            our employees loved it! The VES (Virtual Exploration
-                            Space) was well built, immersive, and even
-                            challenging to get through. We will definitely be
-                            doing this again as a safe alternative to
-                            celebrating our favorite holiday!
-                          </p>
-                          <div className="container-profile">
-                            <div className="name">Jennifer Luu</div>
-                            <div className="occupation">
-                              Twitch / Global Internal Events Manager
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="swiper-slide">
-                      <div className="wrapper-content">
-                        <div className="container-img">
-                          <img src="/images/lib/06_desktop.jpg" className=" " />
-                        </div>
-                        <div className="container-text">
-                          <p className="testimony">
-                            We partnered with Blueprint Studios to provide our
-                            employees with a virtual halloween experience
-                            instead of hosting an in-person party this year, and
-                            our employees loved it! The VES (Virtual Exploration
-                            Space) was well built, immersive, and even
-                            challenging to get through. We will definitely be
-                            doing this again as a safe alternative to
-                            celebrating our favorite holiday!
-                          </p>
-                          <div className="container-profile">
-                            <div className="name">Jennifer Luu</div>
-                            <div className="occupation">
-                              Twitch / Global Internal Events Manager
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="swiper-button-prev no-mobile">
-                  <span>Back</span>
-                </div>
-                <div className="swiper-button-next no-mobile">
-                  <span>Next</span>
-                </div>
-                <div className="swiper-pagination no-mobile"></div>
-              </div>
-            </div>
-            <div className="col-lg-4 offset-lg-4 mt-lg-45 mt-tablet-90 mt-phone-25 flex-center column-btn">
-              <btn-modal-open
-                group="modal-contact"
-                class="btn-blue"
-                data-aos="fadeInUp .8s ease-out-cubic 0s, d:loop, trigger:.column-btn"
-                data-cursor-style="off"
-              >
-                <span>Let’s Craft Magic Together</span>
-                <i className="icon-arrow-right-2"></i>
-              </btn-modal-open>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      <PeopleReviewSlider data={peopleReviewSliderData} homeSectionDetails={homeSectionDetails} />
       <Markets marketsData={marketsData} />
-      <Studios content={studioSectionContent} studiosData={studiosData} />
+      <Studios content={homeSectionDetails} studiosData={studiosData} />
       <DreamBig content={dreamBigSectionContent} />
     </>
   );

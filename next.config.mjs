@@ -5,7 +5,6 @@ const nextConfig = {
       {
         source: "/api/:path*",
         destination: "http://localhost:3000/:path*",
-        // destination: "https://mern-test-server.vercel.app/:path*",
       },
     ];
   },

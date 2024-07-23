@@ -4,6 +4,7 @@ import AnimateLink from "../Common/AnimateLink";
 import Newsletter from "../Common/NewsLetter";
 import { CustomButton } from "../Common/CustomButton";
 import { usePathname } from "next/navigation";
+import { DynamicLink } from "../Common/DynamicLink";
 
 const Footer = ({ menu, footerData, contactData, socialLinks }) => {
   const pathname = usePathname();
@@ -63,14 +64,14 @@ const Footer = ({ menu, footerData, contactData, socialLinks }) => {
                   {menu.map((item) => {
                     return (
                       <li key={item._id} className="list-item">
-                        <CustomButton
+                        <DynamicLink
                           customClasses={"link-footer-menu"}
                           data={{
                             label: item.title,
-                            action: item.action
+                            action: item.rentalsAction
                           }}
                         >
-                        </CustomButton>
+                        </DynamicLink>
                       </li>
                     )
                   })}
