@@ -105,3 +105,12 @@
 .capitalize:first-line {
   text-transform: capitalize;
 }
+
+@media only screen and (min-width: 1025.1px) {
+  [data-pg=pg-my-account] #footer,
+  [data-pg=pg-my-account-saved-products] #footer,
+  [data-pg=pg-my-account-change-password] #footer,
+  [data-pg=pg-my-account-quotes-history] #footer {
+    display: block;
+  }
+}

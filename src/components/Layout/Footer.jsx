@@ -1,9 +1,17 @@
+"use client"
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
 import Newsletter from "../Common/NewsLetter";
 import { CustomButton } from "../Common/CustomButton";
+import { usePathname } from "next/navigation";
 
 const Footer = ({ menu, footerData, contactData, socialLinks }) => {
+  const pathname = usePathname();
+
+  const disabledPages = ["/my-account","/my-account-saved-products","/my-account-quotes-history","/my-account-change-password"];
+
+  if (disabledPages.includes(pathname)) return;
+
   return (
     <footer id="footer" className="footer" data-cursor-style="off">
       <div className="container-fluid">

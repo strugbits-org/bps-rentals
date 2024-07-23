@@ -7808,29 +7808,29 @@ var require_app2 = __commonJS({
     }
     function menuControls() {
       // document.addEventListener("pjax:complete", update);
-      update();
-      let menuLinks = document.querySelectorAll("[data-menu-close]");
-      menuLinks.forEach((element) => {
-        element.addEventListener("click", function () {
-          menuLinks.forEach((el) => {
-            el.classList.remove("active");
-          });
-          element.addActive();
-        });
-      });
-      function update(ev) {
-        const willget = document.querySelectorAll("[data-pg-active]");
-        const pg = document.body.dataset.pg;
-        const hash = window.location.hash;
-        willget.forEach((el) => {
-          const pga = el.dataset.pgActive.split(" ");
-          if (pga.includes(pg) || pga === hash) {
-            el.addActive();
-          } else {
-            el.removeActive();
-          }
-        });
-      }
+      // update();
+      // let menuLinks = document.querySelectorAll("[data-menu-close]");
+      // menuLinks.forEach((element) => {
+      //   element.addEventListener("click", function () {
+      //     menuLinks.forEach((el) => {
+      //       el.classList.remove("active");
+      //     });
+      //     element.addActive();
+      //   });
+      // });
+      // function update(ev) {
+      //   const willget = document.querySelectorAll("[data-pg-active]");
+      //   const pg = document.body.dataset.pg;
+      //   const hash = window.location.hash;
+      //   willget.forEach((el) => {
+      //     const pga = el.dataset.pgActive.split(" ");
+      //     if (pga.includes(pg) || pga === hash) {
+      //       el.addActive();
+      //     } else {
+      //       el.removeActive();
+      //     }
+      //   });
+      // }
     }
     const mediaSize = {
       uhd: "only screen and (min-width: 1921px)",
@@ -9665,7 +9665,7 @@ var require_app2 = __commonJS({
     if (!screen.isMobile) cursor();
     CookiesConsent();
     viewportHeight();
-    menuControls();
+    // menuControls();
     splitWords();
     splitChars();
     function closeSearch() {
