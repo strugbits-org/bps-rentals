@@ -94,6 +94,10 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
     "BPSCatalogStructure",
     "HeaderCategoryMenu",
     "locationFilteredVariant",
+    "Stores/Products",
+    "BPSPairItWith",
+    "BPSProductImages",
+    "Stores/Variants",
   ];
 
   if (unAuthCollections.includes(dataCollectionId)) {

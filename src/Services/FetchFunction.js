@@ -54,6 +54,10 @@ export const getDataFetchFunction = async (payload) => {
       "BPSCatalogStructure",
       "HeaderCategoryMenu",
       "locationFilteredVariant",
+      "Stores/Products",
+      "BPSPairItWith",
+      "BPSProductImages",
+      "Stores/Variants",
     ];
 
     const isValid = authCollections.includes(dataCollectionId);
