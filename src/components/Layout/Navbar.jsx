@@ -5,7 +5,7 @@ import AllCategories from "../Category/AllCategories";
 import AnimateLink from "../Common/AnimateLink";
 import SearchModal from "../Common/Modals/SearchModal";
 import MarketModal from "../Common/Modals/MarketModal";
-import { LocationsFilter } from "../Common/LocationsFilter";
+import LocationsFilter from "../Common/LocationsFilter";
 
 const Navbar = ({
   locations,
