@@ -4,6 +4,7 @@ import ProductCard from "@/components/Category/ProductCard";
 import { useState } from "react";
 
 const Highlights = ({ pageContent, data }) => {
+  if (data.length === 0) return;
   const [selectedVariants, setSelectedVariants] = useState({});
 
   const handleImageHover = (index, variant) => {

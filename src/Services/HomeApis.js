@@ -2,7 +2,7 @@
 
 import getDataFetchFunction from "./FetchFunction";
 
-export const getHomePageContent = async () => {
+export const getPageContentRentals = async () => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "RentalsHomeSectionsTitles"

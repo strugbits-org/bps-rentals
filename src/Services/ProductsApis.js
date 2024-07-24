@@ -62,9 +62,8 @@ export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTer
     return { items: [], totalCount: 0 };
   }
 };
-export const getBestSellerProducts = async () => {
+export const getBestSellerProducts = async (bestSeller, limit = 4, skip = 0) => {
   try {
-    const bestSeller = await fetchBestSellers();
     const response = await getDataFetchFunction({
       dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: [
@@ -72,14 +71,26 @@ export const getBestSellerProducts = async () => {
         "subCategory",
         "f1Collection"
       ],
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
       hasSome: [{
         key: "subCategory",
         values: bestSeller
       }],
-      limit: 4,
+      limit: limit,
+      returnTotalCount: true,
+      skip: skip,
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data)
+      return { items: response._items.map((x) => x.data), totalCount: response.totalCount };
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -88,11 +99,18 @@ export const getBestSellerProducts = async () => {
     return [];
   }
 };
-export const fetchBestSellers = async () => {
+export const fetchBestSellers = async (slug) => {
   try {
-    const response = await getDataFetchFunction({
+    const payload = {
       dataCollectionId: "BestSellers",
-    });
+    }
+    if (slug) {
+      payload.hasSome = [{
+        key: "slug",
+        values: [`/${slug}`]
+      }]
+    }
+    const response = await getDataFetchFunction(payload);
     if (response && response._items) {
       return response._items.map((x) => x.data.category)
     } else {
@@ -112,6 +130,16 @@ export const fetchProductsByIds = async (products) => {
         "product",
         "subCategory",
         "f1Collection"
+      ],
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
       ],
       hasSome: [{
         key: "product",

@@ -1,5 +1,5 @@
 import CategoryPage from "@/components/Category/Index";
-import { getHomePageContent } from "@/Services/HomeApis";
+import { getPageContentRentals } from "@/Services/HomeApis";
 import { getFilterLocations } from "@/Services/NavbarApis";
 import { fetchAllCategoriesData, fetchFilteredProducts, getSelectedColorsData } from "@/Services/ProductsApis";
 import { getMarketsData } from "@/Services/SectionsApis";
@@ -12,7 +12,7 @@ export default async function Page({ params }) {
   const categoryId = selectedCategoryData?.parentCollection?._id || selectedCategoryData?._id || '00000000-000000-000000-000000000001';
 
   const [homePageContent, locations, marketsData, colorsData, products] = await Promise.all([
-    getHomePageContent(),
+    getPageContentRentals(),
     getFilterLocations(),
     getMarketsData(),
     getSelectedColorsData(categoryId),

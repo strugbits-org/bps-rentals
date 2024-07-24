@@ -1,6 +1,5 @@
 "use client";
 import { useEffect } from "react";
-import { SocialSection } from "../Common/Sections/SocialSection";
 import Studios from "../Common/Sections/StudiosSection";
 import Markets from "../Common/Sections/MarketSection";
 import Highlights from "../Common/Sections/HighlightsSection";

@@ -23,10 +23,10 @@ export const getHighlightsSection = async (dataCollectionId) => {
     const response = await getDataFetchFunction({ dataCollectionId });
     if (response && response._items) {
       const items = response._items.map((x) => x.data);
-      const productIds = items.map(x => x.product);
+      const productIds = items.map(x => (x.product || x.products));
       const fullProducts = await fetchProductsByIds(productIds);
       fullProducts.forEach((fullProduct) => {
-        const matchingItem = items.find(item => item.product === fullProduct.product._id);
+        const matchingItem = items.find(item => (item.product || item.products) === fullProduct.product._id);
         if (matchingItem) {
           fullProduct.featureImage = matchingItem.featureImage;
         }
@@ -36,7 +36,7 @@ export const getHighlightsSection = async (dataCollectionId) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching HomeHotTrendsSectionContent data:", error);
+    console.error("Error fetching HighlightsSection:", error);
     return [];
   }
 };

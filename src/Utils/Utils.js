@@ -43,4 +43,8 @@ export const setCookie = (key, value) => {
     document.cookie = key + "=" + value + ";";
 }
 
+export const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 export const findCategoryData = (data, slug) => (data.find(x => x.parentCollection['link-copy-of-category-name-2'] === slug) || data.find((item) => item.level2Collections.some((x) => x['link-copy-of-category-name-2'] === slug))?.level2Collections.find((x) => x['link-copy-of-category-name-2'] === slug));
