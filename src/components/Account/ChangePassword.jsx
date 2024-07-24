@@ -1,22 +1,24 @@
 "use client";
-
 import { useEffect, useState } from "react";
+
+import ErrorModal from "../Common/Modals/ErrorModal";
+
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import { changePassword } from "@/Services/AuthApis";
 
 const ChangePassword = ({ changePasswordPageContent }) => {
-  const [formData, setFormData] = useState({
-    oldPassword: "",
-    newPassword: "",
-    confirmNewPassword: "",
-  });
-  const [errorMessage, setErrorMessage] = useState("");
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState({
     oldPassword: false,
     newPassword: false,
     confirmNewPassword: false,
+  });
+  const [formData, setFormData] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
   });
 
   const handleChange = (e) => {
@@ -39,7 +41,6 @@ const ChangePassword = ({ changePasswordPageContent }) => {
         newPassword: formData.confirmNewPassword,
       });
 
-      console.log(response, "response>>");
       if (response?.error) {
         setErrorMessage(response.message);
         setErrorMessageVisible(true);
@@ -57,72 +58,98 @@ const ChangePassword = ({ changePasswordPageContent }) => {
   const togglePassword = (field) => {
     setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
   };
+
   useEffect(() => {
     markPageLoaded();
   }, []);
+
+  useEffect(() => {
+    if (successMessageVisible) {
+      const timer = setTimeout(() => {
+        setSuccessMessageVisible(false);
+        setFormData({
+          oldPassword: "",
+          newPassword: "",
+          confirmNewPassword: "",
+        });
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessageVisible]);
   return (
-    <div class="wrapper-account">
-      <div class="wrapper-top">
-        <h1 class="fs--60 blue-1 split-words" data-aos="d:loop">
-          {changePasswordPageContent && changePasswordPageContent.title}
-        </h1>
-      </div>
-      <div
-        class="wrapper-bottom mt-lg-90 mt-tablet-25 mt-phone-35"
-        data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-      >
-        <div class="container-password" data-form-container>
-          <form class="form-password form-password" onSubmit={handleSubmit}>
-            {[
-              {
-                label:
-                  changePasswordPageContent &&
-                  changePasswordPageContent.enterYourPasswordFieldLabel,
-                name: "oldPassword",
-                id: "login-password-old",
-              },
-              {
-                label:
-                  changePasswordPageContent &&
-                  changePasswordPageContent.enterYourNewPasswordFieldLabel,
-                name: "newPassword",
-                id: "login-password-new-1",
-              },
-              {
-                label:
-                  changePasswordPageContent &&
-                  changePasswordPageContent.confirmYourNewPasswordFieldLabel,
-                name: "confirmNewPassword",
-                id: "login-password-new-2",
-              },
-            ].map(({ label, name, id }) => (
-              <div
-                className="container-input container-input-password col-lg-12"
-                key={id}
-              >
-                <label htmlFor={id}>{label}</label>
-                <input
-                  id={id}
-                  className="password"
-                  name={name}
-                  type={showPassword[name] ? "text" : "password"}
-                  placeholder="* * * * * *"
-                  required
-                  value={formData[name]}
-                  onChange={handleChange}
-                />
+    <>
+      {" "}
+      {errorMessageVisible && (
+        <ErrorModal
+          message={errorMessage}
+          setErrorMessageVisible={setErrorMessageVisible}
+        />
+      )}
+      <div class="wrapper-account">
+        <div class="wrapper-top">
+          <h1 class="fs--60 blue-1 split-words" data-aos="d:loop">
+            {changePasswordPageContent && changePasswordPageContent.title}
+          </h1>
+        </div>
+        <div
+          class="wrapper-bottom mt-lg-90 mt-tablet-25 mt-phone-35"
+          data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+        >
+          <div
+            class="container-password"
+            data-form-state={successMessageVisible ? "success" : ""}
+          >
+            <form class="form-password form-password" onSubmit={handleSubmit}>
+              {[
+                {
+                  label:
+                    changePasswordPageContent &&
+                    changePasswordPageContent.enterYourPasswordFieldLabel,
+                  name: "oldPassword",
+                  id: "login-password-old",
+                },
+                {
+                  label:
+                    changePasswordPageContent &&
+                    changePasswordPageContent.enterYourNewPasswordFieldLabel,
+                  name: "newPassword",
+                  id: "login-password-new-1",
+                },
+                {
+                  label:
+                    changePasswordPageContent &&
+                    changePasswordPageContent.confirmYourNewPasswordFieldLabel,
+                  name: "confirmNewPassword",
+                  id: "login-password-new-2",
+                },
+              ].map(({ label, name, id }) => (
                 <div
-                  onClick={() => togglePassword(name)}
-                  className={`toggle-password ${
-                    showPassword[name] ? "show" : ""
-                  }`}
+                  className="container-input container-input-password col-lg-12"
+                  key={id}
                 >
-                  <i className="icon-password"></i>
-                  <i className="icon-password-hide"></i>
+                  <label htmlFor={id}>{label}</label>
+                  <input
+                    id={id}
+                    className="password"
+                    name={name}
+                    type={showPassword[name] ? "text" : "password"}
+                    placeholder="* * * * * *"
+                    required
+                    value={formData[name]}
+                    onChange={handleChange}
+                  />
+                  <div
+                    onClick={() => togglePassword(name)}
+                    className={`toggle-password ${
+                      showPassword[name] ? "show" : ""
+                    }`}
+                  >
+                    <i className="icon-password"></i>
+                    <i className="icon-password-hide"></i>
+                  </div>
                 </div>
-              </div>
-            ))}
-            {/* <div class="container-input container-input-password col-lg-12">
+              ))}
+              {/* <div class="container-input container-input-password col-lg-12">
               <label for="login-password-old">
                 {" "}
                 {changePasswordPageContent &&
@@ -177,25 +204,26 @@ const ChangePassword = ({ changePasswordPageContent }) => {
                 <i class="icon-password-hide"></i>
               </div>
             </div> */}
-            <div class="container-submit flex-mobile-center col-lg-12 mt-lg-50">
-              <button type="submit" class="btn-2-blue">
-                <span class="submit-text">
-                  {changePasswordPageContent &&
-                    changePasswordPageContent.resetPasswordButtonLabel}
-                </span>
-                <i class="icon-arrow-right-2"></i>
-              </button>
-            </div>
-          </form>
-          <h3 data-aos="fadeIn" data-form-error>
-            Error, Try again!
-          </h3>
-          <h3 data-aos="fadeIn" data-form-success>
-            Success!
-          </h3>
+              <div class="container-submit flex-mobile-center col-lg-12 mt-lg-50">
+                <button type="submit" class="btn-2-blue">
+                  <span class="submit-text">
+                    {changePasswordPageContent &&
+                      changePasswordPageContent.resetPasswordButtonLabel}
+                  </span>
+                  <i class="icon-arrow-right-2"></i>
+                </button>
+              </div>
+            </form>
+            <h3 data-aos="fadeIn" data-form-error>
+              Error, Try again!
+            </h3>
+            <h3 data-aos="fadeIn" data-form-success>
+              Success!
+            </h3>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

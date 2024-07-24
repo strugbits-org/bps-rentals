@@ -6,7 +6,13 @@ import { signInUser } from "@/Services/AuthApis";
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
 import { useRouter } from "next/navigation";
 
-const Login = ({ loginModalContent }) => {
+const Login = ({
+  loginModalContent,
+  successMessageVisible,
+  setSuccessMessageVisible,
+  setErrorMessageVisible,
+  setMessage,
+}) => {
   const [cookies, setCookie] = useCookies(["authToken", "userData"]);
   const [submittingForm, setSubmittingForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -20,41 +26,42 @@ const Login = ({ loginModalContent }) => {
     if (submittingForm) return;
 
     setSubmittingForm(true);
-    // setErrorMessageVisible(false);
+    setErrorMessageVisible(false);
     try {
       const response = await signInUser({
         email: formData.email,
         password: formData.password,
       });
 
-      console.log(response, "response>>>");
       if (response?.error) {
-        // setMessage(response.message);
-        // setErrorMessageVisible(true);
+        setMessage(response.message);
+        setErrorMessageVisible(true);
         return;
       }
 
       const userToken = response.jwtToken;
       const userData = JSON.stringify(response.member);
+
       setCookie("authToken", userToken, {
         path: "/",
         expires: new Date("2099-01-01"),
       });
+
       setCookie("userData", userData, {
         path: "/",
         expires: new Date("2099-01-01"),
       });
-      console.log(userData, "userData>>");
+
       const loggedIn = cookies.authToken !== undefined;
-      console.log(loggedIn, "loggedIn>>");
+
       if (loggedIn) {
         pageLoadStart();
         router.push("/my-account");
       }
     } catch (error) {
       console.log("Error during login:", error);
-      // setMessage("Invalid Credentials!");
-      // setErrorMessageVisible(true);
+      setMessage("Invalid Credentials!");
+      setErrorMessageVisible(true);
     } finally {
       setTimeout(() => {
         setSubmittingForm(false);
@@ -76,7 +83,7 @@ const Login = ({ loginModalContent }) => {
       <div className="container-sign-in">
         <div
           className="wrapper-form-sign-in"
-          data-form-sign-in-container
+          // data-form-sign-in-container
           onSubmit={LoginUser}
         >
           <form action="/my-account" className="form-sign-in form-base">
@@ -109,7 +116,10 @@ const Login = ({ loginModalContent }) => {
                 onChange={handleChange}
                 required
               />
-              <div className="toggle-password">
+              <div
+                onClick={togglePassword}
+                className={`toggle-password ${showPassword ? "show" : ""}`}
+              >
                 <i className="icon-password"></i>
                 <i className="icon-password-hide"></i>
               </div>

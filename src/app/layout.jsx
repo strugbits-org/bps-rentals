@@ -79,7 +79,7 @@ export default async function RootLayout({ children }) {
           data-load="first-loading"
           className="overflow-hidden"
         >
-          <div className='external-triggers d-none'>
+          <div className="external-triggers d-none">
             <span className="initScript d-none"></span>
             <span className="closeModals d-none"></span>
             <span className="initializeCanvas d-none"></span>
@@ -115,16 +115,29 @@ export default async function RootLayout({ children }) {
           <Wrapper>
             <main>
               {children}
-              <SocialSection data={socialSectionDetails} posts={socialSectionBlogs} insta_feed={instaFeed} />
+              <SocialSection
+                data={socialSectionDetails}
+                posts={socialSectionBlogs}
+                insta_feed={instaFeed}
+              />
             </main>
-            <Footer menu={navigationMenu} footerData={footerData} contactData={contactData} socialLinks={socialLinks} />
+            <Footer
+              menu={navigationMenu}
+              footerData={footerData}
+              contactData={contactData}
+              socialLinks={socialLinks}
+            />
           </Wrapper>
           <StudiosFixedMenu />
           <CartModal />
-          <ContactUsModal contactUsContent={contactUsContent} contactData={contactData} socialLinks={socialLinks} />
+          <ContactUsModal
+            contactUsContent={contactUsContent}
+            contactData={contactData}
+            socialLinks={socialLinks}
+          />
           {/* <ContactFormModal /> */}
           <QuoteViewModal />
-          <QuoteConfirmedModal />
+          {/* <QuoteConfirmedModal /> */}
         </body>
       </html>
     </>
