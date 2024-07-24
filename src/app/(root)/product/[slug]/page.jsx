@@ -14,35 +14,37 @@ import { redirect } from "next/navigation";
 export default async function Page({ params }) {
   const { slug } = params;
 
-  const selectedProductRes = await getSelectedProductId(slug);
-  if (!selectedProductRes?.length) {
+  const res = await getSelectedProductId(slug);
+  let selectedProductId;
+  if (res?.length) {
+    selectedProductId = res[0]._id;
+  } else {
     redirect("/error");
-    return null; // Ensure early return after redirect
   }
+  let pairedProductIds;
+  let productVariantsData;
+  let dataMap;
+  if (selectedProductId) {
+    const pairIWithRes = await getPairItWithProductsId(selectedProductId);
+    pairedProductIds = pairIWithRes.map((item) => item.pairedProductId);
 
-  const selectedProductId = selectedProductRes[0]._id;
-
-  // Fetch initial product data
+    productVariantsData = await getProductVariants(selectedProductId);
+    dataMap = new Map(productVariantsData.map((item) => [item.sku, item]));
+  }
   const [
-    pairIWithRes,
-    productVariantsData,
     selectedProductDetails,
+    matchedProductsData,
     productSnapshots,
     productFound,
     categoriesData,
   ] = await Promise.all([
-    getPairItWithProductsId(selectedProductId),
-    getProductVariants(selectedProductId),
     getSelectedProductDetails(selectedProductId),
+    getPairItWithProducts(pairedProductIds),
     getProductSnapShots(selectedProductId),
     getProductFound(),
     getAllCategoriesData(),
   ]);
 
-  const pairedProductIds = pairIWithRes.map((item) => item.pairedProductId);
-
-  // Fetch matched products data and their details
-  const matchedProductsData = await getPairItWithProducts(pairedProductIds);
   const productsData = await Promise.all(
     matchedProductsData.map(async (productData) => {
       const productId = productData.product._id;
@@ -50,33 +52,26 @@ export default async function Page({ params }) {
         getProductSnapShots(productId),
         getProductVariants(productId),
       ]);
-      return {
-        ...productData,
-        productSnapshotData,
-        productVariantsData,
-      };
+      productData.productSnapshotData = productSnapshotData;
+      productData.productVariantsData = productVariantsData;
+      return productData;
     })
   );
-
-  // Filter and map variant data
-  const dataMap = new Map(productVariantsData.map((item) => [item.sku, item]));
-  const filteredVariantData = selectedProductDetails[0].variantData.filter(
-    (variant) => {
-      if (dataMap.has(variant.sku)) {
-        const dataItem = dataMap.get(variant.sku);
-        variant.variant.variantId = dataItem._id;
-        return true;
-      }
-      return false;
-    }
-  );
-
+  let filteredVariantData;
+  if (productVariantsData && selectedProductDetails) {
+    filteredVariantData = selectedProductDetails[0].variantData =
+      selectedProductDetails[0].variantData.filter((variant) => {
+        if (dataMap.has(variant.sku)) {
+          const dataItem = dataMap.get(variant.sku);
+          variant.variant.variantId = dataItem._id;
+          return true;
+        }
+        return false;
+      });
+  }
   return (
     <ProductPostPage
-      selectedProductDetails={{
-        ...selectedProductDetails[0],
-        variantData: filteredVariantData,
-      }}
+      selectedProductDetails={selectedProductDetails[0]}
       matchedProductsData={productsData}
       productSnapshots={productSnapshots}
       productFoundData={productFound}
