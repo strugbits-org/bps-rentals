@@ -6,8 +6,6 @@ import AnimateLink from "../Common/AnimateLink";
 
 export const FooterAccount = ({ footerData }) => {
     const { footerContent, contactData, socialLinks, navigationMenu } = footerData;
-    console.log("footerData", footerContent, contactData, socialLinks, navigationMenu);
-
 
     return (
         <footer className="footer footer-account d-mobile-none" data-cursor-style="off">

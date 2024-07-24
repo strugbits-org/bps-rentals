@@ -23,13 +23,6 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
 
   const [selectedVariants, setSelectedVariants] = useState({});
 
-  const handleVariantSelection = (productIndex, variant) => {
-    setSelectedVariants((prevSelectedVariants) => ({
-      ...prevSelectedVariants,
-      [productIndex]: variant,
-    }));
-  };
-
   const handleImageHover = (productIndex, variant) => {
     setSelectedVariants((prevSelectedVariants) => ({
       ...prevSelectedVariants,
@@ -78,7 +71,7 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
       updatedWatched();
     } catch (error) {
       console.error("Error fetching more products:", error);
-   } finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -240,17 +233,18 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
                       const { product, variantData } = data;
                       return (
                         <>
-                          <ProductCard
-                            key={index}
-                            index={index}
-                            product={product}
-                            variantData={variantData}
-                            selectedVariant={
-                              selectedVariants[index] || variantData[0]
-                            }
-                            handleVariantSelection={handleVariantSelection}
-                            handleImageHover={handleImageHover}
-                          />
+                          <li className="product-item grid-item" data-get-tag data-aos="d:loop">
+                            <ProductCard
+                              key={index}
+                              index={index}
+                              product={product}
+                              variantData={variantData}
+                              selectedVariant={
+                                selectedVariants[index] || variantData[0]
+                              }
+                              handleImageHover={handleImageHover}
+                            />
+                          </li>
                           {index === 5 && (
                             <HotTrendsCategory />
                           )}

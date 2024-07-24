@@ -1,5 +1,6 @@
 import { instafeed, refreshToken } from "instafeed-node-js";
 import getDataFetchFunction from "./FetchFunction";
+import { fetchProductsByIds } from "./ProductsApis";
 
 export const getNewArrivalSectionContent = async () => {
   try {
@@ -19,9 +20,18 @@ export const getNewArrivalSectionContent = async () => {
 
 export const getHighlightsSection = async (dataCollectionId) => {
   try {
-    const response = await getDataFetchFunction({ dataCollectionId, includeReferencedItems: ["product"] });
+    const response = await getDataFetchFunction({ dataCollectionId });
     if (response && response._items) {
-      return response._items.map((x) => x.data).filter(x => x.product._id);
+      const items = response._items.map((x) => x.data);
+      const productIds = items.map(x => x.product);
+      const fullProducts = await fetchProductsByIds(productIds);
+      fullProducts.forEach((fullProduct) => {
+        const matchingItem = items.find(item => item.product === fullProduct.product._id);
+        if (matchingItem) {
+          fullProduct.featureImage = matchingItem.featureImage;
+        }
+      });
+      return fullProducts.filter(x => x.product._id);
     } else {
       throw new Error("Response does not contain _items");
     }

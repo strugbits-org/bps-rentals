@@ -16,6 +16,7 @@ const HomePage = ({
   heroSectionContent,
   newArrivalSectionContent,
   hotTrendsSectionContent,
+  bestSellerProducts,
   highlightsSectionData,
   homeSectionDetails,
   dreamBigSectionContent,
@@ -31,7 +32,7 @@ const HomePage = ({
   return (
     <>
       <BannerHome content={heroSectionContent} />
-      <BestSellersHome content={heroSectionContent} />
+      <BestSellersHome products={bestSellerProducts} content={heroSectionContent} />
       <NewArrival content={newArrivalSectionContent} />
       <Highlights pageContent={pageContent} data={highlightsSectionData} />
       <HotTrendsHome content={hotTrendsSectionContent} />

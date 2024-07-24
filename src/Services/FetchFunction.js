@@ -20,6 +20,7 @@ export const getDataFetchFunction = async (payload) => {
     const authCollections = [
       "RentalsHomeHero",
       "RentalsHomeNewArrivals",
+      "BestSellers",
       "RentalsHomeStudios",
       "RentalsHomeHotTrends",
       "HighlightsProducts",

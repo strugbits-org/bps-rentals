@@ -9,7 +9,6 @@ export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTer
         "category",
         "product",
         "subCategory",
-        "f1Members",
         "f1Collection"
       ],
       eq: [],
@@ -61,6 +60,72 @@ export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTer
   } catch (error) {
     console.error("Error fetching products:", error);
     return { items: [], totalCount: 0 };
+  }
+};
+export const getBestSellerProducts = async () => {
+  try {
+    const bestSeller = await fetchBestSellers();
+    const response = await getDataFetchFunction({
+      dataCollectionId: "locationFilteredVariant",
+      includeReferencedItems: [
+        "product",
+        "subCategory",
+        "f1Collection"
+      ],
+      hasSome: [{
+        key: "subCategory",
+        values: bestSeller
+      }],
+      limit: 4,
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data)
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching products by ids:", error);
+    return [];
+  }
+};
+export const fetchBestSellers = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "BestSellers",
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data.category)
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching best seller ids:", error);
+    return [];
+  }
+};
+export const fetchProductsByIds = async (products) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "locationFilteredVariant",
+      includeReferencedItems: [
+        "category",
+        "product",
+        "subCategory",
+        "f1Collection"
+      ],
+      hasSome: [{
+        key: "product",
+        values: products
+      }],
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data)
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching products by ids:", error);
+    return [];
   }
 };
 export const fetchAllCategoriesData = async () => {

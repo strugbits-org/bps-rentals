@@ -3,6 +3,7 @@ import {
   getHomeHeroSectionContent,
   getHomePageContent,
 } from "@/Services/HomeApis";
+import { getBestSellerProducts } from "@/Services/ProductsApis";
 
 import {
   getDreamBigSectionContent,
@@ -21,6 +22,7 @@ export default async function Page() {
     homeNewArrivalSectionContent,
     homeHotTrendsSectionContent,
     highlightsSectionData,
+    bestSellerProducts,
     homeSectionDetails,
     homeDreamBigSectionContent,
     studiosData,
@@ -31,6 +33,7 @@ export default async function Page() {
     getNewArrivalSectionContent(),
     getHotTrendsSectionContent(),
     getHighlightsSection("HighlightsProducts"),
+    getBestSellerProducts(),
     getHomeSectionDetails(),
     getDreamBigSectionContent(),
     getStudiosData(),
@@ -43,6 +46,7 @@ export default async function Page() {
       heroSectionContent={homeHeroSectionContent}
       newArrivalSectionContent={homeNewArrivalSectionContent}
       hotTrendsSectionContent={homeHotTrendsSectionContent}
+      bestSellerProducts={bestSellerProducts}
       highlightsSectionData={highlightsSectionData}
       homeSectionDetails={homeSectionDetails}
       dreamBigSectionContent={homeDreamBigSectionContent}

@@ -1,9 +1,18 @@
 "use client";
-import React from 'react'
-import AnimateLink from '../Common/AnimateLink';
+import React, { useState } from 'react'
 import { CustomButton } from '../Common/CustomButton';
+import ProductCard from '../Category/ProductCard';
 
-const BestSellersHome = ({ content }) => {
+const BestSellersHome = ({ products, content }) => {
+  const [selectedVariants, setSelectedVariants] = useState({});
+
+  const handleImageHover = (index, variant) => {
+    setSelectedVariants((prevSelectedVariants) => ({
+      ...prevSelectedVariants,
+      [index]: variant,
+    }));
+  };
+
   return (
     <section className="home-best-sellers white-1" data-aos="d:loop">
       <div className="container-fluid">
@@ -43,108 +52,20 @@ const BestSellersHome = ({ content }) => {
             <div className="best-sellers-slider" data-aos>
               <div className="swiper-container">
                 <div className="swiper-wrapper">
-                  {[1, 2, 3, 4].map((index) => {
+                  {products.map((item, index) => {
+                    const { product, variantData } = item;
                     return (
                       <div key={index} className="swiper-slide">
-                        <div
-                          className="product-link large active"
-                          data-product-category
-                          data-product-location
-                          data-product-colors
-                        >
-                          <div className="container-tags">
-                            <button className="btn-bookmark">
-                              <i className="icon-bookmark"></i>
-                              <i className="icon-bookmark-full"></i>
-                            </button>
-                          </div>
-                          <AnimateLink
-                            to={`product/${index}`}
-                            className="link"
-                          >
-                            <div className="container-top">
-                              <h2 className="product-title">Bristol Chair</h2>
-                            </div>
-                            <div className="wrapper-product-img">
-                              <div
-                                className="container-img product-img"
-                                data-get-product-link-color="green"
-                                data-default-product-link-active
-                              >
-                                <img
-                                  src="/images/chairs/bristol-chair-color-1.webp"
-                                  className=" "
-                                />
-                              </div>
-                              <div
-                                className="container-img product-img"
-                                data-get-product-link-color="white"
-                              >
-                                <img
-                                  src="/images/chairs/bristol-chair-color-2.webp"
-                                  className=" "
-                                />
-                              </div>
-                              <div
-                                className="container-img product-img"
-                                data-get-product-link-color="blue"
-                              >
-                                <img
-                                  src="/images/chairs/bristol-chair-color-3.webp"
-                                  className=" "
-                                />
-                              </div>
-                            </div>
-                          </AnimateLink>
-                          <div className="container-color-options">
-                            <ul className="list-color-options">
-                              <li
-                                className="list-item"
-                                data-set-product-link-color="green"
-                                data-default-product-link-active
-                              >
-                                <div className="container-img">
-                                  <img
-                                    src="/images/chairs/bristol-chair-color-1.webp"
-                                    className=" "
-                                  />
-                                </div>
-                              </li>
-                              <li
-                                className="list-item"
-                                data-set-product-link-color="white"
-                              >
-                                <div className="container-img">
-                                  <img
-                                    src="/images/chairs/bristol-chair-color-2.webp"
-                                    className=" "
-                                  />
-                                </div>
-                              </li>
-                              <li
-                                className="list-item"
-                                data-set-product-link-color="blue"
-                              >
-                                <div className="container-img">
-                                  <img
-                                    src="/images/chairs/bristol-chair-color-3.webp"
-                                    className=" "
-                                  />
-                                </div>
-                              </li>
-                            </ul>
-                            <div className="colors-number">
-                              <span>+3</span>
-                            </div>
-                          </div>
-                          <btn-modal-open
-                            group="modal-product"
-                            class="modal-add-to-cart"
-                          >
-                            <span>Add to cart</span>
-                            <i className="icon-cart"></i>
-                          </btn-modal-open>
-                        </div>
+                        <ProductCard
+                            key={index}
+                            index={index}
+                            product={product}
+                            variantData={variantData}
+                            selectedVariant={
+                              selectedVariants[index] || variantData[0]
+                            }
+                            handleImageHover={handleImageHover}
+                          />
                       </div>
                     );
                   })}
