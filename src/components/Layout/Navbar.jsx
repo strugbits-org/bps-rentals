@@ -1,3 +1,4 @@
+"use client";
 import CreateAccount from "../Authentication/CreateAccount";
 import ForgotPassword from "../Authentication/ForgotPassword";
 import Login from "../Authentication/Login";
@@ -6,6 +7,8 @@ import AnimateLink from "../Common/AnimateLink";
 import SearchModal from "../Common/Modals/SearchModal";
 import MarketModal from "../Common/Modals/MarketModal";
 import LocationsFilter from "../Common/LocationsFilter";
+import ErrorModal from "../Common/Modals/ErrorModal";
+import { useState } from "react";
 
 const Navbar = ({
   locations,
@@ -15,8 +18,18 @@ const Navbar = ({
   marketsData,
   categoriesData,
 }) => {
+  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
+  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const [message, setMessage] = useState("Message");
+
   return (
     <>
+      {errorMessageVisible && (
+        <ErrorModal
+          message={message}
+          setErrorMessageVisible={setErrorMessageVisible}
+        />
+      )}
       <div className="cursor-wrapper" id="wrapper-cursor">
         <div>
           <span className="view text-wrapper">
@@ -144,7 +157,8 @@ const Navbar = ({
                     {categoriesData &&
                       categoriesData.slice(0, 6).map((data, index) => {
                         const { name } = data.categoryName;
-                        const slug = data.categoryName['link-copy-of-category-name-2'];
+                        const slug =
+                          data.categoryName["link-copy-of-category-name-2"];
                         return (
                           <li key={index} className="no-mobile">
                             <AnimateLink
@@ -272,9 +286,19 @@ const Navbar = ({
                       </span>
                     </div>
                     <div className="wrapper-form mt-lg-65 mt-mobile-35">
-                      <Login loginModalContent={loginModalContent} />
+                      <Login
+                        loginModalContent={loginModalContent}
+                        successMessageVisible={successMessageVisible}
+                        setSuccessMessageVisible={setSuccessMessageVisible}
+                        setErrorMessageVisible={setErrorMessageVisible}
+                        setMessage={setMessage}
+                      />
                       <CreateAccount
                         createAccountModalContent={createAccountModalContent}
+                        successMessageVisible={successMessageVisible}
+                        setSuccessMessageVisible={setSuccessMessageVisible}
+                        setErrorMessageVisible={setErrorMessageVisible}
+                        setMessage={setMessage}
                       />
                       <ForgotPassword
                         forgotPasswordModalContent={forgotPasswordModalContent}

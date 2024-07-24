@@ -19,28 +19,3 @@ export const getUserData = () => {
   }
   return null;
 };
-
-export const getUserAuth = () => {
-  const authToken = getCookie("authToken");
-  if (authToken) {
-    return authToken;
-  }
-  return null;
-};
-let authToken = null;
-export const setAuthToken = (token) => {
-  authToken = token;
-};
-
-export const getToken = () => {
-  // return authToken;
-  if (authToken) {
-    return authToken
-  } else {
-    const getTheToken = getCookie("authToken")
-    if (getTheToken) {
-      authToken = getTheToken
-    }
-    return getTheToken
-  }
-};

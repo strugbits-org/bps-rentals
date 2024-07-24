@@ -1,10 +1,18 @@
 "use client";
-import { useState } from "react";
-import Disclaimer from "./Disclaimer";
-import { signUpUser } from "@/Services/AuthApis";
+import { useEffect, useState } from "react";
 
-const CreateAccount = ({ createAccountModalContent }) => {
+import { signUpUser } from "@/Services/AuthApis";
+import Disclaimer from "./Disclaimer";
+
+const CreateAccount = ({
+  createAccountModalContent,
+  successMessageVisible,
+  setSuccessMessageVisible,
+  setErrorMessageVisible,
+  setMessage,
+}) => {
   const [submittingForm, setSubmittingForm] = useState(false);
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -21,8 +29,8 @@ const CreateAccount = ({ createAccountModalContent }) => {
     e.preventDefault();
     if (submittingForm) return;
     setSubmittingForm(true);
-    // setErrorMessageVisible(false);
-    // setSuccessMessageVisible(false);
+    setErrorMessageVisible(false);
+    setSuccessMessageVisible(false);
 
     try {
       const userData = {
@@ -38,16 +46,14 @@ const CreateAccount = ({ createAccountModalContent }) => {
 
       const response = await signUpUser(userData);
       if (response?.error) {
-        // setMessage(response.message);
-        // setErrorMessageVisible(true);
-        console.log(response.message, "response.message>>>");
+        setMessage(response.message);
+        setErrorMessageVisible(true);
         return;
       }
-      console.log(response, "response>>");
+
       if (response) {
-        // setMessage("The Account is under approval");
-        // setSuccessMessageVisible(true);
-        // setErrorMessageVisible(false);
+        setSuccessMessageVisible(true);
+        setErrorMessageVisible(false);
         setFormData({
           first_name: "",
           last_name: "",
@@ -58,18 +64,30 @@ const CreateAccount = ({ createAccountModalContent }) => {
       return response;
     } catch (error) {
       console.error("Error:", error);
-      // setMessage("Something Went Wrong");
-      // setSuccessMessageVisible(false);
-      // setErrorMessageVisible(true);
+      setMessage("Something Went Wrong");
+      setSuccessMessageVisible(false);
+      setErrorMessageVisible(true);
     } finally {
       setTimeout(() => {
         setSubmittingForm(false);
       }, 1500);
     }
   };
+
+  useEffect(() => {
+    if (successMessageVisible) {
+      const timer = setTimeout(() => {
+        setSuccessMessageVisible(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessageVisible]);
   return (
     <div className="container-create-account d-none">
-      <div className="container-account" data-form-container>
+      <div
+        className="container-account"
+        data-form-state={successMessageVisible ? "success" : ""}
+      >
         <form
           className="form-account form-create-account "
           onSubmit={handleSubmit}
