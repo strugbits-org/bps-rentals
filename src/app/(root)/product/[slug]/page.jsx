@@ -1,4 +1,7 @@
+import { redirect } from "next/navigation";
+
 import ProductPostPage from "@/components/Product/Index";
+
 import {
   getAllCategoriesData,
   getPairItWithProducts,
@@ -9,7 +12,6 @@ import {
   getSelectedProductDetails,
   getSelectedProductId,
 } from "@/Services/ProductsApis";
-import { redirect } from "next/navigation";
 
 export default async function Page({ params }) {
   const { slug } = params;
@@ -17,12 +19,11 @@ export default async function Page({ params }) {
   const selectedProductRes = await getSelectedProductId(slug);
   if (!selectedProductRes?.length) {
     redirect("/error");
-    return null; // Ensure early return after redirect
+    return null;
   }
 
   const selectedProductId = selectedProductRes[0]._id;
 
-  // Fetch initial product data
   const [
     pairIWithRes,
     productVariantsData,
@@ -41,7 +42,6 @@ export default async function Page({ params }) {
 
   const pairedProductIds = pairIWithRes.map((item) => item.pairedProductId);
 
-  // Fetch matched products data and their details
   const matchedProductsData = await getPairItWithProducts(pairedProductIds);
   const productsData = await Promise.all(
     matchedProductsData.map(async (productData) => {
@@ -58,7 +58,6 @@ export default async function Page({ params }) {
     })
   );
 
-  // Filter and map variant data
   const dataMap = new Map(productVariantsData.map((item) => [item.sku, item]));
   const filteredVariantData = selectedProductDetails[0].variantData.filter(
     (variant) => {
@@ -70,11 +69,13 @@ export default async function Page({ params }) {
       return false;
     }
   );
+
   return (
     <ProductPostPage
       selectedProductDetails={{
         ...selectedProductDetails[0],
         variantData: filteredVariantData,
+        productVariantsImages: productVariantsImages,
       }}
       matchedProductsData={productsData}
       productVariantsImages={productVariantsImages}

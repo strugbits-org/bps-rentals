@@ -1,13 +1,19 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { markPageLoaded, resetSlideIndex } from "@/Utils/AnimationFunctions";
-import SnapShots from "./SnapShotsSection";
-import MatchItWith from "./MatchItWithSection";
-import AnimateLink from "../Common/AnimateLink";
 import { useRouter } from "next/navigation";
-import { checkParameters } from "@/Utils/CheckParams";
+
+import {
+  markPageLoaded,
+  pageLoadStart,
+  resetSlideIndex,
+} from "@/Utils/AnimationFunctions";
 import { generateImageURL, productImageURL } from "@/Utils/GenerateImageURL";
+import { checkParameters } from "@/Utils/CheckParams";
+
 import Breadcrumb from "../Common/BreadCrumbData";
+import AnimateLink from "../Common/AnimateLink";
+import MatchItWith from "./MatchItWithSection";
+import SnapShots from "./SnapShotsSection";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -22,7 +28,7 @@ const ProductPostPage = ({
   const [selectedVariant, setSelectedVariant] = useState();
   const [cartQuantity, setCartQuantity] = useState(1);
   const descriptionRef = useRef(null);
-  const [buttonLabel, SetButtonLabel] = useState(false);
+  const [buttonLabel, setButtonLabel] = useState(false);
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productVariantsImages.find(
@@ -87,21 +93,22 @@ const ProductPostPage = ({
   }, [productVariantsImages, selectedProductDetails]);
 
   const productFoundRedirection = async (subCategoryId) => {
-    const queryParams = new URLSearchParams(router.query);
-    const subCategory = categoriesData.find((category) =>
-      category.level2Collections.some(
-        (x) => x._id === "c34ffd1a-a454-b995-6408-fe51d6166729"
-      )
-    );
-    if (subCategory) {
-      queryParams.set("category", subCategory.parentCollection._id);
-      queryParams.set("subCategory", subCategoryId);
-    } else {
-      queryParams.set("category", subCategoryId);
-    }
-    queryParams.delete("slug");
-    pageLoadStart();
-    router.push(`/products?${queryParams.toString()}`);
+    console.log(subCategoryId, "subCategoryId");
+    // const queryParams = new URLSearchParams(router.query);
+    // const subCategory = categoriesData.find((category) =>
+    //   category.level2Collections.some(
+    //     (x) => x._id === "c34ffd1a-a454-b995-6408-fe51d6166729"
+    //   )
+    // );
+    // if (subCategory) {
+    //   queryParams.set("category", subCategory.parentCollection._id);
+    //   queryParams.set("subCategory", subCategoryId);
+    // } else {
+    //   queryParams.set("category", subCategoryId);
+    // }
+    // queryParams.delete("slug");
+    // pageLoadStart();
+    // router.push(`/category/?${queryParams.toString()}`);
   };
 
   const seatHeightData =
@@ -163,7 +170,7 @@ const ProductPostPage = ({
 
   const updatedDescription = selectedProductDetails.product.description.replace(
     /color:#000000;/g,
-    "color:#ffffff"
+    "color:#0F41FA"
   );
 
   // const fetchSavedProducts = async () => {
@@ -366,10 +373,12 @@ const ProductPostPage = ({
                         </span>
                       </li>
                     )}
+
                     <li className="weight">
                       <span className="specs-title">Weight</span>
                       <span className="specs-text">11.5lbs</span>
                     </li>
+
                     {seatHeightData && (
                       <li class="seat-height">
                         <span class="specs-title">Seat Height</span>
@@ -484,105 +493,128 @@ const ProductPostPage = ({
                       charm.
                     </p>
                   </div>
-                  <div
-                    className="container-product-notes mt-lg-30 mt-tablet-25 mt-phone-30"
-                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                  >
-                    <div className="container-input product-notes">
-                      <label>Customize product text</label>
-                      <input
-                        name="product_notes"
-                        type="text"
-                        placeholder="Enter you text"
-                      />
-                    </div>
-                  </div>
+
+                  {selectedProductDetails &&
+                    selectedProductDetails.product.customTextFields.map(
+                      (data, index) => {
+                        const { title, mandatory } = data;
+                        return (
+                          <div
+                            key={index}
+                            className="container-product-notes mt-lg-30 mt-tablet-25 mt-phone-30"
+                            data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                          >
+                            <div className="container-input product-notes">
+                              <label>Customize product text</label>
+                              <input
+                                name="product_notes"
+                                type="text"
+                                placeholder={title}
+                                required={mandatory}
+                              />
+                            </div>
+                          </div>
+                        );
+                      }
+                    )}
                 </form>
               </div>
-              {/* {selectedProductDetails &&
-                selectedProductDetails.product.description && ( */}
-              <div
-                className="container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50"
-                data-aos=""
-              >
-                <h3 className="title-info-text split-words" data-aos="">
-                  <span>Description</span>
-                </h3>
-                <div className="wrapper-text" data-aos="fadeIn .8s ease-in-out">
-                  <div className="text">
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      Ut ultrices ipsum purus, at aliquam mauris interdum nec.
-                      Maecenas in pellentesque sapien, ut sodales augue. Sed
-                      magna lacus, scelerisque quis dui eu, tempus auctor nunc.
-                      In pulvinar sapien id mi mattis pulvinar. Vivamus lobortis
-                      nibh in blandit pulvinar. Morbi sagittis justo vitae risus
-                      tristique condimentum. Pellentesque elementum convallis
-                      dui, sed aliquet odio rhoncus sed. Cras bibendum orci a
-                      turpis vulputate dictum. Suspendisse egestas enim lacus,
-                      eget volutpat tellus vestibulum at.
-                    </p>
-                    <p>
-                      Maecenas in pellentesque sapien, ut sodales augue. Sed
-                      magna lacus, scelerisque quis dui eu, tempus auctor nunc.
-                      In pulvinar sapien id mi mattis pulvinar. Vivamus lobortis
-                      nibh in blandit pulvinar. Morbi sagittis justo vitae risus
-                      tristique condimentum. Pellentesque elementum convallis
-                      dui, sed aliquet odio rhoncus sed. Cras bibendum orci a
-                      turpis vulputate dictum. Suspendisse egestas enim lacus,
-                      eget volutpat tellus vestibulum at.
-                    </p>
+
+              {/* DESCRIPTION */}
+              {selectedProductDetails &&
+                selectedProductDetails.product.description && (
+                  <div
+                    className="container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50"
+                    data-aos=""
+                  >
+                    <h3 className="title-info-text split-words" data-aos="">
+                      <span>Description</span>
+                    </h3>
+                    <div
+                      className="wrapper-text"
+                      data-aos="fadeIn .8s ease-in-out"
+                    >
+                      <div
+                        ref={descriptionRef}
+                        class="text"
+                        dangerouslySetInnerHTML={{
+                          __html: updatedDescription,
+                        }}
+                      ></div>
+                    </div>
+                    <button
+                      className="btn-read-more"
+                      data-aos="fadeIn .8s ease-in-out"
+                      onClick={() => setButtonLabel(!buttonLabel)}
+                    >
+                      <div className="btn-text">
+                        <span
+                          className={`${
+                            buttonLabel ? "to-go-back" : "read-more"
+                          }`}
+                        >
+                          {buttonLabel ? "To go back" : "Read More"}
+                        </span>
+                      </div>
+                      <i className="icon-arrow-down"></i>
+                    </button>
+                    {/* <span className="read-more">Read More</span>
+                        <span className="to-go-back">To go back</span> */}
+                  </div>
+                )}
+
+              {/* DOWNLOADS */}
+              {selectedProductDetails &&
+                selectedProductDetails.productDocs?.length > 0 && (
+                  <div className="container-info-text" data-aos="">
+                    <h3 className="title-info-text split-words" data-aos="">
+                      Downloads
+                    </h3>
+                    <div
+                      className="container-btn container-btn-downloads"
+                      data-aos="fadeIn .8s ease-in-out"
+                    >
+                      {selectedProductDetails.productDocs.map((data, index) => {
+                        const { fileName, downloadUrl } = data;
+                        return (
+                          <a key={index} href={downloadUrl} download={fileName}>
+                            <button class="btn-small-tag btn-gray btn-hover-red">
+                              <div class="split-chars">
+                                <span>{fileName}</span>
+                              </div>
+                            </button>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+              {/* PRODUCT FOUND */}
+              {selectedProductDetails && productFondFilteredData.length > 0 && (
+                <div className="container-info-text" data-aos="">
+                  <h3 className="title-info-text split-words" data-aos="">
+                    Product found in
+                  </h3>
+                  <div
+                    className="container-btn"
+                    data-aos="fadeIn .8s ease-in-out"
+                  >
+                    {productFondFilteredData.map((data, index) => {
+                      const { name, _id } = data.parentCollection;
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => productFoundRedirection(_id)}
+                          className="btn-small-tag"
+                        >
+                          <span>{name}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
-                <button
-                  className="btn-read-more"
-                  data-aos="fadeIn .8s ease-in-out"
-                >
-                  <div className="btn-text">
-                    <span className="read-more">Read More</span>
-                    <span className="to-go-back">To go back</span>
-                  </div>
-                  <i className="icon-arrow-down"></i>
-                </button>
-              </div>
-              {/* )} */}
-              <div className="container-info-text" data-aos="">
-                <h3 className="title-info-text split-words" data-aos="">
-                  Downloads
-                </h3>
-                <div
-                  className="container-btn container-btn-downloads"
-                  data-aos="fadeIn .8s ease-in-out"
-                >
-                  <button className="btn-small-tag">
-                    <span>Technical drawing</span>
-                    <i className="icon-arrow-down"></i>
-                  </button>
-                  <button className="btn-small-tag">
-                    <span>Installation video</span>
-                    <i className="icon-arrow-down"></i>
-                  </button>
-                </div>
-              </div>
-              <div className="container-info-text" data-aos="">
-                <h3 className="title-info-text split-words" data-aos="">
-                  Product found in
-                </h3>
-                <div
-                  className="container-btn"
-                  data-aos="fadeIn .8s ease-in-out"
-                >
-                  <button className="btn-small-tag">
-                    <span>Chars</span>
-                  </button>
-                  <button className="btn-small-tag">
-                    <span>Accent Charis</span>
-                  </button>
-                  <button className="btn-small-tag">
-                    <span>Outdoor Furniture</span>
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
