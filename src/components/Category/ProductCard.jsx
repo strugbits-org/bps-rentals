@@ -43,7 +43,7 @@ const ProductCard = ({
           }}
         />
       </div>
-      <AnimateLink to={`product/${product.slug}`} className="link">
+      <AnimateLink to={`/product/${product.slug}`} className="link">
         <div className="container-top">
           <h2 className="product-title">{product.name}</h2>
           <div className="container-info">
@@ -98,9 +98,7 @@ const ProductCard = ({
                   <li
                     className="list-item"
                     data-set-product-link-color={selVariantData.color[0]}
-                    onMouseEnter={() =>
-                      handleImageHover(index, selVariantData)
-                    }
+                    onMouseEnter={() => handleImageHover(index, selVariantData)}
                     data-default-product-link-active={idx === 0}
                   >
                     <div className="container-img">

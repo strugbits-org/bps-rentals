@@ -4,7 +4,7 @@ import {
   getPairItWithProducts,
   getPairItWithProductsId,
   getProductFound,
-  getProductSnapShots,
+  getProductVariantsImages,
   getProductVariants,
   getSelectedProductDetails,
   getSelectedProductId,
@@ -14,66 +14,70 @@ import { redirect } from "next/navigation";
 export default async function Page({ params }) {
   const { slug } = params;
 
-  const res = await getSelectedProductId(slug);
-  let selectedProductId;
-  if (res?.length) {
-    selectedProductId = res[0]._id;
-  } else {
+  const selectedProductRes = await getSelectedProductId(slug);
+  if (!selectedProductRes?.length) {
     redirect("/error");
+    return null; // Ensure early return after redirect
   }
-  let pairedProductIds;
-  let productVariantsData;
-  let dataMap;
-  if (selectedProductId) {
-    const pairIWithRes = await getPairItWithProductsId(selectedProductId);
-    pairedProductIds = pairIWithRes.map((item) => item.pairedProductId);
 
-    productVariantsData = await getProductVariants(selectedProductId);
-    dataMap = new Map(productVariantsData.map((item) => [item.sku, item]));
-  }
+  const selectedProductId = selectedProductRes[0]._id;
+
+  // Fetch initial product data
   const [
+    pairIWithRes,
+    productVariantsData,
     selectedProductDetails,
-    matchedProductsData,
-    productSnapshots,
+    productVariantsImages,
     productFound,
     categoriesData,
   ] = await Promise.all([
+    getPairItWithProductsId(selectedProductId),
+    getProductVariants(selectedProductId),
     getSelectedProductDetails(selectedProductId),
-    getPairItWithProducts(pairedProductIds),
-    getProductSnapShots(selectedProductId),
+    getProductVariantsImages(selectedProductId),
     getProductFound(),
     getAllCategoriesData(),
   ]);
 
+  const pairedProductIds = pairIWithRes.map((item) => item.pairedProductId);
+
+  // Fetch matched products data and their details
+  const matchedProductsData = await getPairItWithProducts(pairedProductIds);
   const productsData = await Promise.all(
     matchedProductsData.map(async (productData) => {
       const productId = productData.product._id;
-      const [productSnapshotData, productVariantsData] = await Promise.all([
-        getProductSnapShots(productId),
+      const [productVariantsImages, productVariantsData] = await Promise.all([
+        getProductVariantsImages(productId),
         getProductVariants(productId),
       ]);
-      productData.productSnapshotData = productSnapshotData;
-      productData.productVariantsData = productVariantsData;
-      return productData;
+      return {
+        ...productData,
+        productVariantsImages,
+        productVariantsData,
+      };
     })
   );
-  let filteredVariantData;
-  if (productVariantsData && selectedProductDetails) {
-    filteredVariantData = selectedProductDetails[0].variantData =
-      selectedProductDetails[0].variantData.filter((variant) => {
-        if (dataMap.has(variant.sku)) {
-          const dataItem = dataMap.get(variant.sku);
-          variant.variant.variantId = dataItem._id;
-          return true;
-        }
-        return false;
-      });
-  }
+
+  // Filter and map variant data
+  const dataMap = new Map(productVariantsData.map((item) => [item.sku, item]));
+  const filteredVariantData = selectedProductDetails[0].variantData.filter(
+    (variant) => {
+      if (dataMap.has(variant.sku)) {
+        const dataItem = dataMap.get(variant.sku);
+        variant.variant.variantId = dataItem._id;
+        return true;
+      }
+      return false;
+    }
+  );
   return (
     <ProductPostPage
-      selectedProductDetails={selectedProductDetails[0]}
+      selectedProductDetails={{
+        ...selectedProductDetails[0],
+        variantData: filteredVariantData,
+      }}
       matchedProductsData={productsData}
-      productSnapshots={productSnapshots}
+      productVariantsImages={productVariantsImages}
       productFoundData={productFound}
       categoriesData={categoriesData}
     />

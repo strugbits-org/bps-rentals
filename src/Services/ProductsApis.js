@@ -345,7 +345,7 @@ export const getProductVariants = async (id) => {
     return [];
   }
 };
-export const getProductSnapShots = async (id) => {
+export const getProductVariantsImages = async (id) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "BPSProductImages",

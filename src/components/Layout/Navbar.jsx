@@ -302,6 +302,10 @@ const Navbar = ({
                       />
                       <ForgotPassword
                         forgotPasswordModalContent={forgotPasswordModalContent}
+                        successMessageVisible={successMessageVisible}
+                        setSuccessMessageVisible={setSuccessMessageVisible}
+                        setErrorMessageVisible={setErrorMessageVisible}
+                        setMessage={setMessage}
                       />
                     </div>
                   </div>

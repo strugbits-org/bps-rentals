@@ -45,7 +45,7 @@ export const signInUser = async (userData) => {
 
 export const confirmEmail = async (userData) => {
   try {
-    const response = await fetch(`${base_url}/api/auth/forgotPassword`, {
+    const response = await fetch(`api/auth/forgotPassword`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,16 +66,13 @@ export const confirmEmail = async (userData) => {
 
 export const resetPassword = async (userData, token) => {
   try {
-    const response = await fetch(
-      `${base_url}/api/auth/resetPassword?token=${token}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      }
-    );
+    const response = await fetch(`api/auth/resetPassword?token=${token}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
 
     if (!response.ok) {
       const data = await response.json();

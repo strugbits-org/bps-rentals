@@ -12,11 +12,10 @@ import Breadcrumb from "../Common/BreadCrumbData";
 const ProductPostPage = ({
   selectedProductDetails,
   matchedProductsData,
-  productSnapshots,
+  productVariantsImages,
   productFoundData,
   categoriesData,
 }) => {
-  console.log(matchedProductsData, "matchedProductsData>>");
   const router = useRouter();
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [savedProductsData, setSavedProductsData] = useState([]);
@@ -26,7 +25,7 @@ const ProductPostPage = ({
   const [buttonLabel, SetButtonLabel] = useState(false);
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
-    const selectedVariantFilteredData = productSnapshots.find(
+    const selectedVariantFilteredData = productVariantsImages.find(
       (variant) => variant.colorVariation === selectedVariantData.variantId
     );
     if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
@@ -59,9 +58,9 @@ const ProductPostPage = ({
   });
 
   useEffect(() => {
-    if (selectedProductDetails && productSnapshots) {
+    if (selectedProductDetails && productVariantsImages) {
       const selectedVariantData = selectedProductDetails.variantData[0].variant;
-      const selectedVariantFilteredData = productSnapshots.find(
+      const selectedVariantFilteredData = productVariantsImages.find(
         (variant) => variant.colorVariation === selectedVariantData.variantId
       );
 
@@ -85,7 +84,7 @@ const ProductPostPage = ({
         setSelectedVariant(combinedVariantData);
       }
     }
-  }, [productSnapshots, selectedProductDetails]);
+  }, [productVariantsImages, selectedProductDetails]);
 
   const productFoundRedirection = async (subCategoryId) => {
     const queryParams = new URLSearchParams(router.query);
@@ -155,12 +154,12 @@ const ProductPostPage = ({
     const params = [
       selectedProductDetails,
       matchedProductsData,
-      productSnapshots,
+      productVariantsImages,
     ];
     if (checkParameters(params)) {
       markPageLoaded();
     }
-  }, [selectedProductDetails, matchedProductsData, productSnapshots]);
+  }, [selectedProductDetails, matchedProductsData, productVariantsImages]);
 
   const updatedDescription = selectedProductDetails.product.description.replace(
     /color:#000000;/g,
