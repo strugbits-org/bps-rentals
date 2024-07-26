@@ -1,8 +1,8 @@
-"use client"
+"use client";
 import React from "react";
-import { ModalWrapper } from "../ModalWrapper";
-import ContactForm from "@/components/common/ContactForm";
 import AnimateLink from "@/components/Common/AnimateLink";
+import ContactForm from "@/components/Common/ContactForm";
+import { ModalWrapper } from "./ModalWrapper/ModalWrapper";
 
 const ContactUsModal = ({ contactUsContent, contactData, socialLinks }) => {
   return (
@@ -12,14 +12,23 @@ const ContactUsModal = ({ contactUsContent, contactData, socialLinks }) => {
         {contactUsContent && (
           <div className="container-info">
             <div className="container-tel">
-              <AnimateLink target={"_blank"} to={"tel:" + contactUsContent.sfPhone}>
+              <AnimateLink
+                target={"_blank"}
+                to={"tel:" + contactUsContent.sfPhone}
+              >
                 <span>{contactUsContent.sfPhone}</span>
               </AnimateLink>
-              <AnimateLink target={"_blank"} to={"tel:" + contactUsContent.lvPhone}>
+              <AnimateLink
+                target={"_blank"}
+                to={"tel:" + contactUsContent.lvPhone}
+              >
                 <span>{contactUsContent.lvPhone}</span>
               </AnimateLink>
             </div>
-            <AnimateLink target={"_blank"} to={"mailto:" + contactUsContent.infoEmail}>
+            <AnimateLink
+              target={"_blank"}
+              to={"mailto:" + contactUsContent.infoEmail}
+            >
               <span>{contactUsContent.infoEmail}</span>
             </AnimateLink>
           </div>
@@ -27,10 +36,13 @@ const ContactUsModal = ({ contactUsContent, contactData, socialLinks }) => {
         <ul className="list-social-media">
           {socialLinks.map((item, index) => (
             <li key={index}>
-              <AnimateLink to={item.link} target="_blank"
+              <AnimateLink
+                to={item.link}
+                target="_blank"
                 attributes={{
-                  "rel": "noopener noreferrer"
-                }}>
+                  rel: "noopener noreferrer",
+                }}
+              >
                 <i className={item.icon}></i>
               </AnimateLink>
             </li>

@@ -28,7 +28,7 @@ import {
   getSocialLinks,
 } from "@/Services/FooterApis";
 import { fetchInstaFeed, getMarketsData, getSocialSectionBlogs, getSocialSectionDetails } from "@/Services/SectionsApis";
-import ContactUsModal from "@/components/Lightbox/modalComponents/ContactUsModal";
+import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
 
 export const metadata = {
