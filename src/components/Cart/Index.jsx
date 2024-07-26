@@ -1,8 +1,7 @@
 "use client";
 import { useEffect } from "react";
-import LetsGetSocial from "../Common/Sections/SocialSection";
 import AnimateLink from "../Common/AnimateLink";
-import { markPageLoaded } from "@/utils/AnimationFunctions";
+import { markPageLoaded } from "@/Utils/AnimationFunctions";
 
 const CartPage = () => {
   useEffect(() => {
@@ -146,7 +145,6 @@ const CartPage = () => {
           </div>
         </div>
       </section>
-      <LetsGetSocial />
     </>
   );
 };

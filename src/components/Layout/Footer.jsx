@@ -1,8 +1,18 @@
-import Addresses from "../Common/Addresses";
+"use client"
+import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
-import SocialLinks from "../Common/SocialLinks";
+import Newsletter from "../Common/NewsLetter";
+import { CustomButton } from "../Common/CustomButton";
+import { usePathname } from "next/navigation";
+import { DynamicLink } from "../Common/DynamicLink";
 
-const Footer = () => {
+const Footer = ({ menu, footerData, contactData, socialLinks }) => {
+  const pathname = usePathname();
+
+  const disabledPages = ["/my-account","/my-account-saved-products","/my-account-quotes-history","/my-account-change-password"];
+
+  if (disabledPages.includes(pathname)) return;
+
   return (
     <footer id="footer" className="footer" data-cursor-style="off">
       <div className="container-fluid">
@@ -10,7 +20,10 @@ const Footer = () => {
           <div className="col-lg-7 column-1">
             <div className="container-logo">
               <div data-parallax data-end="bottom bottom" className="z-3">
-                <img src="/images/logo/logo-bps-b.svg" className="img-b z-3" />
+                <img
+                  src={generateImageURL({ wix_url: footerData && footerData.logo1, original: true })}
+                  className="img-b z-3"
+                />
               </div>
               <div
                 data-parallax
@@ -20,7 +33,10 @@ const Footer = () => {
                 data-end="bottom center"
                 className="z-2"
               >
-                <img src="/images/logo/logo-bps-p.svg" className="img-p z-2" />
+                <img
+                  src={generateImageURL({ wix_url: footerData && footerData.logo2, original: true })}
+                  className="img-p z-2"
+                />
               </div>
               <div
                 data-parallax
@@ -30,110 +46,82 @@ const Footer = () => {
                 data-end="bottom center"
                 className="z-1"
               >
-                <img src="/images/logo/logo-bps-s.svg" className="img-s z-1" />
+                <img
+                  src={generateImageURL({ wix_url: footerData && footerData.logo3, original: true })}
+                  className="img-s z-1"
+                />
               </div>
             </div>
             <h2 className="fs--60 fs-mobile-50 title-footer white-1 mt-lg-170 mt-mobile-20">
-              If it's not remarkable, it's invisible.
+              {footerData && footerData.heading}
             </h2>
           </div>
           <div className="col-lg-5 column-2 pt-lg-65 pt-mobile-50">
             <div className="wrapper-newsletter-menu">
-              <div className="container-newsletter" data-form-container>
-                <div className="container-text">
-                  <h3 className="fs-25 white-1">Newsletter:</h3>
-                  <p className="fs--16 fs-phone-15 font-2 white-1 mt-5">
-                    Register your email and stay up to date with everything
-                    before anyone else.
-                  </p>
-                </div>
-                <div className="container-newsletter mt-mobile-25">
-                  <form className="form-newsletter">
-                    <input type="hidden" name="assunto" value="[newsletter]" />
-                    <div className="container-input">
-                      <label for="newsletter-email">Enter your email</label>
-                      <input
-                        id="newsletter-email"
-                        name="email"
-                        type="email"
-                        required
-                      />
-                    </div>
-                    <div className="container-submit">
-                      <button type="submit" className="bt-submit">
-                        <span className="submit-text">Send</span>
-                      </button>
-                    </div>
-                  </form>
-                  <h3
-                    className="feedback-newsletter white-1"
-                    data-aos="fadeIn"
-                    data-form-success
-                  >
-                    Success!
-                  </h3>
-                  <h3
-                    className="feedback-newsletter white-1"
-                    data-aos="fadeIn"
-                    data-form-error
-                  >
-                    Error, Try again!
-                  </h3>
-                </div>
-              </div>
-              <div className="container-footer-menu">
+              <Newsletter data={footerData} />
+              <div className="container-footer-menu mt-lg-165 mt-tablet-55 mt-phone-125">
                 <ul className="list-footer-menu">
-                  <li className="list-item">
-                    <button
-                      data-set-submenu="services"
-                      className="link-footer-menu"
-                    >
-                      <span>Services</span>
-                    </button>
-                  </li>
-                  {[1, 2, 3, 4, 5].map((index) => {
+                  {menu.map((item) => {
                     return (
-                      <li key={index} className="list-item">
-                        <AnimateLink to="/" className="link-footer-menu">
-                          <span>Store</span>
-                        </AnimateLink>
+                      <li key={item._id} className="list-item">
+                        <DynamicLink
+                          customClasses={"link-footer-menu"}
+                          data={{
+                            label: item.title,
+                            action: item.rentalsAction
+                          }}
+                        >
+                        </DynamicLink>
                       </li>
-                    );
-                  })}
-                  <li className="list-item">
-                    <btn-modal-open
-                      class="link-footer-menu"
-                      group="modal-contact"
-                    >
-                      <span>Contact</span>
-                    </btn-modal-open>
-                  </li>
-                  {[1, 2, 3].map((index) => {
-                    return (
-                      <li key={index} className="list-item">
-                        <AnimateLink to="/" className="link-footer-menu">
-                          <span>Rental</span>
-                        </AnimateLink>
-                      </li>
-                    );
+                    )
                   })}
                   <li className="list-item item-social-media">
-                    <SocialLinks />
+                    <ul className="list-social-media">
+                      {socialLinks.map((item, index) => (
+                        <li key={index}>
+                          <AnimateLink to={item.link} target="_blank"
+                            attributes={{
+                              "rel": "noopener noreferrer"
+                            }}>
+                            <i className={item.icon}></i>
+                          </AnimateLink>
+                        </li>
+                      ))}
+                    </ul>
                   </li>
                 </ul>
               </div>
             </div>
             <div className="container-address mt-lg-145 mt-phone-115">
-              <Addresses />
+              <ul className="list-address">
+                {contactData.map((data, index) => {
+                  return (
+
+                    <li key={index}>
+                      <h3 className="city">{data && data.city}</h3>
+                      <address>
+                        {data && data.address1} <br />
+                        {data && data.address2} <br />
+                        {data && data.address3}
+                      </address>
+                      <div className="phones">
+                        <AnimateLink to={`tel:${data && data.phone1}`} target={"_blank"}>
+                          <span>{data && data.phone1}</span>
+                        </AnimateLink>
+                        <AnimateLink to={`tel:${data && data.phone2}`} target={"_blank"}>
+                          <span>{data && data.phone2}</span>
+                        </AnimateLink>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </div>
         </div>
         <div className="row row-2 mt-lg-80 mt-mobile-45">
           <div className="col-lg-12 column-1">
-            <p className="fs--14 font-2 white-1">
-              © BLUEPRINT STUDIOS. ALL RIGHTS RESERVED. - If it’s not
-              remarkable, it’s invisible is a trademark of blueprint studios.
-            </p>
+            <p className="fs--14 font-2 white-1">{footerData && footerData.copyright}</p>
           </div>
         </div>
       </div>

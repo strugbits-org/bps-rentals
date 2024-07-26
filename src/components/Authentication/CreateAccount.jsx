@@ -1,51 +1,154 @@
-import AnimateLink from "../Common/AnimateLink";
+"use client";
+import { useEffect, useState } from "react";
 
-const CreateAccount = () => {
+import { signUpUser } from "@/Services/AuthApis";
+import Disclaimer from "./Disclaimer";
+
+const CreateAccount = ({
+  createAccountModalContent,
+  successMessageVisible,
+  setSuccessMessageVisible,
+  setErrorMessageVisible,
+  setMessage,
+}) => {
+  const [submittingForm, setSubmittingForm] = useState(false);
+
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (submittingForm) return;
+    setSubmittingForm(true);
+    setErrorMessageVisible(false);
+    setSuccessMessageVisible(false);
+
+    try {
+      const userData = {
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirm_password,
+        firstName: formData.first_name,
+        lastName: formData.last_name,
+        company: formData.company,
+        phone: formData.phone,
+        hospitalityLoc: formData.hospitality_space,
+      };
+
+      const response = await signUpUser(userData);
+      if (response?.error) {
+        setMessage(response.message);
+        setErrorMessageVisible(true);
+        return;
+      }
+
+      if (response) {
+        setSuccessMessageVisible(true);
+        setErrorMessageVisible(false);
+        setFormData({
+          first_name: "",
+          last_name: "",
+          email: "",
+          password: "",
+        });
+      }
+      return response;
+    } catch (error) {
+      console.error("Error:", error);
+      setMessage("Something Went Wrong");
+      setSuccessMessageVisible(false);
+      setErrorMessageVisible(true);
+    } finally {
+      setTimeout(() => {
+        setSubmittingForm(false);
+      }, 1500);
+    }
+  };
+
+  useEffect(() => {
+    if (successMessageVisible) {
+      const timer = setTimeout(() => {
+        setSuccessMessageVisible(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessageVisible]);
   return (
     <div className="container-create-account d-none">
-      <div className="container-account" data-form-container>
+      <div
+        className="container-account"
+        data-form-state={successMessageVisible ? "success" : ""}
+      >
         <form
           className="form-account form-create-account "
-          data-redirect="my-account.html"
+          onSubmit={handleSubmit}
         >
-          <input type="hidden" name="subject" value="[account]" />
           <div className="container-input col-md-12">
-            <label for="create-account-first-name">First name</label>
+            <label for="create-account-first-name">
+              {createAccountModalContent &&
+                createAccountModalContent.firstNameFieldLabel}
+            </label>
             <input
               id="create-account-first-name"
               name="first_name"
               type="text"
               placeholder="Name"
+              value={formData.first_name}
+              onChange={handleChange}
               required
             />
           </div>
           <div className="container-input col-md-12">
-            <label for="create-account-last-name">Last name</label>
+            <label for="create-account-last-name">
+              {createAccountModalContent &&
+                createAccountModalContent.lastNameFieldLabel}
+            </label>
             <input
               id="create-account-last-name"
               name="last_name"
               type="text"
+              value={formData.last_name}
+              onChange={handleChange}
               placeholder="Last Name"
               required
             />
           </div>
           <div className="container-input col-md-12">
-            <label for="create-account-email">E-mail</label>
+            <label for="create-account-email">
+              {createAccountModalContent &&
+                createAccountModalContent.emailFieldLabel}
+            </label>
             <input
               id="create-account-email"
               name="email"
               type="email"
               placeholder="exemple@myemail.com"
+              value={formData.email}
+              onChange={handleChange}
               required
             />
           </div>
           <div className="container-input col-md-12">
-            <label for="create-account-phone">Phone Number</label>
+            <label for="create-account-phone">
+              {createAccountModalContent &&
+                createAccountModalContent.phoneNumberFieldLabel}
+            </label>
             <input
               id="create-account-phone"
-              name="phone"
-              type="tel"
-              placeholder="+1 (415) 000-0000"
+              name="password"
+              type="password"
+              placeholder="* * * * * *"
+              value={formData.password}
+              onChange={handleChange}
               required
             />
           </div>
@@ -54,7 +157,10 @@ const CreateAccount = () => {
               type="submit"
               className="bt-submit btn-blue w-100 mt-tablet-10 w-mobile-100"
             >
-              <span>Create Account</span>
+              <span>
+                {createAccountModalContent &&
+                  createAccountModalContent.createAccountButtonLabel}
+              </span>
             </button>
           </div>
         </form>
@@ -65,7 +171,11 @@ const CreateAccount = () => {
           Success!
         </h3>
       </div>
-      <p className="text-agree font-2 fs--16 blue-1 lh-140 mt-lg-25 mt-mobile-20">
+      <Disclaimer
+        textClass="btn-underlined-white"
+        data={createAccountModalContent.disclaimer}
+      />
+      {/* <p className="text-agree font-2 fs--16 blue-1 lh-140 mt-lg-25 mt-mobile-20">
         By continuing, you are agreeing with{" "}
         <AnimateLink to="/terms-of-use" className="btn-underlined-white">
           <span>Blueprint Studios Terms & Conditions</span>
@@ -74,7 +184,7 @@ const CreateAccount = () => {
         <AnimateLink to="/privacy-policy" className="btn-underlined-white">
           <span>Privacy Policy.</span>
         </AnimateLink>
-      </p>
+      </p> */}
     </div>
   );
 };

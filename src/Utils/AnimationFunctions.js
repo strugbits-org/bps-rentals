@@ -9,16 +9,6 @@ export const AnimationFunction = () => {
   }
 };
 
-let page;
-let cleanPage;
-if (typeof window !== "undefined") {
-  page =
-    window.location.pathname.trim() === "/"
-      ? "home"
-      : window.location.pathname.substring(1);
-  cleanPage = page.split("/")[0].trim();
-}
-
 export const initAnimations = () => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
@@ -61,12 +51,25 @@ export const updatedWatched = () => {
     }, 200);
   }
 };
-
+export const loadPinterest = () => {
+  if (typeof window !== 'undefined') {
+    setTimeout(() => {
+      const script = document.createElement("script");
+      script.async = true;
+      script.type = "text/javascript";
+      script.dataset.pinBuild = "doBuild";
+      script.src = "//assets.pinterest.com/js/pinit.js";
+      document.body.appendChild(script);
+      if (window.doBuild) window.doBuild();
+    }, 1000);
+  }
+};
 export const markPageLoaded = (watched = true) => {
   if (typeof window !== "undefined") {
     setTimeout(() => window.scrollTo({ top: 0 }), 200);
     initAnimations();
     if (watched) updatedWatched();
+    setTimeout(loadPinterest, 1000);
     const isFirstLoadDone = document.body.classList.contains("first-load-done");
     if (isFirstLoadDone) {
       pageLoadEnd();
@@ -78,8 +81,10 @@ export const markPageLoaded = (watched = true) => {
 
 export const firstLoadAnimation = async () => {
   for (let i = 0; i <= 100; i++) {
-    await new Promise(resolve => setTimeout(resolve, 2));
-    if (i % 10 === 0) changeProgress(i);
+    await new Promise(resolve => setTimeout(resolve, 1));
+    if (i % 25 === 0) {
+      changeProgress(i);
+    }
   }
   document.body.dataset.load = "first-leaving";
   setTimeout(() => {
@@ -148,5 +153,11 @@ export const getPageName = () => {
         ? "home"
         : location.pathname.substring(1);
     return page.split("/")[0].trim();
+  }
+};
+export const closeLocationsDropdown = () => {
+  if (typeof window !== "undefined") {
+    const activeDropdown = document.querySelector(".accordion-item.active .accordion-header.custom-close");
+    if (activeDropdown) activeDropdown.click();
   }
 };
