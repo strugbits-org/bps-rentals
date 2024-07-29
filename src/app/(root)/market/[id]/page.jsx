@@ -12,12 +12,22 @@ import {
   getStudiosData,
 } from "@/Services/SectionsApis";
 
+export const generateStaticParams = async () => {
+  try {
+    const marketsData = await getMarketsData();
+    const paths = marketsData.map((data) => ({ slug: data.slug }));
+    return paths;
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
+
 export default async function Page({ params }) {
   const marketSection = await getMarketSection(params.id);
   const bestSeller = await fetchBestSellers(params.id);
   const collectionIds = {
     "tradeshows": "HighlightsTradeshow",
-    "Social": "HighlightsSocial",
+    "social": "HighlightsSocial",
     "weddings": "HighlightsWedding",
     "corporate": "HighlightsCorporate",
   }

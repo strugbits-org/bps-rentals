@@ -1,3 +1,5 @@
+import { getAuthToken } from "./GetAuthToken";
+
 const base_url = process.env.BASE_URL;
 export const signUpUser = async (userData) => {
   try {
@@ -88,9 +90,9 @@ export const resetPassword = async (userData, token) => {
 
 export const updateProfile = async (userData) => {
   try {
-    // const authToken = getAuthToken();
-    const authToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBnbWFpbC5jb20iLCJpYXQiOjE3MjE3NDc4NzQsImV4cCI6MTcyNDMzOTg3NH0.1VqPecln8GBajtec4kJhInHmzBJzBxQobAODRELEEhs";
+    const authToken = getAuthToken();
+    // const authToken =
+    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBnbWFpbC5jb20iLCJpYXQiOjE3MjE3NDc4NzQsImV4cCI6MTcyNDMzOTg3NH0.1VqPecln8GBajtec4kJhInHmzBJzBxQobAODRELEEhs";
     const response = await fetch(`api/auth/updateProfile`, {
       method: "POST",
       headers: {
@@ -114,9 +116,9 @@ export const updateProfile = async (userData) => {
 
 export const changePassword = async (userData) => {
   try {
-    // const authToken = getAuthToken();
-    const authToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBnbWFpbC5jb20iLCJpYXQiOjE3MjE3MzA1MDAsImV4cCI6MTcyNDMyMjUwMH0.oyJlRDAaYBgeQ5svVuCxHonWxNp8AsWjM4C8N4eyLfk";
+    const authToken = getAuthToken();
+    // const authToken =
+    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBnbWFpbC5jb20iLCJpYXQiOjE3MjE3MzA1MDAsImV4cCI6MTcyNDMyMjUwMH0.oyJlRDAaYBgeQ5svVuCxHonWxNp8AsWjM4C8N4eyLfk";
     const response = await fetch(`api/auth/changePassword`, {
       method: "POST",
       headers: {

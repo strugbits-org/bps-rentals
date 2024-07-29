@@ -27,9 +27,15 @@ import {
   getFooterNavigationMenu,
   getSocialLinks,
 } from "@/Services/FooterApis";
-import { fetchInstaFeed, getMarketsData, getSocialSectionBlogs, getSocialSectionDetails } from "@/Services/SectionsApis";
+import {
+  fetchInstaFeed,
+  getMarketsData,
+  getSocialSectionBlogs,
+  getSocialSectionDetails,
+} from "@/Services/SectionsApis";
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
+import { getAuthToken } from "@/Services/GetAuthToken";
 
 export const metadata = {
   title: "BPS Rentals",
@@ -51,7 +57,7 @@ export default async function RootLayout({ children }) {
     allCategoriesData,
     socialSectionDetails,
     socialSectionBlogs,
-    instaFeed
+    instaFeed,
   ] = await Promise.all([
     getFilterLocations(),
     getLoginModalContent(),
@@ -129,7 +135,7 @@ export default async function RootLayout({ children }) {
             />
           </Wrapper>
           <StudiosFixedMenu />
-          <CartModal />
+          {/* <CartModal /> */}
           <ContactUsModal
             contactUsContent={contactUsContent}
             contactData={contactData}

@@ -1,6 +1,6 @@
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
 
-import ProductPostPage from "@/components/Product/Index";
+import ProductPostPage from '@/components/Product/Index';
 
 import {
   getAllCategoriesData,
@@ -11,14 +11,25 @@ import {
   getProductVariants,
   getSelectedProductDetails,
   getSelectedProductId,
-} from "@/Services/ProductsApis";
+  fetchAllProducts,
+} from '@/Services/ProductsApis';
+
+// export const generateStaticParams = async () => {
+//   try {
+//     const all_products = await fetchAllProducts() || [];
+//     const paths = all_products.map((data) => ({ slug: data.product.slug }));
+//     return paths;
+//   } catch (error) {
+//     console.log("Error:", error);
+//   }
+// }
 
 export default async function Page({ params }) {
   const { slug } = params;
 
   const selectedProductRes = await getSelectedProductId(slug);
   if (!selectedProductRes?.length) {
-    redirect("/error");
+    redirect('/error');
     return null;
   }
 
