@@ -8,6 +8,8 @@ const ProductCard = ({
   variantData,
   selectedVariant,
   handleImageHover,
+  filteredProducts,
+  getSelectedProductSnapShots,
 }) => {
   const defaultVariantSku = selectedVariant?.sku;
   const defaultVariantImage = selectedVariant?.variant.imageSrc;
@@ -127,7 +129,11 @@ const ProductCard = ({
           </div>
         )}
       </div>
-      <btn-modal-open group="modal-product" class="modal-add-to-cart">
+      <btn-modal-open
+        onClick={() => getSelectedProductSnapShots(filteredProducts[index])}
+        group="modal-product"
+        class="modal-add-to-cart"
+      >
         <span>Add to cart</span>
         <i className="icon-cart"></i>
       </btn-modal-open>

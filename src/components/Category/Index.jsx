@@ -6,11 +6,25 @@ import AnimateLink from "../Common/AnimateLink";
 import { HotTrendsCategory } from "../Common/Sections/HotTrendsSection";
 import ProductCard from "./ProductCard";
 import { BannerOurTeam } from "../Common/Sections/BannerOurTeam";
-import { fetchFilteredProducts } from "@/Services/ProductsApis";
+import {
+  fetchFilteredProducts,
+  getProductVariants,
+  getProductVariantsImages,
+} from "@/Services/ProductsApis";
 import { useCookies } from "react-cookie";
+import { useRouter } from "next/navigation";
+import CartModal from "../Common/Modals/CartModal";
+import useUserData from "@/Hooks/useUserData";
+import { getAuthToken } from "@/Services/GetAuthToken";
 
-const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selectedCategoryData, products }) => {
-
+const CategoryPage = ({
+  pageContent,
+  locations,
+  marketsData,
+  colorsData,
+  selectedCategoryData,
+  products,
+}) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [totalCount, setTotalCount] = useState();
   const [loading, setLoading] = useState(false);
@@ -33,9 +47,20 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
   const handleFilterChange = async ({ categories = [], colors = [] }) => {
     try {
       setLoading(true);
-      const checkedCategories = categories ? categories.filter(x => x.checked).map(x => x._id) : filterCategories.filter(x => x.checked).map(x => x._id);
-      const selectedCategories = checkedCategories?.length !== 0 ? checkedCategories : [selectedCategoryData?.parentCollection?._id || selectedCategoryData?._id];
-      const checkedColors = colors?.length !== 0 ? colors.filter(x => x.checked).map(x => x.label) : filterColors.filter(x => x.checked).map(x => x.label);
+      const checkedCategories = categories
+        ? categories.filter((x) => x.checked).map((x) => x._id)
+        : filterCategories.filter((x) => x.checked).map((x) => x._id);
+      const selectedCategories =
+        checkedCategories?.length !== 0
+          ? checkedCategories
+          : [
+              selectedCategoryData?.parentCollection?._id ||
+                selectedCategoryData?._id,
+            ];
+      const checkedColors =
+        colors?.length !== 0
+          ? colors.filter((x) => x.checked).map((x) => x.label)
+          : filterColors.filter((x) => x.checked).map((x) => x.label);
       const response = await fetchFilteredProducts({
         pageSize,
         location: cookies.location,
@@ -50,23 +75,33 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const handleSeeMore = async () => {
     try {
       setLoading(true);
 
-      const selectedCategories = filterCategories.filter(x => x.checked).map(x => x._id);
-      const selectedColors = filterColors.filter(x => x.checked).map(x => x.label);
-      const categories = selectedCategories.length !== 0 ? selectedCategories : [selectedCategoryData?.parentCollection?._id || selectedCategoryData?._id];
+      const selectedCategories = filterCategories
+        .filter((x) => x.checked)
+        .map((x) => x._id);
+      const selectedColors = filterColors
+        .filter((x) => x.checked)
+        .map((x) => x.label);
+      const categories =
+        selectedCategories.length !== 0
+          ? selectedCategories
+          : [
+              selectedCategoryData?.parentCollection?._id ||
+                selectedCategoryData?._id,
+            ];
       const response = await fetchFilteredProducts({
         pageSize,
         skip: filteredProducts.length,
         location: cookies.location,
         categories,
-        colors: selectedColors
+        colors: selectedColors,
       });
-      setFilteredProducts(prev => [...prev, ...response.items]);
+      setFilteredProducts((prev) => [...prev, ...response.items]);
       setTotalCount(response.totalCount);
       updatedWatched();
     } catch (error) {
@@ -77,41 +112,54 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
   };
 
   const handleColorChange = (data) => {
-    const updatedColors = filterColors.map(item => item.label === data.label ? { ...item, checked: !item.checked } : item);
+    const updatedColors = filterColors.map((item) =>
+      item.label === data.label ? { ...item, checked: !item.checked } : item
+    );
     setFilterColors(updatedColors);
     handleFilterChange({ colors: updatedColors });
-
-  }
+  };
   const handleLocationChange = (data) => {
-    setCookie("location", data.value, { path: '/' });
-  }
+    setCookie("location", data.value, { path: "/" });
+  };
   const handleCategoryChange = (data) => {
-    const updatedCategories = filterCategories.map(item => item._id === data._id ? { ...item, checked: !item.checked } : item);
+    const updatedCategories = filterCategories.map((item) =>
+      item._id === data._id ? { ...item, checked: !item.checked } : item
+    );
     setFilterCategories(updatedCategories);
     handleFilterChange({ categories: updatedCategories });
-  }
+  };
 
   const setInitialValues = () => {
     if (selectedCategoryData.level2Collections !== undefined) {
-      const categories = selectedCategoryData.level2Collections.filter(x => x._id).map(x => ({
-        ...x,
-        checked: false,
-        label: x.name
-      }));
+      const categories = selectedCategoryData.level2Collections
+        .filter((x) => x._id)
+        .map((x) => ({
+          ...x,
+          checked: false,
+          label: x.name,
+        }));
       setFilterCategories(categories);
     }
     if (colorsData) {
-      const colors = colorsData.colors.map(x => { return { label: x, checked: false } });
+      const colors = colorsData.colors.map((x) => {
+        return { label: x, checked: false };
+      });
       setFilterColors(colors);
     }
     setFilteredProducts(products.items);
     setTotalCount(products.totalCount);
     setTimeout(markPageLoaded, 200);
     setTimeout(setEnableLocationFilter(true), 200);
-  }
+  };
 
   useEffect(() => {
-    setFilterLocations(locations.map(x => (cookies.location === x.value ? { ...x, checked: true } : { ...x, checked: false })));
+    setFilterLocations(
+      locations.map((x) =>
+        cookies.location === x.value
+          ? { ...x, checked: true }
+          : { ...x, checked: false }
+      )
+    );
     if (enableLocationFilter) handleFilterChange({});
   }, [cookies.location]);
 
@@ -119,14 +167,158 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
     setInitialValues();
   }, []);
 
-
   // useEffect(() => {
   //   console.log("HEllllllllllloooooooooooooooooooooo", cookies.location);
   // }, [cookies])
 
+  const router = useRouter();
+  const { memberId } = useUserData();
+  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
+  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const [selectedProductData, setSelectedProductData] = useState(null);
+  const [productSnapshots, setProductSnapshots] = useState();
+  const [productFilteredVariantData, setProductFilteredVariantData] =
+    useState();
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [selectedVariantData, setSelectedVariantData] = useState(null);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const [categoryTitle, setCategoryTitle] = useState("");
+  getAuthToken();
+  const getSelectedProductSnapShots = async (productData) => {
+    setSelectedProductData(productData);
+    try {
+      const product_id = productData.product._id;
+      const [productSnapshotData, productVariantsData] = await Promise.all([
+        getProductVariantsImages(product_id),
+        getProductVariants(product_id),
+      ]);
+
+      let dataMap = new Map(
+        productVariantsData.map((item) => [item.sku.toLowerCase(), item])
+      );
+      let filteredVariantData;
+      if (productVariantsData && productData) {
+        filteredVariantData = productData.variantData.filter((variant) => {
+          const normalizedSku = variant.sku.toLowerCase();
+          if (dataMap.has(normalizedSku)) {
+            const dataItem = dataMap.get(normalizedSku);
+            variant.variant.variantId = dataItem._id;
+            return true;
+          }
+          return false;
+        });
+      }
+      setProductSnapshots(productSnapshotData);
+      setProductFilteredVariantData(filteredVariantData);
+      if (filteredVariantData && filteredVariantData.length > 0) {
+        handleImageChange({
+          index: 0,
+          selectedVariantData: filteredVariantData[0].variant,
+          productSnapshots: productSnapshotData,
+          modalUrl: filteredVariantData[0].zipUrl,
+        });
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+  const handleImageChange = ({
+    index,
+    selectedVariantData,
+    productSnapshots,
+    modalUrl,
+  }) => {
+    if (productSnapshots) {
+      const selectedVariantFilteredData = productSnapshots.find(
+        (variant) => variant.colorVariation === selectedVariantData.variantId
+      );
+
+      if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
+        const combinedVariantData = {
+          ...selectedVariantData,
+          ...selectedVariantFilteredData,
+          modalUrl: modalUrl,
+        };
+
+        setSelectedVariantIndex(index);
+        setSelectedVariantData(combinedVariantData);
+      } else {
+        const combinedVariantData = {
+          ...selectedVariantData,
+          ...selectedVariantFilteredData,
+          modalUrl: modalUrl,
+          images: [{ src: selectedVariantData.imageSrc }],
+        };
+        setSelectedVariantIndex(index);
+        setSelectedVariantData(combinedVariantData);
+      }
+    }
+  };
+
+  const changeQuery = (key, value) => {
+    pageLoadStart();
+    router.query[key] = value;
+    router.push(router);
+  };
+
+  // const getCategoriesList = async () => {
+  //   let categories;
+  //   if (router.query.category === undefined) {
+  //     let collectionIds = collectionsData.map((x) => x._id);
+  //     if (selectedCollection.length !== 0) {
+  //       collectionIds = selectedCollection.map((x) => x._id);
+  //     }
+  //     const response = await getCategoriesData(collectionIds);
+  //     categories = response.map((x) => {
+  //       return { ...x.parentCollection, type: 'category' };
+  //     });
+  //   } else {
+  //     categories = selectedCategory[0]?.level2Collections
+  //       .filter((x) => x._id !== undefined)
+  //       .map((x) => {
+  //         return { ...x, type: 'subCategory' };
+  //       });
+  //   }
+  //   setFilterCategories(categories);
+  // };
+
+  // useEffect(() => {
+  //   if (
+  //     router.query.category === undefined ||
+  //     (selectedCategory && selectedCategory.length !== 0)
+  //   ) {
+  //     getCategoriesList();
+  //   }
+  // }, [router, selectedCollection, collectionsData, selectedCategory]);
+
+  // useEffect(() => {
+  //   if (router.query.subCategory && selectedCategory.length !== 0) {
+  //     const name = selectedCategory[0]?.level2Collections.find(
+  //       (x) => x._id === router.query.subCategory
+  //     ).name;
+  //     setCategoryTitle(name);
+  //   } else {
+  //     setCategoryTitle(selectedCategory[0]?.parentCollection?.name);
+  //   }
+  // }, [router, selectedCategory]);
 
   return (
     <>
+      <CartModal
+        setProductData={setSelectedProductData}
+        setErrorMessageVisible={setErrorMessageVisible}
+        setSuccessMessageVisible={setSuccessMessageVisible}
+        productData={selectedProductData}
+        productSnapshots={productSnapshots}
+        productFilteredVariantData={productFilteredVariantData}
+        selectedVariantData={selectedVariantData}
+        setSelectedVariantData={setSelectedVariantData}
+        handleImageChange={handleImageChange}
+        selectedVariantIndex={selectedVariantIndex}
+        setProductSnapshots={setProductSnapshots}
+        setProductFilteredVariantData={setProductFilteredVariantData}
+      />
       <section className="section-category-content section-category-fixed-pin">
         <div className="container-fluid">
           <div className="row pos-relative">
@@ -137,7 +329,9 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
                     className="d-block section-category-title fs--60 fw-600 pb-lg-50 pb-tablet-20 pb-phone-30 split-words"
                     data-aos
                   >
-                    {selectedCategoryData.parentCollection ? selectedCategoryData.parentCollection.name : selectedCategoryData.name}
+                    {selectedCategoryData.parentCollection
+                      ? selectedCategoryData.parentCollection.name
+                      : selectedCategoryData.name}
                   </h1>
                 </div>
                 {selectedCategoryData.parentCollection && (
@@ -163,7 +357,9 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
                                   {filterCategories.map((item, index) => (
                                     <li key={index}>
                                       <AnimateLink
-                                        to={item['link-copy-of-category-name-2']}
+                                        to={
+                                          item["link-copy-of-category-name-2"]
+                                        }
                                         className="blog-btn-tag"
                                       >
                                         <span>{item.name}</span>
@@ -233,7 +429,11 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
                       const { product, variantData } = data;
                       return (
                         <>
-                          <li className="product-item grid-item" data-get-tag data-aos="d:loop">
+                          <li
+                            className="product-item grid-item"
+                            data-get-tag
+                            data-aos="d:loop"
+                          >
                             <ProductCard
                               key={index}
                               index={index}
@@ -242,16 +442,15 @@ const CategoryPage = ({ pageContent, locations, marketsData, colorsData, selecte
                               selectedVariant={
                                 selectedVariants[index] || variantData[0]
                               }
+                              filteredProducts={filteredProducts}
                               handleImageHover={handleImageHover}
+                              getSelectedProductSnapShots={
+                                getSelectedProductSnapShots
+                              }
                             />
                           </li>
-                          {index === 5 && (
-                            <HotTrendsCategory />
-                          )}
-                          {index === 11 && (
-                            <BannerOurTeam />
-                          )}
-
+                          {index === 5 && <HotTrendsCategory />}
+                          {index === 11 && <BannerOurTeam />}
                         </>
                       );
                     })}
@@ -306,6 +505,6 @@ const FilterSection = ({ styleClass, title, items, handleChange }) => {
         ))}
       </div>
     </div>
-  )
+  );
 };
 export default CategoryPage;
