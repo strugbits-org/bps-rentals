@@ -1,6 +1,6 @@
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
 
-import ProductPostPage from "@/components/Product/Index";
+import ProductPostPage from '@/components/Product/Index';
 
 import {
   getAllCategoriesData,
@@ -11,14 +11,14 @@ import {
   getProductVariants,
   getSelectedProductDetails,
   getSelectedProductId,
-} from "@/Services/ProductsApis";
+} from '@/Services/ProductsApis';
 
 export default async function Page({ params }) {
   const { slug } = params;
 
   const selectedProductRes = await getSelectedProductId(slug);
   if (!selectedProductRes?.length) {
-    redirect("/error");
+    redirect('/error');
     return null;
   }
 
