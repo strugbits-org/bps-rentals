@@ -50,7 +50,6 @@ export const getDataFetchFunction = async (payload) => {
       "RentalsFooterLinks",
       "RentalsSocialMediaLinks",
       "RentalsAddresses",
-      "RentalsHomeSectionsTitles",
       "DreamBigSection",
       "RentalsMyAccountPage",
       "RentalsChangePasswordPage",

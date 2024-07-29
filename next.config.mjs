@@ -14,7 +14,9 @@ const nextConfig = {
       fullUrl: true,
     },
   },
+  env: {
+    CORPORATE_URL: process.env.CORPORATE_URL
+  }
 };
 
 export default nextConfig;
-  

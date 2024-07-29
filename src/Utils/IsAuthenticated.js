@@ -86,7 +86,6 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
     "RentalsFooterLinks",
     "RentalsSocialMediaLinks",
     "RentalsAddresses",
-    "RentalsHomeSectionsTitles",
     "DreamBigSection",
     "RentalsMyAccountPage",
     "RentalsChangePasswordPage",

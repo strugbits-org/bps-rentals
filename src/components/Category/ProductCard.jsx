@@ -107,10 +107,10 @@ const ProductCard = ({
                       <img
                         src={productImageURL({
                           wix_url: selVariantData.variant.imageSrc,
-                          w: "22",
-                          h: "22",
+                          w: "40",
+                          h: "40",
                           fit: "fill",
-                          q: "90",
+                          q: "100",
                         })}
                         data-preload
                         className="media"

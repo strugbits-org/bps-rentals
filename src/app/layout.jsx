@@ -32,6 +32,7 @@ import {
   getMarketsData,
   getSocialSectionBlogs,
   getSocialSectionDetails,
+  getStudiosData,
 } from "@/Services/SectionsApis";
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
@@ -54,6 +55,7 @@ export default async function RootLayout({ children }) {
     navigationMenu,
     contactUsContent,
     marketsData,
+    studiosData,
     allCategoriesData,
     socialSectionDetails,
     socialSectionBlogs,
@@ -69,6 +71,7 @@ export default async function RootLayout({ children }) {
     getFooterNavigationMenu(),
     getContactUsContent(),
     getMarketsData(),
+    getStudiosData(),
     getNavbarCategoriesData(),
     getSocialSectionDetails(),
     getSocialSectionBlogs(),
@@ -134,7 +137,7 @@ export default async function RootLayout({ children }) {
               socialLinks={socialLinks}
             />
           </Wrapper>
-          <StudiosFixedMenu />
+          <StudiosFixedMenu data={studiosData} />
           {/* <CartModal /> */}
           <ContactUsModal
             contactUsContent={contactUsContent}

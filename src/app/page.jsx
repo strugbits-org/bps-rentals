@@ -1,7 +1,6 @@
 import HomePage from "@/components/Home/Index";
 import {
   getHomeHeroSectionContent,
-  getPageContentRentals,
 } from "@/Services/HomeApis";
 import { fetchBestSellers, getBestSellerProducts } from "@/Services/ProductsApis";
 
@@ -19,7 +18,6 @@ export default async function Page() {
   const bestSeller = await fetchBestSellers();
 
   const [
-    homePageContent,
     homeHeroSectionContent,
     homeNewArrivalSectionContent,
     homeHotTrendsSectionContent,
@@ -30,7 +28,6 @@ export default async function Page() {
     studiosData,
     marketsData,
   ] = await Promise.all([
-    getPageContentRentals(),
     getHomeHeroSectionContent(),
     getNewArrivalSectionContent(),
     getHotTrendsSectionContent(),
@@ -44,7 +41,6 @@ export default async function Page() {
 
   return (
     <HomePage
-      pageContent={homePageContent}
       heroSectionContent={homeHeroSectionContent}
       newArrivalSectionContent={homeNewArrivalSectionContent}
       hotTrendsSectionContent={homeHotTrendsSectionContent}

@@ -62,7 +62,7 @@ export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTer
     return { items: [], totalCount: 0 };
   }
 };
-export const getBestSellerProducts = async (bestSeller, limit = 4, skip = 0) => {
+export const getBestSellerProducts = async (bestSeller, limit = 12, skip = 0) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "locationFilteredVariant",
