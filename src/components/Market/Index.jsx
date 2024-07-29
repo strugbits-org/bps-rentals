@@ -24,7 +24,7 @@ const MarketPage = ({
   bestSellerProducts
 }) => {
   useEffect(() => {
-    setTimeout(markPageLoaded, 200);
+    setTimeout(markPageLoaded, 500);
   }, []);
   return (
     <>

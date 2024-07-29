@@ -148,8 +148,8 @@ const CategoryPage = ({
     }
     setFilteredProducts(products.items);
     setTotalCount(products.totalCount);
-    setTimeout(markPageLoaded, 200);
-    setTimeout(setEnableLocationFilter(true), 200);
+    setTimeout(markPageLoaded, 500);
+    setTimeout(setEnableLocationFilter(true), 500);
   };
 
   useEffect(() => {
