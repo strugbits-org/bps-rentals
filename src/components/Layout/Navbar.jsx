@@ -11,6 +11,9 @@ import MarketModal from "../Common/Modals/MarketModal";
 import AllCategories from "../Category/AllCategories";
 import ErrorModal from "../Common/Modals/ErrorModal";
 import AnimateLink from "../Common/AnimateLink";
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/navigation";
+import { pageLoadStart } from "@/Utils/AnimationFunctions";
 
 const Navbar = ({
   locations,
@@ -22,10 +25,27 @@ const Navbar = ({
 }) => {
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("Message");
   const [toggleModal, setToggleModal] = useState("");
-console.log(showModal,'showModal>');
+  const [cookies, setCookie] = useCookies(["authToken"]);
+  const router = useRouter();
+
+  const checkUser = () => {
+    const loggedIn = cookies.authToken;
+    const submenuLogin = document.querySelector(".submenu-login");
+    const hasActive = submenuLogin.classList.contains("active");
+    submenuLogin.classList.remove("active");
+    if (loggedIn) {
+      pageLoadStart();
+      router.push("/my-account");
+    } else {
+      if (hasActive) {
+        submenuLogin.classList.remove("active");
+      } else {
+        submenuLogin.classList.add("active");
+      }
+    }
+  };
   return (
     <>
       {errorMessageVisible && (
@@ -69,7 +89,21 @@ console.log(showModal,'showModal>');
                     </button>
                   </li>
                   <li className="login-item">
-                    <button data-set-submenu="login" className="new-login-button">
+                    {/* {"login" === "login" ? (
+                      <button
+                        data-set-submenu="login"
+                        className="new-login-button"
+                      >
+                        <i className="icon-user"></i>
+                        <span className="hide">Login</span>
+                      </button>
+                    ) : (
+                      )} */}
+                    <button
+                      onClick={checkUser}
+                      // data-set-submenu="login"
+                      className="new-login-button"
+                    >
                       <i className="icon-user"></i>
                       <span className="hide">Login</span>
                     </button>
@@ -227,7 +261,28 @@ console.log(showModal,'showModal>');
                       </button>
                     </li>
                     <li className="login-item">
-                      <button data-set-submenu="login" className="new-login-button">
+                      {/* {"login" !== "login" ? (
+                        <AnimateLink
+                          to="/my-account"
+                          className="new-login-button"
+                        >
+                          <i className="icon-user"></i>
+                          <span className="hide">Login</span>
+                        </AnimateLink>
+                      ) : (
+                        <button
+                          data-set-submenu="login"
+                          className="new-login-button"
+                        >
+                          <i className="icon-user"></i>
+                          <span className="hide">Login</span>
+                        </button>
+                      )} */}
+                      <button
+                        onClick={checkUser}
+                        // data-set-submenu="login"
+                        className="new-login-button"
+                      >
                         <i className="icon-user"></i>
                         <span className="hide">Login</span>
                       </button>
