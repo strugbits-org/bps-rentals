@@ -1,7 +1,19 @@
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 import { createWixClient } from "@/Utils/CreateWixClient";
+
+export function isValidPassword(password) {
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()~<>?,./;:{}[\]|\\])[A-Za-z\d!@#$%^&*()~<>?,./;:{}[\]|\\]{6,}$/;
+  return passwordRegex.test(password);
+}
+
+export function isValidEmail(email) {
+  const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  return emailRegex.test(email);
+}
 
 export const POST = async (req) => {
   try {
@@ -10,6 +22,17 @@ export const POST = async (req) => {
     const { email, password, firstName, lastName } = body;
 
     const wixClient = await createWixClient();
+
+    const invalidEmail = isValidEmail(email);
+
+    if (!invalidEmail) {
+      return NextResponse.json(
+        {
+          message: "Enter a valid email address",
+        },
+        { status: 404 }
+      );
+    }
 
     const memberData = await wixClient.items
       .queryDataItems({
@@ -25,12 +48,26 @@ export const POST = async (req) => {
       );
     }
 
-    const user = await wixClient.auth.register({ email, password });
+    const invalidPassword = isValidPassword(password);
+    if (!invalidPassword) {
+      return NextResponse.json(
+        {
+          message:
+            "Password must have 1 uppercase, 1 lowercase, 1 number, 1 symbol, minimum 6 characters",
+        },
+        { status: 404 }
+      );
+    }
 
+    const user = await wixClient.auth.register({ email, password });
+    let jwtToken;
     if (
       user.loginState === "SUCCESS" ||
       user.errorCode === "emailAlreadyExists"
     ) {
+      jwtToken = jwt.sign({ email: email }, process.env.JWT_SECRET, {
+        expiresIn: "30d",
+      });
       setTimeout(async () => {
         const payload = { loginEmail: email };
         const response = await fetch(`${process.env.RENTALS_URL}/getMember`, {
@@ -100,7 +137,32 @@ export const POST = async (req) => {
           console.error(error);
         }
       }, 8000);
-      return NextResponse.json({ message: "User registered successfully" });
+
+      const response = NextResponse.json(
+        {
+          message: "User registered successfully",
+        },
+        { status: 200 }
+      );
+      // const userData = {
+      //   firstName,
+      //   lastName,
+      //   email,
+      // };
+      // Set authToken as an HTTP-only cookie
+      response.cookies.set("authToken", jwtToken, {
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+        path: "/",
+      });
+
+      // response.cookies.set("userData", userData, {
+      //   httpOnly: true,
+      //   maxAge: 30 * 24 * 60 * 60, // 30 days
+      //   path: "/",
+      // });
+
+      return response;
     } else {
       return NextResponse.json(
         { message: `Server Error: ${user.loginState || "Unknown error"}` },

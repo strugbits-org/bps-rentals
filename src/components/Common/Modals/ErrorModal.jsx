@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
 import AnimateLink from "../AnimateLink";
 
 const ErrorModal = ({ buttonLabel, message, setErrorMessageVisible }) => {
@@ -12,7 +12,7 @@ const ErrorModal = ({ buttonLabel, message, setErrorMessageVisible }) => {
   useEffect(() => {
     setTimeout(() => {
       document.body.setAttribute("data-form-cart-state", "success");
-      markPageLoaded();
+      updatedWatched();
     }, 500);
   }, []);
   return (

@@ -12,7 +12,10 @@ const Login = ({
   setSuccessMessageVisible,
   setErrorMessageVisible,
   setMessage,
+  setToggleModal
 }) => {
+  const router = useRouter();
+
   const [cookies, setCookie] = useCookies(["authToken", "userData"]);
   const [submittingForm, setSubmittingForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -20,13 +23,15 @@ const Login = ({
     email: "",
     password: "",
   });
-  const router = useRouter();
+
   const LoginUser = async (e) => {
     e.preventDefault();
     if (submittingForm) return;
 
     setSubmittingForm(true);
     setErrorMessageVisible(false);
+    const submenuLogin = document.querySelector('.submenu-login');
+    const button = document.querySelector('.new-login-button');
     try {
       const response = await signInUser({
         email: formData.email,
@@ -51,17 +56,22 @@ const Login = ({
         path: "/",
         expires: new Date("2099-01-01"),
       });
-
-      const loggedIn = cookies.authToken !== undefined;
-
-      if (loggedIn) {
+      if (userToken) {
         pageLoadStart();
+        submenuLogin.classList.remove('active');
+        button.classList.remove('active');
         router.push("/my-account");
+
+        setFormData({
+          email: "",
+          password: "",
+        })
       }
     } catch (error) {
       console.log("Error during login:", error);
       setMessage("Invalid Credentials!");
       setErrorMessageVisible(true);
+      submenuLogin.classList.add('active');
     } finally {
       setTimeout(() => {
         setSubmittingForm(false);
@@ -123,8 +133,8 @@ const Login = ({
                 <i className="icon-password"></i>
                 <i className="icon-password-hide"></i>
               </div>
-              <a
-                href="javascript:void(0)"
+              <button
+                onClick={()=>setToggleModal('forgot-password')}
                 className="btn-forgot-password password-link"
               >
                 <span>
@@ -132,7 +142,7 @@ const Login = ({
                   {loginModalContent &&
                     loginModalContent.forgotYourPasswordLinkText}
                 </span>
-              </a>
+              </button>
             </div>
             <div className="container-submit col-12 mt-mobile-10">
               <button type="submit" className="bt-submit btn-blue w-100">
@@ -166,7 +176,7 @@ const Login = ({
         <span className="d-block fs-lg-35 fs-mobile-30 fw-600 text-center">
           New to Blueprint Studios?
         </span>
-        <button className="btn-create-account btn-border-blue mx-auto mt-20">
+        <button onClick={()=>setToggleModal('create-account')} className="btn-create-account btn-border-blue mx-auto mt-20">
           <i className="icon-arrow-diagonal-left"></i>
           <span>
             {" "}

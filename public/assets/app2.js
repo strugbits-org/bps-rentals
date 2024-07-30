@@ -9695,7 +9695,7 @@ var require_app2 = __commonJS({
       blockScroll: true,
       // multiple: false,
       toggle: true,
-      deactivateOnClickOutside: true,
+      deactivateOnClickOutside: false,
       leaveDelay: 800,
       onClose: () => {
         closeSearch();
@@ -9793,7 +9793,9 @@ var require_app2 = __commonJS({
     // }
     document.querySelector(".closeModals").addEventListener("click", manualModalCloseControls);
 
-    document.querySelector(".updateWatched").addEventListener("click", () => {
+    document
+    .querySelector(".updateWatched")
+    .addEventListener("customUpdateWatch", () => {
       updateWatched();
       productLinkColor();
       manualModalClose();
