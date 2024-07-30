@@ -376,7 +376,7 @@ export const getProductVariantsImages = async (id) => {
 export const getProductFound = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "F1CategoriesStructure",
+      dataCollectionId: "BPSCatalogStructure",
       includeReferencedItems: ["parentCollection"],
       returnTotalCount: null,
       contains: null,
@@ -403,7 +403,7 @@ export const getProductFound = async () => {
 export const getAllCategoriesData = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "F1CategoriesStructure",
+      dataCollectionId: "BPSCatalogStructure",
       includeReferencedItems: [
         "parentCollection",
         "level2Collections",

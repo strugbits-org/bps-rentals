@@ -59,7 +59,7 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
   }
   const unAuthCollections = [
     "RentalsHomeHero",
-    "RentalsHomeNewArrivals",
+    "RentalsNewArrivals",
     "RentalsHomeStudios",
     "RentalsHomeHotTrends",
     "RentalsHomeDreamBig",
@@ -89,7 +89,6 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
     "DreamBigSection",
     "RentalsMyAccountPage",
     "RentalsChangePasswordPage",
-    "F1CategoriesStructure",
     "BPSCatalogStructure",
     "HeaderCategoryMenu",
     "locationFilteredVariant",

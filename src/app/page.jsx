@@ -13,9 +13,13 @@ import {
   getNewArrivalSectionContent,
   getStudiosData,
 } from "@/Services/SectionsApis";
+import { headers } from 'next/headers'
 
 export default async function Page() {
   const bestSeller = await fetchBestSellers();
+  const headersList = headers();
+  const referer = headersList.get('referer');
+  console.log("referer", referer);
 
   const [
     homeHeroSectionContent,

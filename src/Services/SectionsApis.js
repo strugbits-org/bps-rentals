@@ -5,15 +5,16 @@ import { fetchProductsByIds } from "./ProductsApis";
 export const getNewArrivalSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeNewArrivals",
+      dataCollectionId: "RentalsNewArrivals",
+      includeReferencedItems: ["product"]
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items.map((x) => x.data)[4];
     } else {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching HomeNewArrivalSectionContent data:", error);
+    console.error("Error fetching RentalsNewArrivals data:", error);
     return [];
   }
 };
