@@ -10,7 +10,6 @@ import {
   getPeopleReviewSliderData,
   getStudiosData,
 } from "@/Services/SectionsApis";
-import { headers } from "next/headers";
 
 export const generateStaticParams = async () => {
   try {
@@ -23,10 +22,6 @@ export const generateStaticParams = async () => {
 }
 
 export default async function Page({ params }) {
-
-  const headersList = headers();
-  const referer = headersList.get('referer');
-  console.log("referer", referer);
 
   const marketSection = await getMarketSection(params.id);
   const bestSeller = await fetchBestSellers(params.id);
@@ -48,7 +43,7 @@ export default async function Page({ params }) {
     highlightsSectionData,
     bestSellerProducts,
   ] = await Promise.all([
-    getNewArrivalSectionContent(),
+    getNewArrivalSectionContent(params.id),
     getHomeSectionDetails(),
     getDreamBigSectionContent(),
     getStudiosData(),

@@ -1,8 +1,8 @@
 import { generateImageURL } from "@/Utils/GenerateImageURL";
-import { CustomButton } from "../CustomButton";
 import AnimateLink from "../AnimateLink";
 
 const NewArrival = ({ content }) => {
+  if (!content) return;
   return (
     <section className="section-new-arrivals white-1">
       <div className="container-text pt-tablet-105 pt-phone-185 z-3 col-6">

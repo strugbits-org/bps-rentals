@@ -9695,7 +9695,7 @@ var require_app2 = __commonJS({
       blockScroll: true,
       // multiple: false,
       toggle: true,
-      deactivateOnClickOutside: false,
+      deactivateOnClickOutside: true,
       leaveDelay: 800,
       onClose: () => {
         closeSearch();

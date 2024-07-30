@@ -16,7 +16,9 @@ export function middleware(req) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
   }
-  return NextResponse.next();
+  const headers = new Headers(req.headers);
+  headers.set("x-current-path", req.nextUrl.pathname);
+  return NextResponse.next({ headers });
 }
 export const config = {
   matcher: ["/((?!_next|favicon.ico|assets|public|api).*)"],

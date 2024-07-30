@@ -19,6 +19,7 @@ export const MarketBestSeller = ({ products }) => {
         try {
             setLoading(true);
             const response = await getBestSellerProducts(products.bestSellerId, 6, productsData.length);
+            console.log("response",response );
             setProductsData(prev => [...prev, ...response.items]);
             setTotalCount(response.totalCount);
             updatedWatched();
