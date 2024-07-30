@@ -1,28 +1,31 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import AnimateLink from "../Common/AnimateLink";
 import { FooterAccount } from "./FooterAccount";
+import { useCookies } from "react-cookie";
+import useUserData from "@/Hooks/useUserData";
+import { pageLoadStart } from "@/Utils/AnimationFunctions";
 
+const links = [
+  { name: "My Account", icon: "icon-account", href: "/my-account" },
+  {
+    name: "Saved Products",
+    icon: "icon-saved",
+    href: "/my-account-saved-products",
+  },
+  {
+    name: "Quotes History",
+    icon: "icon-history",
+    href: "/my-account-quotes-history",
+  },
+  {
+    name: "Change Password",
+    icon: "icon-change",
+    href: "/my-account-change-password",
+  },
+];
 const Account = ({ children, footerData }) => {
-  const links = [
-    { name: "My Account", icon: "icon-account", href: "/my-account" },
-    {
-      name: "Saved Products",
-      icon: "icon-saved",
-      href: "/my-account-saved-products",
-    },
-    {
-      name: "Quotes History",
-      icon: "icon-history",
-      href: "/my-account-quotes-history",
-    },
-    {
-      name: "Change Password",
-      icon: "icon-change",
-      href: "/my-account-change-password",
-    },
-  ];
 
   const pathname = usePathname();
   const accountSections = {
@@ -32,7 +35,26 @@ const Account = ({ children, footerData }) => {
     '/my-account-change-password': 'section-change-password',
   };
   const activeSection = accountSections[pathname] || '';
+  const { firstName } = useUserData();
 
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "authToken",
+    "userData",
+  ]);
+const router = useRouter()
+  const handleLogOut = () => {
+    pageLoadStart();
+    try {
+      const loggedIn = cookies.authToken !== undefined;
+      if (loggedIn) {
+        removeCookie("authToken", { path: "/" });
+        removeCookie("userData", { path: "/" });
+        router.push('/')
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
   return (
     <>
       <section className={`my-account-intro ${activeSection}`}>
@@ -45,7 +67,7 @@ const Account = ({ children, footerData }) => {
         >
           <div className="container-my-account">
             <h2 className="fs--35 blue-1">
-              Hello, <br className="no-tablet" /> Gabriel
+              Hello, <br className="no-tablet" /> {firstName}
             </h2>
             <ul className="list-menu-my-account mt-lg-65 mt-tablet-30">
               {links.map((data, index) => {
@@ -64,10 +86,10 @@ const Account = ({ children, footerData }) => {
                 );
               })}
               <li className="list-item">
-                <AnimateLink to="/" className="link-account">
+                <span onClick={handleLogOut} className="link-account">
                   <i className="icon-logout"></i>
                   <span>Log Out</span>
-                </AnimateLink>
+                </span>
               </li>
             </ul>
           </div>

@@ -1,14 +1,16 @@
 "use client";
+import { useState } from "react";
+
 import CreateAccount from "../Authentication/CreateAccount";
 import ForgotPassword from "../Authentication/ForgotPassword";
 import Login from "../Authentication/Login";
-import AllCategories from "../Category/AllCategories";
-import AnimateLink from "../Common/AnimateLink";
+
+import LocationsFilter from "../Common/LocationsFilter";
 import SearchModal from "../Common/Modals/SearchModal";
 import MarketModal from "../Common/Modals/MarketModal";
-import LocationsFilter from "../Common/LocationsFilter";
+import AllCategories from "../Category/AllCategories";
 import ErrorModal from "../Common/Modals/ErrorModal";
-import { useState } from "react";
+import AnimateLink from "../Common/AnimateLink";
 
 const Navbar = ({
   locations,
@@ -20,8 +22,10 @@ const Navbar = ({
 }) => {
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("Message");
-
+  const [toggleModal, setToggleModal] = useState("");
+console.log(showModal,'showModal>');
   return (
     <>
       {errorMessageVisible && (
@@ -65,7 +69,7 @@ const Navbar = ({
                     </button>
                   </li>
                   <li className="login-item">
-                    <button data-set-submenu="login">
+                    <button data-set-submenu="login" className="new-login-button">
                       <i className="icon-user"></i>
                       <span className="hide">Login</span>
                     </button>
@@ -223,7 +227,7 @@ const Navbar = ({
                       </button>
                     </li>
                     <li className="login-item">
-                      <button data-set-submenu="login">
+                      <button data-set-submenu="login" className="new-login-button">
                         <i className="icon-user"></i>
                         <span className="hide">Login</span>
                       </button>
@@ -254,7 +258,7 @@ const Navbar = ({
               <div
                 className="submenu-login submenu"
                 data-get-submenu="login"
-                data-form-active=""
+                data-form-active={toggleModal}
               >
                 <div
                   className="wrapper-submenu-login wrapper-submenu"
@@ -292,6 +296,7 @@ const Navbar = ({
                         setSuccessMessageVisible={setSuccessMessageVisible}
                         setErrorMessageVisible={setErrorMessageVisible}
                         setMessage={setMessage}
+                        setToggleModal={setToggleModal}
                       />
                       <CreateAccount
                         createAccountModalContent={createAccountModalContent}

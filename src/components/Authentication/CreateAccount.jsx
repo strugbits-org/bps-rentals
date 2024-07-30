@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 
 import { signUpUser } from "@/Services/AuthApis";
 import Disclaimer from "./Disclaimer";
+import { useRouter } from "next/navigation";
+import { pageLoadStart } from "@/Utils/AnimationFunctions";
 
 const CreateAccount = ({
   createAccountModalContent,
@@ -11,8 +13,9 @@ const CreateAccount = ({
   setErrorMessageVisible,
   setMessage,
 }) => {
-  const [submittingForm, setSubmittingForm] = useState(false);
+  const router = useRouter();
 
+  const [submittingForm, setSubmittingForm] = useState(false);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -31,7 +34,7 @@ const CreateAccount = ({
     setSubmittingForm(true);
     setErrorMessageVisible(false);
     setSuccessMessageVisible(false);
-
+    const submenuLogin = document.querySelector(".submenu-login");
     try {
       const userData = {
         email: formData.email,
@@ -45,13 +48,15 @@ const CreateAccount = ({
       };
 
       const response = await signUpUser(userData);
-      if (response?.error) {
+      console.log(response, "response");
+
+      if (response.error) {
         setMessage(response.message);
         setErrorMessageVisible(true);
         return;
       }
 
-      if (response) {
+      if (!response.error) {
         setSuccessMessageVisible(true);
         setErrorMessageVisible(false);
         setFormData({
@@ -60,6 +65,12 @@ const CreateAccount = ({
           email: "",
           password: "",
         });
+      }
+
+      if (!response.error) {
+        submenuLogin.classList.remove("active");
+        pageLoadStart();
+        router.push("/my-account");
       }
       return response;
     } catch (error) {

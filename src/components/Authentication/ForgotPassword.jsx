@@ -11,12 +11,12 @@ const ForgotPassword = ({
   const [isDisabled, setDisabled] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
   });
 
   const handleSubmit = async (e) => {
     setDisabled(true);
     console.log("called");
+    console.log(formData, "formData");
     try {
       e.preventDefault();
       setMessage("");
