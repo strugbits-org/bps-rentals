@@ -473,8 +473,8 @@ export const getPairItWithProducts = async (productIds) => {
 
 export const saveProduct = async (id) => {
   try {
-    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBnbWFpbC5jb20iLCJpYXQiOjE3MjI0MTM0NTEsImV4cCI6MTcyNTAwNTQ1MX0.fG9FHqI0AicMglhw5kaVs1t-kGR_2oPQMSCbMhqlARs"
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/wix/saveProduct/${id}`, {
+    const authToken = getAuthToken();
+    const response = await fetch(`/api/wix/saveProduct/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
