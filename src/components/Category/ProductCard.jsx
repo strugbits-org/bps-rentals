@@ -1,7 +1,7 @@
-import { productImageURL } from '@/Utils/GenerateImageURL';
-import AnimateLink from '../Common/AnimateLink';
-import React from 'react';
-import { SaveProductButton } from '../Common/SaveProductButton';
+import { productImageURL } from "@/Utils/GenerateImageURL";
+import AnimateLink from "../Common/AnimateLink";
+import React from "react";
+import { SaveProductButton } from "../Common/SaveProductButton";
 
 const ProductCard = ({
   index,

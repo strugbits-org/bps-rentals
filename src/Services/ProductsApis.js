@@ -471,18 +471,23 @@ export const getPairItWithProducts = async (productIds) => {
   }
 };
 
+
 export const saveProduct = async (id) => {
   try {
-    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBnbWFpbC5jb20iLCJpYXQiOjE3MjI0MTM0NTEsImV4cCI6MTcyNTAwNTQ1MX0.fG9FHqI0AicMglhw5kaVs1t-kGR_2oPQMSCbMhqlARs"
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/wix/saveProduct/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      },
-    });
+    const authToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBnbWFpbC5jb20iLCJpYXQiOjE3MjI0MTM0NTEsImV4cCI6MTcyNTAwNTQ1MX0.fG9FHqI0AicMglhw5kaVs1t-kGR_2oPQMSCbMhqlARs";
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/wix/saveProduct/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      }
+    );
 
-    console.log(response, 'response');
+    console.log(response, "response");
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
@@ -497,13 +502,16 @@ export const saveProduct = async (id) => {
 export const unSaveProduct = async (id) => {
   try {
     const authToken = getAuthToken();
-    const response = await fetch(`${base_url}/api/wix/removeSavedProduct/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      },
-    });
+    const response = await fetch(
+      `${base_url}/api/wix/removeSavedProduct/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      }
+    );
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
