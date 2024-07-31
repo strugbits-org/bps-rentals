@@ -30,6 +30,7 @@ export default async function Page({ params }) {
     getSelectedColorsData(categoryId),
     fetchFilteredProducts({ categories: [categoryId], pageSize: 18 }),
   ]);
+  
 
   return (
     <CategoryPage
