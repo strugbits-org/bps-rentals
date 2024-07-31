@@ -30,7 +30,7 @@ const ProductCard = ({
         </button>
       </div>
       <div className="container-copy">
-        <a href="javascript:void(0)" className="btn-copy copy-link">
+        <a href="#" className="btn-copy copy-link">
           <span>{defaultVariantSku}</span>
           <i className="icon-copy"></i>
         </a>

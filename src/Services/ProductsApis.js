@@ -90,9 +90,8 @@ export const getBestSellerProducts = async (bestSeller, limit = 12, skip = 0) =>
       skip: skip,
     });
     if (response && response._items) {
-      console.log("response", response);
-      console.log("response123", { items: response._items.map((x) => x.data), totalCount: response._totalCount });
-      return { items: response._items.map((x) => x.data), totalCount: response._totalCount };
+      const data = { items: response._items.map((x) => x.data), totalCount: response._totalCount }
+      return data;
     } else {
       throw new Error("Response does not contain _items");
     }

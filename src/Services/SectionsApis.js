@@ -210,9 +210,13 @@ export const getSocialSectionDetails = async () => {
 export const fetchInstaFeed = async () => {
   try {
     const response = await instafeed({ access_token: process.env.INSTA_ACCESS_TOKEN, requestedCount: 24 });
+    if (!response.data) {
+      return [];
+    }
     return response.data;
   } catch (error) {
-    throw new Error(error.message);
+    console.log("Error: ",error);
+    return [];
   } finally {
     refreshToken({ access_token: process.env.INSTA_ACCESS_TOKEN });
   };
