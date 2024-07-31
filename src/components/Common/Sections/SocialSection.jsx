@@ -115,28 +115,29 @@ export const SocialSection = ({ data, posts, insta_feed }) => {
                     <h3>{data && data.instaFeedTitle}</h3>
                   </div>
                   <ul className="list-instagram insta-feed">
-                    {insta_feed.map((item, index) => {
-                      return (
-                        <li key={index}>
-                          <AnimateLink
-                            to={item.permalink}
-                            target="_blank"
-                            attributes={{
-                              rel: "noopener noreferrer",
-                            }}
-                          >
-                            <div className="container-img">
-                              <img
-                                src={item.image}
-                                data-preload
-                                className="media"
-                                alt=""
-                              />
-                            </div>
-                          </AnimateLink>
-                        </li>
-                      );
-                    })}
+                    {insta_feed &&
+                      insta_feed.map((item, index) => {
+                        return (
+                          <li key={index}>
+                            <AnimateLink
+                              to={item.permalink}
+                              target="_blank"
+                              attributes={{
+                                rel: "noopener noreferrer",
+                              }}
+                            >
+                              <div className="container-img">
+                                <img
+                                  src={item.image}
+                                  data-preload
+                                  className="media"
+                                  alt=""
+                                />
+                              </div>
+                            </AnimateLink>
+                          </li>
+                        );
+                      })}
                   </ul>
                 </div>
               </li>
@@ -164,7 +165,7 @@ export const SocialSection = ({ data, posts, insta_feed }) => {
                       data-pin-scale-width="1200"
                       data-pin-min-weight="100%"
                       data-pin-max-weight="100%"
-                      href={data && data.pinterestUrl || ""}
+                      href={(data && data.pinterestUrl) || ""}
                     ></Link>
                   </ul>
                 </div>
