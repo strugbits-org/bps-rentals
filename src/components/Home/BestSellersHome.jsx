@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { CustomButton } from '../Common/CustomButton';
 import ProductCard from '../Category/ProductCard';
-import CartModal from '../Common/Modals/CartModal';
 
 const BestSellersHome = ({ products, content }) => {
   const [selectedVariants, setSelectedVariants] = useState({});

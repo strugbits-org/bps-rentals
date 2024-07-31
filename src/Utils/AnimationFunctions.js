@@ -44,12 +44,16 @@ export const resetSlideIndex = () => {
   }
 };
 
-export const updatedWatched = () => {
+export const updatedWatched = (refreshScroll = false) => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
-
       const customEvent = new Event("customUpdateWatch");
       document.querySelector(".updateWatched").dispatchEvent(customEvent);
+
+      if (refreshScroll) {
+        const customEvent = new Event("refreshScroll");
+        document.querySelector(".scrollRefresh").dispatchEvent(customEvent);
+      }
     }, 200);
   }
 };

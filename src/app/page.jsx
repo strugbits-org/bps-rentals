@@ -35,19 +35,20 @@ export default async function Page() {
     getNewArrivalSectionContent(path),
     getHotTrendsSectionContent(),
     getHighlightsSection("HighlightsProducts"),
-    getBestSellerProducts(bestSeller),
+    getBestSellerProducts(bestSeller, 12),
     getHomeSectionDetails(),
     getDreamBigSectionContent(),
     getStudiosData(),
     getMarketsData()
   ]);
 
+  console.log("");
   return (
     <HomePage
       heroSectionContent={homeHeroSectionContent}
       newArrivalSectionContent={homeNewArrivalSectionContent}
       hotTrendsSectionContent={homeHotTrendsSectionContent}
-      bestSellerProducts={bestSellerProducts.items}
+      bestSellerProducts={bestSellerProducts}
       highlightsSectionData={highlightsSectionData}
       homeSectionDetails={homeSectionDetails}
       dreamBigSectionContent={homeDreamBigSectionContent}

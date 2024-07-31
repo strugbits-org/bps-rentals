@@ -62,7 +62,7 @@ export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTer
     return { items: [], totalCount: 0 };
   }
 };
-export const getBestSellerProducts = async (bestSeller, limit = 12, skip = 0) => {
+export const getBestSellerProducts = async (bestSeller, limit) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "locationFilteredVariant",
@@ -85,13 +85,13 @@ export const getBestSellerProducts = async (bestSeller, limit = 12, skip = 0) =>
         key: "subCategory",
         values: bestSeller
       }],
-      limit: limit,
-      returnTotalCount: true,
-      skip: skip,
+      limit: "infinite",
     });
     if (response && response._items) {
-      const data = { items: response._items.map((x) => x.data), totalCount: response._totalCount }
-      return data;
+      if (limit) {
+        return response._items.map((x) => x.data).slice(0, limit);
+      }
+      return response._items.map((x) => x.data);
     } else {
       throw new Error("Response does not contain _items");
     }
