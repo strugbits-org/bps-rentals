@@ -1,6 +1,19 @@
+import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
+import ProductCard from "@/components/Category/ProductCard";
+import { useState } from "react";
 
-const Highlights = () => {
+const Highlights = ({ pageContent, data }) => {
+  if (data.length === 0) return;
+  const [selectedVariants, setSelectedVariants] = useState({});
+
+  const handleImageHover = (index, variant) => {
+    setSelectedVariants((prevSelectedVariants) => ({
+      ...prevSelectedVariants,
+      [index]: variant,
+    }));
+  };
+
   return (
     <section className="section-highlights">
       <div className="container-fluid">
@@ -10,145 +23,38 @@ const Highlights = () => {
               className="fs--60 fs-phone-40 blue-1 text-center split-words"
               data-aos="d:loop"
             >
-              Highlights
+              {pageContent && pageContent.highlightsSectionTitle}
             </h2>
             <div className="slider-highlights mt-lg-95 mt-tablet-55 mt-phone-35">
               <div className="swiper-container">
                 <div className="swiper-wrapper">
-                  {[1, 2, 3, 4, 5, 6].map((index) => {
+                  {data && data.map((item, index) => {
+                    const { product, variantData } = item;
                     return (
                       <div key={index} className="swiper-slide">
                         <div className="highlight-content">
-                          <div
-                            className="product-link large active"
-                            data-product-category
-                            data-product-location
-                            data-product-colors
-                          >
-                            <div className="container-tags">
-                              <div className="best-seller">
-                                <span>Best Seller</span>
-                              </div>
-                              <button className="btn-bookmark">
-                                <i className="icon-bookmark"></i>
-                                <i className="icon-bookmark-full"></i>
-                              </button>
-                            </div>
-                            <div className="container-copy">
-                              <a
-                                href="javascript:void(0)"
-                                className="btn-copy copy-link"
-                              >
-                                <span>MODCH39</span>
-                                <i className="icon-copy"></i>
-                              </a>
-                              <input
-                                type="text"
-                                className="copy-link-url"
-                                value="MODCH39"
-                                style={{
-                                  position: "absolute",
-                                  opacity: 0,
-                                  pointerEvents: "none",
-                                }}
-                              />
-                            </div>
-                            <AnimateLink to="/product" className="link">
-                              <div className="container-top">
-                                <h2 className="product-title">Bristol Chair</h2>
-                                <div className="container-info">
-                                  <div className="dimensions">
-                                    <span>24”L X 30”W X 37”H</span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="wrapper-product-img">
-                                <div
-                                  className="container-img product-img"
-                                  data-get-product-link-color="green"
-                                  data-default-product-link-active
-                                >
-                                  <img
-                                    src="/images/chairs/bristol-chair-color-1.webp"
-                                    className=" "
-                                  />
-                                </div>
-                                <div
-                                  className="container-img product-img"
-                                  data-get-product-link-color="white"
-                                >
-                                  <img
-                                    src="/images/chairs/bristol-chair-color-2.webp"
-                                    className=" "
-                                  />
-                                </div>
-                                <div
-                                  className="container-img product-img"
-                                  data-get-product-link-color="blue"
-                                >
-                                  <img
-                                    src="/images/chairs/bristol-chair-color-3.webp"
-                                    className=" "
-                                  />
-                                </div>
-                              </div>
-                            </AnimateLink>
-                            <div className="container-color-options">
-                              <ul className="list-color-options">
-                                <li
-                                  className="list-item"
-                                  data-set-product-link-color="green"
-                                  data-default-product-link-active
-                                >
-                                  <div className="container-img">
-                                    <img
-                                      src="/images/chairs/bristol-chair-color-1.webp"
-                                      className=" "
-                                    />
-                                  </div>
-                                </li>
-                                <li
-                                  className="list-item"
-                                  data-set-product-link-color="white"
-                                >
-                                  <div className="container-img">
-                                    <img
-                                      src="/images/chairs/bristol-chair-color-2.webp"
-                                      className=" "
-                                    />
-                                  </div>
-                                </li>
-                                <li
-                                  className="list-item"
-                                  data-set-product-link-color="blue"
-                                >
-                                  <div className="container-img">
-                                    <img
-                                      src="/images/chairs/bristol-chair-color-3.webp"
-                                      className=" "
-                                    />
-                                  </div>
-                                </li>
-                              </ul>
-                              <div className="colors-number">
-                                <span>+3</span>
-                              </div>
-                            </div>
-                            <btn-modal-open
-                              group="modal-product"
-                              class="modal-add-to-cart"
-                            >
-                              <span>Add to cart</span>
-                              <i className="icon-cart"></i>
-                            </btn-modal-open>
-                          </div>
-                          <AnimateLink to="/product" className="link-highlight">
+                          <ProductCard
+                            key={index}
+                            index={index}
+                            product={product}
+                            variantData={variantData}
+                            selectedVariant={
+                              selectedVariants[index] || variantData[0]
+                            }
+                            handleImageHover={handleImageHover}
+                          />
+                          <AnimateLink to={`product/${item.product.slug}`} className="link-highlight">
                             <div className="container-img bg-blue-1">
                               <img
-                                src="/images/product/highlights.jpg"
+                                src={generateImageURL({
+                                  wix_url: item.featureImage,
+                                  w: "699",
+                                  h: "385",
+                                  fit: "fill",
+                                  q: "95",
+                                })}
                                 className=" "
-                                data-aos="scaleOut
-                                      .8s ease-out-cubic 0s, d:loop"
+                                data-aos="scaleOut .8s ease-out-cubic 0s, d:loop"
                               />
                             </div>
                           </AnimateLink>

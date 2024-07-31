@@ -26,6 +26,8 @@ export const generateImageURL = ({
         ? ""
         : `/v1/${fit}/w_${w},h_${h},al_c,q_${q},usm_0.66_1.00_0.01,enc_auto/compress.webp`)
     );
+
+
   } else {
     return wix_url;
   }

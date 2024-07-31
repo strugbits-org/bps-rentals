@@ -1,6 +1,8 @@
+import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
+import { CustomButton } from "../CustomButton";
 
-export const HotTrendsHome = () => {
+export const HotTrendsHome = ({ content }) => {
   return (
     <section className="section-hot-trends white-1">
       <div className="container-fluid">
@@ -10,19 +12,25 @@ export const HotTrendsHome = () => {
               className="d-block fs--40 fs--mobile-25 fw-600"
               data-aos="fadeIn .6s ease-in-out 0s, d:loop"
             >
-              Hot Trends
+              {content && content.title}
             </span>
             <h2
               className="fs--90 fs-tablet-40 fs-phone-60 lh-100 fw-600 pt-lg-35 pt-tablet-10 pt-phone-20 section-title split-words"
               data-aos="d:loop"
             >
-              Modern elegant to elevate your celebration
+              {content && content.tagline}
             </h2>
           </div>
           <div className="col-12">
             <div className="container-img bg-img">
               <img
-                src="/images/hot-trends.jpg"
+                src={generateImageURL({
+                  wix_url: content.backgroundImage,
+                  w: "1374",
+                  h: "547",
+                  fit: "fill",
+                  q: "95",
+                })}
                 className=" "
                 data-parallax
                 data-translate-x-from="10vw"
@@ -34,14 +42,19 @@ export const HotTrendsHome = () => {
             className="col-lg-5 offset-lg-1 pos-relative z-2 column-btn"
             data-aos="fadeIn .6s ease-in-out 0s, d:loop"
           >
-            <AnimateLink
-              to={`/category/${"123"}`}
-              className="btn-blue mt-lg-50 mt-mobile-20"
-              data-cursor-style="off"
+            <CustomButton
+              customClasses={"btn-blue mt-lg-50 mt-mobile-20"}
+              data={{
+                label: content.buttonLabel,
+                action: content.buttonAction
+              }}
+              attributes={{
+                "data-cursor-style": "off",
+              }}
             >
-              <span>Show Now</span>
-              <i className="icon-arrow-right"></i>
-            </AnimateLink>
+              {content && content.buttonLabel}
+
+            </CustomButton>
           </div>
         </div>
       </div>

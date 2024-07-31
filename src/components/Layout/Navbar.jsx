@@ -1,22 +1,59 @@
+"use client";
+import { useState } from "react";
+
 import CreateAccount from "../Authentication/CreateAccount";
 import ForgotPassword from "../Authentication/ForgotPassword";
 import Login from "../Authentication/Login";
-import AllCategories from "../Category/AllCategories";
-import AnimateLink from "../Common/AnimateLink";
-import SearchModal from "../Common/Modals/SearchModal";
 
-const links = [
-  "New",
-  "Chairs",
-  "Tables",
-  "Sofas",
-  "Benches",
-  "Lighting",
-  "F&B Rentals",
-];
-const Navbar = () => {
+import LocationsFilter from "../Common/LocationsFilter";
+import SearchModal from "../Common/Modals/SearchModal";
+import MarketModal from "../Common/Modals/MarketModal";
+import AllCategories from "../Category/AllCategories";
+import ErrorModal from "../Common/Modals/ErrorModal";
+import AnimateLink from "../Common/AnimateLink";
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/navigation";
+import { pageLoadStart } from "@/Utils/AnimationFunctions";
+
+const Navbar = ({
+  locations,
+  loginModalContent,
+  createAccountModalContent,
+  forgotPasswordModalContent,
+  marketsData,
+  categoriesData,
+}) => {
+  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
+  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const [message, setMessage] = useState("Message");
+  const [toggleModal, setToggleModal] = useState("");
+  const [cookies, setCookie] = useCookies(["authToken"]);
+  const router = useRouter();
+
+  const checkUser = () => {
+    const loggedIn = cookies.authToken;
+    const submenuLogin = document.querySelector(".submenu-login");
+    const hasActive = submenuLogin.classList.contains("active");
+    submenuLogin.classList.remove("active");
+    if (loggedIn) {
+      pageLoadStart();
+      router.push("/my-account");
+    } else {
+      if (hasActive) {
+        submenuLogin.classList.remove("active");
+      } else {
+        submenuLogin.classList.add("active");
+      }
+    }
+  };
   return (
     <>
+      {errorMessageVisible && (
+        <ErrorModal
+          message={message}
+          setErrorMessageVisible={setErrorMessageVisible}
+        />
+      )}
       <div className="cursor-wrapper" id="wrapper-cursor">
         <div>
           <span className="view text-wrapper">
@@ -40,25 +77,7 @@ const Navbar = () => {
                   <i className="icon-logo"></i>
                 </AnimateLink>
                 <ul className="header-info-list no-desktop">
-                  <li className="local-item accordion-item">
-                    <div className="accordion-header">
-                      <i className="icon-pin"></i>
-                      <span>National</span>
-                    </div>
-                    <div className="accordion-content">
-                      <ul>
-                        {["San Francisco", "Las Vegas", "Nacional"].map(
-                          (data, index) => {
-                            return (
-                              <li key={index}>
-                                <AnimateLink to="/#">{data}</AnimateLink>
-                              </li>
-                            );
-                          }
-                        )}
-                      </ul>
-                    </div>
-                  </li>
+                  <LocationsFilter locations={locations} />
                   <li className="search-item no-mobile">
                     <button
                       className="link-search"
@@ -70,7 +89,21 @@ const Navbar = () => {
                     </button>
                   </li>
                   <li className="login-item">
-                    <button data-set-submenu="login">
+                    {/* {"login" === "login" ? (
+                      <button
+                        data-set-submenu="login"
+                        className="new-login-button"
+                      >
+                        <i className="icon-user"></i>
+                        <span className="hide">Login</span>
+                      </button>
+                    ) : (
+                      )} */}
+                    <button
+                      onClick={checkUser}
+                      // data-set-submenu="login"
+                      className="new-login-button"
+                    >
                       <i className="icon-user"></i>
                       <span className="hide">Login</span>
                     </button>
@@ -159,19 +192,23 @@ const Navbar = () => {
                         <i className="icon-arrow-down"></i>
                       </button>
                     </li>
-                    {links.map((data, index) => {
-                      return (
-                        <li key={index} className="no-mobile">
-                          <AnimateLink
-                            to={`/category/${index}`}
-                            className="header-link"
-                            data-menu-close
-                          >
-                            <span data-letter="New">{data}</span>
-                          </AnimateLink>
-                        </li>
-                      );
-                    })}
+                    {categoriesData &&
+                      categoriesData.slice(0, 6).map((data, index) => {
+                        const { name } = data.categoryName;
+                        const slug =
+                          data.categoryName["link-copy-of-category-name-2"];
+                        return (
+                          <li key={index} className="no-mobile">
+                            <AnimateLink
+                              to={slug}
+                              className="header-link"
+                              data-menu-close
+                            >
+                              <span data-letter="New">{name}</span>
+                            </AnimateLink>
+                          </li>
+                        );
+                      })}
 
                     <li className="btn-submenu-categories">
                       <button
@@ -212,25 +249,7 @@ const Navbar = () => {
                     </li>
                   </ul>
                   <ul className="header-info-list no-mobile">
-                    <li className="local-item accordion-item">
-                      <div className="accordion-header">
-                        <i className="icon-pin"></i>
-                        <span>National</span>
-                      </div>
-                      <div className="accordion-content">
-                        <ul>
-                          {["San Francisco", "Las Vegas", "Nacional"].map(
-                            (data, index) => {
-                              return (
-                                <li key={index}>
-                                  <AnimateLink to="/#">{data}</AnimateLink>
-                                </li>
-                              );
-                            }
-                          )}
-                        </ul>
-                      </div>
-                    </li>
+                    <LocationsFilter locations={locations} />
                     <li className="search-item no-mobile">
                       <button
                         className="link-search"
@@ -242,7 +261,28 @@ const Navbar = () => {
                       </button>
                     </li>
                     <li className="login-item">
-                      <button data-set-submenu="login">
+                      {/* {"login" !== "login" ? (
+                        <AnimateLink
+                          to="/my-account"
+                          className="new-login-button"
+                        >
+                          <i className="icon-user"></i>
+                          <span className="hide">Login</span>
+                        </AnimateLink>
+                      ) : (
+                        <button
+                          data-set-submenu="login"
+                          className="new-login-button"
+                        >
+                          <i className="icon-user"></i>
+                          <span className="hide">Login</span>
+                        </button>
+                      )} */}
+                      <button
+                        onClick={checkUser}
+                        // data-set-submenu="login"
+                        className="new-login-button"
+                      >
                         <i className="icon-user"></i>
                         <span className="hide">Login</span>
                       </button>
@@ -264,65 +304,16 @@ const Navbar = () => {
                   </ul>
                 </div>
               </nav>
-              <div className="submenu-market submenu" data-get-submenu="market">
-                <div className="wrapper-submenu-market wrapper-submenu">
-                  <div className="container-title-mobile">
-                    <h2 className="submenu-title">Markets</h2>
-                    <button className="btn-go-back" data-submenu-close>
-                      <i className="icon-arrow-left-3"></i>
-                      <span>Go back</span>
-                    </button>
-                  </div>
-                  <ul className="list-submenu-market list-submenu list-projects font-submenu">
-                    {[1, 2, 3, 4].map((index) => {
-                      return (
-                        <li key={index} className="list-item">
-                          <AnimateLink
-                            to="/market"
-                            className="market-link project-link"
-                            data-cursor-style="view"
-                          >
-                            <div
-                              className="container-img bg-blue"
-                              data-cursor-style="view"
-                            >
-                              <img
-                                src="/images/lib/06_desktop.jpg"
-                                className=" "
-                              />
-                            </div>
-                            <div className="container-text">
-                              <h3 className="title-project split-words">
-                                Corporate
-                              </h3>
-                              <ul className="list-tags">
-                                <li>
-                                  <span>Personal</span>
-                                </li>
-                                <li>
-                                  <span>Wedding</span>
-                                </li>
-                                <li>
-                                  <span>Milestone event</span>
-                                </li>
-                              </ul>
-                            </div>
-                          </AnimateLink>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </div>{" "}
+              <MarketModal marketsData={marketsData} />
               {/* All categories */}
-              <AllCategories />
+              <AllCategories categoriesData={categoriesData} />
               {/* Search */}
-              <SearchModal />
+              <SearchModal marketsData={marketsData} />
               {/* User Authentication */}
               <div
                 className="submenu-login submenu"
                 data-get-submenu="login"
-                data-form-active=""
+                data-form-active={toggleModal}
               >
                 <div
                   className="wrapper-submenu-login wrapper-submenu"
@@ -350,13 +341,32 @@ const Navbar = () => {
                         Create Account
                       </span>
                       <span className="text-forgot-password fs-lg-60 fs-mobile-40 fw-600">
-                        Reset password
+                        Reset Password
                       </span>
                     </div>
                     <div className="wrapper-form mt-lg-65 mt-mobile-35">
-                      <Login />
-                      <CreateAccount />
-                      <ForgotPassword />
+                      <Login
+                        loginModalContent={loginModalContent}
+                        successMessageVisible={successMessageVisible}
+                        setSuccessMessageVisible={setSuccessMessageVisible}
+                        setErrorMessageVisible={setErrorMessageVisible}
+                        setMessage={setMessage}
+                        setToggleModal={setToggleModal}
+                      />
+                      <CreateAccount
+                        createAccountModalContent={createAccountModalContent}
+                        successMessageVisible={successMessageVisible}
+                        setSuccessMessageVisible={setSuccessMessageVisible}
+                        setErrorMessageVisible={setErrorMessageVisible}
+                        setMessage={setMessage}
+                      />
+                      <ForgotPassword
+                        forgotPasswordModalContent={forgotPasswordModalContent}
+                        successMessageVisible={successMessageVisible}
+                        setSuccessMessageVisible={setSuccessMessageVisible}
+                        setErrorMessageVisible={setErrorMessageVisible}
+                        setMessage={setMessage}
+                      />
                     </div>
                   </div>
                 </div>

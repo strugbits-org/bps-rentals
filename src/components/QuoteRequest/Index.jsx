@@ -1,7 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { markPageLoaded } from "../../utils/AnimationFunctions";
-import LetsGetSocial from "../Common/Sections/SocialSection";
+import { markPageLoaded } from "@/Utils/AnimationFunctions";
 
 const QuoteRequestPage = () => {
   useEffect(() => {
@@ -50,11 +49,6 @@ const QuoteRequestPage = () => {
                     className="form-quote"
                     data-aos="fadeIn .6s ease-in-out .3s, d:loop"
                   >
-                    <input
-                      type="hidden"
-                      name="assunto"
-                      value="[Quote Request]"
-                    />
                     <div className="col-12 column-container-input-top">
                       <div className="container-input-radio-top">
                         <span className="font-2 fs--16 fw-500 d-block text-uppercase">
@@ -249,7 +243,6 @@ const QuoteRequestPage = () => {
           </div>
         </div>
       </section>
-      <LetsGetSocial />
     </>
   );
 };

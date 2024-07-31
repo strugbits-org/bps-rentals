@@ -1,0 +1,116 @@
+.list-pinterest>span {
+    min-width: 100% !important;
+    max-width: 100% !important;
+    display: flex;
+}
+
+.list-pinterest>span>span:nth-child(1) {
+    display: none;
+}
+
+.list-pinterest>span>span:nth-child(3) {
+    display: none;
+}
+
+.insta-feed,
+.list-blog-lets-get-social {
+    height: 100% !important;
+    max-height: 55vh !important;
+    overflow-x: hidden;
+}
+
+.list-pinterest>span>span:nth-child(2) {
+    height: 100% !important;
+    max-height: 55vh !important;
+    width: 100%;
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1600px) {
+    .list-pinterest>span>span:nth-child(2) {
+        max-height: 40vh !important;
+    }
+
+    .insta-feed,
+    .list-blog-lets-get-social {
+        max-height: 40vh !important;
+    }
+}
+
+.insta-feed::-webkit-scrollbar-thumb,
+.list-blog-lets-get-social::-webkit-scrollbar-thumb {
+    cursor: pointer;
+}
+
+.container-contact.form-success:not(.formError) .form-contact {
+    opacity: 0.2;
+    pointer-events: none;
+    -webkit-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+    -moz-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+    -ms-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+    -o-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+    transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+    transition-delay: 0s;
+}
+
+.container-newsletter.form-success .form-newsletter {
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.container-newsletter.form-success .feedback-newsletter {
+    position: absolute;
+    top: 55%;
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--white-1);
+}
+
+.container-newsletter.form-success .feedback-newsletter {
+    position: absolute;
+    top: auto;
+    right: auto;
+    bottom: -3rem;
+    left: 0;
+    color: var(--white-1);
+}
+
+.container-newsletter.formError .feedback-newsletter {
+    position: absolute;
+    top: auto;
+    right: auto;
+    bottom: -3rem;
+    left: 0;
+    color: var(--white-1);
+}
+.container-newsletter.letter-success .form-newsletter {
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.container-newsletter.letter-success .feedback-newsletter {
+    position: absolute;
+    top: 55%;
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--white-1);
+}
+
+.capitalize {
+  text-transform: lowercase;
+}
+.capitalize:first-line {
+  text-transform: capitalize;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [data-pg=pg-my-account] #footer,
+  [data-pg=pg-my-account-saved-products] #footer,
+  [data-pg=pg-my-account-change-password] #footer,
+  [data-pg=pg-my-account-quotes-history] #footer {
+    display: block;
+  }
+}

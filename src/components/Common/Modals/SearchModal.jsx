@@ -1,8 +1,9 @@
 "use client";
 
+import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 
-const SearchModal = () => {
+const SearchModal = ({ marketsData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitted");
@@ -247,34 +248,43 @@ const SearchModal = () => {
                       className="list-result-our-markets list-projects font-35 grid-md-50"
                       data-aos
                     >
-                      {[1, 2, 3, 4].map((index) => {
-                        return (
-                          <li className="grid-item">
-                            <AnimateLink
-                              key={index}
-                              to="/"
-                              className="market-link project-link"
-                              data-cursor-style="view"
-                              data-menu-close
-                            >
-                              <div
-                                className="container-img bg-blue"
+                      {marketsData &&
+                        marketsData.map((data, index) => {
+                          const { slug, cardname, marketTags, image } = data;
+
+                          return (
+                            <li key={index} className="grid-item">
+                              <AnimateLink
+                                key={index}
+                                to={`/category/${slug}`}
+                                className="market-link project-link"
                                 data-cursor-style="view"
+                                data-menu-close
                               >
-                                <img
-                                  src="/images/lib/06_desktop.jpg"
-                                  className=" "
-                                />
-                              </div>
-                              <div className="container-text">
-                                <h3 className="title-project split-words">
-                                  Corporate
-                                </h3>
-                              </div>
-                            </AnimateLink>
-                          </li>
-                        );
-                      })}
+                                <div
+                                  className="container-img bg-blue"
+                                  data-cursor-style="view"
+                                >
+                                  <img
+                                    src={generateImageURL({
+                                      wix_url: image,
+                                      w: "203",
+                                      h: "216",
+                                      fit: "fill",
+                                      q: "95",
+                                    })}
+                                    className=" "
+                                  />
+                                </div>
+                                <div className="container-text">
+                                  <h3 className="title-project split-words">
+                                    {cardname}
+                                  </h3>
+                                </div>
+                              </AnimateLink>
+                            </li>
+                          );
+                        })}
                     </ul>
                   </div>
                   <div className="result-blog">
@@ -363,7 +373,7 @@ const SearchModal = () => {
                     >
                       {[1, 2, 3, 4, 5].map((index) => {
                         return (
-                          <li className="grid-item">
+                          <li key={index} className="grid-item">
                             <AnimateLink
                               key={index}
                               to="/"

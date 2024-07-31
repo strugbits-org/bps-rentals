@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 import React, { useEffect } from "react";
-import { getPageName, markPageLoaded } from "../utils/AnimationFunctions";
+import { getPageName, markPageLoaded } from "@/Utils/AnimationFunctions";
 
 export const CustomScripts = () => {
   const router = useRouter();

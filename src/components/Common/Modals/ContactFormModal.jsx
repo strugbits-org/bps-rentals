@@ -18,11 +18,6 @@ const ContactFormModal = () => {
                         data-form-container
                       >
                         <form className="form-contact">
-                          <input
-                            type="hidden"
-                            name="assunto"
-                            value="[contact]"
-                          />
                           <div className="container-input col-md-6">
                             <label for="contact-first-name">First name</label>
                             <input
