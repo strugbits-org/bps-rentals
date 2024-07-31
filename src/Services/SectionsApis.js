@@ -29,30 +29,6 @@ export const getNewArrivalSectionContent = async (slug) => {
   }
 };
 
-export const getMarketSliderData = async (id) => {
-  try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "PortfolioCollection",
-      includeReferencedItems: ["portfolioRef", "markets"],
-      limit: 3,
-      hasSome: [
-        {
-          key: "markets",
-          values: [id]
-        }
-      ]
-    });
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    console.error("Error fetching MarketSliderData data:", error);
-    return [];
-  }
-};
-
 export const getHighlightsSection = async (dataCollectionId) => {
   try {
     const response = await getDataFetchFunction({ dataCollectionId });
@@ -234,13 +210,9 @@ export const getSocialSectionDetails = async () => {
 export const fetchInstaFeed = async () => {
   try {
     const response = await instafeed({ access_token: process.env.INSTA_ACCESS_TOKEN, requestedCount: 24 });
-    if (!response.data) {
-      return [];
-    }
     return response.data;
   } catch (error) {
-    console.log("Error: ", error);
-    return [];
+    throw new Error(error.message);
   } finally {
     refreshToken({ access_token: process.env.INSTA_ACCESS_TOKEN });
   };

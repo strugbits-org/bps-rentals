@@ -37,7 +37,6 @@ import {
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
 import { getAuthToken } from "@/Services/GetAuthToken";
-import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
 
 export const metadata = {
   title: "BPS Rentals",
@@ -89,7 +88,29 @@ export default async function RootLayout({ children }) {
           data-load="first-loading"
           className="overflow-hidden"
         >
-          <ExternalTriggers />
+          <div className="external-triggers d-none">
+            <span className="initScript d-none"></span>
+            <span className="closeModals d-none"></span>
+            <span className="initializeCanvas d-none"></span>
+            <span className="home d-none"></span>
+            <span className="updateWatched d-none"></span>
+            <span className="galleryLightBox d-none"></span>
+            <span className="collections d-none"></span>
+            <span className="products d-none"></span>
+            <span className="productsPost d-none"></span>
+            <span className="cartPage d-none"></span>
+            <span className="myAccount d-none"></span>
+            <span className="savedProducts d-none"></span>
+            <span className="quotesHistory d-none"></span>
+            <span className="changePassword d-none"></span>
+            <span className="galleryImages d-none"></span>
+            <span className="addToCart d-none"></span>
+            <span className="modalLoad d-none"></span>
+            <span className="loadMore d-none"></span>
+            <span className="updateWatchedTrigger d-none"></span>
+            <span className="triggerSplitWordAnimation d-none"></span>
+            <span className="stickyAnimationTrigger d-none"></span>
+          </div>
           <Loader />
           <Navbar
             locations={filterLocations}

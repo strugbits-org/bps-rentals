@@ -23,7 +23,7 @@ const SearchModal = ({ marketsData }) => {
                 >
                   <div className="container-input input-header">
                     <label
-                      htmlFor="search"
+                      for="search"
                       className="split-chars"
                       data-aos="d:loop"
                     >

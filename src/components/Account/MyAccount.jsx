@@ -148,7 +148,7 @@ const MyAccount = ({ myAccountPageContent }) => {
               onSubmit={handleSubmit}
             >
               <div className="container-input col-md-6">
-                <label htmlFor="account-first-name">
+                <label for="account-first-name">
                   {" "}
                   {myAccountPageContent &&
                     myAccountPageContent.firstNameFieldLabel}
@@ -164,7 +164,7 @@ const MyAccount = ({ myAccountPageContent }) => {
                 />
               </div>
               <div className="container-input col-md-6">
-                <label htmlFor="account-last-name">
+                <label for="account-last-name">
                   {" "}
                   {myAccountPageContent &&
                     myAccountPageContent.lastNameFieldLabel}
@@ -180,7 +180,7 @@ const MyAccount = ({ myAccountPageContent }) => {
                 />
               </div>
               <div className="container-input col-md-6">
-                <label htmlFor="account-email">
+                <label for="account-email">
                   {" "}
                   {myAccountPageContent && myAccountPageContent.emailFieldLabel}
                 </label>
@@ -193,7 +193,7 @@ const MyAccount = ({ myAccountPageContent }) => {
                 />
               </div>
               <div className="container-input col-md-6">
-                {/* <label htmlFor="account-phone">
+                {/* <label for="account-phone">
                 {" "}
                 {myAccountPageContent &&
                   myAccountPageContent.phoneNumberFieldLabel}

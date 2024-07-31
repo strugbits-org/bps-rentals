@@ -46,7 +46,6 @@ const queryDataItems = async (client, payload) => {
       "RentalsCreateAccountModal",
       "RentalsResetPasswordModal",
       "RentalsFooter",
-      "PortfolioCollection",
       "SocialSectionDetails",
       "BlogProductData",
       "RentalsFooterLinks",

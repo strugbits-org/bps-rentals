@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ProductCard from '../Category/ProductCard';
+import { getBestSellerProducts } from '@/Services/ProductsApis';
 import { updatedWatched } from '@/Utils/AnimationFunctions';
 
 export const MarketBestSeller = ({ products }) => {
     const [selectedVariants, setSelectedVariants] = useState({});
-    const pageSize = 6;
-    const [pageLimit, setPageLimit] = useState(pageSize);
+    const [productsData, setProductsData] = useState([]);
+    const [totalCount, setTotalCount] = useState();
+    const [loading, setLoading] = useState(false);
 
     const handleImageHover = (index, variant) => {
         setSelectedVariants((prevSelectedVariants) => ({
@@ -13,6 +15,25 @@ export const MarketBestSeller = ({ products }) => {
             [index]: variant,
         }));
     };
+    const handleSeeMore = async () => {
+        try {
+            setLoading(true);
+            const response = await getBestSellerProducts(products.bestSellerId, 6, productsData.length);
+            console.log("response",response );
+            setProductsData(prev => [...prev, ...response.items]);
+            setTotalCount(response.totalCount);
+            updatedWatched();
+        } catch (error) {
+            console.error("Error fetching more products:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        setProductsData(products.items);
+        setTotalCount(products.totalCount);
+    }, [])
+
 
     return (
         <section className="market-products pb-lg-225 pb-tablet-100 pb-phone-170">
@@ -20,7 +41,7 @@ export const MarketBestSeller = ({ products }) => {
                 <div className="row">
                     <div className="col-lg-10 offset-lg-1">
                         <ul className="market-products-list">
-                            {products.slice(0, pageLimit).map((item, index) => {
+                            {productsData.map((item, index) => {
                                 const { product, variantData } = item;
 
                                 return (
@@ -39,14 +60,11 @@ export const MarketBestSeller = ({ products }) => {
                                 );
                             })}
                         </ul>
-                        {pageLimit < products.length && (
+                        {productsData.length < totalCount && !loading && (
                             <div className="flex-center">
                                 <button
                                     className="btn-border-blue mt-lg-90 mt-tablet-40 mt-phone-50"
-                                    onClick={() => {
-                                        setPageLimit((prev) => prev + pageSize);
-                                        updatedWatched(true);
-                                    }}
+                                    onClick={handleSeeMore}
                                 >
                                     <span>See more</span>
                                 </button>

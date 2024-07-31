@@ -104,7 +104,7 @@ const CreateAccount = ({
           onSubmit={handleSubmit}
         >
           <div className="container-input col-md-12">
-            <label htmlFor="create-account-first-name">
+            <label for="create-account-first-name">
               {createAccountModalContent &&
                 createAccountModalContent.firstNameFieldLabel}
             </label>
@@ -119,7 +119,7 @@ const CreateAccount = ({
             />
           </div>
           <div className="container-input col-md-12">
-            <label htmlFor="create-account-last-name">
+            <label for="create-account-last-name">
               {createAccountModalContent &&
                 createAccountModalContent.lastNameFieldLabel}
             </label>
@@ -134,7 +134,7 @@ const CreateAccount = ({
             />
           </div>
           <div className="container-input col-md-12">
-            <label htmlFor="create-account-email">
+            <label for="create-account-email">
               {createAccountModalContent &&
                 createAccountModalContent.emailFieldLabel}
             </label>
@@ -149,7 +149,7 @@ const CreateAccount = ({
             />
           </div>
           <div className="container-input col-md-12">
-            <label htmlFor="create-account-phone">
+            <label for="create-account-phone">
               {createAccountModalContent &&
                 createAccountModalContent.phoneNumberFieldLabel}
             </label>

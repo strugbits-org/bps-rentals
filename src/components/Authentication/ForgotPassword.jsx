@@ -57,7 +57,7 @@ const ForgotPassword = ({
           >
             <input type="hidden" name="forgot_password" />
             <div className="container-input col-12">
-              <label htmlFor="forgot-password-login-email">
+              <label for="forgot-password-login-email">
                 {forgotPasswordModalContent &&
                   forgotPasswordModalContent.emailFieldLabel}
               </label>

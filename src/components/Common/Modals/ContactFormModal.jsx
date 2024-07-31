@@ -19,7 +19,7 @@ const ContactFormModal = () => {
                       >
                         <form className="form-contact">
                           <div className="container-input col-md-6">
-                            <label htmlFor="contact-first-name">First name</label>
+                            <label for="contact-first-name">First name</label>
                             <input
                               id="contact-first-name"
                               name="name"
@@ -28,7 +28,7 @@ const ContactFormModal = () => {
                             />
                           </div>
                           <div className="container-input col-md-6">
-                            <label htmlFor="contact-last-name">Last name</label>
+                            <label for="contact-last-name">Last name</label>
                             <input
                               id="contact-last-name"
                               name="name"
@@ -37,7 +37,7 @@ const ContactFormModal = () => {
                             />
                           </div>
                           <div className="container-input col-12">
-                            <label htmlFor="contact-email">E-mail</label>
+                            <label for="contact-email">E-mail</label>
                             <input
                               id="contact-email"
                               name="email"
@@ -46,7 +46,7 @@ const ContactFormModal = () => {
                             />
                           </div>
                           <div className="container-textarea col-12">
-                            <label htmlFor="contact-message">Message</label>
+                            <label for="contact-message">Message</label>
                             <textarea
                               id="contact-message"
                               name="message"

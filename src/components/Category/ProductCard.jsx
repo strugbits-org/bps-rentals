@@ -1,6 +1,7 @@
-import { productImageURL } from "@/Utils/GenerateImageURL";
-import AnimateLink from "../Common/AnimateLink";
-import React from "react";
+import { productImageURL } from '@/Utils/GenerateImageURL';
+import AnimateLink from '../Common/AnimateLink';
+import React from 'react';
+import { SaveProductButton } from '../Common/SaveProductButton';
 
 const ProductCard = ({
   index,
@@ -10,6 +11,8 @@ const ProductCard = ({
   handleImageHover,
   filteredProducts,
   getSelectedProductSnapShots,
+  savedProductsData,
+  setSavedProductsData,
 }) => {
   const defaultVariantSku = selectedVariant?.sku;
   const defaultVariantImage = selectedVariant?.variant.imageSrc;
@@ -24,13 +27,18 @@ const ProductCard = ({
         <div className="best-seller">
           <span>Best Seller</span>
         </div>
-        <button className="btn-bookmark">
+        <SaveProductButton
+          productData={product}
+          savedProductsData={savedProductsData}
+          setSavedProductsData={setSavedProductsData}
+        />
+        {/* <button className="btn-bookmark">
           <i className="icon-bookmark"></i>
           <i className="icon-bookmark-full"></i>
-        </button>
+        </button> */}
       </div>
       <div className="container-copy">
-        <a href="#" className="btn-copy copy-link">
+        <a href="javascript:void(0)" className="btn-copy copy-link">
           <span>{defaultVariantSku}</span>
           <i className="icon-copy"></i>
         </a>
@@ -39,9 +47,9 @@ const ProductCard = ({
           className="copy-link-url"
           defaultValue={defaultVariantSku}
           style={{
-            position: "absolute",
+            position: 'absolute',
             opacity: 0,
-            pointerEvents: "none",
+            pointerEvents: 'none',
           }}
         />
       </div>
@@ -52,7 +60,7 @@ const ProductCard = ({
             <div className="dimensions">
               {product.additionalInfoSections?.map((data, index) => {
                 const { title, description } = data;
-                if (title == "Size") {
+                if (title == 'Size') {
                   return (
                     <span
                       key={index}
@@ -78,10 +86,10 @@ const ProductCard = ({
                   <img
                     src={productImageURL({
                       wix_url: defaultVariantImage,
-                      w: "346",
-                      h: "346",
-                      fit: "fill",
-                      q: "80",
+                      w: '346',
+                      h: '346',
+                      fit: 'fill',
+                      q: '80',
                     })}
                     className=" "
                   />
@@ -107,10 +115,10 @@ const ProductCard = ({
                       <img
                         src={productImageURL({
                           wix_url: selVariantData.variant.imageSrc,
-                          w: "40",
-                          h: "40",
-                          fit: "fill",
-                          q: "100",
+                          w: '40',
+                          h: '40',
+                          fit: 'fill',
+                          q: '100',
                         })}
                         data-preload
                         className="media"

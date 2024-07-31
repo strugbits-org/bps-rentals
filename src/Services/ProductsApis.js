@@ -1,5 +1,6 @@
 "use server"
 import getDataFetchFunction from "./FetchFunction";
+import { getAuthToken } from './GetAuthToken';
 
 export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTerm = "", categories = [], location = "NT", colors = [], slug = null }) => {
   try {
@@ -62,7 +63,7 @@ export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTer
     return { items: [], totalCount: 0 };
   }
 };
-export const getBestSellerProducts = async (bestSeller, limit) => {
+export const getBestSellerProducts = async (bestSeller, limit = 12, skip = 0) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "locationFilteredVariant",
@@ -85,13 +86,14 @@ export const getBestSellerProducts = async (bestSeller, limit) => {
         key: "subCategory",
         values: bestSeller
       }],
-      limit: "infinite",
+      limit: limit,
+      returnTotalCount: true,
+      skip: skip,
     });
     if (response && response._items) {
-      if (limit) {
-        return response._items.map((x) => x.data).slice(0, limit);
-      }
-      return response._items.map((x) => x.data);
+      console.log("response", response);
+      console.log("response123", { items: response._items.map((x) => x.data), totalCount: response._totalCount });
+      return { items: response._items.map((x) => x.data), totalCount: response._totalCount };
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -466,5 +468,49 @@ export const getPairItWithProducts = async (productIds) => {
     }
   } catch (error) {
     console.error("Error fetching products(getPairItWithProducts):", error);
+  }
+};
+
+export const saveProduct = async (id) => {
+  try {
+    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBnbWFpbC5jb20iLCJpYXQiOjE3MjI0MTM0NTEsImV4cCI6MTcyNTAwNTQ1MX0.fG9FHqI0AicMglhw5kaVs1t-kGR_2oPQMSCbMhqlARs"
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/wix/saveProduct/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authToken,
+      },
+    });
+
+    console.log(response, 'response');
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const unSaveProduct = async (id) => {
+  try {
+    const authToken = getAuthToken();
+    const response = await fetch(`${base_url}/api/wix/removeSavedProduct/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authToken,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(error);
   }
 };
