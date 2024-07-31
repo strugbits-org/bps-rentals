@@ -6,7 +6,6 @@ import Studios from "../Common/Sections/StudiosSection";
 import DreamBig from "../Common/Sections/DreamBigSection";
 import NewArrival from "../Common/Sections/NewArrivalSection";
 import Highlights from "../Common/Sections/HighlightsSection";
-import AnimateLink from "../Common/AnimateLink";
 import PeopleReviewSlider from "../Common/Sections/PeopleReviewSlider";
 import { MarketIntroSection } from "./MarketIntroSection";
 import { MarketBestSeller } from "./MarketBestSeller";
@@ -17,6 +16,7 @@ const MarketPage = ({
   newArrivalSectionContent,
   homeSectionDetails,
   dreamBigSectionContent,
+  marketSliderData,
   studiosData,
   marketsData,
   peopleReviewSliderData,
@@ -32,7 +32,7 @@ const MarketPage = ({
       <MarketBestSeller products={bestSellerProducts} />
       <NewArrival content={newArrivalSectionContent} />
       <Highlights pageContent={homeSectionDetails} data={highlightsSectionData} />
-      <MarketSlider />
+      <MarketSlider content={homeSectionDetails} marketSliderData={marketSliderData} />
       <PeopleReviewSlider data={peopleReviewSliderData} homeSectionDetails={homeSectionDetails} />
       <Markets marketsData={marketsData} />
       <Studios content={homeSectionDetails} studiosData={studiosData} />
