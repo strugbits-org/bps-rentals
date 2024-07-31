@@ -1,7 +1,8 @@
 import { createWixClient } from "@/Utils/CreateWixClient";
 import { apiAuth } from "@/Utils/IsAuthenticated";
+import { unstable_cache } from 'next/cache';
 
-export const getDataFetchFunction = async (payload) => {
+const queryDataItems = async (client, payload) => {
   try {
     const {
       dataCollectionId,
@@ -19,7 +20,7 @@ export const getDataFetchFunction = async (payload) => {
 
     const authCollections = [
       "RentalsHomeHero",
-      "RentalsHomeNewArrivals",
+      "RentalsNewArrivals",
       "BestSellers",
       "RentalsHomeStudios",
       "RentalsHomeHotTrends",
@@ -50,11 +51,9 @@ export const getDataFetchFunction = async (payload) => {
       "RentalsFooterLinks",
       "RentalsSocialMediaLinks",
       "RentalsAddresses",
-      "RentalsHomeSectionsTitles",
       "DreamBigSection",
       "RentalsMyAccountPage",
       "RentalsChangePasswordPage",
-      "F1CategoriesStructure",
       "BPSCatalogStructure",
       "HeaderCategoryMenu",
       "locationFilteredVariant",
@@ -65,7 +64,6 @@ export const getDataFetchFunction = async (payload) => {
     ];
 
     const isValid = authCollections.includes(dataCollectionId);
-    const wixClient = await createWixClient();
 
     if (dataCollectionId && !isValid) {
       return { error: "Unauthorized", status: 401 };
@@ -83,7 +81,7 @@ export const getDataFetchFunction = async (payload) => {
       options.includeReferencedItems = includeReferencedItems;
     if (returnTotalCount) options.returnTotalCount = returnTotalCount;
 
-    let data = wixClient.items.queryDataItems(options);
+    let data = client.items.queryDataItems(options);
     if (contains?.length === 2) {
       data = data.contains(contains[0], contains[1]);
     }
@@ -100,7 +98,6 @@ export const getDataFetchFunction = async (payload) => {
       });
     }
 
-
     if (skip && skip !== "null") {
       data = data.skip(skip);
     }
@@ -109,7 +106,7 @@ export const getDataFetchFunction = async (payload) => {
       data = data.limit(limit);
     }
 
-    if (limit == "infinite") {
+    if (limit === "infinite") {
       data = data.limit(50);
     }
 
@@ -120,7 +117,7 @@ export const getDataFetchFunction = async (payload) => {
     }
 
     data = await data.find();
-    if (limit == "infinite") {
+    if (limit === "infinite") {
       let items = data._items;
       while (items.length < data._totalCount) {
         data = await data._fetchNextPage();
@@ -161,4 +158,13 @@ export const getDataFetchFunction = async (payload) => {
   }
 };
 
+const getDataFetchFunction = unstable_cache(
+  async (payload) => {
+    const client = await createWixClient();
+    const data = await queryDataItems(client, payload);
+    return data;
+  },
+  ['data-fetch'],
+  { tags: ["all"], revalidate: 120 }
+);
 export default getDataFetchFunction;

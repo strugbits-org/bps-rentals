@@ -1,5 +1,4 @@
 import MarketPage from "@/components/Market/Index";
-import { getPageContentRentals } from "@/Services/HomeApis";
 import { fetchBestSellers, getBestSellerProducts } from "@/Services/ProductsApis";
 import {
   getDreamBigSectionContent,
@@ -23,6 +22,7 @@ export const generateStaticParams = async () => {
 }
 
 export default async function Page({ params }) {
+
   const marketSection = await getMarketSection(params.id);
   const bestSeller = await fetchBestSellers(params.id);
   const collectionIds = {
@@ -36,7 +36,6 @@ export default async function Page({ params }) {
   const [
     homeNewArrivalSectionContent,
     homeSectionDetails,
-    pageContentRentals,
     homeDreamBigSectionContent,
     studiosData,
     marketsData,
@@ -44,9 +43,8 @@ export default async function Page({ params }) {
     highlightsSectionData,
     bestSellerProducts,
   ] = await Promise.all([
-    getNewArrivalSectionContent(),
+    getNewArrivalSectionContent(params.id),
     getHomeSectionDetails(),
-    getPageContentRentals(),
     getDreamBigSectionContent(),
     getStudiosData(),
     getMarketsData(),
@@ -59,7 +57,6 @@ export default async function Page({ params }) {
     <MarketPage
       marketSection={marketSection}
       newArrivalSectionContent={homeNewArrivalSectionContent}
-      pageContentRentals={pageContentRentals}
       homeSectionDetails={homeSectionDetails}
       highlightsSectionData={highlightsSectionData}
       dreamBigSectionContent={homeDreamBigSectionContent}

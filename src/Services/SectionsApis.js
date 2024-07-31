@@ -2,10 +2,21 @@ import { instafeed, refreshToken } from "instafeed-node-js";
 import getDataFetchFunction from "./FetchFunction";
 import { fetchProductsByIds } from "./ProductsApis";
 
-export const getNewArrivalSectionContent = async () => {
+export const getNewArrivalSectionContent = async (slug) => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeNewArrivals",
+      dataCollectionId: "RentalsNewArrivals",
+      includeReferencedItems: ["product"],
+      eq: [
+        {
+          key: "active",
+          value: true,
+        },
+        {
+          key: "slug",
+          value: slug,
+        }
+      ]
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
@@ -13,7 +24,7 @@ export const getNewArrivalSectionContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching HomeNewArrivalSectionContent data:", error);
+    console.error("Error fetching RentalsNewArrivals data:", error);
     return [];
   }
 };

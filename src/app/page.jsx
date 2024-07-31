@@ -1,7 +1,6 @@
 import HomePage from "@/components/Home/Index";
 import {
   getHomeHeroSectionContent,
-  getPageContentRentals,
 } from "@/Services/HomeApis";
 import { fetchBestSellers, getBestSellerProducts } from "@/Services/ProductsApis";
 
@@ -14,12 +13,14 @@ import {
   getNewArrivalSectionContent,
   getStudiosData,
 } from "@/Services/SectionsApis";
+import { headers } from 'next/headers'
 
 export default async function Page() {
   const bestSeller = await fetchBestSellers();
+  const headersList = headers();
+  const path = headersList.get('x-current-path');
 
   const [
-    homePageContent,
     homeHeroSectionContent,
     homeNewArrivalSectionContent,
     homeHotTrendsSectionContent,
@@ -30,9 +31,8 @@ export default async function Page() {
     studiosData,
     marketsData,
   ] = await Promise.all([
-    getPageContentRentals(),
     getHomeHeroSectionContent(),
-    getNewArrivalSectionContent(),
+    getNewArrivalSectionContent(path),
     getHotTrendsSectionContent(),
     getHighlightsSection("HighlightsProducts"),
     getBestSellerProducts(bestSeller),
@@ -44,7 +44,6 @@ export default async function Page() {
 
   return (
     <HomePage
-      pageContent={homePageContent}
       heroSectionContent={homeHeroSectionContent}
       newArrivalSectionContent={homeNewArrivalSectionContent}
       hotTrendsSectionContent={homeHotTrendsSectionContent}

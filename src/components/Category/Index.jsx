@@ -1,21 +1,21 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
-import Markets from "../Common/Sections/MarketSection";
-import AnimateLink from "../Common/AnimateLink";
-import { HotTrendsCategory } from "../Common/Sections/HotTrendsSection";
-import ProductCard from "./ProductCard";
-import { BannerOurTeam } from "../Common/Sections/BannerOurTeam";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { markPageLoaded, updatedWatched } from '@/Utils/AnimationFunctions';
+import Markets from '../Common/Sections/MarketSection';
+import AnimateLink from '../Common/AnimateLink';
+import { HotTrendsCategory } from '../Common/Sections/HotTrendsSection';
+import ProductCard from './ProductCard';
+import { BannerOurTeam } from '../Common/Sections/BannerOurTeam';
 import {
   fetchFilteredProducts,
   getProductVariants,
   getProductVariantsImages,
-} from "@/Services/ProductsApis";
-import { useCookies } from "react-cookie";
-import { useRouter } from "next/navigation";
-import CartModal from "../Common/Modals/CartModal";
-import useUserData from "@/Hooks/useUserData";
-import { getAuthToken } from "@/Services/GetAuthToken";
+} from '@/Services/ProductsApis';
+import { useCookies } from 'react-cookie';
+import { useRouter } from 'next/navigation';
+import CartModal from '../Common/Modals/CartModal';
+import useUserData from '@/Hooks/useUserData';
+import { getAuthToken } from '@/Services/GetAuthToken';
 
 const CategoryPage = ({
   pageContent,
@@ -28,11 +28,12 @@ const CategoryPage = ({
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [totalCount, setTotalCount] = useState();
   const [loading, setLoading] = useState(false);
-  const [cookies, setCookie] = useCookies(["location"]);
+  const [cookies, setCookie] = useCookies(['location']);
   const [filterCategories, setFilterCategories] = useState([]);
   const [filterColors, setFilterColors] = useState([]);
   const [filterLocations, setFilterLocations] = useState([]);
   const [enableLocationFilter, setEnableLocationFilter] = useState(false);
+  const [savedProductsData, setSavedProductsData] = useState([]);
   const pageSize = 18;
 
   const [selectedVariants, setSelectedVariants] = useState({});
@@ -71,7 +72,7 @@ const CategoryPage = ({
       setTotalCount(response.totalCount);
       updatedWatched();
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error('Error fetching products:', error);
     } finally {
       setLoading(false);
     }
@@ -105,7 +106,7 @@ const CategoryPage = ({
       setTotalCount(response.totalCount);
       updatedWatched();
     } catch (error) {
-      console.error("Error fetching more products:", error);
+      console.error('Error fetching more products:', error);
     } finally {
       setLoading(false);
     }
@@ -119,7 +120,7 @@ const CategoryPage = ({
     handleFilterChange({ colors: updatedColors });
   };
   const handleLocationChange = (data) => {
-    setCookie("location", data.value, { path: "/" });
+    setCookie('location', data.value, { path: '/' });
   };
   const handleCategoryChange = (data) => {
     const updatedCategories = filterCategories.map((item) =>
@@ -182,7 +183,7 @@ const CategoryPage = ({
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedVariantData, setSelectedVariantData] = useState(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-  const [categoryTitle, setCategoryTitle] = useState("");
+  const [categoryTitle, setCategoryTitle] = useState('');
   getAuthToken();
   const getSelectedProductSnapShots = async (productData) => {
     setSelectedProductData(productData);
@@ -219,7 +220,7 @@ const CategoryPage = ({
         });
       }
     } catch (error) {
-      console.log("Error:", error);
+      console.log('Error:', error);
     }
   };
 
@@ -358,7 +359,7 @@ const CategoryPage = ({
                                     <li key={index}>
                                       <AnimateLink
                                         to={
-                                          item["link-copy-of-category-name-2"]
+                                          item['link-copy-of-category-name-2']
                                         }
                                         className="blog-btn-tag"
                                       >
@@ -447,6 +448,8 @@ const CategoryPage = ({
                               getSelectedProductSnapShots={
                                 getSelectedProductSnapShots
                               }
+                              savedProductsData={savedProductsData}
+                              setSavedProductsData={setSavedProductsData}
                             />
                           </li>
                           {index === 5 && <HotTrendsCategory />}

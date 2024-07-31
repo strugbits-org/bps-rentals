@@ -1,21 +1,22 @@
 import AnimateLink from "./AnimateLink";
 
-const StudiosFixedMenu = () => {
+const StudiosFixedMenu = ({ data }) => {
+  const url = process.env.CORPORATE_URL;
   return (
     <div className="category-menu-fixed">
       <div className="category-menu-wrapper">
         <div className="category-menu">
           <ul className="category-menu-list">
-            {/* {[1, 2, 3, 4, 5, 6].map((index) => {
+            {data.map((data, index) => {
               return (
                 <li key={index}>
-                  <AnimateLink to="/" className="btn-underline-white">
-                    <span>Blueprint Studios</span>
+                  <AnimateLink target={"_blank"} to={`${url}/services/${data.slug}`} className="btn-underline-white">
+                    <span>{data.cardName}</span>
                   </AnimateLink>
                 </li>
               );
-            })} */}
-            <li>
+            })}
+            {/* <li>
               <AnimateLink to="/">
                 <i className="icon-bps-logo"></i>
                 <span className="hide">Blueprint Studios</span>
@@ -45,7 +46,7 @@ const StudiosFixedMenu = () => {
               <AnimateLink to="/" className="btn-underline-white">
                 <span>Printing Services</span>
               </AnimateLink>
-            </li>
+            </li> */}
           </ul>
         </div>
         <button className="btn-close-category-menu" data-category-menu-close>
