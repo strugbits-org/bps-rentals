@@ -1,6 +1,7 @@
 import { productImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
 import React from "react";
+import { SaveProductButton } from "../Common/SaveProductButton";
 
 const ProductCard = ({
   index,
@@ -10,6 +11,8 @@ const ProductCard = ({
   handleImageHover,
   filteredProducts,
   getSelectedProductSnapShots,
+  savedProductsData,
+  setSavedProductsData,
 }) => {
   const defaultVariantSku = selectedVariant?.sku;
   const defaultVariantImage = selectedVariant?.variant.imageSrc;
@@ -24,13 +27,18 @@ const ProductCard = ({
         <div className="best-seller">
           <span>Best Seller</span>
         </div>
-        <button className="btn-bookmark">
+        <SaveProductButton
+          productData={product}
+          savedProductsData={savedProductsData}
+          setSavedProductsData={setSavedProductsData}
+        />
+        {/* <button className="btn-bookmark">
           <i className="icon-bookmark"></i>
           <i className="icon-bookmark-full"></i>
-        </button>
+        </button> */}
       </div>
       <div className="container-copy">
-        <a href="#" className="btn-copy copy-link">
+        <a href="javascript:void(0)" className="btn-copy copy-link">
           <span>{defaultVariantSku}</span>
           <i className="icon-copy"></i>
         </a>
