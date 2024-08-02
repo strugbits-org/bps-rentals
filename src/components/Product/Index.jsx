@@ -329,7 +329,7 @@ const ProductPostPage = ({
               </ul>
               <div className="container-product-description">
                 <form action="cart.html" className="form-cart" data-pjax>
-                  <input type="hidden" name="sku[]" value="MODCH09" />
+                  <input type="hidden" name="sku[]" defaultValue="MODCH09" />
                   <div className="wrapper-product-name">
                     <div className="container-product-name">
                       <h1

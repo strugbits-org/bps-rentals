@@ -62,7 +62,7 @@ const Newsletter = ({ data }) => {
 
       <div className="container-newsletter mt-mobile-25">
         <form className="form-newsletter" onSubmit={handleSubmit(onSubmit)}>
-          <input type="hidden" name="assunto" value="[newsletter]" />
+          <input type="hidden" name="assunto" defaultValue="[newsletter]" />
           <div className="container-input">
             <label htmlFor="newsletter-email">
               {data?.newsletterPlaceholder}

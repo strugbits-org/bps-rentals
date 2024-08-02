@@ -98,7 +98,7 @@ const Login = ({
         >
           <form action="/my-account" className="form-sign-in form-base">
             <div className="container-input col-12">
-              <label for="login-email">
+              <label htmlFor="login-email">
                 {loginModalContent && loginModalContent.emailFieldLabel}
               </label>
               <input
@@ -112,7 +112,7 @@ const Login = ({
               />
             </div>
             <div className="container-input container-input-password col-12 pos-relative">
-              <label for="login-password">
+              <label htmlFor="login-password">
                 {" "}
                 {loginModalContent && loginModalContent.passwordFieldLabel}
               </label>
