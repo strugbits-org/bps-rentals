@@ -6,7 +6,6 @@ import {
   getHomeSectionDetails,
   getMarketsData,
   getMarketSection,
-  getMarketSliderData,
   getNewArrivalSectionContent,
   getPeopleReviewSliderData,
   getStudiosData,
@@ -38,7 +37,6 @@ export default async function Page({ params }) {
     homeNewArrivalSectionContent,
     homeSectionDetails,
     homeDreamBigSectionContent,
-    marketSliderData,
     studiosData,
     marketsData,
     peopleReviewSliderData,
@@ -48,12 +46,11 @@ export default async function Page({ params }) {
     getNewArrivalSectionContent(params.slug),
     getHomeSectionDetails(),
     getDreamBigSectionContent(),
-    getMarketSliderData(marketSection._id),
     getStudiosData(),
     getMarketsData(),
     getPeopleReviewSliderData(),
     getHighlightsSection(highlightsCollection),
-    getBestSellerProducts(bestSeller),
+    getBestSellerProducts(bestSeller, 6),
   ]);
 
   return (
@@ -63,11 +60,10 @@ export default async function Page({ params }) {
       homeSectionDetails={homeSectionDetails}
       highlightsSectionData={highlightsSectionData}
       dreamBigSectionContent={homeDreamBigSectionContent}
-      marketSliderData={marketSliderData}
       studiosData={studiosData}
       marketsData={marketsData}
       peopleReviewSliderData={peopleReviewSliderData}
-      bestSellerProducts={bestSellerProducts}
+      bestSellerProducts={{ ...bestSellerProducts, bestSellerId: bestSeller }}
     />
   );
 }

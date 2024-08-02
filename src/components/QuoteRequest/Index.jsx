@@ -59,26 +59,26 @@ const QuoteRequestPage = () => {
                             id="quote-delivered"
                             name="order_type"
                             type="radio"
-                            defaultValue="Order Delivered"
+                            value="Order Delivered"
                             required
                             checked
                           />
-                          <label htmlFor="quote-delivered">Delivered</label>
+                          <label for="quote-delivered">Delivered</label>
                         </div>
                         <div className="container-radio">
                           <input
                             id="quote-will-call"
                             name="order_type"
                             type="radio"
-                            defaultValue="Order Will Call"
+                            value="Order Will Call"
                             required
                           />
-                          <label htmlFor="quote-will-call">Will Call</label>
+                          <label for="quote-will-call">Will Call</label>
                         </div>
                       </div>
                     </div>
                     <div className="container-input input-date col-lg-4">
-                      <label htmlFor="quote-event-date">Event date*</label>
+                      <label for="quote-event-date">Event date*</label>
                       <input
                         id="quote-event-date"
                         name="event_date"
@@ -88,7 +88,7 @@ const QuoteRequestPage = () => {
                       />
                     </div>
                     <div className="container-input input-date col-lg-4">
-                      <label htmlFor="quote-delivery-date">Delivery date*</label>
+                      <label for="quote-delivery-date">Delivery date*</label>
                       <input
                         id="quote-delivery-date"
                         name="delivery_date"
@@ -98,7 +98,7 @@ const QuoteRequestPage = () => {
                       />
                     </div>
                     <div className="container-input input-date col-lg-4">
-                      <label htmlFor="quote-pickup-date">Pickup date*</label>
+                      <label for="quote-pickup-date">Pickup date*</label>
                       <input
                         id="quote-pickup-date"
                         name="pickup_date"
@@ -108,7 +108,7 @@ const QuoteRequestPage = () => {
                       />
                     </div>
                     <div className="container-input col-lg-4">
-                      <label htmlFor="quote-event-location">Event location</label>
+                      <label for="quote-event-location">Event location</label>
                       <input
                         id="quote-event-location"
                         name="event_location"
@@ -116,7 +116,7 @@ const QuoteRequestPage = () => {
                       />
                     </div>
                     <div className="container-input col-lg-8">
-                      <label htmlFor="quote-event-description">
+                      <label for="quote-event-description">
                         Event description / PO*
                       </label>
                       <input
@@ -131,7 +131,7 @@ const QuoteRequestPage = () => {
                       Billing details
                     </span>
                     <div className="container-input col-lg-4">
-                      <label htmlFor="quote-bill-to">Bill to*</label>
+                      <label for="quote-bill-to">Bill to*</label>
                       <input
                         id="quote-bill-to"
                         name="bill-to"
@@ -141,7 +141,7 @@ const QuoteRequestPage = () => {
                       />
                     </div>
                     <div className="container-input col-lg-4">
-                      <label htmlFor="quote-address">Street address*</label>
+                      <label for="quote-address">Street address*</label>
                       <input
                         id="quote-address"
                         name="address"
@@ -150,15 +150,15 @@ const QuoteRequestPage = () => {
                       />
                     </div>
                     <div className="container-input col-lg-4">
-                      <label htmlFor="quote-address2">Address Line 2</label>
+                      <label for="quote-address2">Address Line 2</label>
                       <input id="quote-address2" name="address2" type="text" />
                     </div>
                     <div className="container-input col-lg-4">
-                      <label htmlFor="quote-city">City*</label>
+                      <label for="quote-city">City*</label>
                       <input id="quote-city" name="city" type="text" required />
                     </div>
                     <div className="container-input col-lg-4">
-                      <label htmlFor="quote-state">State*</label>
+                      <label for="quote-state">State*</label>
                       <input
                         id="quote-state"
                         name="state"
@@ -167,12 +167,12 @@ const QuoteRequestPage = () => {
                       />
                     </div>
                     <div className="container-input col-lg-4">
-                      <label htmlFor="quote-zip-code">Zip code</label>
+                      <label for="quote-zip-code">Zip code</label>
                       <input id="quote-zip-code" name="zip_code" type="text" />
                     </div>
                     <div className="divisor"></div>
                     <div className="container-input col-lg-4 col-12">
-                      <label htmlFor="quote-instructions">
+                      <label for="quote-instructions">
                         Special instructions or order comments
                       </label>
                       <input
@@ -182,7 +182,7 @@ const QuoteRequestPage = () => {
                       />
                     </div>
                     <div className="container-input col-lg-4">
-                      <label htmlFor="quote-instructions-city">City</label>
+                      <label for="quote-instructions-city">City</label>
                       <input
                         id="quote-instructions-city"
                         name="instructions_city"
@@ -190,7 +190,7 @@ const QuoteRequestPage = () => {
                       />
                     </div>
                     <div className="container-input col-lg-4">
-                      <label htmlFor="quote-instructions-state">State</label>
+                      <label for="quote-instructions-state">State</label>
                       <input
                         id="quote-instructions-state"
                         name="instructions_state"
@@ -202,7 +202,7 @@ const QuoteRequestPage = () => {
                       Ordered by
                     </span>
                     <div className="container-input col-lg-6">
-                      <label htmlFor="quote-name">Name*</label>
+                      <label for="quote-name">Name*</label>
                       <input
                         id="quote-name"
                         name="name"
@@ -212,7 +212,7 @@ const QuoteRequestPage = () => {
                       />
                     </div>
                     <div className="container-input col-lg-6">
-                      <label htmlFor="quote-email">Email*</label>
+                      <label for="quote-email">Email*</label>
                       <input
                         id="quote-email"
                         name="email"

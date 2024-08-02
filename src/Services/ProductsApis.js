@@ -1,5 +1,6 @@
 "use server"
 import getDataFetchFunction from "./FetchFunction";
+import { getAuthToken } from './GetAuthToken';
 
 export const getProductsByCategory = async (category) => {
   try {
@@ -116,7 +117,7 @@ export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTer
     return { items: [], totalCount: 0 };
   }
 };
-export const getBestSellerProducts = async (bestSeller, limit) => {
+export const getBestSellerProducts = async (bestSeller, limit = 12, skip = 0) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "locationFilteredVariant",
@@ -139,13 +140,14 @@ export const getBestSellerProducts = async (bestSeller, limit) => {
         key: "subCategory",
         values: bestSeller
       }],
-      limit: "infinite",
+      limit: limit,
+      returnTotalCount: true,
+      skip: skip,
     });
     if (response && response._items) {
-      if (limit) {
-        return response._items.map((x) => x.data).slice(0, limit);
-      }
-      return response._items.map((x) => x.data);
+      console.log("response", response);
+      console.log("response123", { items: response._items.map((x) => x.data), totalCount: response._totalCount });
+      return { items: response._items.map((x) => x.data), totalCount: response._totalCount };
     } else {
       throw new Error("Response does not contain _items");
     }

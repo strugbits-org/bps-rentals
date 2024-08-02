@@ -37,7 +37,7 @@ const QuoteViewModal = () => {
                                   <input
                                     type="hidden"
                                     name="sku[]"
-                                    defaultValue="MODCH09"
+                                    value="MODCH09"
                                   />
                                   <div class="cart-product">
                                     <div class="container-img">
@@ -121,7 +121,7 @@ const QuoteViewModal = () => {
                                             <input
                                               type="number"
                                               min="1"
-                                              defaultValue="1"
+                                              value="1"
                                               placeholder="1"
                                               class="input-number"
                                             />

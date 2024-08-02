@@ -31,6 +31,7 @@ const CategoryPage = ({
   const [enableLocationFilter, setEnableFilterTrigger] = useState(false);
 
   const [selectedVariants, setSelectedVariants] = useState({});
+  const [savedProductsData, setSavedProductsData] = useState([]);
 
   const handleImageHover = (productIndex, variant) => {
     setSelectedVariants((prevSelectedVariants) => ({
@@ -88,7 +89,7 @@ const CategoryPage = ({
     handleFilterChange({ colors: updatedColors });
   };
   const handleLocationChange = (data) => {
-    setCookie("location", data.value, { path: "/" });
+    setCookie('location', data.value, { path: '/' });
   };
   const handleCategoryChange = (data) => {
     const updatedCategories = filterCategories.map((item) =>
@@ -158,7 +159,7 @@ const CategoryPage = ({
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedVariantData, setSelectedVariantData] = useState(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-  const [categoryTitle, setCategoryTitle] = useState("");
+  const [categoryTitle, setCategoryTitle] = useState('');
   getAuthToken();
   const getSelectedProductSnapShots = async (productData) => {
     setSelectedProductData(productData);
@@ -195,7 +196,7 @@ const CategoryPage = ({
         });
       }
     } catch (error) {
-      console.log("Error:", error);
+      console.log('Error:', error);
     }
   };
 
@@ -334,7 +335,7 @@ const CategoryPage = ({
                                     <li key={index}>
                                       <AnimateLink
                                         to={
-                                          item["link-copy-of-category-name-2"]
+                                          item['link-copy-of-category-name-2']
                                         }
                                         className="blog-btn-tag"
                                       >
@@ -422,6 +423,8 @@ const CategoryPage = ({
                             getSelectedProductSnapShots={
                               getSelectedProductSnapShots
                             }
+                            savedProductsData={savedProductsData}
+                            setSavedProductsData={setSavedProductsData}
                           />
                         </li>
                         {index === 5 && <HotTrendsCategory />}

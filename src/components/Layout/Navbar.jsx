@@ -118,7 +118,7 @@ const Navbar = ({
                   </li>{" "}
                 </ul>
                 <button
-                  href="#"
+                  href="javascript:void(0)"
                   id="bt-menu"
                   aria-label="Menu"
                   data-search-remove

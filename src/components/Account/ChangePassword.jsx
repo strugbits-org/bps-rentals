@@ -150,7 +150,7 @@ const ChangePassword = ({ changePasswordPageContent }) => {
                 </div>
               ))}
               {/* <div class="container-input container-input-password col-lg-12">
-              <label htmlFor="login-password-old">
+              <label for="login-password-old">
                 {" "}
                 {changePasswordPageContent &&
                   changePasswordPageContent.enterYourPasswordFieldLabel}
@@ -169,7 +169,7 @@ const ChangePassword = ({ changePasswordPageContent }) => {
               </div>
             </div>
             <div class="container-input container-input-password col-lg-12">
-              <label htmlFor="login-password-new-1">
+              <label for="login-password-new-1">
                 {changePasswordPageContent &&
                   changePasswordPageContent.enterYourNewPasswordFieldLabel}
               </label>
@@ -187,7 +187,7 @@ const ChangePassword = ({ changePasswordPageContent }) => {
               </div>
             </div>
             <div class="container-input container-input-password col-lg-12">
-              <label htmlFor="login-password-new-2">
+              <label for="login-password-new-2">
                 {changePasswordPageContent &&
                   changePasswordPageContent.confirmYourNewPasswordFieldLabel}
               </label>

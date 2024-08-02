@@ -1,13 +1,18 @@
-"use client"
-import Link from "next/link";
-import AnimateLink from "../AnimateLink";
-import { generateImageUrl2 } from "@/Utils/GenerateImageURL";
-import { usePathname } from "next/navigation";
+'use client';
+import Link from 'next/link';
+import AnimateLink from '../AnimateLink';
+import { generateImageUrl2 } from '@/Utils/GenerateImageURL';
+import { usePathname } from 'next/navigation';
 
 export const SocialSection = ({ data, posts, insta_feed }) => {
   const pathname = usePathname();
 
-  const disabledPages = ["/my-account","/my-account-saved-products","/my-account-quotes-history","/my-account-change-password"];
+  const disabledPages = [
+    '/my-account',
+    '/my-account-saved-products',
+    '/my-account-quotes-history',
+    '/my-account-change-password',
+  ];
 
   if (disabledPages.includes(pathname)) return;
 
@@ -72,9 +77,9 @@ export const SocialSection = ({ data, posts, insta_feed }) => {
                               <img
                                 src={generateImageUrl2({
                                   wix_url: data && data.blogRef.coverImage,
-                                  h: "150",
-                                  w: "150",
-                                  q: "95",
+                                  h: '150',
+                                  w: '150',
+                                  q: '95',
                                 })}
                                 data-preload
                                 className="media"
@@ -83,7 +88,7 @@ export const SocialSection = ({ data, posts, insta_feed }) => {
                             </div>
                             <div className="container-text">
                               <h4 className="blog-title">
-                                {" "}
+                                {' '}
                                 {data && data.blogRef.title}
                               </h4>
                               <p className="blog-text">
@@ -115,28 +120,29 @@ export const SocialSection = ({ data, posts, insta_feed }) => {
                     <h3>{data && data.instaFeedTitle}</h3>
                   </div>
                   <ul className="list-instagram insta-feed">
-                    {insta_feed.map((item, index) => {
-                      return (
-                        <li key={index}>
-                          <AnimateLink
-                            to={item.permalink}
-                            target="_blank"
-                            attributes={{
-                              rel: "noopener noreferrer",
-                            }}
-                          >
-                            <div className="container-img">
-                              <img
-                                src={item.image}
-                                data-preload
-                                className="media"
-                                alt=""
-                              />
-                            </div>
-                          </AnimateLink>
-                        </li>
-                      );
-                    })}
+                    {insta_feed &&
+                      insta_feed.map((item, index) => {
+                        return (
+                          <li key={index}>
+                            <AnimateLink
+                              to={item.permalink}
+                              target="_blank"
+                              attributes={{
+                                rel: 'noopener noreferrer',
+                              }}
+                            >
+                              <div className="container-img">
+                                <img
+                                  src={item.image}
+                                  data-preload
+                                  className="media"
+                                  alt=""
+                                />
+                              </div>
+                            </AnimateLink>
+                          </li>
+                        );
+                      })}
                   </ul>
                 </div>
               </li>
@@ -164,7 +170,7 @@ export const SocialSection = ({ data, posts, insta_feed }) => {
                       data-pin-scale-width="1200"
                       data-pin-min-weight="100%"
                       data-pin-max-weight="100%"
-                      href={data && data.pinterestUrl || ""}
+                      href={(data && data.pinterestUrl) || ''}
                     ></Link>
                   </ul>
                 </div>

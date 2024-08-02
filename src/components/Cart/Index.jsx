@@ -32,7 +32,7 @@ const CartPage = () => {
                     {[1, 2, 3].map((index) => {
                       return (
                         <li key={index} className="list-item">
-                          <input type="hidden" name="sku[]" defaultValue="MODCH09" />
+                          <input type="hidden" name="sku[]" value="MODCH09" />
                           <div className="cart-product">
                             <div className="container-img">
                               <img
@@ -105,7 +105,7 @@ const CartPage = () => {
                                     <input
                                       type="number"
                                       min="1"
-                                      defaultdefaultValue="1"
+                                      value="1"
                                       placeholder="1"
                                       className="input-number"
                                     />
