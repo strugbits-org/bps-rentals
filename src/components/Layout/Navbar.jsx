@@ -33,19 +33,14 @@ const Navbar = ({
   const checkUser = () => {
     const loggedIn = cookies.authToken;
     const submenuLogin = document.querySelector(".submenu-login");
-    const hasActive = submenuLogin.classList.contains("active");
-    submenuLogin.classList.remove("active");
     if (loggedIn) {
       pageLoadStart();
       router.push("/my-account");
     } else {
-      if (hasActive) {
-        submenuLogin.classList.remove("active");
-      } else {
-        submenuLogin.classList.add("active");
-      }
+      submenuLogin.classList.toggle("active", !submenuLogin.classList.contains("active"));
     }
   };
+
   return (
     <>
       {errorMessageVisible && (
@@ -100,8 +95,7 @@ const Navbar = ({
                     ) : (
                       )} */}
                     <button
-                      onClick={checkUser}
-                      // data-set-submenu="login"
+                      data-set-submenu="login"
                       className="new-login-button"
                     >
                       <i className="icon-user"></i>
@@ -280,8 +274,7 @@ const Navbar = ({
                       )} */}
                       <button
                         onClick={checkUser}
-                        // data-set-submenu="login"
-                        className="new-login-button"
+                        className="new-login-button disable-click-outside"
                       >
                         <i className="icon-user"></i>
                         <span className="hide">Login</span>

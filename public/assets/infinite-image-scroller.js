@@ -1,14 +1,14 @@
 import { g as gsapWithCSS, c as ScrollSmoother, S as ScrollTrigger } from "./all.js";
-(function() {
-  const AddActive = function(options) {
+(function () {
+  const AddActive = function (options) {
     const addactive = active.bind(this);
     addactive(true, options);
   };
-  const RemoveActive = function(options) {
+  const RemoveActive = function (options) {
     const removeactive = active.bind(this);
     removeactive(false, options);
   };
-  const active = function(active2 = true, options) {
+  const active = function (active2 = true, options) {
     const {
       delay = -1,
       leave = true,
@@ -3071,24 +3071,24 @@ function addClasses() {
   const suffixes = prepareClasses(["initialized", params.direction, {
     "free-mode": swiper.params.freeMode && params.freeMode.enabled
   }, {
-    "autoheight": params.autoHeight
-  }, {
-    "rtl": rtl
-  }, {
-    "grid": params.grid && params.grid.rows > 1
-  }, {
-    "grid-column": params.grid && params.grid.rows > 1 && params.grid.fill === "column"
-  }, {
-    "android": device.android
-  }, {
-    "ios": device.ios
-  }, {
-    "css-mode": params.cssMode
-  }, {
-    "centered": params.cssMode && params.centeredSlides
-  }, {
-    "watch-progress": params.watchSlidesProgress
-  }], params.containerModifierClass);
+      "autoheight": params.autoHeight
+    }, {
+      "rtl": rtl
+    }, {
+      "grid": params.grid && params.grid.rows > 1
+    }, {
+      "grid-column": params.grid && params.grid.rows > 1 && params.grid.fill === "column"
+    }, {
+      "android": device.android
+    }, {
+      "ios": device.ios
+    }, {
+      "css-mode": params.cssMode
+    }, {
+      "centered": params.cssMode && params.centeredSlides
+    }, {
+      "watch-progress": params.watchSlidesProgress
+    }], params.containerModifierClass);
   classNames.push(...suffixes);
   el.classList.add(...classNames);
   swiper.emitContainerClasses();
@@ -4345,9 +4345,14 @@ class DataSetGet {
     }, this.debounceDelay);
   }
   handleOutsideClick(event) {
+    const target = event.target;
+    const closestButton = target.closest("button");
+    const disabled = target.classList.contains("disable-click-outside") ||
+      (closestButton && closestButton.classList.contains("disable-click-outside"));
+      
     const clickedInsideDataSet = Array.from(this.dataSets).some((dataSet) => dataSet.contains(event.target));
     const clickedInsideDataGet = Array.from(this.dataGets).some((dataGet) => dataGet.contains(event.target));
-    if (!clickedInsideDataSet && !clickedInsideDataGet && this.isActive()) {
+    if (!disabled && !clickedInsideDataSet && !clickedInsideDataGet && this.isActive()) {
       this.reset();
       if (this.blockScroll) {
         let smoother = ScrollSmoother.get();
