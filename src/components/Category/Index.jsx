@@ -28,7 +28,7 @@ const CategoryPage = ({
   const [filterCategories, setFilterCategories] = useState([]);
   const [filterColors, setFilterColors] = useState([]);
   const [filterLocations, setFilterLocations] = useState([]);
-  const [enableLocationFilter, setEnableFilterTrigger] = useState(false);
+  const [enableFilterTrigger, setEnableFilterTrigger] = useState(false);
 
   const [selectedVariants, setSelectedVariants] = useState({});
   const [savedProductsData, setSavedProductsData] = useState([]);
@@ -141,7 +141,7 @@ const CategoryPage = ({
           : { ...x, checked: false }
       )
     );
-    if (enableLocationFilter) handleFilterChange({});
+    if (enableFilterTrigger) handleFilterChange({});
   }, [cookies.location]);
 
   useEffect(() => {
@@ -154,13 +154,13 @@ const CategoryPage = ({
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
-  const [productFilteredVariantData, setProductFilteredVariantData] =
-    useState();
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedVariantData, setSelectedVariantData] = useState(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-  const [categoryTitle, setCategoryTitle] = useState('');
-  getAuthToken();
+  const [categoryTitle, setCategoryTitle] = useState("");
+  const [productFilteredVariantData, setProductFilteredVariantData] =
+    useState();
+
   const getSelectedProductSnapShots = async (productData) => {
     setSelectedProductData(productData);
     try {

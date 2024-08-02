@@ -6,10 +6,10 @@ import { NextResponse } from "next/server";
 export const GET = async (req, context) => {
   try {
     const authenticatedUserData = await handleAuthentication(req);
-
     if (!authenticatedUserData) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
     const { params } = context;
     const id = params.id;
 
@@ -19,6 +19,7 @@ export const GET = async (req, context) => {
         dataCollectionId: "locationFilteredVariant",
       })
       .eq("product", id)
+      .hasSome("f1Members", [authenticatedUserData.memberId])
       .find();
 
     if (locationFilterVariantData._items.length === 0) {
@@ -27,13 +28,14 @@ export const GET = async (req, context) => {
 
     const dataObject = {
       ...locationFilterVariantData._items[0].data,
-      f1Members: locationFilterVariantData._items[0].data.f1Members
-        ? [
-            ...locationFilterVariantData._items[0].data.f1Members,
-            authenticatedUserData.memberId,
-          ]
-        : [authenticatedUserData.memberId],
+      f1Members: locationFilterVariantData._items[0].data.f1Members.filter(
+        (member) => member !== authenticatedUserData.memberId
+      ),
     };
+    // delete dataObject._id;
+    // delete dataObject._owner;
+    // delete dataObject._createdDate;
+    // delete dataObject._updatedDate;
 
     const response = await wixClient.items.updateDataItem(
       locationFilterVariantData._items[0]._id,
@@ -53,9 +55,9 @@ export const GET = async (req, context) => {
         return val;
       }
     );
-
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

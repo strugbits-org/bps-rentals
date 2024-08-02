@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-import { saveProduct, unSaveProduct } from '@/Services/ProductsApis';
-import useUserData from '@/Hooks/useUserData';
+import { saveProduct, unSaveProduct } from "@/Services/ProductsApis";
+import useUserData from "@/Hooks/useUserData";
 
 export const SaveProductButton = ({
   productData,
@@ -10,10 +10,10 @@ export const SaveProductButton = ({
   setSavedProductsData,
 }) => {
   const [productSaved, setProductSaved] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const { memberId } = useUserData();
   const productId = productData?._id;
-  // console.log(savedProductsData, 'savedProductsData');
+
   useEffect(() => {
     if (savedProductsData?.length) {
       setProductSaved(savedProductsData?.some((i) => i?._id === productId));
@@ -31,15 +31,15 @@ export const SaveProductButton = ({
       }
     } catch (error) {
       console.error(
-        `Error ${isSaving ? 'saving' : 'unsaving'} product:`,
+        `Error ${isSaving ? "saving" : "unsaving"} product:`,
         error
       );
       updateSavedProducts(productId);
       if (isSaving) {
-        setError('saving');
+        setError("saving");
         setProductSaved(false);
       } else {
-        setError('unsaving');
+        setError("unsaving");
         setProductSaved(true);
       }
     }
@@ -63,11 +63,11 @@ export const SaveProductButton = ({
 
   const buttonProps = {
     className: `btn-bookmark aos-animate 
-    ${error === '' && productSaved ? 'productSavedColor' : ''}
-    ${error === 'saving' && productSaved ? 'productSavedColor' : ''}
-    ${error === 'unsaving' && productSaved ? 'productSavedColor' : ''}`,
+    ${error === "" && productSaved ? "productSavedColor" : ""}
+    ${error === "saving" && productSaved ? "productSavedColor" : ""}
+    ${error === "unsaving" && productSaved ? "productSavedColor" : ""}`,
     onClick: handleClick,
-    ...(dataAos && { 'data-aos': dataAos }),
+    ...(dataAos && { "data-aos": dataAos }),
   };
 
   return (
