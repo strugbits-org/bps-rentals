@@ -1,24 +1,70 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
-import { getSavedProductData } from "@/Services/ProductsApis";
+import {
+  getProductVariants,
+  getProductVariantsImages,
+  getSavedProductData,
+} from "@/Services/ProductsApis";
+import ProductCard from "../Category/ProductCard";
 
 const SavedProducts = ({ savedProducts }) => {
   useEffect(() => {
-    get();
     markPageLoaded();
   }, []);
-  console.log(savedProducts, "savedProducts");
 
-  // const get = async () => {
-  //   try {
-  //     const res = await getSavedProductData();
-  //     console.log(res, "res");
-  //   } catch (error) {
-  //     console.log("Error", error);
-  //   }
-  // };
+  const [selectedVariants, setSelectedVariants] = useState({});
+  const [savedProductsData, setSavedProductsData] = useState(
+    savedProducts || []
+  );
+  const [selectedProductData, setSelectedProductData] = useState(null);
+
+  const handleImageHover = (productIndex, variant) => {
+    setSelectedVariants((prevSelectedVariants) => ({
+      ...prevSelectedVariants,
+      [productIndex]: variant,
+    }));
+  };
+
+  const getSelectedProductSnapShots = async (productData) => {
+    setSelectedProductData(productData);
+    try {
+      const product_id = productData.product._id;
+      const [productSnapshotData, productVariantsData] = await Promise.all([
+        getProductVariantsImages(product_id),
+        getProductVariants(product_id),
+      ]);
+
+      let dataMap = new Map(
+        productVariantsData.map((item) => [item.sku.toLowerCase(), item])
+      );
+      let filteredVariantData;
+      if (productVariantsData && productData) {
+        filteredVariantData = productData.variantData.filter((variant) => {
+          const normalizedSku = variant.sku.toLowerCase();
+          if (dataMap.has(normalizedSku)) {
+            const dataItem = dataMap.get(normalizedSku);
+            variant.variant.variantId = dataItem._id;
+            return true;
+          }
+          return false;
+        });
+      }
+      setProductSnapshots(productSnapshotData);
+      setProductFilteredVariantData(filteredVariantData);
+      if (filteredVariantData && filteredVariantData.length > 0) {
+        handleImageChange({
+          index: 0,
+          selectedVariantData: filteredVariantData[0].variant,
+          productSnapshots: productSnapshotData,
+          modalUrl: filteredVariantData[0].zipUrl,
+        });
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
   return (
     <div class="wrapper-account">
       <div class="wrapper-top">
@@ -31,7 +77,8 @@ const SavedProducts = ({ savedProducts }) => {
           class="list-saved-products grid-lg-25 grid-tablet-33 grid-phone-50"
           data-aos="fadeIn .8s ease-in-out .4s, d:loop"
         >
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => {
+          {savedProducts.map((data, index) => {
+            const { product, variantData } = data;
             return (
               <li key={index} className="grid-item">
                 <div
@@ -40,95 +87,19 @@ const SavedProducts = ({ savedProducts }) => {
                   data-product-location
                   data-product-colors
                 >
-                  <div className="container-tags">
-                    <button className="btn-bookmark">
-                      <i className="icon-bookmark"></i>
-                      <i className="icon-bookmark-full"></i>
-                    </button>
-                  </div>
-                  <a href="product.html" className="link">
-                    <div className="container-top">
-                      <h2 className="product-title">Bristol Chair</h2>
-                    </div>
-                    <div className="wrapper-product-img">
-                      <div
-                        className="container-img product-img"
-                        data-get-product-link-color="green"
-                        data-default-product-link-active
-                      >
-                        <img
-                          src="/images/chairs/bristol-chair-color-1.webp"
-                          className=" "
-                        />
-                      </div>
-                      <div
-                        className="container-img product-img"
-                        data-get-product-link-color="white"
-                      >
-                        <img
-                          src="/images/chairs/bristol-chair-color-2.webp"
-                          className=" "
-                        />
-                      </div>
-                      <div
-                        className="container-img product-img"
-                        data-get-product-link-color="blue"
-                      >
-                        <img
-                          src="/images/chairs/bristol-chair-color-3.webp"
-                          className=" "
-                        />
-                      </div>
-                    </div>
-                  </a>
-                  <div className="container-color-options">
-                    <ul className="list-color-options">
-                      <li
-                        className="list-item"
-                        data-set-product-link-color="green"
-                        data-default-product-link-active
-                      >
-                        <div className="container-img">
-                          <img
-                            src="/images/chairs/bristol-chair-color-1.webp"
-                            className=" "
-                          />
-                        </div>
-                      </li>
-                      <li
-                        className="list-item"
-                        data-set-product-link-color="white"
-                      >
-                        <div className="container-img">
-                          <img
-                            src="/images/chairs/bristol-chair-color-2.webp"
-                            className=" "
-                          />
-                        </div>
-                      </li>
-                      <li
-                        className="list-item"
-                        data-set-product-link-color="blue"
-                      >
-                        <div className="container-img">
-                          <img
-                            src="/images/chairs/bristol-chair-color-3.webp"
-                            className=" "
-                          />
-                        </div>
-                      </li>
-                    </ul>
-                    <div className="colors-number">
-                      <span>+3</span>
-                    </div>
-                  </div>
-                  <btn-modal-open
-                    group="modal-product"
-                    class="modal-add-to-cart"
-                  >
-                    <span>Add to cart</span>
-                    <i className="icon-cart"></i>
-                  </btn-modal-open>
+                  <ProductCard
+                    key={index}
+                    index={index}
+                    styleClassName="product-link small saved-products active"
+                    product={product}
+                    variantData={variantData}
+                    selectedVariant={selectedVariants[index] || variantData[0]}
+                    filteredProducts={savedProducts}
+                    handleImageHover={handleImageHover}
+                    getSelectedProductSnapShots={getSelectedProductSnapShots}
+                    savedProductsData={savedProductsData}
+                    setSavedProductsData={setSavedProductsData}
+                  />
                 </div>
               </li>
             );

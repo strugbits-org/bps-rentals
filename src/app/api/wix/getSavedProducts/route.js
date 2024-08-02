@@ -20,13 +20,10 @@ export const POST = async (req) => {
           "subCategory",
           "f1Collection",
         ],
-        returnTotalCount: true,
       })
-
-      .skip(req.body.skip)
+      .hasSome("members", [authenticatedUserData.memberId])
       .limit(10)
       .find();
-
     console.log(locationFilterVariantData, "locationFilterVariantData");
 
     let items = locationFilterVariantData._items;

@@ -55,14 +55,12 @@ export const isAuthenticated = async (token) => {
     //     return true; // Or some appropriate default object for unauthenticated users
     // }
 
-    console.log(token, "got token");
 
     if (!token) {
       throw new Error("Unauthorized: No token provided");
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded, "decoded");
 
     const wixClient = await createWixClient();
     const memberData = await wixClient.items
@@ -72,7 +70,6 @@ export const isAuthenticated = async (token) => {
       .eq("userEmail", decoded.email)
       .find();
 
-    console.log(memberData, "memberData");
 
     if (memberData._items.length === 0) {
       throw new Error("Unauthorized: No matching user data");

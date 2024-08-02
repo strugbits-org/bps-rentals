@@ -35,7 +35,6 @@ export default async function Page() {
     })
   );
 
-  console.log(savedProducts, "savedProducts");
   return (
     <Account
       footerData={{ footerContent, contactData, socialLinks, navigationMenu }}

@@ -1,8 +1,9 @@
 import { getAuthToken } from "./GetAuthToken";
+const baseUrl = process.env.BASE_URL;
 
 export const signUpUser = async (userData) => {
   try {
-    const response = await fetch(`api/auth/signup`, {
+    const response = await fetch(`${baseUrl}/api/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,7 +25,7 @@ export const signUpUser = async (userData) => {
 
 export const signInUser = async (userData) => {
   try {
-    const response = await fetch(`api/auth/login`, {
+    const response = await fetch(`${baseUrl}/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +47,7 @@ export const signInUser = async (userData) => {
 
 export const confirmEmail = async (userData) => {
   try {
-    const response = await fetch(`api/auth/forgotPassword`, {
+    const response = await fetch(`${baseUrl}/api/auth/forgotPassword`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -67,13 +68,16 @@ export const confirmEmail = async (userData) => {
 
 export const resetPassword = async (userData, token) => {
   try {
-    const response = await fetch(`api/auth/resetPassword?token=${token}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
+    const response = await fetch(
+      `${baseUrl}/api/auth/resetPassword?token=${token}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      }
+    );
 
     if (!response.ok) {
       const data = await response.json();
@@ -90,7 +94,7 @@ export const resetPassword = async (userData, token) => {
 export const updateProfile = async (userData) => {
   try {
     const authToken = getAuthToken();
-    const response = await fetch(`api/auth/updateProfile`, {
+    const response = await fetch(`${baseUrl}/api/auth/updateProfile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -114,7 +118,7 @@ export const updateProfile = async (userData) => {
 export const changePassword = async (userData) => {
   try {
     const authToken = getAuthToken();
-    const response = await fetch(`api/auth/changePassword`, {
+    const response = await fetch(`${baseUrl}/api/auth/changePassword`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

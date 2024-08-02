@@ -6,7 +6,11 @@ import AnimateLink from "../Common/AnimateLink";
 import { HotTrendsCategory } from "../Common/Sections/HotTrendsSection";
 import ProductCard from "./ProductCard";
 import { BannerOurTeam } from "../Common/Sections/BannerOurTeam";
-import { getProductVariants, getProductVariantsImages } from "@/Services/ProductsApis";
+import {
+  getProductVariants,
+  getProductVariantsImages,
+  getSavedProductData,
+} from "@/Services/ProductsApis";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import CartModal from "../Common/Modals/CartModal";
@@ -20,6 +24,7 @@ const CategoryPage = ({
   colorsData,
   selectedCategoryData,
   productsData,
+  userSavedProducts,
 }) => {
   const pageSize = 18;
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -31,7 +36,21 @@ const CategoryPage = ({
   const [enableFilterTrigger, setEnableFilterTrigger] = useState(false);
 
   const [selectedVariants, setSelectedVariants] = useState({});
-  const [savedProductsData, setSavedProductsData] = useState([]);
+  const [savedProductsData, setSavedProductsData] = useState(
+    userSavedProducts || []
+  );
+  const router = useRouter();
+  const { memberId } = useUserData();
+  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
+  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const [selectedProductData, setSelectedProductData] = useState(null);
+  const [productSnapshots, setProductSnapshots] = useState();
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [selectedVariantData, setSelectedVariantData] = useState(null);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const [categoryTitle, setCategoryTitle] = useState("");
+  const [productFilteredVariantData, setProductFilteredVariantData] =
+    useState();
 
   const handleImageHover = (productIndex, variant) => {
     setSelectedVariants((prevSelectedVariants) => ({
@@ -49,9 +68,9 @@ const CategoryPage = ({
         checkedCategories?.length !== 0
           ? checkedCategories
           : [
-            selectedCategoryData?.parentCollection?._id ||
-            selectedCategoryData?._id,
-          ];
+              selectedCategoryData?.parentCollection?._id ||
+                selectedCategoryData?._id,
+            ];
       const selectedColors =
         colors?.length !== 0
           ? colors.filter((x) => x.checked).map((x) => x.label)
@@ -60,13 +79,17 @@ const CategoryPage = ({
       const selectedLocation = cookies.location;
 
       const filteredProductsList = productsData.filter((product) => {
-        const hasCategory = selectedCategories.length > 0
-          ? product.subCategory.some(subCat => selectedCategories.includes(subCat._id))
-          : true;
+        const hasCategory =
+          selectedCategories.length > 0
+            ? product.subCategory.some((subCat) =>
+                selectedCategories.includes(subCat._id)
+              )
+            : true;
 
-        const hasColor = selectedColors.length > 0
-          ? product.colors.some(color => selectedColors.includes(color))
-          : true;
+        const hasColor =
+          selectedColors.length > 0
+            ? product.colors.some((color) => selectedColors.includes(color))
+            : true;
 
         const hasLocation = selectedLocation
           ? product.location.includes(selectedLocation)
@@ -89,7 +112,7 @@ const CategoryPage = ({
     handleFilterChange({ colors: updatedColors });
   };
   const handleLocationChange = (data) => {
-    setCookie('location', data.value, { path: '/' });
+    setCookie("location", data.value, { path: "/" });
   };
   const handleCategoryChange = (data) => {
     const updatedCategories = filterCategories.map((item) =>
@@ -100,10 +123,16 @@ const CategoryPage = ({
   };
 
   const setInitialValues = () => {
-    const categoryId = selectedCategoryData?.parentCollection?._id || selectedCategoryData?._id || '00000000-000000-000000-000000000001';
+    const categoryId =
+      selectedCategoryData?.parentCollection?._id ||
+      selectedCategoryData?._id ||
+      "00000000-000000-000000-000000000001";
 
     // set category filters
-    if (selectedCategoryData && selectedCategoryData.level2Collections !== undefined) {
+    if (
+      selectedCategoryData &&
+      selectedCategoryData.level2Collections !== undefined
+    ) {
       const categories = selectedCategoryData.level2Collections
         .filter((x) => x._id)
         .map((x) => ({
@@ -116,7 +145,7 @@ const CategoryPage = ({
 
     // set filter colors
     if (colorsData) {
-      const filteredColor = colorsData.find(x => x.category === categoryId);
+      const filteredColor = colorsData.find((x) => x.category === categoryId);
       if (filteredColor) {
         const colors = filteredColor.colors.map((x) => {
           return { label: x, checked: false };
@@ -126,13 +155,15 @@ const CategoryPage = ({
     }
 
     console.log("productsData", productsData);
-    const products = productsData.filter((product) => product.location.some((x) => x === cookies.location));
+    const products = productsData.filter((product) =>
+      product.location.some((x) => x === cookies.location)
+    );
     console.log("products", products.length);
     setFilteredProducts(products);
 
     setTimeout(markPageLoaded, 500);
     setTimeout(setEnableFilterTrigger(true), 500);
-  }
+  };
   useEffect(() => {
     setFilterLocations(
       locations.map((x) =>
@@ -147,19 +178,6 @@ const CategoryPage = ({
   useEffect(() => {
     setInitialValues();
   }, []);
-
-  const router = useRouter();
-  const { memberId } = useUserData();
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
-  const [selectedProductData, setSelectedProductData] = useState(null);
-  const [productSnapshots, setProductSnapshots] = useState();
-  const [selectedVariant, setSelectedVariant] = useState(null);
-  const [selectedVariantData, setSelectedVariantData] = useState(null);
-  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-  const [categoryTitle, setCategoryTitle] = useState("");
-  const [productFilteredVariantData, setProductFilteredVariantData] =
-    useState();
 
   const getSelectedProductSnapShots = async (productData) => {
     setSelectedProductData(productData);
@@ -196,7 +214,7 @@ const CategoryPage = ({
         });
       }
     } catch (error) {
-      console.log('Error:', error);
+      console.log("Error:", error);
     }
   };
 
@@ -279,7 +297,15 @@ const CategoryPage = ({
   //     setCategoryTitle(selectedCategory[0]?.parentCollection?.name);
   //   }
   // }, [router, selectedCategory]);
+  // const fetchSavedProducts = async () => {
+  //   const savedProducts = await getSavedProductData();
+  //   console.log(savedProducts, "savedProducts >>>>");
+  // };
 
+  // useEffect(() => {
+  //   setSavedProductsData(userSavedProducts);
+  //   fetchSavedProducts();
+  // }, []);
   return (
     <>
       <CartModal
@@ -335,7 +361,7 @@ const CategoryPage = ({
                                     <li key={index}>
                                       <AnimateLink
                                         to={
-                                          item['link-copy-of-category-name-2']
+                                          item["link-copy-of-category-name-2"]
                                         }
                                         className="blog-btn-tag"
                                       >
