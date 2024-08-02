@@ -1,9 +1,10 @@
 import { createWixClient } from "@/Utils/CreateWixClient";
 import { apiAuth } from "@/Utils/IsAuthenticated";
 import { unstable_cache } from 'next/cache';
+import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
 
 // Query data items from Wix data collections
-const queryDataItems = async (client, payload) => {
+const getDataFetchFunction = async (payload) => {
   try {
     const {
       dataCollectionId,
@@ -15,6 +16,8 @@ const queryDataItems = async (client, payload) => {
       ne,
       hasSome,
       skip,
+      includeVariants,
+      increasedLimit,
       log
     } = payload;
 
@@ -86,6 +89,7 @@ const queryDataItems = async (client, payload) => {
     if (returnTotalCount || limit === "infinite") options.returnTotalCount = returnTotalCount || true;
 
     // Initialize query
+    const client = await createWixClient();
     let data = client.items.queryDataItems(options);
 
     // Apply filters
@@ -94,20 +98,49 @@ const queryDataItems = async (client, payload) => {
     if (hasSome && hasSome.length > 0 && hasSome !== "null") hasSome.forEach(filter => data = data.hasSome(filter.key, filter.values));
     if (skip && skip !== "null") data = data.skip(skip);
     if (limit && limit !== "null" && limit !== "infinite") data = data.limit(limit);
-    if (limit === "infinite") data = data.limit(50);
+    if (limit === "infinite" && increasedLimit) {
+      data = data.limit(increasedLimit);
+    } else if (limit === "infinite") {
+      data = data.limit(50);
+    };
     if (ne && ne.length > 0 && ne !== "null") ne.forEach(filter => data = data.ne(filter.key, filter.value));
 
     // Fetch data
+    // const getData = unstable_cache(
+    //   async (payload) => await data.find(),
+    //   ["data-fetch"]
+    // );
+    // data = await getData(payload);
     data = await data.find();
 
     // Handle infinite limit
     if (limit === "infinite") {
       let items = data._items;
       while (items.length < data._totalCount) {
+        // const nextPage = unstable_cache(
+        //   async (x) => await x._fetchNextPage(),
+        //   ["data-fetch-next-page"]
+        // );
         data = await data._fetchNextPage();
         items = [...items, ...data._items];
       }
       data._items = items;
+    }
+
+    if (includeVariants) {
+      // const [productsVariantImagesData, productsVariantsData] = await Promise.all([
+      //   getAllProductVariantsImages(),
+      //   getAllProductVariants()
+      // ]);
+      // console.log("hello here", productsVariantImagesData.length, productsVariantsData.length);
+
+      // data._items = data._items.map((product) => {
+      //   if (!product.data._id) return;
+      //   const productId = product.data.product.data._id;
+      //   product.data.productSnapshotData = productsVariantImagesData.find(x => x.productId === productId);
+      //   product.data.productVariantsData = productsVariantImagesData.find(x => x.productId === productId);
+      //   return product;
+      // });
     }
 
     // Data cleanup for specific collections
@@ -137,23 +170,12 @@ const queryDataItems = async (client, payload) => {
       }
     }
 
-    if (log) console.log("log here");
     return data;
 
   } catch (error) {
-    console.log("Error in queryDataItems:", error);
+    console.log("Error in queryDataItems:", payload.dataCollectionId, error);
     return { error: error.message, status: 500 };
   }
 };
-
-// Caches the data fetching function
-const getDataFetchFunction = unstable_cache(
-  async (payload) => {
-    const client = await createWixClient();
-    return await queryDataItems(client, payload);
-  },
-  ["data-fetch"],
-  { tags: ["all"] }
-);
 
 export default getDataFetchFunction;

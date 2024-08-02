@@ -37,7 +37,7 @@ export default async function Page({ params }) {
     colorsData,
     productsData,
     userSavedProducts,
-  ] = await Promise.all([
+  ,] = await Promise.all([
     getHomeSectionDetails(),
     getFilterLocations(),
     getMarketsData(),

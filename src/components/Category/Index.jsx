@@ -15,7 +15,6 @@ import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import CartModal from "../Common/Modals/CartModal";
 import useUserData from "@/Hooks/useUserData";
-import { getAuthToken } from "@/Services/GetAuthToken";
 
 const CategoryPage = ({
   pageContent,
@@ -187,6 +186,7 @@ const CategoryPage = ({
         getProductVariantsImages(product_id),
         getProductVariants(product_id),
       ]);
+      // const { productSnapshotData, productVariantsData } = productData;
 
       let dataMap = new Map(
         productVariantsData.map((item) => [item.sku.toLowerCase(), item])
@@ -430,8 +430,9 @@ const CategoryPage = ({
                   {filteredProducts.slice(0, pageLimit).map((data, index) => {
                     const { product, variantData } = data;
                     return (
-                      <>
+                      <React.Fragment key={index}>
                         <li
+                          key={index}
                           className="product-item grid-item"
                           data-get-tag
                           data-aos="d:loop"
@@ -455,7 +456,7 @@ const CategoryPage = ({
                         </li>
                         {index === 5 && <HotTrendsCategory />}
                         {index === 11 && <BannerOurTeam />}
-                      </>
+                      </React.Fragment>
                     );
                   })}
                 </ul>
