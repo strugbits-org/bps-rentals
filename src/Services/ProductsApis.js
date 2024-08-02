@@ -20,8 +20,9 @@ export const getProductsByCategory = async (category) => {
           value: true,
         },
       ],
-      limit: 50,
-      // limit: "infinite",
+      includeVariants: true,
+      // limit: 50,
+      limit: "infinite",
       // log:true
     };
 
@@ -43,7 +44,7 @@ export const getAllColorsData = async () => {
     const response = await getDataFetchFunction({
       dataCollectionId: "colorFilterCache",
       limit: "infinite",
-      log: true
+      // log: true
     });
 
     if (response && response._items) {
@@ -53,6 +54,41 @@ export const getAllColorsData = async () => {
     }
   } catch (error) {
     console.error("Error fetching colors:", error);
+  }
+};
+export const getAllProductVariantsImages = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "BPSProductImages",
+      increasedLimit: 1000,
+      limit: "infinite",
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data);
+    } else {
+      throw new Error("Response does not contain _items", response);
+    }
+  } catch (error) {
+    console.error("Error fetching product variant images:", error);
+    return [];
+  }
+};
+export const getAllProductVariants = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "Stores/Variants",
+      increasedLimit: 100,
+      limit: "infinite",
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data);
+    } else {
+      throw new Error("Response does not contain _items", response);
+    }
+  } catch (error) {
+    console.error("Error fetching product variants:", error);
+    return [];
   }
 };
 
@@ -149,8 +185,6 @@ export const getBestSellerProducts = async (bestSeller, limit = 12, skip = 0) =>
       skip: skip,
     });
     if (response && response._items) {
-      console.log("response", response);
-      console.log("response123", { items: response._items.map((x) => x.data), totalCount: response._totalCount });
       return { items: response._items.map((x) => x.data), totalCount: response._totalCount };
     } else {
       throw new Error("Response does not contain _items");
@@ -256,8 +290,8 @@ export const getSelectedColorsData = async (categoryId) => {
     if (response && response._items) {
       return categoryId
         ? response._items
-            .map((x) => x.data)
-            .find((x) => x.category === categoryId)
+          .map((x) => x.data)
+          .find((x) => x.category === categoryId)
         : response._items.map((x) => x.data);
     } else {
       throw new Error("Response does not contain _items");
