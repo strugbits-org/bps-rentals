@@ -2,19 +2,35 @@
 
 import { useEffect } from "react";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { getSavedProductData } from "@/Services/ProductsApis";
 
-const SavedProducts = () => {
+const SavedProducts = ({ savedProducts }) => {
   useEffect(() => {
+    get();
     markPageLoaded();
   }, []);
+  console.log(savedProducts, "savedProducts");
+
+  // const get = async () => {
+  //   try {
+  //     const res = await getSavedProductData();
+  //     console.log(res, "res");
+  //   } catch (error) {
+  //     console.log("Error", error);
+  //   }
+  // };
   return (
     <div class="wrapper-account">
       <div class="wrapper-top">
-        <h1 class="fs--60 blue-1 split-words" data-aos="d:loop">Saved Products</h1>
+        <h1 class="fs--60 blue-1 split-words" data-aos="d:loop">
+          Saved Products
+        </h1>
       </div>
       <div class="wrapper-bottom mt-lg-105 mt-tablet-35 mt-phone-25">
-        <ul class="list-saved-products grid-lg-25 grid-tablet-33 grid-phone-50"
-          data-aos="fadeIn .8s ease-in-out .4s, d:loop">
+        <ul
+          class="list-saved-products grid-lg-25 grid-tablet-33 grid-phone-50"
+          data-aos="fadeIn .8s ease-in-out .4s, d:loop"
+        >
           {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => {
             return (
               <li key={index} className="grid-item">

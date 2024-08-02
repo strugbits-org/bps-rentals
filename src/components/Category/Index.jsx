@@ -33,6 +33,7 @@ const CategoryPage = ({
   const [filterColors, setFilterColors] = useState([]);
   const [filterLocations, setFilterLocations] = useState([]);
   const [enableLocationFilter, setEnableLocationFilter] = useState(false);
+  const [savedProductsData, setSavedProductsData] = useState([]);
   const pageSize = 18;
 
   const [selectedVariants, setSelectedVariants] = useState({});
@@ -177,13 +178,13 @@ const CategoryPage = ({
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
-  const [productFilteredVariantData, setProductFilteredVariantData] =
-    useState();
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedVariantData, setSelectedVariantData] = useState(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [categoryTitle, setCategoryTitle] = useState("");
-  getAuthToken();
+  const [productFilteredVariantData, setProductFilteredVariantData] =
+    useState();
+
   const getSelectedProductSnapShots = async (productData) => {
     setSelectedProductData(productData);
     try {
@@ -447,6 +448,8 @@ const CategoryPage = ({
                               getSelectedProductSnapShots={
                                 getSelectedProductSnapShots
                               }
+                              savedProductsData={savedProductsData}
+                              setSavedProductsData={setSavedProductsData}
                             />
                           </li>
                           {index === 5 && <HotTrendsCategory />}
