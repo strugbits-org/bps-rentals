@@ -2,6 +2,7 @@ import { createWixClient } from "@/Utils/CreateWixClient";
 import { apiAuth } from "@/Utils/IsAuthenticated";
 import { unstable_cache } from 'next/cache';
 
+// Query data items from Wix data collections
 const queryDataItems = async (client, payload) => {
   try {
     const {
@@ -14,10 +15,13 @@ const queryDataItems = async (client, payload) => {
       ne,
       hasSome,
       skip,
+      log
     } = payload;
 
+    // Options for the query
     const options = {};
 
+    // List of collections requiring authentication
     const authCollections = [
       "RentalsHomeHero",
       "RentalsNewArrivals",
@@ -64,12 +68,12 @@ const queryDataItems = async (client, payload) => {
       "Stores/Variants",
     ];
 
-    const isValid = authCollections.includes(dataCollectionId);
-
-    if (dataCollectionId && !isValid) {
+    // Validate collection ID
+    if (dataCollectionId && !authCollections.includes(dataCollectionId)) {
       return { error: "Unauthorized", status: 401 };
     }
 
+    // Authenticate the API key
     const apiKey = process.env.APIKEY;
     const auth = await apiAuth(apiKey, dataCollectionId);
 
@@ -77,47 +81,27 @@ const queryDataItems = async (client, payload) => {
       return { error: "Unauthorized", status: 401 };
     }
 
+    // Populate query options
     if (dataCollectionId) options.dataCollectionId = dataCollectionId;
-    if (includeReferencedItems?.length > 0)
-      options.includeReferencedItems = includeReferencedItems;
-    if (returnTotalCount) options.returnTotalCount = returnTotalCount;
+    if (includeReferencedItems?.length > 0) options.includeReferencedItems = includeReferencedItems;
+    if (returnTotalCount || limit === "infinite") options.returnTotalCount = returnTotalCount || true;
 
+    // Initialize query
     let data = client.items.queryDataItems(options);
-    if (contains?.length === 2) {
-      data = data.contains(contains[0], contains[1]);
-    }
 
-    if (eq && eq.length > 0 && eq !== "null") {
-      eq.forEach((filter) => {
-        data = data.eq(filter.key, filter.value);
-      });
-    }
+    // Apply filters
+    if (contains?.length === 2) data = data.contains(contains[0], contains[1]);
+    if (eq && eq.length > 0 && eq !== "null") eq.forEach(filter => data = data.eq(filter.key, filter.value));
+    if (hasSome && hasSome.length > 0 && hasSome !== "null") hasSome.forEach(filter => data = data.hasSome(filter.key, filter.values));
+    if (skip && skip !== "null") data = data.skip(skip);
+    if (limit && limit !== "null" && limit !== "infinite") data = data.limit(limit);
+    if (limit === "infinite") data = data.limit(50);
+    if (ne && ne.length > 0 && ne !== "null") ne.forEach(filter => data = data.ne(filter.key, filter.value));
 
-    if (hasSome && hasSome.length > 0 && hasSome !== "null") {
-      hasSome.forEach((filter) => {
-        data = data.hasSome(filter.key, filter.values);
-      });
-    }
-
-    if (skip && skip !== "null") {
-      data = data.skip(skip);
-    }
-
-    if (limit && limit !== "null" && limit !== "infinite") {
-      data = data.limit(limit);
-    }
-
-    if (limit === "infinite") {
-      data = data.limit(50);
-    }
-
-    if (ne && ne.length > 0 && ne !== "null") {
-      ne.forEach((filter) => {
-        data = data.ne(filter.key, filter.value);
-      });
-    }
-
+    // Fetch data
     data = await data.find();
+
+    // Handle infinite limit
     if (limit === "infinite") {
       let items = data._items;
       while (items.length < data._totalCount) {
@@ -127,9 +111,10 @@ const queryDataItems = async (client, payload) => {
       data._items = items;
     }
 
+    // Data cleanup for specific collections
     if (data._items.length > 0) {
       if (dataCollectionId === "Stores/Products") {
-        data._items = data._items.map((val) => {
+        data._items = data._items.map(val => {
           delete val.data.formattedDiscountedPrice;
           delete val.data.formattedPrice;
           delete val.data.price;
@@ -138,8 +123,8 @@ const queryDataItems = async (client, payload) => {
         });
       }
       if (dataCollectionId === "locationFilteredVariant") {
-        data._items = data._items.map((val) => {
-          val.data.variantData = val.data.variantData.map((val2) => {
+        data._items = data._items.map(val => {
+          val.data.variantData = val.data.variantData.map(val2 => {
             delete val2.variant.discountedPrice;
             delete val2.variant.price;
             return val2;
@@ -152,20 +137,24 @@ const queryDataItems = async (client, payload) => {
         });
       }
     }
+
+    if (log) console.log("log here");
     return data;
+
   } catch (error) {
-    console.log(error);
+    console.log("Error in queryDataItems:", error);
     return { error: error.message, status: 500 };
   }
 };
 
+// Caches the data fetching function
 const getDataFetchFunction = unstable_cache(
   async (payload) => {
     const client = await createWixClient();
-    const data = await queryDataItems(client, payload);
-    return data;
+    return await queryDataItems(client, payload);
   },
-  ['data-fetch'],
-  { tags: ["all"], revalidate: 120 }
+  ["data-fetch"],
+  { tags: ["all"] }
 );
+
 export default getDataFetchFunction;

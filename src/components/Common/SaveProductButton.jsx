@@ -13,7 +13,7 @@ export const SaveProductButton = ({
   const [error, setError] = useState('');
   const { memberId } = useUserData();
   const productId = productData?._id;
-  console.log(savedProductsData, 'savedProductsData');
+  // console.log(savedProductsData, 'savedProductsData');
   useEffect(() => {
     if (savedProductsData?.length) {
       setProductSaved(savedProductsData?.some((i) => i?._id === productId));

@@ -6,11 +6,7 @@ import AnimateLink from "../Common/AnimateLink";
 import { HotTrendsCategory } from "../Common/Sections/HotTrendsSection";
 import ProductCard from "./ProductCard";
 import { BannerOurTeam } from "../Common/Sections/BannerOurTeam";
-import {
-  fetchFilteredProducts,
-  getProductVariants,
-  getProductVariantsImages,
-} from "@/Services/ProductsApis";
+import { getProductVariants, getProductVariantsImages } from "@/Services/ProductsApis";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import CartModal from "../Common/Modals/CartModal";
@@ -23,17 +19,16 @@ const CategoryPage = ({
   marketsData,
   colorsData,
   selectedCategoryData,
-  products,
+  productsData,
 }) => {
+  const pageSize = 18;
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [totalCount, setTotalCount] = useState();
-  const [loading, setLoading] = useState(false);
+  const [pageLimit, setPageLimit] = useState(pageSize);
   const [cookies, setCookie] = useCookies(["location"]);
   const [filterCategories, setFilterCategories] = useState([]);
   const [filterColors, setFilterColors] = useState([]);
   const [filterLocations, setFilterLocations] = useState([]);
-  const [enableLocationFilter, setEnableLocationFilter] = useState(false);
-  const pageSize = 18;
+  const [enableLocationFilter, setEnableFilterTrigger] = useState(false);
 
   const [selectedVariants, setSelectedVariants] = useState({});
 
@@ -46,7 +41,6 @@ const CategoryPage = ({
 
   const handleFilterChange = async ({ categories = [], colors = [] }) => {
     try {
-      setLoading(true);
       const checkedCategories = categories
         ? categories.filter((x) => x.checked).map((x) => x._id)
         : filterCategories.filter((x) => x.checked).map((x) => x._id);
@@ -54,60 +48,35 @@ const CategoryPage = ({
         checkedCategories?.length !== 0
           ? checkedCategories
           : [
-              selectedCategoryData?.parentCollection?._id ||
-                selectedCategoryData?._id,
-            ];
-      const checkedColors =
+            selectedCategoryData?.parentCollection?._id ||
+            selectedCategoryData?._id,
+          ];
+      const selectedColors =
         colors?.length !== 0
           ? colors.filter((x) => x.checked).map((x) => x.label)
           : filterColors.filter((x) => x.checked).map((x) => x.label);
-      const response = await fetchFilteredProducts({
-        pageSize,
-        location: cookies.location,
-        categories: selectedCategories,
-        colors: checkedColors,
+
+      const selectedLocation = cookies.location;
+
+      const filteredProductsList = productsData.filter((product) => {
+        const hasCategory = selectedCategories.length > 0
+          ? product.subCategory.some(subCat => selectedCategories.includes(subCat._id))
+          : true;
+
+        const hasColor = selectedColors.length > 0
+          ? product.colors.some(color => selectedColors.includes(color))
+          : true;
+
+        const hasLocation = selectedLocation
+          ? product.location.includes(selectedLocation)
+          : true;
+
+        return hasCategory && hasColor && hasLocation;
       });
-      setFilteredProducts(response.items);
-      setTotalCount(response.totalCount);
-      updatedWatched();
+      setFilteredProducts(filteredProductsList);
+      updatedWatched(true);
     } catch (error) {
       console.error("Error fetching products:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSeeMore = async () => {
-    try {
-      setLoading(true);
-
-      const selectedCategories = filterCategories
-        .filter((x) => x.checked)
-        .map((x) => x._id);
-      const selectedColors = filterColors
-        .filter((x) => x.checked)
-        .map((x) => x.label);
-      const categories =
-        selectedCategories.length !== 0
-          ? selectedCategories
-          : [
-              selectedCategoryData?.parentCollection?._id ||
-                selectedCategoryData?._id,
-            ];
-      const response = await fetchFilteredProducts({
-        pageSize,
-        skip: filteredProducts.length,
-        location: cookies.location,
-        categories,
-        colors: selectedColors,
-      });
-      setFilteredProducts((prev) => [...prev, ...response.items]);
-      setTotalCount(response.totalCount);
-      updatedWatched();
-    } catch (error) {
-      console.error("Error fetching more products:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -130,7 +99,10 @@ const CategoryPage = ({
   };
 
   const setInitialValues = () => {
-    if (selectedCategoryData.level2Collections !== undefined) {
+    const categoryId = selectedCategoryData?.parentCollection?._id || selectedCategoryData?._id || '00000000-000000-000000-000000000001';
+
+    // set category filters
+    if (selectedCategoryData && selectedCategoryData.level2Collections !== undefined) {
       const categories = selectedCategoryData.level2Collections
         .filter((x) => x._id)
         .map((x) => ({
@@ -140,18 +112,26 @@ const CategoryPage = ({
         }));
       setFilterCategories(categories);
     }
-    if (colorsData) {
-      const colors = colorsData.colors.map((x) => {
-        return { label: x, checked: false };
-      });
-      setFilterColors(colors);
-    }
-    setFilteredProducts(products.items);
-    setTotalCount(products.totalCount);
-    setTimeout(markPageLoaded, 500);
-    setTimeout(setEnableLocationFilter(true), 500);
-  };
 
+    // set filter colors
+    if (colorsData) {
+      const filteredColor = colorsData.find(x => x.category === categoryId);
+      if (filteredColor) {
+        const colors = filteredColor.colors.map((x) => {
+          return { label: x, checked: false };
+        });
+        setFilterColors(colors);
+      }
+    }
+
+    console.log("productsData", productsData);
+    const products = productsData.filter((product) => product.location.some((x) => x === cookies.location));
+    console.log("products", products.length);
+    setFilteredProducts(products);
+
+    setTimeout(markPageLoaded, 500);
+    setTimeout(setEnableFilterTrigger(true), 500);
+  }
   useEffect(() => {
     setFilterLocations(
       locations.map((x) =>
@@ -166,10 +146,6 @@ const CategoryPage = ({
   useEffect(() => {
     setInitialValues();
   }, []);
-
-  // useEffect(() => {
-  //   console.log("HEllllllllllloooooooooooooooooooooo", cookies.location);
-  // }, [cookies])
 
   const router = useRouter();
   const { memberId } = useUserData();
@@ -424,36 +400,35 @@ const CategoryPage = ({
             <div className="col-lg-10 column-content">
               <div className="product-list-wrapper container-wrapper-list">
                 <ul className="product-list grid-lg-33 grid-tablet-50 grid-list">
-                  {products &&
-                    filteredProducts.map((data, index) => {
-                      const { product, variantData } = data;
-                      return (
-                        <>
-                          <li
-                            className="product-item grid-item"
-                            data-get-tag
-                            data-aos="d:loop"
-                          >
-                            <ProductCard
-                              key={index}
-                              index={index}
-                              product={product}
-                              variantData={variantData}
-                              selectedVariant={
-                                selectedVariants[index] || variantData[0]
-                              }
-                              filteredProducts={filteredProducts}
-                              handleImageHover={handleImageHover}
-                              getSelectedProductSnapShots={
-                                getSelectedProductSnapShots
-                              }
-                            />
-                          </li>
-                          {index === 5 && <HotTrendsCategory />}
-                          {index === 11 && <BannerOurTeam />}
-                        </>
-                      );
-                    })}
+                  {filteredProducts.slice(0, pageLimit).map((data, index) => {
+                    const { product, variantData } = data;
+                    return (
+                      <>
+                        <li
+                          className="product-item grid-item"
+                          data-get-tag
+                          data-aos="d:loop"
+                        >
+                          <ProductCard
+                            key={index}
+                            index={index}
+                            product={product}
+                            variantData={variantData}
+                            selectedVariant={
+                              selectedVariants[index] || variantData[0]
+                            }
+                            filteredProducts={filteredProducts}
+                            handleImageHover={handleImageHover}
+                            getSelectedProductSnapShots={
+                              getSelectedProductSnapShots
+                            }
+                          />
+                        </li>
+                        {index === 5 && <HotTrendsCategory />}
+                        {index === 11 && <BannerOurTeam />}
+                      </>
+                    );
+                  })}
                 </ul>
                 {filteredProducts.length === 0 && (
                   <h6
@@ -464,11 +439,15 @@ const CategoryPage = ({
                   </h6>
                 )}
                 {/* {products.totalCount < filteredProducts.length && ( */}
-                {filteredProducts.length < totalCount && !loading && (
+                {/* {filteredProducts.length < totalCount && !loading && ( */}
+                {pageLimit < filteredProducts.length && (
                   <div className="flex-center">
                     <button
                       className="btn-border-blue mt-90"
-                      onClick={handleSeeMore}
+                      onClick={() => {
+                        setPageLimit((prev) => prev + pageSize);
+                        updatedWatched(true);
+                      }}
                       data-aos="fadeIn .6s ease-in-out 0s, d:loop"
                     >
                       <span>See more</span>

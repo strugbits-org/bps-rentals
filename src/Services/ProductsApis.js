@@ -1,6 +1,60 @@
 "use server"
 import getDataFetchFunction from "./FetchFunction";
 
+export const getProductsByCategory = async (category) => {
+  try {
+    const payload = {
+      dataCollectionId: "locationFilteredVariant",
+      includeReferencedItems: [
+        "product",
+        "subCategory",
+      ],
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+      limit: 50,
+      // limit: "infinite",
+      // log:true
+    };
+
+    const response = await getDataFetchFunction(payload);
+    if (response && response._items) {
+      const products = response._items.map((x) => x.data);
+      const filteredProducts = products.filter(product => product.subCategory.some((x) => x._id === category))
+      return filteredProducts;
+    } else {
+      throw new Error("Response does not contain _items", response);
+    }
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
+};
+export const getAllColorsData = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "colorFilterCache",
+      limit: "infinite",
+      log: true
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data);
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching colors:", error);
+  }
+};
+
 export const fetchFilteredProducts = async ({ pageSize = 10, skip = 0, searchTerm = "", categories = [], location = "NT", colors = [], slug = null }) => {
   try {
     const payload = {
@@ -180,7 +234,7 @@ export const getSelectedColorsData = async (categoryId) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "colorFilterCache",
-      limit: 1000
+      limit: "infinite"
     });
 
     if (response && response._items) {

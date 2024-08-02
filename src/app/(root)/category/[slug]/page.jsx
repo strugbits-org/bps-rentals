@@ -1,13 +1,14 @@
 import CategoryPage from "@/components/Category/Index";
 import { getFilterLocations } from "@/Services/NavbarApis";
-import { fetchAllCategoriesData, fetchFilteredProducts, getSelectedColorsData } from "@/Services/ProductsApis";
+import { fetchAllCategoriesData, getAllColorsData, getProductsByCategory } from "@/Services/ProductsApis";
 import { getHomeSectionDetails, getMarketsData } from "@/Services/SectionsApis";
 import { findCategoryData, getAllCategoriesPaths } from "@/Utils/Utils";
 
 export const generateStaticParams = async () => {
   try {
     const categoriesData = await fetchAllCategoriesData();
-    const paths = getAllCategoriesPaths(categoriesData);
+    const slugs = getAllCategoriesPaths(categoriesData);
+    const paths = slugs.map((slug) => ({ slug }));
     return paths;
   } catch (error) {
     console.log("Error:", error);
@@ -17,17 +18,18 @@ export const generateStaticParams = async () => {
 
 
 export default async function Page({ params }) {
-  const slug = "/category/" + params.id;
+  const slug = "/category/" + params.slug;
   const categoriesData = await fetchAllCategoriesData();
   const selectedCategoryData = findCategoryData(categoriesData, slug);
   const categoryId = selectedCategoryData?.parentCollection?._id || selectedCategoryData?._id || '00000000-000000-000000-000000000001';
 
-  const [homePageContent, locations, marketsData, colorsData, products] = await Promise.all([
+
+  const [homePageContent, locations, marketsData, colorsData, productsData] = await Promise.all([
     getHomeSectionDetails(),
     getFilterLocations(),
     getMarketsData(),
-    getSelectedColorsData(categoryId),
-    fetchFilteredProducts({ categories: [categoryId], pageSize: 18 }),
+    getAllColorsData(),
+    getProductsByCategory(categoryId),
   ]);
 
 
@@ -39,7 +41,7 @@ export default async function Page({ params }) {
       colorsData={colorsData}
       categoriesData={categoriesData}
       selectedCategoryData={selectedCategoryData}
-      products={products}
+      productsData={productsData}
     />
   );
 }
