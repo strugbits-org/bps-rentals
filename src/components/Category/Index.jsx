@@ -33,7 +33,7 @@ const CategoryPage = ({
   const [selectedVariants, setSelectedVariants] = useState({});
   const [savedProductsData, setSavedProductsData] = useState([]);
 
-  const handleImageHover = (productIndex, variant) => {
+  const handleVariantChange = (productIndex, variant) => {
     setSelectedVariants((prevSelectedVariants) => ({
       ...prevSelectedVariants,
       [productIndex]: variant,
@@ -412,14 +412,13 @@ const CategoryPage = ({
                             index={index}
                             product={product}
                             variantData={variantData}
-                            selectedVariant={
-                              selectedVariants[index] || variantData[0]
-                            }
+                            selectedVariant={selectedVariants[index] || variantData[0]}
                             filteredProducts={filteredProducts}
-                            handleImageHover={handleImageHover}
+                            handleVariantChange={handleVariantChange}
                             getSelectedProductSnapShots={
                               getSelectedProductSnapShots
                             }
+                            filterColors={filterColors}
                             savedProductsData={savedProductsData}
                             setSavedProductsData={setSavedProductsData}
                           />

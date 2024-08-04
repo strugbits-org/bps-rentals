@@ -1,21 +1,35 @@
 import { productImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SaveProductButton } from "../Common/SaveProductButton";
+import { hasMatchingColor } from "@/Utils/Utils";
 
 const ProductCard = ({
   index,
   product,
   variantData,
   selectedVariant,
-  handleImageHover,
+  handleVariantChange,
   filteredProducts,
   getSelectedProductSnapShots,
   savedProductsData,
   setSavedProductsData,
+  filterColors
 }) => {
   const defaultVariantSku = selectedVariant?.sku;
   const defaultVariantImage = selectedVariant?.variant.imageSrc;
+  const [filteredVariants, setFilteredVariants] = useState(variantData);
+
+  useEffect(() => {
+    const matchingVariants = variantData.filter((variant, index) => {
+      if (hasMatchingColor(filterColors.filter(x => x.checked), variant.color)) {
+        // handleVariantChange(index, variant)
+        return true;
+      }
+    });
+    setFilteredVariants(matchingVariants.length !== 0 ? matchingVariants : variantData);
+  }, [filterColors])
+
   return (
     <div
       className="product-link large active"
@@ -75,7 +89,7 @@ const ProductCard = ({
           </div>
         </div>
         <div className="wrapper-product-img">
-          {variantData.map((selectedData, index) => {
+          {filteredVariants.map((selectedData, index) => {
             return (
               <React.Fragment key={index}>
                 <div
@@ -101,20 +115,20 @@ const ProductCard = ({
       </AnimateLink>
       <div className="container-color-options">
         <ul className="list-color-options">
-          {variantData.map((selVariantData, idx) => {
+          {filteredVariants.map((variant, idx) => {
             return (
               <React.Fragment key={idx}>
                 {idx < 4 && (
                   <li
                     className="list-item"
-                    data-set-product-link-color={selVariantData.color[0]}
-                    onMouseEnter={() => handleImageHover(index, selVariantData)}
+                    data-set-product-link-color={variant.color[0]}
+                    onMouseEnter={() => handleVariantChange(index, variant)}
                     data-default-product-link-active={idx === 0}
                   >
                     <div className="container-img">
                       <img
                         src={productImageURL({
-                          wix_url: selVariantData.variant.imageSrc,
+                          wix_url: variant.variant.imageSrc,
                           w: '40',
                           h: '40',
                           fit: 'fill',
@@ -131,9 +145,9 @@ const ProductCard = ({
             );
           })}
         </ul>
-        {variantData.length > 4 && (
+        {filteredVariants.length > 4 && (
           <div className="colors-number">
-            <span>+{variantData.length - 4}</span>
+            <span>+{filteredVariants.length - 4}</span>
           </div>
         )}
       </div>

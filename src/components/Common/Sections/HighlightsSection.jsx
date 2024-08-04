@@ -7,7 +7,7 @@ const Highlights = ({ pageContent, data }) => {
   if (data.length === 0) return;
   const [selectedVariants, setSelectedVariants] = useState({});
 
-  const handleImageHover = (index, variant) => {
+  const handleVariantChange = (index, variant) => {
     setSelectedVariants((prevSelectedVariants) => ({
       ...prevSelectedVariants,
       [index]: variant,
@@ -41,7 +41,7 @@ const Highlights = ({ pageContent, data }) => {
                             selectedVariant={
                               selectedVariants[index] || variantData[0]
                             }
-                            handleImageHover={handleImageHover}
+                            handleVariantChange={handleVariantChange}
                           />
                           <AnimateLink to={`product/${item.product.slug}`} className="link-highlight">
                             <div className="container-img bg-blue-1">

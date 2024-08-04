@@ -63,3 +63,8 @@ export const getAllCategoriesPaths = (categoriesData) => {
     });
     return paths;
 }
+
+export const hasMatchingColor = (colorsArray, variantColors) => {
+    const labels = colorsArray.map(item => item.label);
+    return variantColors.some(item => labels.includes(item));
+  };

@@ -9,7 +9,7 @@ export const MarketBestSeller = ({ products }) => {
     const [totalCount, setTotalCount] = useState();
     const [loading, setLoading] = useState(false);
 
-    const handleImageHover = (index, variant) => {
+    const handleVariantChange = (index, variant) => {
         setSelectedVariants((prevSelectedVariants) => ({
             ...prevSelectedVariants,
             [index]: variant,
@@ -54,7 +54,7 @@ export const MarketBestSeller = ({ products }) => {
                                             selectedVariant={
                                                 selectedVariants[index] || variantData[0]
                                             }
-                                            handleImageHover={handleImageHover}
+                                            handleVariantChange={handleVariantChange}
                                         />
                                     </li>
                                 );
