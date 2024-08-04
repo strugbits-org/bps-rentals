@@ -106,21 +106,12 @@ const getDataFetchFunction = async (payload) => {
     if (ne && ne.length > 0 && ne !== "null") ne.forEach(filter => data = data.ne(filter.key, filter.value));
 
     // Fetch data
-    // const getData = unstable_cache(
-    //   async (payload) => await data.find(),
-    //   ["data-fetch"]
-    // );
-    // data = await getData(payload);
     data = await data.find();
 
     // Handle infinite limit
     if (limit === "infinite") {
       let items = data._items;
       while (items.length < data._totalCount) {
-        // const nextPage = unstable_cache(
-        //   async (x) => await x._fetchNextPage(),
-        //   ["data-fetch-next-page"]
-        // );
         data = await data._fetchNextPage();
         items = [...items, ...data._items];
       }
@@ -128,19 +119,18 @@ const getDataFetchFunction = async (payload) => {
     }
 
     if (includeVariants) {
-      // const [productsVariantImagesData, productsVariantsData] = await Promise.all([
-      //   getAllProductVariantsImages(),
-      //   getAllProductVariants()
-      // ]);
-      // console.log("hello here", productsVariantImagesData.length, productsVariantsData.length);
+      const [productsVariantImagesData, productsVariantsData] = await Promise.all([
+        getAllProductVariantsImages(),
+        getAllProductVariants()
+      ]);
 
-      // data._items = data._items.map((product) => {
-      //   if (!product.data._id) return;
-      //   const productId = product.data.product.data._id;
-      //   product.data.productSnapshotData = productsVariantImagesData.find(x => x.productId === productId);
-      //   product.data.productVariantsData = productsVariantImagesData.find(x => x.productId === productId);
-      //   return product;
-      // });
+      data._items = data._items.map((product) => {
+        if (!product.data._id) return;
+        const productId = product.data.product._id;
+        product.data.productSnapshotData = productsVariantImagesData.filter(x => x.productId === productId);
+        product.data.productVariantsData = productsVariantsData.filter(x => x.productId === productId);
+        return product;
+      });
     }
 
     // Data cleanup for specific collections

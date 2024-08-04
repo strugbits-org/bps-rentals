@@ -20,6 +20,7 @@ const CategoryPage = ({
   selectedCategoryData,
   productsData,
 }) => {
+
   const pageSize = 18;
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [pageLimit, setPageLimit] = useState(pageSize);
@@ -163,12 +164,7 @@ const CategoryPage = ({
   const getSelectedProductSnapShots = async (productData) => {
     setSelectedProductData(productData);
     try {
-      const product_id = productData.product._id;
-      const [productSnapshotData, productVariantsData] = await Promise.all([
-        getProductVariantsImages(product_id),
-        getProductVariants(product_id),
-      ]);
-      // const { productSnapshotData, productVariantsData } = productData;
+      const { productSnapshotData, productVariantsData } = productData;
 
       let dataMap = new Map(
         productVariantsData.map((item) => [item.sku.toLowerCase(), item])
