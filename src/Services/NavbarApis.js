@@ -73,6 +73,21 @@ export const getForgotPasswordModalContent = async () => {
     return [];
   }
 };
+export const getSearchSectionDetails = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "SearchSectionDetails",
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data)[0];
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching search section data:", error);
+    return [];
+  }
+};
 
 export const getFilterLocations = async () => {
   try {

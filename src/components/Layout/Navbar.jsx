@@ -21,7 +21,9 @@ const Navbar = ({
   createAccountModalContent,
   forgotPasswordModalContent,
   marketsData,
+  studiosData,
   categoriesData,
+  searchSectionDetails
 }) => {
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
@@ -300,7 +302,7 @@ const Navbar = ({
               {/* All categories */}
               <AllCategories categoriesData={categoriesData} />
               {/* Search */}
-              <SearchModal marketsData={marketsData} />
+              <SearchModal searchSectionDetails={searchSectionDetails} studiosData={studiosData} marketsData={marketsData} />
               {/* User Authentication */}
               <div
                 className="submenu-login submenu"

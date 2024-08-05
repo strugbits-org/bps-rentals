@@ -171,6 +171,29 @@ export const getMarketSection = async (slug) => {
     console.error("Error fetching Market Section data:", error);
   }
 };
+export const getMarketSliderData = async (id) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "PortfolioCollection",
+      includeReferencedItems: ["portfolioRef", "markets"],
+      limit: 3,
+      hasSome: [
+        {
+          key: "markets",
+          values: [id]
+        }
+      ]
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data);
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching MarketSliderData data:", error);
+    return [];
+  }
+};
 
 export const getSocialSectionBlogs = async () => {
   try {
