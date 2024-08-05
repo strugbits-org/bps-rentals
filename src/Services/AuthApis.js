@@ -71,7 +71,7 @@ export const confirmEmail = async (userData) => {
 export const resetPassword = async (userData, token) => {
   try {
     const response = await fetch(
-      `${baseUrl}/api/auth/resetPassword?token=${token}`,
+      `${baseUrl}/api/auth/resetPassword?reset-id=${token}`,
       {
         method: "PUT",
         headers: {

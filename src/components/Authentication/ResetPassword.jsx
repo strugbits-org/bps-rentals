@@ -33,7 +33,7 @@ const ResetPassword = () => {
       e?.preventDefault();
       setMessage("");
       const { password, confirmPassword } = formData;
-      const token = searchParams.get("token");
+      const userId = searchParams.get("reset-id");
       if (password !== confirmPassword) {
         setMessage("Passwords should be matched.");
         setErrorMessageVisible(true);
@@ -41,7 +41,7 @@ const ResetPassword = () => {
       }
       const response = await resetPassword(
         { password, confirmPassword },
-        token
+        userId
       );
       if (response?.error) {
         setMessage(response.message);
@@ -60,11 +60,11 @@ const ResetPassword = () => {
   };
 
   const handleClose = () => {
-    router.push("/#sign-in");
+    router.push("/");
   };
 
   useEffect(() => {
-    if (searchParams.get("token")) {
+    if (searchParams.get("reset-id")) {
       markPageLoaded();
     } else {
       handleClose();
