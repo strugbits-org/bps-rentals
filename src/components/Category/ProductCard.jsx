@@ -15,7 +15,7 @@ const ProductCard = ({
   getSelectedProductSnapShots,
   savedProductsData,
   setSavedProductsData,
-  filterColors
+  filterColors = []
 }) => {
   const defaultVariantSku = selectedVariant?.sku;
   const defaultVariantImage = selectedVariant?.variant.imageSrc;
@@ -33,9 +33,8 @@ const ProductCard = ({
 
   return (
     <div
-      className={`${
-        styleClassName ? styleClassName : "product-link large active"
-      }`}
+      className={`${styleClassName ? styleClassName : "product-link large active"
+        }`}
       data-product-category
       data-product-location
       data-product-colors

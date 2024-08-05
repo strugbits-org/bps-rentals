@@ -18,7 +18,7 @@ export const getProductsByCategory = async (category) => {
           value: true,
         },
       ],
-      includeVariants: true,
+      // includeVariants: true,
       limit: 50,
       // limit: "infinite",
       // log:true

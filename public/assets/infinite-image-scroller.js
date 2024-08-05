@@ -4349,10 +4349,11 @@ class DataSetGet {
     const closestButton = target.closest("button");
     const disabled = target.classList.contains("disable-click-outside") ||
       (closestButton && closestButton.classList.contains("disable-click-outside"));
-      
+
     const clickedInsideDataSet = Array.from(this.dataSets).some((dataSet) => dataSet.contains(event.target));
     const clickedInsideDataGet = Array.from(this.dataGets).some((dataGet) => dataGet.contains(event.target));
-    if (!disabled && !clickedInsideDataSet && !clickedInsideDataGet && this.isActive()) {
+    const isModal = document.querySelector(".feedback-quote-request-confirmed");
+    if (!isModal && !disabled && !clickedInsideDataSet && !clickedInsideDataGet && this.isActive()) {
       this.reset();
       if (this.blockScroll) {
         let smoother = ScrollSmoother.get();

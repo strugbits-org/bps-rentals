@@ -1,4 +1,5 @@
 import CategoryPage from "@/components/Category/Index";
+import { getRentalsBanners } from "@/Services/Index";
 import { getFilterLocations } from "@/Services/NavbarApis";
 import {
   fetchAllCategoriesData,
@@ -32,6 +33,7 @@ export default async function Page({ params }) {
 
   const [
     homePageContent,
+    bannersData,
     locations,
     marketsData,
     colorsData,
@@ -39,6 +41,7 @@ export default async function Page({ params }) {
     userSavedProducts,
   ,] = await Promise.all([
     getHomeSectionDetails(),
+    getRentalsBanners(),
     getFilterLocations(),
     getMarketsData(),
     getAllColorsData(),
@@ -49,6 +52,7 @@ export default async function Page({ params }) {
   return (
     <CategoryPage
       pageContent={homePageContent}
+      bannersData={bannersData}
       locations={locations}
       marketsData={marketsData}
       colorsData={colorsData}
