@@ -2,13 +2,43 @@
 
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
+import { useState } from "react";
 
-const SearchModal = ({ marketsData }) => {
+const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedStudios, setSelectedStudios] = useState([]);
+  const [selectedMarkets, setSelectedMarkets] = useState([]);
+
+  const [resultStudios, setResultStudios] = useState([]);
+  const [resultMarkets, setResultMarkets] = useState([]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitted");
     // document.body.setAttribute("data-search-state", "success");
   };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+  };
+  const handleStudioFilter = (studio) => {
+    if (selectedStudios.includes(studio)) {
+      setSelectedStudios(selectedStudios.filter((el) => el !== studio));
+    } else {
+      setSelectedStudios([...selectedStudios, tag]);
+    }
+  };
+  const handleMarketFilter = (market) => {
+    if (selectedMarkets.includes(market)) {
+      setSelectedMarkets(selectedMarkets.filter((el) => el !== market));
+    } else {
+      setSelectedMarkets([...selectedMarkets, market]);
+    }
+  };
+
+
   return (
     <section className="menu-search" data-get-submenu="search">
       <div className="container-fluid">
@@ -33,6 +63,8 @@ const SearchModal = ({ marketsData }) => {
                       type="search"
                       className="search"
                       name="por"
+                      value={searchTerm}
+                      onChange={handleInputChange}
                       required
                     />
                     <div className="container-submit">
@@ -58,25 +90,22 @@ const SearchModal = ({ marketsData }) => {
                   <div className="result-all-studios">
                     <div className="container-title-results">
                       <h2 className="title-results split-chars" data-aos>
-                        All Studios
+                        {searchSectionDetails?.studiosTitle}
                       </h2>
                     </div>
                     <ul
                       className="list-result-all-studios grid-lg-16 grid-tablet-33 grid-phone-50"
                       data-aos
                     >
-                      {[1, 2, 3, 4, 5, 6].map((index) => {
+                      {studiosData?.map((item, index) => {
                         return (
                           <li key={index} className="grid-item">
-                            <AnimateLink
-                              to="/"
-                              data-menu-close
-                              className="link-studios" //we can add "disabled" className to disable the studio
-                            >
+                            <div onClick={() => { handleStudioFilter(item._id) }}
+                              className={`link-studios ${selectedStudios.includes(item._id) ? "active" : ""} ${resultStudios.includes(item._id) ? "" : "disabled"}`}>
                               <h3 className="title-all-studios">
-                                <span>Event Design And Prodution</span>
+                                <span>{item.cardName}</span>
                               </h3>
-                            </AnimateLink>
+                            </div>
                           </li>
                         );
                       })}
@@ -86,7 +115,7 @@ const SearchModal = ({ marketsData }) => {
                     <div className="result-rental">
                       <div className="container-title-results">
                         <h2 className="title-results split-chars" data-aos>
-                          Rental <span>“Wedding”</span>
+                          {searchSectionDetails?.rentalTitle} <span>{`"${searchTerm}"`}</span>
                         </h2>
                         <AnimateLink
                           to="/"
@@ -184,7 +213,7 @@ const SearchModal = ({ marketsData }) => {
                     <div className="result-portfolio mt-lg-60 mt-mobile-40">
                       <div className="container-title-results">
                         <h2 className="title-results split-chars" data-aos>
-                          Portfolio <span>“Wedding”</span>
+                          {searchSectionDetails?.portfolioTitle} <span>{`"${searchTerm}"`}</span>
                         </h2>
                         <AnimateLink
                           to="/"
@@ -241,56 +270,50 @@ const SearchModal = ({ marketsData }) => {
                   <div className="result-our-markets">
                     <div className="container-title-results">
                       <h2 className="title-results split-chars" data-aos>
-                        Our Markets
+                        {searchSectionDetails?.marketsTitle}
                       </h2>
                     </div>
                     <ul
                       className="list-result-our-markets list-projects font-35 grid-md-50"
                       data-aos
                     >
-                      {marketsData &&
-                        marketsData.map((data, index) => {
-                          const { slug, cardname, marketTags, image } = data;
-
-                          return (
-                            <li key={index} className="grid-item">
-                              <AnimateLink
-                                key={index}
-                                to={`/category/${slug}`}
-                                className="market-link project-link"
-                                data-cursor-style="view"
-                                data-menu-close
+                      {marketsData.map((item, index) => {
+                        return (
+                          <li key={index} className={`grid-item ${selectedMarkets.includes(item._id) ? "active" : ""}`}>
+                            <div
+                              onClick={() => { handleMarketFilter(item._id) }}
+                              className={`market-link project-link ${!resultMarkets.includes(item._id) ? "disabled" : ""}`}
+                              data-cursor-style="default"
+                              data-menu-close
+                            >
+                              <div
+                                className="container-img bg-blue"
+                                data-cursor-style="default"
                               >
-                                <div
-                                  className="container-img bg-blue"
-                                  data-cursor-style="view"
-                                >
+                                {resultMarkets.includes(item._id) && (
                                   <img
-                                    src={generateImageURL({
-                                      wix_url: image,
-                                      w: "203",
-                                      h: "216",
-                                      fit: "fill",
-                                      q: "95",
-                                    })}
-                                    className=" "
+                                    src={generateImageURL({ wix_url: item?.image, fit: "fit", w: "500", h: "500", q: "95" })}
+                                    data-preload
+                                    className="media"
+                                    alt=""
                                   />
-                                </div>
-                                <div className="container-text">
-                                  <h3 className="title-project split-words">
-                                    {cardname}
-                                  </h3>
-                                </div>
-                              </AnimateLink>
-                            </li>
-                          );
-                        })}
+                                )}
+                              </div>
+                              <div className="container-text">
+                                <h3 className="title-project split-words">
+                                  {item.cardname}
+                                </h3>
+                              </div>
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                   <div className="result-blog">
                     <div className="container-title-results">
                       <h2 className="title-results split-chars" data-aos>
-                        Blog <span>“Wedding”</span>
+                        {searchSectionDetails?.blogTitle} <span>{`"${searchTerm}"`}</span>
                       </h2>
                       <AnimateLink
                         to="/"
@@ -364,7 +387,7 @@ const SearchModal = ({ marketsData }) => {
                   <div className="result-order-pages">
                     <div className="container-title-results">
                       <h2 className="title-results split-chars" data-aos>
-                        Order pages <span>“Wedding”</span>
+                        {searchSectionDetails?.otherPagesTitle} <span>{`"${searchTerm}"`}</span>
                       </h2>
                     </div>
                     <ul

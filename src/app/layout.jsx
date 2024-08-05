@@ -16,6 +16,7 @@ import {
   getForgotPasswordModalContent,
   getLoginModalContent,
   getFilterLocations,
+  getSearchSectionDetails,
 } from "@/Services/NavbarApis";
 import {
   getContactData,
@@ -57,6 +58,7 @@ export default async function RootLayout({ children }) {
     socialSectionDetails,
     socialSectionBlogs,
     instaFeed,
+    searchSectionDetails
   ] = await Promise.all([
     getFilterLocations(),
     getLoginModalContent(),
@@ -73,6 +75,7 @@ export default async function RootLayout({ children }) {
     getSocialSectionDetails(),
     getSocialSectionBlogs(),
     fetchInstaFeed(),
+    getSearchSectionDetails()
   ]);
 
   return (
@@ -93,6 +96,8 @@ export default async function RootLayout({ children }) {
             createAccountModalContent={createAccountModalContent}
             forgotPasswordModalContent={forgotPasswordModalContent}
             marketsData={marketsData}
+            studiosData={studiosData}
+            searchSectionDetails={searchSectionDetails}
             categoriesData={allCategoriesData}
           />
           <CookiesConsent />
