@@ -16,7 +16,9 @@ export const SaveProductButton = ({
 
   useEffect(() => {
     if (savedProductsData?.length) {
-      setProductSaved(savedProductsData?.some((i) => i?._id === productId));
+      setProductSaved(
+        savedProductsData?.some((i) => i?.product?._id === productId)
+      );
     }
   }, [memberId, savedProductsData]);
 
@@ -47,8 +49,12 @@ export const SaveProductButton = ({
 
   const updateSavedProducts = (productId) => {
     if (setSavedProductsData) {
-      if (savedProductsData.findIndex((x) => x._id === productId) !== -1) {
-        const data = savedProductsData.filter((x) => x._id !== productId);
+      if (
+        savedProductsData.findIndex((i) => i?.product?._id === productId) !== -1
+      ) {
+        const data = savedProductsData.filter(
+          (i) => i?.product?._id !== productId
+        );
         setSavedProductsData(data);
       } else {
         const data = [...savedProductsData, productData];
@@ -63,9 +69,9 @@ export const SaveProductButton = ({
 
   const buttonProps = {
     className: `btn-bookmark aos-animate 
-    ${error === "" && productSaved ? "productSavedColor" : ""}
-    ${error === "saving" && productSaved ? "productSavedColor" : ""}
-    ${error === "unsaving" && productSaved ? "productSavedColor" : ""}`,
+    ${error === "" && productSaved ? " productSavedColor" : ""}
+    ${error === "saving" && productSaved ? " productSavedColor" : ""}
+    ${error === "unsaving" && productSaved ? " productSavedColor" : ""}`,
     onClick: handleClick,
     ...(dataAos && { "data-aos": dataAos }),
   };

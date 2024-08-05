@@ -12,6 +12,7 @@ export const GET = async (req, context) => {
 
     const { params } = context;
     const id = params.id;
+    const memberId = authenticatedUserData.memberId;
 
     const wixClient = await createWixClient();
     const locationFilterVariantData = await wixClient.items
@@ -19,34 +20,32 @@ export const GET = async (req, context) => {
         dataCollectionId: "locationFilteredVariant",
       })
       .eq("product", id)
-      .hasSome("f1Members", [authenticatedUserData.memberId])
+      .hasSome("members", [memberId])
       .find();
 
-    if (locationFilterVariantData._items.length === 0) {
+    let productData = locationFilterVariantData._items[0];
+    let membersData = productData.data.members;
+
+    if (productData.length === 0) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
     const dataObject = {
-      ...locationFilterVariantData._items[0].data,
-      f1Members: locationFilterVariantData._items[0].data.f1Members.filter(
-        (member) => member !== authenticatedUserData.memberId
-      ),
+      ...productData.data,
+      members: membersData.filter((member) => member !== memberId),
     };
     // delete dataObject._id;
     // delete dataObject._owner;
     // delete dataObject._createdDate;
     // delete dataObject._updatedDate;
 
-    const response = await wixClient.items.updateDataItem(
-      locationFilterVariantData._items[0]._id,
-      {
-        dataCollectionId: "locationFilteredVariant",
-        dataItem: {
-          _id: locationFilterVariantData._items[0]._id,
-          data: dataObject,
-        },
-      }
-    );
+    const response = await wixClient.items.updateDataItem(productData._id, {
+      dataCollectionId: "locationFilteredVariant",
+      dataItem: {
+        _id: productData._id,
+        data: dataObject,
+      },
+    });
 
     response.dataItem.data.variantData = response.dataItem.data.variantData.map(
       (val) => {
@@ -55,6 +54,7 @@ export const GET = async (req, context) => {
         return val;
       }
     );
+    
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
     console.error(error);

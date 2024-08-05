@@ -1,3 +1,4 @@
+"use server";
 import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
@@ -6,10 +7,7 @@ export const getProductsByCategory = async (category) => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: [
-        "product",
-        "subCategory",
-      ],
+      includeReferencedItems: ["product", "subCategory"],
       ne: [
         {
           key: "hidden",
@@ -29,7 +27,9 @@ export const getProductsByCategory = async (category) => {
     const response = await getDataFetchFunction(payload);
     if (response && response._items) {
       const products = response._items.map((x) => x.data);
-      const filteredProducts = products.filter(product => product.subCategory.some((x) => x._id === category))
+      const filteredProducts = products.filter((product) =>
+        product.subCategory.some((x) => x._id === category)
+      );
       return filteredProducts;
     } else {
       throw new Error("Response does not contain _items", response);
@@ -161,7 +161,11 @@ export const fetchFilteredProducts = async ({
     return { items: [], totalCount: 0 };
   }
 };
-export const getBestSellerProducts = async (bestSeller, limit = 12, skip = 0) => {
+export const getBestSellerProducts = async (
+  bestSeller,
+  limit = 12,
+  skip = 0
+) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "locationFilteredVariant",
@@ -176,16 +180,26 @@ export const getBestSellerProducts = async (bestSeller, limit = 12, skip = 0) =>
           value: true,
         },
       ],
-      hasSome: [{
-        key: "subCategory",
-        values: bestSeller
-      }],
+      hasSome: [
+        {
+          key: "subCategory",
+          values: bestSeller,
+        },
+      ],
       limit: limit,
       returnTotalCount: true,
       skip: skip,
     });
     if (response && response._items) {
-      return { items: response._items.map((x) => x.data), totalCount: response._totalCount };
+      console.log("response", response);
+      console.log("response123", {
+        items: response._items.map((x) => x.data),
+        totalCount: response._totalCount,
+      });
+      return {
+        items: response._items.map((x) => x.data),
+        totalCount: response._totalCount,
+      };
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -284,7 +298,7 @@ export const getSelectedColorsData = async (categoryId) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "colorFilterCache",
-      limit: "infinite"
+      limit: "infinite",
     });
 
     if (response && response._items) {
@@ -578,9 +592,7 @@ export const getPairItWithProducts = async (productIds) => {
 };
 export const getSavedProductData = async () => {
   try {
-    const authToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzZEBnbWFpbC5jb20iLCJpYXQiOjE3MjI0NDA2MzksImV4cCI6MTcyNTAzMjYzOX0.u-YWOAqOS5rIAgRYv5OSDVQBRbgVvozAnMWCmYDgflo";
-    console.log(authToken, "authToken");
+    const authToken = await getAuthToken();
     const response = await fetch(`${baseUrl}/api/wix/getSavedProducts`, {
       method: "POST",
       headers: {
@@ -589,11 +601,9 @@ export const getSavedProductData = async () => {
       },
       cache: "no-store",
     });
-    console.log(response, "response");
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-
     const data = await response.json();
 
     if (data && data._items) {
@@ -602,14 +612,16 @@ export const getSavedProductData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    // console.error("Error fetching saved products:", error);
+    console.log("Error:", error);
+
     return [];
   }
 };
 
 export const saveProduct = async (id) => {
   try {
-    const authToken = getAuthToken();
+    const authToken = await getAuthToken();
+
     const response = await fetch(`${baseUrl}/api/wix/saveProduct/${id}`, {
       method: "GET",
       headers: {
@@ -617,11 +629,13 @@ export const saveProduct = async (id) => {
         Authorization: authToken,
       },
     });
-    const jsonResponse = await response.json();
-    if (jsonResponse.error) {
-      throw new Error(jsonResponse.error);
+    // const jsonResponse = await response.json();
+    // if (jsonResponse.error) {
+    //   throw new Error(jsonResponse.error);
+    // }
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
     }
-
     const data = await response.json();
     return data;
   } catch (error) {
@@ -631,7 +645,7 @@ export const saveProduct = async (id) => {
 
 export const unSaveProduct = async (id) => {
   try {
-    const authToken = getAuthToken();
+    const authToken = await getAuthToken();
     const response = await fetch(
       `${baseUrl}/api/wix/removeSavedProduct/${id}`,
       {
@@ -642,9 +656,9 @@ export const unSaveProduct = async (id) => {
         },
       }
     );
-    // if (!response.ok) {
-    //   throw new Error("Network response was not ok");
-    // }
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
 
     const data = await response.json();
     return data;

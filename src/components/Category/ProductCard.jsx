@@ -7,6 +7,7 @@ import { hasMatchingColor } from "@/Utils/Utils";
 const ProductCard = ({
   index,
   product,
+  styleClassName,
   variantData,
   selectedVariant,
   handleVariantChange,
@@ -32,7 +33,9 @@ const ProductCard = ({
 
   return (
     <div
-      className="product-link large active"
+      className={`${
+        styleClassName ? styleClassName : "product-link large active"
+      }`}
       data-product-category
       data-product-location
       data-product-colors
@@ -61,9 +64,9 @@ const ProductCard = ({
           className="copy-link-url"
           defaultValue={defaultVariantSku}
           style={{
-            position: 'absolute',
+            position: "absolute",
             opacity: 0,
-            pointerEvents: 'none',
+            pointerEvents: "none",
           }}
         />
       </div>
@@ -74,7 +77,7 @@ const ProductCard = ({
             <div className="dimensions">
               {product.additionalInfoSections?.map((data, index) => {
                 const { title, description } = data;
-                if (title == 'Size') {
+                if (title == "Size") {
                   return (
                     <span
                       key={index}
@@ -100,10 +103,10 @@ const ProductCard = ({
                   <img
                     src={productImageURL({
                       wix_url: defaultVariantImage,
-                      w: '346',
-                      h: '346',
-                      fit: 'fill',
-                      q: '80',
+                      w: "346",
+                      h: "346",
+                      fit: "fill",
+                      q: "80",
                     })}
                     className=" "
                   />
@@ -129,10 +132,10 @@ const ProductCard = ({
                       <img
                         src={productImageURL({
                           wix_url: variant.variant.imageSrc,
-                          w: '40',
-                          h: '40',
-                          fit: 'fill',
-                          q: '100',
+                          w: "40",
+                          h: "40",
+                          fit: "fill",
+                          q: "100",
                         })}
                         data-preload
                         className="media"

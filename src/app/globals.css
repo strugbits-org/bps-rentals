@@ -164,3 +164,22 @@ a {
     padding-right: 3rem;
   }
 }
+
+/* .productSavedColor .icon-bookmark-full {
+  color: blue !important;
+  background-color: red !important;
+} */
+/* .product-link .container-tags .btn-bookmark i {
+color: blue !important;
+background-color: blue !important; */
+
+/* }  */
+.productSavedColor .icon-bookmark {
+  color: blue !important;
+  background-color: red !important;
+}
+
+.productSavedColor .icon-bookmark-full {
+  color: blue !important;
+  background-color: red !important;
+}
