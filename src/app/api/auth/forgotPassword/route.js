@@ -1,14 +1,25 @@
-import { createWixClient } from "@/Utils/CreateWixClient";
-import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
-// POST method handler
+import { createWixClient } from "@/Utils/CreateWixClient";
+import { isValidEmail } from "@/Utils/AuthApisUtils";
+
 export const POST = async (req) => {
+  const body = await req.json();
+  const { email } = body;
+
   try {
-    const body = await req.json();
-    console.log(body, "email body");
-    const { email } = body;
     const wixClient = await createWixClient();
+
+    const invalidEmail = isValidEmail(email);
+    if (!invalidEmail) {
+      return NextResponse.json(
+        {
+          message: "Enter a valid email address",
+        },
+        { status: 404 }
+      );
+    }
+
     const memberData = await wixClient.items
       .queryDataItems({
         dataCollectionId: "membersPassword",
@@ -17,14 +28,43 @@ export const POST = async (req) => {
       .find();
 
     if (memberData._items.length === 0) {
-      return NextResponse.json({ message: "Email not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Account with this email does not exist" },
+        { status: 404 }
+      );
     }
 
-    const token = jwt.sign({ email: email }, process.env.JWT_SECRET, {
-      expiresIn: "30m",
+    const currentDate = new Date();
+    const twoHoursLater = new Date(currentDate.getTime() + 2 * 60 * 60 * 1000);
+
+    const formattedDate = twoHoursLater.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
     });
-    const origin = process.env.BASE_URL; // we will have to check the origin
-    const resetUrl = `${origin}/reset-password?token=${token}`;
+
+    const selectedMemberData = memberData._items[0].data;
+
+    const userData = {
+      ...memberData.items[0].data,
+      emailToken: formattedDate,
+    };
+
+    const res = await wixClient.items.updateDataItem(selectedMemberData._id, {
+      dataCollectionId: "membersPassword",
+      dataItemId: selectedMemberData._id,
+      dataItem: { data: userData },
+    });
+
+    const userId = res.dataItem._id;
+
+    const origin = process.env.BASE_URL;
+    const resetUrl = `${origin}/reset-password?reset-id=${encodeURIComponent(
+      userId
+    )}`;
 
     const options = {
       method: "POST",
@@ -42,6 +82,7 @@ export const POST = async (req) => {
       `${process.env.RENTALS_URL}/rentalsResetPassword`,
       options
     );
+
     if (!response.ok) {
       return NextResponse.json(
         { message: "Email could not be sent" },
