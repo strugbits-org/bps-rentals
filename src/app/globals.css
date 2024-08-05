@@ -165,21 +165,25 @@ a {
   }
 }
 
-/* .productSavedColor .icon-bookmark-full {
-  color: blue !important;
-  background-color: red !important;
-} */
-/* .product-link .container-tags .btn-bookmark i {
-color: blue !important;
-background-color: blue !important; */
-
-/* }  */
-.productSavedColor .icon-bookmark {
-  color: blue !important;
-  background-color: red !important;
+/* Custom css of save product icon */
+.hidden {
+  opacity: 0 !important;
 }
 
-.productSavedColor .icon-bookmark-full {
-  color: blue !important;
-  background-color: red !important;
+.visible {
+  opacity: 1 !important;
+}
+
+.icon-bookmark {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.icon-bookmark-full {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+button:hover .icon-bookmark-full {
+  opacity: 1 !important;
 }
