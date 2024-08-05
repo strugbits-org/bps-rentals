@@ -8,7 +8,7 @@ import { createWixClient } from "@/Utils/CreateWixClient";
 export const POST = async (req) => {
   try {
     const authenticatedUserData = await handleAuthentication(req);
-    console.log(authenticatedUserData, "authenticatedUserData>>");
+
     if (!authenticatedUserData) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }

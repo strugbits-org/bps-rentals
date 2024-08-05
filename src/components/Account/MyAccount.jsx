@@ -50,6 +50,8 @@ const MyAccount = ({ myAccountPageContent }) => {
         return;
       }
       setSuccessMessageVisible(true);
+      console.log(response, "response");
+      
       const userData = JSON.stringify(response.member);
 
       setCookie("userData", userData, {
