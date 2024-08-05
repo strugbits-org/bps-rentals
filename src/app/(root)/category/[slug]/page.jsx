@@ -5,7 +5,6 @@ import {
   fetchAllCategoriesData,
   getAllColorsData,
   getProductsByCategory,
-  getSavedProductData,
 } from "@/Services/ProductsApis";
 import { getHomeSectionDetails, getMarketsData } from "@/Services/SectionsApis";
 import { findCategoryData, getAllCategoriesPaths } from "@/Utils/Utils";
@@ -38,7 +37,6 @@ export default async function Page({ params }) {
     marketsData,
     colorsData,
     productsData,
-    userSavedProducts,
   ,] = await Promise.all([
     getHomeSectionDetails(),
     getRentalsBanners(),
@@ -46,7 +44,6 @@ export default async function Page({ params }) {
     getMarketsData(),
     getAllColorsData(),
     getProductsByCategory(categoryId),
-    getSavedProductData(),
   ]);
 
   return (
@@ -59,7 +56,6 @@ export default async function Page({ params }) {
       categoriesData={categoriesData}
       selectedCategoryData={selectedCategoryData}
       productsData={productsData}
-      userSavedProducts={userSavedProducts}
     />
   );
 }
