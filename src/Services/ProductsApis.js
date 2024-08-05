@@ -191,11 +191,6 @@ export const getBestSellerProducts = async (
       skip: skip,
     });
     if (response && response._items) {
-      console.log("response", response);
-      console.log("response123", {
-        items: response._items.map((x) => x.data),
-        totalCount: response._totalCount,
-      });
       return {
         items: response._items.map((x) => x.data),
         totalCount: response._totalCount,
