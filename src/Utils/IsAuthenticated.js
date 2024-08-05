@@ -5,6 +5,7 @@ import { createWixClient } from "./CreateWixClient";
 export const isAuthenticated = async (token) => {
   try {
     const unAuthCollections = [
+      "RentalsBanners",
       "RentalsHomeHero",
       "RentalsNewArrivals",
       "BestSellers",

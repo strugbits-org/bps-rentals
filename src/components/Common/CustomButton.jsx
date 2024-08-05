@@ -1,7 +1,6 @@
 import AnimateLink from "./AnimateLink";
 
 export const CustomButton = ({ data, customClasses = "", attributes, showArrow = true }) => {
-
     let actionType;
     function isValidUrl(string) {
         try {
@@ -26,7 +25,6 @@ export const CustomButton = ({ data, customClasses = "", attributes, showArrow =
         <btn-modal-open
             group={data.action}
             class={customClasses ? customClasses : 'btn-blue'}
-            data-cursor-style="off"
             {...attributes}
         >
             <span>{data.label}</span>

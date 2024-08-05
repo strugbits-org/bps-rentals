@@ -15,9 +15,12 @@ import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import CartModal from "../Common/Modals/CartModal";
 import useUserData from "@/Hooks/useUserData";
+import { Banner } from "./Banner";
+import { shuffleArray } from "@/Utils/Utils";
 
 const CategoryPage = ({
   pageContent,
+  bannersData,
   locations,
   marketsData,
   colorsData,
@@ -33,6 +36,8 @@ const CategoryPage = ({
   const [filterColors, setFilterColors] = useState([]);
   const [filterLocations, setFilterLocations] = useState([]);
   const [enableFilterTrigger, setEnableFilterTrigger] = useState(false);
+
+  const [shuffledBanners, setShuffledBanners] = useState([]);
 
   const [selectedVariants, setSelectedVariants] = useState({});
   const [savedProductsData, setSavedProductsData] = useState(
@@ -67,9 +72,9 @@ const CategoryPage = ({
         checkedCategories?.length !== 0
           ? checkedCategories
           : [
-              selectedCategoryData?.parentCollection?._id ||
-                selectedCategoryData?._id,
-            ];
+            selectedCategoryData?.parentCollection?._id ||
+            selectedCategoryData?._id,
+          ];
       const selectedColors =
         colors?.length !== 0
           ? colors.filter((x) => x.checked).map((x) => x.label)
@@ -81,8 +86,8 @@ const CategoryPage = ({
         const hasCategory =
           selectedCategories.length > 0
             ? product.subCategory.some((subCat) =>
-                selectedCategories.includes(subCat._id)
-              )
+              selectedCategories.includes(subCat._id)
+            )
             : true;
 
         const hasColor =
@@ -153,7 +158,6 @@ const CategoryPage = ({
       }
     }
 
-    console.log("productsData", productsData);
     const products = productsData.filter((product) =>
       product.location.some((x) => x === cookies.location)
     );
@@ -173,6 +177,11 @@ const CategoryPage = ({
     );
     if (enableFilterTrigger) handleFilterChange({});
   }, [cookies.location]);
+
+  useEffect(() => {
+    setShuffledBanners(shuffleArray([...bannersData]));
+    console.log("shuffleArray([...bannersData])", shuffleArray([...bannersData]));
+  }, [bannersData]);
 
   useEffect(() => {
     setInitialValues();
@@ -395,11 +404,13 @@ const CategoryPage = ({
                             setSavedProductsData={setSavedProductsData}
                           />
                         </li>
-                        {index === 5 && <HotTrendsCategory />}
-                        {index === 11 && <BannerOurTeam />}
+                        {(index + 1) % 6 === 0 && (
+                          <Banner key={`banner-${index}`} data={shuffledBanners[Math.floor((index + 1) / 6) % shuffledBanners.length]} />
+                        )}
                       </React.Fragment>
                     );
                   })}
+
                 </ul>
                 {filteredProducts.length === 0 && (
                   <h6
@@ -409,8 +420,6 @@ const CategoryPage = ({
                     No Products Found
                   </h6>
                 )}
-                {/* {products.totalCount < filteredProducts.length && ( */}
-                {/* {filteredProducts.length < totalCount && !loading && ( */}
                 {pageLimit < filteredProducts.length && (
                   <div className="flex-center">
                     <button
