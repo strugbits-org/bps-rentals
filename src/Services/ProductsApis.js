@@ -3,7 +3,7 @@ import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
-export const getProductsByCategory = async (category) => {
+export const getProductsByCategory = async ({ category, searchTerm }) => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
@@ -27,6 +27,16 @@ export const getProductsByCategory = async (category) => {
     const response = await getDataFetchFunction(payload);
     if (response && response._items) {
       const products = response._items.map((x) => x.data);
+      if (!category && searchTerm) {
+        console.log("searchTerm", searchTerm);
+        console.log("products", products.length);
+        const filteredProducts = products.filter(product => {
+          const matchedTerm = searchTerm === "" || (product.search && product.search.toLowerCase().includes(searchTerm));
+          return matchedTerm;
+        });
+        console.log("filteredProducts", filteredProducts.length);
+        return filteredProducts;
+      }
       const filteredProducts = products.filter((product) =>
         product.subCategory.some((x) => x._id === category)
       );
