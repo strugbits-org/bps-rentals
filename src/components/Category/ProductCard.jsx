@@ -15,7 +15,7 @@ const ProductCard = ({
   getSelectedProductSnapShots,
   savedProductsData,
   setSavedProductsData,
-  filterColors
+  filterColors = [],
 }) => {
   const defaultVariantSku = selectedVariant?.sku;
   const defaultVariantImage = selectedVariant?.variant.imageSrc;
@@ -23,13 +23,20 @@ const ProductCard = ({
 
   useEffect(() => {
     const matchingVariants = variantData.filter((variant, index) => {
-      if (hasMatchingColor(filterColors.filter(x => x.checked), variant.color)) {
+      if (
+        hasMatchingColor(
+          filterColors.filter((x) => x.checked),
+          variant.color
+        )
+      ) {
         // handleVariantChange(index, variant)
         return true;
       }
     });
-    setFilteredVariants(matchingVariants.length !== 0 ? matchingVariants : variantData);
-  }, [filterColors])
+    setFilteredVariants(
+      matchingVariants.length !== 0 ? matchingVariants : variantData
+    );
+  }, [filterColors]);
 
   return (
     <div
