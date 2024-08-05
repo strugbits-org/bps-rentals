@@ -5,6 +5,7 @@ import ProductCard from '../Category/ProductCard';
 import CartModal from '../Common/Modals/CartModal';
 
 const BestSellersHome = ({ products, content }) => {
+  console.log("products", products[0]);
   const [selectedVariants, setSelectedVariants] = useState({});
 
   const handleVariantChange = (index, variant) => {

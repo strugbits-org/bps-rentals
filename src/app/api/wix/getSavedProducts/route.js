@@ -24,7 +24,6 @@ export const POST = async (req) => {
       .hasSome("members", [authenticatedUserData.memberId])
       .limit(10)
       .find();
-    console.log(locationFilterVariantData, "locationFilterVariantData");
 
     let items = locationFilterVariantData._items;
     while (items.length < locationFilterVariantData._totalCount) {

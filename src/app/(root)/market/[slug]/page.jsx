@@ -50,7 +50,7 @@ export default async function Page({ params }) {
     getMarketsData(),
     getPeopleReviewSliderData(),
     getHighlightsSection(highlightsCollection),
-    getBestSellerProducts(bestSeller, 6),
+    getBestSellerProducts(bestSeller),
   ]);
 
   return (
@@ -63,7 +63,7 @@ export default async function Page({ params }) {
       studiosData={studiosData}
       marketsData={marketsData}
       peopleReviewSliderData={peopleReviewSliderData}
-      bestSellerProducts={{ ...bestSellerProducts, bestSellerId: bestSeller }}
+      bestSellerProducts={bestSellerProducts}
     />
   );
 }
