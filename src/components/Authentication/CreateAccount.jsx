@@ -20,6 +20,7 @@ const CreateAccount = ({
     first_name: "",
     last_name: "",
     email: "",
+    phone: "",
     password: "",
   });
 
@@ -39,16 +40,12 @@ const CreateAccount = ({
       const userData = {
         email: formData.email,
         password: formData.password,
-        confirmPassword: formData.confirm_password,
         firstName: formData.first_name,
         lastName: formData.last_name,
-        company: formData.company,
         phone: formData.phone,
-        hospitalityLoc: formData.hospitality_space,
       };
 
       const response = await signUpUser(userData);
-      console.log(response, "response");
 
       if (response.error) {
         setMessage(response.message);
@@ -63,15 +60,16 @@ const CreateAccount = ({
           first_name: "",
           last_name: "",
           email: "",
+          phone: "",
           password: "",
         });
       }
 
-      if (!response.error) {
-        submenuLogin.classList.remove("active");
-        pageLoadStart();
-        router.push("/my-account");
-      }
+      // if (!response.error) {
+      //   submenuLogin.classList.remove("active");
+      //   pageLoadStart();
+      //   router.push("/my-account");
+      // }
       return response;
     } catch (error) {
       console.error("Error:", error);
@@ -152,6 +150,19 @@ const CreateAccount = ({
             <label htmlFor="create-account-phone">
               {createAccountModalContent &&
                 createAccountModalContent.phoneNumberFieldLabel}
+            </label>
+            <input
+              id="create-account-phone"
+              name="phone"
+              type="tel"
+              placeholder="+1 (415) 000-0000"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="container-input col-md-12">
+            <label htmlFor="create-account-phone">
+              {createAccountModalContent && createAccountModalContent.password}
             </label>
             <input
               id="create-account-phone"

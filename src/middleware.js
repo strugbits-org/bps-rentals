@@ -21,5 +21,10 @@ export function middleware(req) {
   return NextResponse.next({ headers });
 }
 export const config = {
-  matcher: ["/((?!_next|favicon.ico|assets|public|api).*)"],
+  matcher: [
+    {
+      source: "/((?!_next|favicon.ico|assets|public|api).*)",
+      missing: [{ type: "header", key: "next-action" }],
+    },
+  ],
 };

@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
-import Disclaimer from "./Disclaimer";
 import { useCookies } from "react-cookie";
-import { signInUser } from "@/Services/AuthApis";
-import { pageLoadStart } from "@/Utils/AnimationFunctions";
 import { useRouter } from "next/navigation";
+
+import { pageLoadStart } from "@/Utils/AnimationFunctions";
+import { signInUser } from "@/Services/AuthApis";
+import Disclaimer from "./Disclaimer";
 
 const Login = ({
   loginModalContent,
@@ -12,7 +13,7 @@ const Login = ({
   setSuccessMessageVisible,
   setErrorMessageVisible,
   setMessage,
-  setToggleModal
+  setToggleModal,
 }) => {
   const router = useRouter();
 
@@ -30,48 +31,54 @@ const Login = ({
 
     setSubmittingForm(true);
     setErrorMessageVisible(false);
-    const submenuLogin = document.querySelector('.submenu-login');
-    const button = document.querySelector('.new-login-button');
+    const submenuLogin = document.querySelector(".submenu-login");
+    const button = document.querySelector(".new-login-button");
     try {
       const response = await signInUser({
         email: formData.email,
         password: formData.password,
       });
 
-      if (response?.error) {
+      console.log(response, "response>>");
+      console.log("lllllll");
+
+      if (response && response.error) {
         setMessage(response.message);
         setErrorMessageVisible(true);
         return;
       }
 
-      const userToken = response.jwtToken;
-      const userData = JSON.stringify(response.member);
+      if (response) {
+        const userToken = response.jwtToken;
+        const userData = JSON.stringify(response.member);
 
-      setCookie("authToken", userToken, {
-        path: "/",
-        expires: new Date("2099-01-01"),
-      });
+        setCookie("authToken", userToken, {
+          path: "/",
+          expires: new Date("2099-01-01"),
+        });
 
-      setCookie("userData", userData, {
-        path: "/",
-        expires: new Date("2099-01-01"),
-      });
-      if (userToken) {
-        pageLoadStart();
-        submenuLogin.classList.remove('active');
-        button.classList.remove('active');
-        router.push("/my-account");
+        setCookie("userData", userData, {
+          path: "/",
+          expires: new Date("2099-01-01"),
+        });
 
-        setFormData({
-          email: "",
-          password: "",
-        })
+        if (userToken) {
+          pageLoadStart();
+          submenuLogin.classList.remove("active");
+          button.classList.remove("active");
+          router.push("/my-account");
+
+          setFormData({
+            email: "",
+            password: "",
+          });
+        }
       }
     } catch (error) {
       console.log("Error during login:", error);
-      setMessage("Invalid Credentials!");
+      setMessage("Error during login:", error);
       setErrorMessageVisible(true);
-      submenuLogin.classList.add('active');
+      submenuLogin.classList.add("active");
     } finally {
       setTimeout(() => {
         setSubmittingForm(false);
@@ -82,10 +89,6 @@ const Login = ({
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  };
-
-  const togglePassword = () => {
-    setShowPassword(!showPassword);
   };
 
   return (

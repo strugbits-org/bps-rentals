@@ -43,8 +43,9 @@ const ProductCard = ({
 
   return (
     <div
-      className={`${styleClassName ? styleClassName : "product-link large active"
-        }`}
+      className={`${
+        styleClassName ? styleClassName : "product-link large active"
+      }`}
       data-product-category
       data-product-location
       data-product-colors
@@ -129,8 +130,6 @@ const ProductCard = ({
       <div className="container-color-options">
         <ul className="list-color-options">
           {filteredVariants.map((variant, idx) => {
-            console.log(variant, "variant");
-
             return (
               <React.Fragment key={idx}>
                 {idx < 4 && (

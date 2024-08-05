@@ -19,7 +19,7 @@ export const POST = async (req) => {
   try {
     const body = await req.json();
 
-    const { email, password, firstName, lastName } = body;
+    const { email, password, firstName, lastName, phone } = body;
 
     const wixClient = await createWixClient();
 
@@ -108,6 +108,7 @@ export const POST = async (req) => {
                 lastName,
                 memberId: json.data.items[0]._id,
                 userEmail: email,
+                userPhone: phone,
                 userPassword: hashedPassword,
                 cartId: cartResponse._id,
               },
