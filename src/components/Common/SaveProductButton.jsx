@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-
+import { useState, useEffect } from "react";
 import { saveProduct, unSaveProduct } from "@/Services/ProductsApis";
 import useUserData from "@/Hooks/useUserData";
 
@@ -17,7 +16,7 @@ export const SaveProductButton = ({
   useEffect(() => {
     if (savedProductsData?.length) {
       setProductSaved(
-        savedProductsData?.some((i) => i?.product?._id === productId)
+        savedProductsData.some((i) => i?.product?._id === productId)
       );
     }
   }, [memberId, savedProductsData]);
@@ -25,39 +24,40 @@ export const SaveProductButton = ({
   const handleProductSaveToggle = async (productId, isSaving) => {
     try {
       setProductSaved(isSaving);
-      updateSavedProducts(productId);
+      updateSavedProducts(productId, isSaving);
       if (isSaving) {
-        await saveProduct(productId);
+        const res = await saveProduct(productId);
+        if (!res) {
+          setProductSaved(false);
+          updateSavedProducts(productId, false);
+        }
       } else {
-        await unSaveProduct(productId);
+        const res = await unSaveProduct(productId);
+        if (!res) {
+          setProductSaved(true);
+          updateSavedProducts(productId, true);
+        }
       }
     } catch (error) {
       console.error(
         `Error ${isSaving ? "saving" : "unsaving"} product:`,
         error
       );
-      updateSavedProducts(productId);
-      if (isSaving) {
-        setError("saving");
-        setProductSaved(false);
-      } else {
-        setError("unsaving");
-        setProductSaved(true);
-      }
+      setProductSaved(!isSaving);
+      setError(isSaving ? "saving" : "unsaving");
+      updateSavedProducts(productId, !isSaving);
     }
   };
 
-  const updateSavedProducts = (productId) => {
+  const updateSavedProducts = (productId, isSaving) => {
     if (setSavedProductsData) {
-      if (
-        savedProductsData.findIndex((i) => i?.product?._id === productId) !== -1
-      ) {
+      if (isSaving) {
+        const data = [...savedProductsData, { product: productData }];
+        setSavedProductsData(data);
+      } else {
         const data = savedProductsData.filter(
           (i) => i?.product?._id !== productId
         );
-        setSavedProductsData(data);
-      } else {
-        const data = [...savedProductsData, productData];
         setSavedProductsData(data);
       }
     }
@@ -78,8 +78,10 @@ export const SaveProductButton = ({
 
   return (
     <button type="button" {...buttonProps}>
-      <i className="icon-bookmark"></i>
-      <i className="icon-bookmark-full"></i>
+      <i className={`icon-bookmark ${productSaved ? "hidden" : "visible"}`}></i>
+      <i
+        className={`icon-bookmark-full ${productSaved ? "visible" : "hidden"}`}
+      ></i>
     </button>
   );
 };

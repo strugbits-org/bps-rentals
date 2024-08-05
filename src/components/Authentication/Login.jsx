@@ -39,9 +39,6 @@ const Login = ({
         password: formData.password,
       });
 
-      console.log(response, "response>>");
-      console.log("lllllll");
-
       if (response && response.error) {
         setMessage(response.message);
         setErrorMessageVisible(true);
