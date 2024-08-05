@@ -21,6 +21,8 @@ const ProductCard = ({
   const defaultVariantImage = selectedVariant?.variant.imageSrc;
   const [filteredVariants, setFilteredVariants] = useState(variantData);
 
+
+  
   useEffect(() => {
     const matchingVariants = variantData.filter((variant, index) => {
       if (
@@ -29,10 +31,11 @@ const ProductCard = ({
           variant.color
         )
       ) {
-        // handleVariantChange(index, variant)
+        handleVariantChange(index, variant);
         return true;
       }
     });
+
     setFilteredVariants(
       matchingVariants.length !== 0 ? matchingVariants : variantData
     );
@@ -46,6 +49,7 @@ const ProductCard = ({
       data-product-category
       data-product-location
       data-product-colors
+      // data-active-value="Red"
     >
       <div className="container-tags">
         <div className="best-seller">
@@ -59,7 +63,7 @@ const ProductCard = ({
         {/* <button className="btn-bookmark">
           <i className="icon-bookmark"></i>
           <i className="icon-bookmark-full"></i>
-        </button> */}
+          </button> */}
       </div>
       <div className="container-copy">
         <button className="btn-copy copy-link">
@@ -126,6 +130,8 @@ const ProductCard = ({
       <div className="container-color-options">
         <ul className="list-color-options">
           {filteredVariants.map((variant, idx) => {
+            console.log(variant, "variant");
+
             return (
               <React.Fragment key={idx}>
                 {idx < 4 && (

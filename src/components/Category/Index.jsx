@@ -25,7 +25,6 @@ const CategoryPage = ({
   productsData,
   userSavedProducts,
 }) => {
-
   const pageSize = 18;
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [pageLimit, setPageLimit] = useState(pageSize);
@@ -247,61 +246,6 @@ const CategoryPage = ({
     }
   };
 
-  const changeQuery = (key, value) => {
-    pageLoadStart();
-    router.query[key] = value;
-    router.push(router);
-  };
-
-  // const getCategoriesList = async () => {
-  //   let categories;
-  //   if (router.query.category === undefined) {
-  //     let collectionIds = collectionsData.map((x) => x._id);
-  //     if (selectedCollection.length !== 0) {
-  //       collectionIds = selectedCollection.map((x) => x._id);
-  //     }
-  //     const response = await getCategoriesData(collectionIds);
-  //     categories = response.map((x) => {
-  //       return { ...x.parentCollection, type: 'category' };
-  //     });
-  //   } else {
-  //     categories = selectedCategory[0]?.level2Collections
-  //       .filter((x) => x._id !== undefined)
-  //       .map((x) => {
-  //         return { ...x, type: 'subCategory' };
-  //       });
-  //   }
-  //   setFilterCategories(categories);
-  // };
-
-  // useEffect(() => {
-  //   if (
-  //     router.query.category === undefined ||
-  //     (selectedCategory && selectedCategory.length !== 0)
-  //   ) {
-  //     getCategoriesList();
-  //   }
-  // }, [router, selectedCollection, collectionsData, selectedCategory]);
-
-  // useEffect(() => {
-  //   if (router.query.subCategory && selectedCategory.length !== 0) {
-  //     const name = selectedCategory[0]?.level2Collections.find(
-  //       (x) => x._id === router.query.subCategory
-  //     ).name;
-  //     setCategoryTitle(name);
-  //   } else {
-  //     setCategoryTitle(selectedCategory[0]?.parentCollection?.name);
-  //   }
-  // }, [router, selectedCategory]);
-  // const fetchSavedProducts = async () => {
-  //   const savedProducts = await getSavedProductData();
-  //   console.log(savedProducts, "savedProducts >>>>");
-  // };
-
-  // useEffect(() => {
-  //   setSavedProductsData(userSavedProducts);
-  //   fetchSavedProducts();
-  // }, []);
   return (
     <>
       <CartModal
@@ -438,7 +382,9 @@ const CategoryPage = ({
                             index={index}
                             product={product}
                             variantData={variantData}
-                            selectedVariant={selectedVariants[index] || variantData[0]}
+                            selectedVariant={
+                              selectedVariants[index] || variantData[0]
+                            }
                             filteredProducts={filteredProducts}
                             handleVariantChange={handleVariantChange}
                             getSelectedProductSnapShots={
