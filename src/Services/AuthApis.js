@@ -1,3 +1,4 @@
+"use server";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
@@ -93,7 +94,8 @@ export const resetPassword = async (userData, token) => {
 
 export const updateProfile = async (userData) => {
   try {
-    const authToken = getAuthToken();
+    const authToken = await getAuthToken();
+
     const response = await fetch(`${baseUrl}/api/auth/updateProfile`, {
       method: "POST",
       headers: {
@@ -117,7 +119,7 @@ export const updateProfile = async (userData) => {
 
 export const changePassword = async (userData) => {
   try {
-    const authToken = getAuthToken();
+    const authToken = await getAuthToken();
     const response = await fetch(`${baseUrl}/api/auth/changePassword`, {
       method: "POST",
       headers: {

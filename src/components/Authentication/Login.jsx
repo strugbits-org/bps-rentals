@@ -120,21 +120,21 @@ const Login = ({
                 id="login-password"
                 className="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="* * * * * *"
                 value={formData.password}
                 onChange={handleChange}
                 required
               />
               <div
-                onClick={togglePassword}
+                onClick={() => setShowPassword((prev) => !prev)}
                 className={`toggle-password ${showPassword ? "show" : ""}`}
               >
                 <i className="icon-password"></i>
                 <i className="icon-password-hide"></i>
               </div>
               <button
-                onClick={()=>setToggleModal('forgot-password')}
+                onClick={() => setToggleModal("forgot-password")}
                 className="btn-forgot-password password-link"
               >
                 <span>
@@ -176,7 +176,10 @@ const Login = ({
         <span className="d-block fs-lg-35 fs-mobile-30 fw-600 text-center">
           New to Blueprint Studios?
         </span>
-        <button onClick={()=>setToggleModal('create-account')} className="btn-create-account btn-border-blue mx-auto mt-20">
+        <button
+          onClick={() => setToggleModal("create-account")}
+          className="btn-create-account btn-border-blue mx-auto mt-20"
+        >
           <i className="icon-arrow-diagonal-left"></i>
           <span>
             {" "}

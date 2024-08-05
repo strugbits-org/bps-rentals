@@ -95,7 +95,7 @@ const SavedProducts = ({ savedProducts }) => {
                     variantData={variantData}
                     selectedVariant={selectedVariants[index] || variantData[0]}
                     filteredProducts={savedProducts}
-                    handleImageHover={handleImageHover}
+                    handleVariantChange={handleImageHover}
                     getSelectedProductSnapShots={getSelectedProductSnapShots}
                     savedProductsData={savedProductsData}
                     setSavedProductsData={setSavedProductsData}

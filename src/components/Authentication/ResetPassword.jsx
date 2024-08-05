@@ -114,7 +114,7 @@ const ResetPassword = () => {
               id="login-password"
               className="password"
               name="password"
-              type={showPassword ? "text" : "password"}
+              type="password"
               placeholder="* * * * * *"
               value={formData.password}
               onChange={handleChange}
