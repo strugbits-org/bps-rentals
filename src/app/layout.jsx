@@ -8,10 +8,7 @@ import CustomScripts from "@/Services/CustomScripts";
 import Footer from "@/components/Layout/Footer";
 import CookiesConsent from "@/components/Common/CookiesConsent";
 import Navbar from "@/components/Layout/Navbar";
-import ContactFormModal from "@/components/Common/Modals/ContactFormModal";
-import CartModal from "@/components/Common/Modals/CartModal";
 import QuoteViewModal from "@/components/Common/Modals/QuoteViewModal";
-import QuoteConfirmedModal from "@/components/Common/Modals/QuoteConfirmedModal";
 import StudiosFixedMenu from "@/components/Common/StudiosFixedMenu";
 import {
   getNavbarCategoriesData,
@@ -19,6 +16,7 @@ import {
   getForgotPasswordModalContent,
   getLoginModalContent,
   getFilterLocations,
+  getSearchSectionDetails,
 } from "@/Services/NavbarApis";
 import {
   getContactData,
@@ -36,7 +34,6 @@ import {
 } from "@/Services/SectionsApis";
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
-import { getAuthToken } from "@/Services/GetAuthToken";
 import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
 
 export const metadata = {
@@ -61,6 +58,7 @@ export default async function RootLayout({ children }) {
     socialSectionDetails,
     socialSectionBlogs,
     instaFeed,
+    searchSectionDetails
   ] = await Promise.all([
     getFilterLocations(),
     getLoginModalContent(),
@@ -77,6 +75,7 @@ export default async function RootLayout({ children }) {
     getSocialSectionDetails(),
     getSocialSectionBlogs(),
     fetchInstaFeed(),
+    getSearchSectionDetails()
   ]);
 
   return (
@@ -97,6 +96,8 @@ export default async function RootLayout({ children }) {
             createAccountModalContent={createAccountModalContent}
             forgotPasswordModalContent={forgotPasswordModalContent}
             marketsData={marketsData}
+            studiosData={studiosData}
+            searchSectionDetails={searchSectionDetails}
             categoriesData={allCategoriesData}
           />
           <CookiesConsent />

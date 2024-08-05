@@ -180,7 +180,6 @@ const CategoryPage = ({
 
   useEffect(() => {
     setShuffledBanners(shuffleArray([...bannersData]));
-    console.log("shuffleArray([...bannersData])", shuffleArray([...bannersData]));
   }, [bannersData]);
 
   useEffect(() => {

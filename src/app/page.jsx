@@ -35,7 +35,7 @@ export default async function Page() {
     getNewArrivalSectionContent(path),
     getHotTrendsSectionContent(),
     getHighlightsSection("HighlightsProducts"),
-    getBestSellerProducts(bestSeller),
+    getBestSellerProducts(bestSeller, 12),
     getHomeSectionDetails(),
     getDreamBigSectionContent(),
     getStudiosData(),
@@ -47,7 +47,7 @@ export default async function Page() {
       heroSectionContent={homeHeroSectionContent}
       newArrivalSectionContent={homeNewArrivalSectionContent}
       hotTrendsSectionContent={homeHotTrendsSectionContent}
-      bestSellerProducts={bestSellerProducts.items}
+      bestSellerProducts={bestSellerProducts}
       highlightsSectionData={highlightsSectionData}
       homeSectionDetails={homeSectionDetails}
       dreamBigSectionContent={homeDreamBigSectionContent}
@@ -56,3 +56,5 @@ export default async function Page() {
     />
   );
 }
+
+export const dynamic = 'force-static'

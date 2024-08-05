@@ -92,84 +92,11 @@ export const getAllProductVariants = async () => {
   }
 };
 
-export const fetchFilteredProducts = async ({
-  pageSize = 10,
-  skip = 0,
-  searchTerm = "",
-  categories = [],
-  location = "NT",
-  colors = [],
-  slug = null,
-}) => {
-  try {
-    const payload = {
-      dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: [
-        "category",
-        "product",
-        "subCategory",
-        "f1Collection",
-      ],
-      eq: [],
-      hasSome: [],
-      ne: [
-        {
-          key: "hidden",
-          value: true,
-        },
-        {
-          key: "isF1Exclusive",
-          value: true,
-        },
-      ],
-      returnTotalCount: true,
-      limit: pageSize,
-      skip: skip,
-    };
-
-    if (location) {
-      payload.eq.push({
-        key: "location",
-        value: location,
-      });
-    }
-
-    if (categories.length !== 0) {
-      payload.hasSome.push({
-        key: "subCategory",
-        values: categories,
-      });
-    }
-    if (colors.length !== 0) {
-      payload.hasSome.push({
-        key: "colors",
-        values: colors,
-      });
-    }
-
-    const response = await getDataFetchFunction(payload);
-    if (response && response._items) {
-      return {
-        items: response._items.map((x) => x.data),
-        totalCount: response.totalCount,
-      };
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    return { items: [], totalCount: 0 };
-  }
-};
-export const getBestSellerProducts = async (
-  bestSeller,
-  limit = 12,
-  skip = 0
-) => {
+export const getBestSellerProducts = async (bestSeller, limit) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: ["product", "subCategory", "f1Collection"],
+      includeReferencedItems: ["product"],
       ne: [
         {
           key: "hidden",
@@ -180,21 +107,19 @@ export const getBestSellerProducts = async (
           value: true,
         },
       ],
-      hasSome: [
-        {
-          key: "subCategory",
-          values: bestSeller,
-        },
-      ],
-      limit: limit,
-      returnTotalCount: true,
-      skip: skip,
+      hasSome: [{
+        key: "subCategory",
+        values: bestSeller
+      }],
+      increasedLimit: 1000,
+      includeVariants: true,
+      limit: "infinite",
     });
     if (response && response._items) {
-      return {
-        items: response._items.map((x) => x.data),
-        totalCount: response._totalCount,
-      };
+      if (limit) {
+        return response._items.map((x) => x.data).slice(0, limit);
+      }
+      return response._items.map((x) => x.data);
     } else {
       throw new Error("Response does not contain _items");
     }

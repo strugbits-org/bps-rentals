@@ -10,46 +10,33 @@ const ProductCard = ({
   styleClassName,
   variantData,
   selectedVariant,
-  handleVariantChange,
   filteredProducts,
   getSelectedProductSnapShots,
   savedProductsData,
   setSavedProductsData,
   filterColors = []
 }) => {
-  const defaultVariantSku = selectedVariant?.sku;
-  const defaultVariantImage = selectedVariant?.variant.imageSrc;
   const [filteredVariants, setFilteredVariants] = useState(variantData);
+  const [activeVariant, setActiveVariant] = useState(selectedVariant);
 
-
-  
   useEffect(() => {
-    const matchingVariants = variantData.filter((variant, index) => {
-      if (
-        hasMatchingColor(
-          filterColors.filter((x) => x.checked),
-          variant.color
-        )
-      ) {
-        handleVariantChange(index, variant);
-        return true;
-      }
-    });
-
-    setFilteredVariants(
-      matchingVariants.length !== 0 ? matchingVariants : variantData
-    );
+    const matchingVariants = variantData.filter(variant => hasMatchingColor(
+      filterColors.filter((x) => x.checked),
+      variant.color
+    ));
+    const newVariants = matchingVariants.length !== 0 ? matchingVariants : variantData;
+    setFilteredVariants(newVariants);
+    setActiveVariant(newVariants[0]);
   }, [filterColors]);
 
   return (
     <div
-      className={`${
-        styleClassName ? styleClassName : "product-link large active"
-      }`}
+      className={`${styleClassName ? styleClassName : "product-link large active"
+        }`}
       data-product-category
       data-product-location
       data-product-colors
-      // data-active-value="Red"
+    // data-active-value="Red"
     >
       <div className="container-tags">
         <div className="best-seller">
@@ -67,13 +54,13 @@ const ProductCard = ({
       </div>
       <div className="container-copy">
         <button className="btn-copy copy-link">
-          <span>{defaultVariantSku}</span>
+          <span>{activeVariant.sku}</span>
           <i className="icon-copy"></i>
         </button>
         <input
           type="text"
           className="copy-link-url"
-          defaultValue={defaultVariantSku}
+          defaultValue={activeVariant.sku}
           style={{
             position: "absolute",
             opacity: 0,
@@ -109,11 +96,11 @@ const ProductCard = ({
                 <div
                   className="container-img product-img"
                   data-get-product-link-color={selectedData.color[0]}
-                  data-default-product-link-active={index === 0}
+                  data-default-product-link-active={index === 1}
                 >
                   <img
                     src={productImageURL({
-                      wix_url: defaultVariantImage,
+                      wix_url: activeVariant.variant.imageSrc,
                       w: "346",
                       h: "346",
                       fit: "fill",
@@ -136,7 +123,7 @@ const ProductCard = ({
                   <li
                     className="list-item"
                     data-set-product-link-color={variant.color[0]}
-                    onMouseEnter={() => handleVariantChange(index, variant)}
+                    onMouseEnter={() => setActiveVariant(variant)}
                     data-default-product-link-active={idx === 0}
                   >
                     <div className="container-img">
