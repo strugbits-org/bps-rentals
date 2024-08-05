@@ -26,7 +26,6 @@ const CategoryPage = ({
   colorsData,
   selectedCategoryData,
   productsData,
-  userSavedProducts,
 }) => {
   const pageSize = 18;
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -40,9 +39,7 @@ const CategoryPage = ({
   const [shuffledBanners, setShuffledBanners] = useState([]);
 
   const [selectedVariants, setSelectedVariants] = useState({});
-  const [savedProductsData, setSavedProductsData] = useState(
-    userSavedProducts || []
-  );
+  const [savedProductsData, setSavedProductsData] = useState([]);
   const router = useRouter();
   const { memberId } = useUserData();
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
@@ -126,7 +123,7 @@ const CategoryPage = ({
     handleFilterChange({ categories: updatedCategories });
   };
 
-  const setInitialValues = () => {
+  const setInitialValues = async () => {
     const categoryId =
       selectedCategoryData?.parentCollection?._id ||
       selectedCategoryData?._id ||
@@ -163,6 +160,9 @@ const CategoryPage = ({
     );
     console.log("products", products.length);
     setFilteredProducts(products);
+
+    const savedProducts = await getSavedProductData();
+    setSavedProductsData(savedProducts);
 
     setTimeout(markPageLoaded, 500);
     setTimeout(setEnableFilterTrigger(true), 500);
