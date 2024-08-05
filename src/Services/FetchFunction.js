@@ -1,7 +1,10 @@
 import { createWixClient } from "@/Utils/CreateWixClient";
 import { apiAuth } from "@/Utils/IsAuthenticated";
+import { unstable_cache } from 'next/cache';
+import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
 
-export const getDataFetchFunction = async (payload) => {
+// Query data items from Wix data collections
+const getDataFetchFunction = async (payload) => {
   try {
     const {
       dataCollectionId,
@@ -13,13 +16,19 @@ export const getDataFetchFunction = async (payload) => {
       ne,
       hasSome,
       skip,
+      includeVariants,
+      increasedLimit,
+      log
     } = payload;
 
+    // Options for the query
     const options = {};
 
+    // List of collections requiring authentication
     const authCollections = [
+      "RentalsBanners",
       "RentalsHomeHero",
-      "RentalsHomeNewArrivals",
+      "RentalsNewArrivals",
       "BestSellers",
       "RentalsHomeStudios",
       "RentalsHomeHotTrends",
@@ -50,11 +59,9 @@ export const getDataFetchFunction = async (payload) => {
       "RentalsFooterLinks",
       "RentalsSocialMediaLinks",
       "RentalsAddresses",
-      "RentalsHomeSectionsTitles",
       "DreamBigSection",
       "RentalsMyAccountPage",
       "RentalsChangePasswordPage",
-      "F1CategoriesStructure",
       "BPSCatalogStructure",
       "HeaderCategoryMenu",
       "locationFilteredVariant",
@@ -64,13 +71,12 @@ export const getDataFetchFunction = async (payload) => {
       "Stores/Variants",
     ];
 
-    const isValid = authCollections.includes(dataCollectionId);
-    const wixClient = await createWixClient();
-
-    if (dataCollectionId && !isValid) {
+    // Validate collection ID
+    if (dataCollectionId && !authCollections.includes(dataCollectionId)) {
       return { error: "Unauthorized", status: 401 };
     }
 
+    // Authenticate the API key
     const apiKey = process.env.APIKEY;
     const auth = await apiAuth(apiKey, dataCollectionId);
 
@@ -78,49 +84,33 @@ export const getDataFetchFunction = async (payload) => {
       return { error: "Unauthorized", status: 401 };
     }
 
+    // Populate query options
     if (dataCollectionId) options.dataCollectionId = dataCollectionId;
-    if (includeReferencedItems?.length > 0)
-      options.includeReferencedItems = includeReferencedItems;
-    if (returnTotalCount) options.returnTotalCount = returnTotalCount;
+    if (includeReferencedItems?.length > 0) options.includeReferencedItems = includeReferencedItems;
+    if (returnTotalCount || limit === "infinite") options.returnTotalCount = returnTotalCount || true;
 
-    let data = wixClient.items.queryDataItems(options);
-    if (contains?.length === 2) {
-      data = data.contains(contains[0], contains[1]);
-    }
+    // Initialize query
+    const client = await createWixClient();
+    let data = client.items.queryDataItems(options);
 
-    if (eq && eq.length > 0 && eq !== "null") {
-      eq.forEach((filter) => {
-        data = data.eq(filter.key, filter.value);
-      });
-    }
-
-    if (hasSome && hasSome.length > 0 && hasSome !== "null") {
-      hasSome.forEach((filter) => {
-        data = data.hasSome(filter.key, filter.values);
-      });
-    }
-
-
-    if (skip && skip !== "null") {
-      data = data.skip(skip);
-    }
-
-    if (limit && limit !== "null" && limit !== "infinite") {
-      data = data.limit(limit);
-    }
-
-    if (limit == "infinite") {
+    // Apply filters
+    if (contains?.length === 2) data = data.contains(contains[0], contains[1]);
+    if (eq && eq.length > 0 && eq !== "null") eq.forEach(filter => data = data.eq(filter.key, filter.value));
+    if (hasSome && hasSome.length > 0 && hasSome !== "null") hasSome.forEach(filter => data = data.hasSome(filter.key, filter.values));
+    if (skip && skip !== "null") data = data.skip(skip);
+    if (limit && limit !== "null" && limit !== "infinite") data = data.limit(limit);
+    if (limit === "infinite" && increasedLimit) {
+      data = data.limit(increasedLimit);
+    } else if (limit === "infinite") {
       data = data.limit(50);
-    }
+    };
+    if (ne && ne.length > 0 && ne !== "null") ne.forEach(filter => data = data.ne(filter.key, filter.value));
 
-    if (ne && ne.length > 0 && ne !== "null") {
-      ne.forEach((filter) => {
-        data = data.ne(filter.key, filter.value);
-      });
-    }
-
+    // Fetch data
     data = await data.find();
-    if (limit == "infinite") {
+
+    // Handle infinite limit
+    if (limit === "infinite") {
       let items = data._items;
       while (items.length < data._totalCount) {
         data = await data._fetchNextPage();
@@ -129,9 +119,25 @@ export const getDataFetchFunction = async (payload) => {
       data._items = items;
     }
 
+    if (includeVariants) {
+      const [productsVariantImagesData, productsVariantsData] = await Promise.all([
+        getAllProductVariantsImages(),
+        getAllProductVariants()
+      ]);
+
+      data._items = data._items.map((product) => {
+        if (!product.data._id) return;
+        const productId = product.data.product._id;
+        product.data.productSnapshotData = productsVariantImagesData.filter(x => x.productId === productId);
+        product.data.productVariantsData = productsVariantsData.filter(x => x.productId === productId);
+        return product;
+      });
+    }
+
+    // Data cleanup for specific collections
     if (data._items.length > 0) {
       if (dataCollectionId === "Stores/Products") {
-        data._items = data._items.map((val) => {
+        data._items = data._items.map(val => {
           delete val.data.formattedDiscountedPrice;
           delete val.data.formattedPrice;
           delete val.data.price;
@@ -140,8 +146,8 @@ export const getDataFetchFunction = async (payload) => {
         });
       }
       if (dataCollectionId === "locationFilteredVariant") {
-        data._items = data._items.map((val) => {
-          val.data.variantData = val.data.variantData.map((val2) => {
+        data._items = data._items.map(val => {
+          val.data.variantData = val.data.variantData.map(val2 => {
             delete val2.variant.discountedPrice;
             delete val2.variant.price;
             return val2;
@@ -154,9 +160,11 @@ export const getDataFetchFunction = async (payload) => {
         });
       }
     }
+
     return data;
+
   } catch (error) {
-    console.log(error);
+    console.log("Error in queryDataItems:", payload.dataCollectionId, error);
     return { error: error.message, status: 500 };
   }
 };

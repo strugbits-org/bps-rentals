@@ -11,12 +11,12 @@ const ForgotPassword = ({
   const [isDisabled, setDisabled] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
   });
 
   const handleSubmit = async (e) => {
     setDisabled(true);
     console.log("called");
+    console.log(formData, "formData");
     try {
       e.preventDefault();
       setMessage("");
@@ -57,7 +57,7 @@ const ForgotPassword = ({
           >
             <input type="hidden" name="forgot_password" />
             <div className="container-input col-12">
-              <label for="forgot-password-login-email">
+              <label htmlFor="forgot-password-login-email">
                 {forgotPasswordModalContent &&
                   forgotPasswordModalContent.emailFieldLabel}
               </label>

@@ -7,37 +7,53 @@ import { HotTrendsCategory } from "../Common/Sections/HotTrendsSection";
 import ProductCard from "./ProductCard";
 import { BannerOurTeam } from "../Common/Sections/BannerOurTeam";
 import {
-  fetchFilteredProducts,
   getProductVariants,
   getProductVariantsImages,
+  getSavedProductData,
 } from "@/Services/ProductsApis";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import CartModal from "../Common/Modals/CartModal";
 import useUserData from "@/Hooks/useUserData";
-import { getAuthToken } from "@/Services/GetAuthToken";
+import { Banner } from "./Banner";
+import { shuffleArray } from "@/Utils/Utils";
 
 const CategoryPage = ({
   pageContent,
+  bannersData,
   locations,
   marketsData,
   colorsData,
   selectedCategoryData,
-  products,
+  productsData,
 }) => {
+  const pageSize = 18;
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [totalCount, setTotalCount] = useState();
-  const [loading, setLoading] = useState(false);
+  const [pageLimit, setPageLimit] = useState(pageSize);
   const [cookies, setCookie] = useCookies(["location"]);
   const [filterCategories, setFilterCategories] = useState([]);
   const [filterColors, setFilterColors] = useState([]);
   const [filterLocations, setFilterLocations] = useState([]);
-  const [enableLocationFilter, setEnableLocationFilter] = useState(false);
-  const pageSize = 18;
+  const [enableFilterTrigger, setEnableFilterTrigger] = useState(false);
+
+  const [shuffledBanners, setShuffledBanners] = useState([]);
 
   const [selectedVariants, setSelectedVariants] = useState({});
+  const [savedProductsData, setSavedProductsData] = useState([]);
+  const router = useRouter();
+  const { memberId } = useUserData();
+  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
+  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const [selectedProductData, setSelectedProductData] = useState(null);
+  const [productSnapshots, setProductSnapshots] = useState();
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [selectedVariantData, setSelectedVariantData] = useState(null);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const [categoryTitle, setCategoryTitle] = useState("");
+  const [productFilteredVariantData, setProductFilteredVariantData] =
+    useState();
 
-  const handleImageHover = (productIndex, variant) => {
+  const handleVariantChange = (productIndex, variant) => {
     setSelectedVariants((prevSelectedVariants) => ({
       ...prevSelectedVariants,
       [productIndex]: variant,
@@ -46,7 +62,6 @@ const CategoryPage = ({
 
   const handleFilterChange = async ({ categories = [], colors = [] }) => {
     try {
-      setLoading(true);
       const checkedCategories = categories
         ? categories.filter((x) => x.checked).map((x) => x._id)
         : filterCategories.filter((x) => x.checked).map((x) => x._id);
@@ -54,60 +69,39 @@ const CategoryPage = ({
         checkedCategories?.length !== 0
           ? checkedCategories
           : [
-              selectedCategoryData?.parentCollection?._id ||
-                selectedCategoryData?._id,
-            ];
-      const checkedColors =
+            selectedCategoryData?.parentCollection?._id ||
+            selectedCategoryData?._id,
+          ];
+      const selectedColors =
         colors?.length !== 0
           ? colors.filter((x) => x.checked).map((x) => x.label)
           : filterColors.filter((x) => x.checked).map((x) => x.label);
-      const response = await fetchFilteredProducts({
-        pageSize,
-        location: cookies.location,
-        categories: selectedCategories,
-        colors: checkedColors,
+
+      const selectedLocation = cookies.location;
+
+      const filteredProductsList = productsData.filter((product) => {
+        const hasCategory =
+          selectedCategories.length > 0
+            ? product.subCategory.some((subCat) =>
+              selectedCategories.includes(subCat._id)
+            )
+            : true;
+
+        const hasColor =
+          selectedColors.length > 0
+            ? product.colors.some((color) => selectedColors.includes(color))
+            : true;
+
+        const hasLocation = selectedLocation
+          ? product.location.includes(selectedLocation)
+          : true;
+
+        return hasCategory && hasColor && hasLocation;
       });
-      setFilteredProducts(response.items);
-      setTotalCount(response.totalCount);
-      updatedWatched();
+      setFilteredProducts(filteredProductsList);
+      updatedWatched(true);
     } catch (error) {
       console.error("Error fetching products:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSeeMore = async () => {
-    try {
-      setLoading(true);
-
-      const selectedCategories = filterCategories
-        .filter((x) => x.checked)
-        .map((x) => x._id);
-      const selectedColors = filterColors
-        .filter((x) => x.checked)
-        .map((x) => x.label);
-      const categories =
-        selectedCategories.length !== 0
-          ? selectedCategories
-          : [
-              selectedCategoryData?.parentCollection?._id ||
-                selectedCategoryData?._id,
-            ];
-      const response = await fetchFilteredProducts({
-        pageSize,
-        skip: filteredProducts.length,
-        location: cookies.location,
-        categories,
-        colors: selectedColors,
-      });
-      setFilteredProducts((prev) => [...prev, ...response.items]);
-      setTotalCount(response.totalCount);
-      updatedWatched();
-    } catch (error) {
-      console.error("Error fetching more products:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -129,8 +123,17 @@ const CategoryPage = ({
     handleFilterChange({ categories: updatedCategories });
   };
 
-  const setInitialValues = () => {
-    if (selectedCategoryData.level2Collections !== undefined) {
+  const setInitialValues = async () => {
+    const categoryId =
+      selectedCategoryData?.parentCollection?._id ||
+      selectedCategoryData?._id ||
+      "00000000-000000-000000-000000000001";
+
+    // set category filters
+    if (
+      selectedCategoryData &&
+      selectedCategoryData.level2Collections !== undefined
+    ) {
       const categories = selectedCategoryData.level2Collections
         .filter((x) => x._id)
         .map((x) => ({
@@ -140,18 +143,30 @@ const CategoryPage = ({
         }));
       setFilterCategories(categories);
     }
-    if (colorsData) {
-      const colors = colorsData.colors.map((x) => {
-        return { label: x, checked: false };
-      });
-      setFilterColors(colors);
-    }
-    setFilteredProducts(products.items);
-    setTotalCount(products.totalCount);
-    setTimeout(markPageLoaded, 500);
-    setTimeout(setEnableLocationFilter(true), 500);
-  };
 
+    // set filter colors
+    if (colorsData) {
+      const filteredColor = colorsData.find((x) => x.category === categoryId);
+      if (filteredColor) {
+        const colors = filteredColor.colors.map((x) => {
+          return { label: x, checked: false };
+        });
+        setFilterColors(colors);
+      }
+    }
+
+    const products = productsData.filter((product) =>
+      product.location.some((x) => x === cookies.location)
+    );
+    console.log("products", products.length);
+    setFilteredProducts(products);
+
+    const savedProducts = await getSavedProductData();
+    setSavedProductsData(savedProducts);
+
+    setTimeout(markPageLoaded, 500);
+    setTimeout(setEnableFilterTrigger(true), 500);
+  };
   useEffect(() => {
     setFilterLocations(
       locations.map((x) =>
@@ -160,38 +175,21 @@ const CategoryPage = ({
           : { ...x, checked: false }
       )
     );
-    if (enableLocationFilter) handleFilterChange({});
+    if (enableFilterTrigger) handleFilterChange({});
   }, [cookies.location]);
+
+  useEffect(() => {
+    setShuffledBanners(shuffleArray([...bannersData]));
+  }, [bannersData]);
 
   useEffect(() => {
     setInitialValues();
   }, []);
 
-  // useEffect(() => {
-  //   console.log("HEllllllllllloooooooooooooooooooooo", cookies.location);
-  // }, [cookies])
-
-  const router = useRouter();
-  const { memberId } = useUserData();
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
-  const [selectedProductData, setSelectedProductData] = useState(null);
-  const [productSnapshots, setProductSnapshots] = useState();
-  const [productFilteredVariantData, setProductFilteredVariantData] =
-    useState();
-  const [selectedVariant, setSelectedVariant] = useState(null);
-  const [selectedVariantData, setSelectedVariantData] = useState(null);
-  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-  const [categoryTitle, setCategoryTitle] = useState("");
-  getAuthToken();
   const getSelectedProductSnapShots = async (productData) => {
     setSelectedProductData(productData);
     try {
-      const product_id = productData.product._id;
-      const [productSnapshotData, productVariantsData] = await Promise.all([
-        getProductVariantsImages(product_id),
-        getProductVariants(product_id),
-      ]);
+      const { productSnapshotData, productVariantsData } = productData;
 
       let dataMap = new Map(
         productVariantsData.map((item) => [item.sku.toLowerCase(), item])
@@ -255,53 +253,6 @@ const CategoryPage = ({
       }
     }
   };
-
-  const changeQuery = (key, value) => {
-    pageLoadStart();
-    router.query[key] = value;
-    router.push(router);
-  };
-
-  // const getCategoriesList = async () => {
-  //   let categories;
-  //   if (router.query.category === undefined) {
-  //     let collectionIds = collectionsData.map((x) => x._id);
-  //     if (selectedCollection.length !== 0) {
-  //       collectionIds = selectedCollection.map((x) => x._id);
-  //     }
-  //     const response = await getCategoriesData(collectionIds);
-  //     categories = response.map((x) => {
-  //       return { ...x.parentCollection, type: 'category' };
-  //     });
-  //   } else {
-  //     categories = selectedCategory[0]?.level2Collections
-  //       .filter((x) => x._id !== undefined)
-  //       .map((x) => {
-  //         return { ...x, type: 'subCategory' };
-  //       });
-  //   }
-  //   setFilterCategories(categories);
-  // };
-
-  // useEffect(() => {
-  //   if (
-  //     router.query.category === undefined ||
-  //     (selectedCategory && selectedCategory.length !== 0)
-  //   ) {
-  //     getCategoriesList();
-  //   }
-  // }, [router, selectedCollection, collectionsData, selectedCategory]);
-
-  // useEffect(() => {
-  //   if (router.query.subCategory && selectedCategory.length !== 0) {
-  //     const name = selectedCategory[0]?.level2Collections.find(
-  //       (x) => x._id === router.query.subCategory
-  //     ).name;
-  //     setCategoryTitle(name);
-  //   } else {
-  //     setCategoryTitle(selectedCategory[0]?.parentCollection?.name);
-  //   }
-  // }, [router, selectedCategory]);
 
   return (
     <>
@@ -424,36 +375,41 @@ const CategoryPage = ({
             <div className="col-lg-10 column-content">
               <div className="product-list-wrapper container-wrapper-list">
                 <ul className="product-list grid-lg-33 grid-tablet-50 grid-list">
-                  {products &&
-                    filteredProducts.map((data, index) => {
-                      const { product, variantData } = data;
-                      return (
-                        <>
-                          <li
-                            className="product-item grid-item"
-                            data-get-tag
-                            data-aos="d:loop"
-                          >
-                            <ProductCard
-                              key={index}
-                              index={index}
-                              product={product}
-                              variantData={variantData}
-                              selectedVariant={
-                                selectedVariants[index] || variantData[0]
-                              }
-                              filteredProducts={filteredProducts}
-                              handleImageHover={handleImageHover}
-                              getSelectedProductSnapShots={
-                                getSelectedProductSnapShots
-                              }
-                            />
-                          </li>
-                          {index === 5 && <HotTrendsCategory />}
-                          {index === 11 && <BannerOurTeam />}
-                        </>
-                      );
-                    })}
+                  {filteredProducts.slice(0, pageLimit).map((data, index) => {
+                    const { product, variantData } = data;
+                    return (
+                      <React.Fragment key={index}>
+                        <li
+                          key={index}
+                          className="product-item grid-item"
+                          data-get-tag
+                          data-aos="d:loop"
+                        >
+                          <ProductCard
+                            key={index}
+                            index={index}
+                            product={product}
+                            variantData={variantData}
+                            selectedVariant={
+                              selectedVariants[index] || variantData[0]
+                            }
+                            filteredProducts={filteredProducts}
+                            handleVariantChange={handleVariantChange}
+                            getSelectedProductSnapShots={
+                              getSelectedProductSnapShots
+                            }
+                            filterColors={filterColors}
+                            savedProductsData={savedProductsData}
+                            setSavedProductsData={setSavedProductsData}
+                          />
+                        </li>
+                        {(index + 1) % 6 === 0 && (
+                          <Banner key={`banner-${index}`} data={shuffledBanners[Math.floor((index + 1) / 6) % shuffledBanners.length]} />
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+
                 </ul>
                 {filteredProducts.length === 0 && (
                   <h6
@@ -463,12 +419,14 @@ const CategoryPage = ({
                     No Products Found
                   </h6>
                 )}
-                {/* {products.totalCount < filteredProducts.length && ( */}
-                {filteredProducts.length < totalCount && !loading && (
+                {pageLimit < filteredProducts.length && (
                   <div className="flex-center">
                     <button
                       className="btn-border-blue mt-90"
-                      onClick={handleSeeMore}
+                      onClick={() => {
+                        setPageLimit((prev) => prev + pageSize);
+                        updatedWatched(true);
+                      }}
                       data-aos="fadeIn .6s ease-in-out 0s, d:loop"
                     >
                       <span>See more</span>

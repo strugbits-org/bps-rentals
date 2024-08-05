@@ -5,9 +5,10 @@ import ProductCard from '../Category/ProductCard';
 import CartModal from '../Common/Modals/CartModal';
 
 const BestSellersHome = ({ products, content }) => {
+  console.log("products", products[0]);
   const [selectedVariants, setSelectedVariants] = useState({});
 
-  const handleImageHover = (index, variant) => {
+  const handleVariantChange = (index, variant) => {
     setSelectedVariants((prevSelectedVariants) => ({
       ...prevSelectedVariants,
       [index]: variant,
@@ -65,7 +66,7 @@ const BestSellersHome = ({ products, content }) => {
                             selectedVariant={
                               selectedVariants[index] || variantData[0]
                             }
-                            handleImageHover={handleImageHover}
+                            handleVariantChange={handleVariantChange}
                           />
                         </div>
                       );

@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
-import Disclaimer from "./Disclaimer";
 import { useCookies } from "react-cookie";
-import { signInUser } from "@/Services/AuthApis";
-import { pageLoadStart } from "@/Utils/AnimationFunctions";
 import { useRouter } from "next/navigation";
+
+import { pageLoadStart } from "@/Utils/AnimationFunctions";
+import { signInUser } from "@/Services/AuthApis";
+import Disclaimer from "./Disclaimer";
 
 const Login = ({
   loginModalContent,
@@ -12,7 +13,10 @@ const Login = ({
   setSuccessMessageVisible,
   setErrorMessageVisible,
   setMessage,
+  setToggleModal,
 }) => {
+  const router = useRouter();
+
   const [cookies, setCookie] = useCookies(["authToken", "userData"]);
   const [submittingForm, setSubmittingForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -20,48 +24,58 @@ const Login = ({
     email: "",
     password: "",
   });
-  const router = useRouter();
+
   const LoginUser = async (e) => {
     e.preventDefault();
     if (submittingForm) return;
 
     setSubmittingForm(true);
     setErrorMessageVisible(false);
+    const submenuLogin = document.querySelector(".submenu-login");
+    const button = document.querySelector(".new-login-button");
     try {
       const response = await signInUser({
         email: formData.email,
         password: formData.password,
       });
 
-      if (response?.error) {
+      if (response && response.error) {
         setMessage(response.message);
         setErrorMessageVisible(true);
         return;
       }
 
-      const userToken = response.jwtToken;
-      const userData = JSON.stringify(response.member);
+      if (response) {
+        const userToken = response.jwtToken;
+        const userData = JSON.stringify(response.member);
 
-      setCookie("authToken", userToken, {
-        path: "/",
-        expires: new Date("2099-01-01"),
-      });
+        setCookie("authToken", userToken, {
+          path: "/",
+          expires: new Date("2099-01-01"),
+        });
 
-      setCookie("userData", userData, {
-        path: "/",
-        expires: new Date("2099-01-01"),
-      });
+        setCookie("userData", userData, {
+          path: "/",
+          expires: new Date("2099-01-01"),
+        });
 
-      const loggedIn = cookies.authToken !== undefined;
+        if (userToken) {
+          pageLoadStart();
+          submenuLogin.classList.remove("active");
+          button.classList.remove("active");
+          router.push("/my-account");
 
-      if (loggedIn) {
-        pageLoadStart();
-        router.push("/my-account");
+          setFormData({
+            email: "",
+            password: "",
+          });
+        }
       }
     } catch (error) {
       console.log("Error during login:", error);
-      setMessage("Invalid Credentials!");
+      setMessage("Error during login:", error);
       setErrorMessageVisible(true);
+      submenuLogin.classList.add("active");
     } finally {
       setTimeout(() => {
         setSubmittingForm(false);
@@ -74,10 +88,6 @@ const Login = ({
     setFormData({ ...formData, [name]: value });
   };
 
-  const togglePassword = () => {
-    setShowPassword(!showPassword);
-  };
-
   return (
     <div className="container-sign-in">
       <div className="container-sign-in">
@@ -88,7 +98,7 @@ const Login = ({
         >
           <form action="/my-account" className="form-sign-in form-base">
             <div className="container-input col-12">
-              <label for="login-email">
+              <label htmlFor="login-email">
                 {loginModalContent && loginModalContent.emailFieldLabel}
               </label>
               <input
@@ -102,7 +112,7 @@ const Login = ({
               />
             </div>
             <div className="container-input container-input-password col-12 pos-relative">
-              <label for="login-password">
+              <label htmlFor="login-password">
                 {" "}
                 {loginModalContent && loginModalContent.passwordFieldLabel}
               </label>
@@ -110,21 +120,21 @@ const Login = ({
                 id="login-password"
                 className="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="* * * * * *"
                 value={formData.password}
                 onChange={handleChange}
                 required
               />
               <div
-                onClick={togglePassword}
+                onClick={() => setShowPassword((prev) => !prev)}
                 className={`toggle-password ${showPassword ? "show" : ""}`}
               >
                 <i className="icon-password"></i>
                 <i className="icon-password-hide"></i>
               </div>
-              <a
-                href="javascript:void(0)"
+              <button
+                onClick={() => setToggleModal("forgot-password")}
                 className="btn-forgot-password password-link"
               >
                 <span>
@@ -132,7 +142,7 @@ const Login = ({
                   {loginModalContent &&
                     loginModalContent.forgotYourPasswordLinkText}
                 </span>
-              </a>
+              </button>
             </div>
             <div className="container-submit col-12 mt-mobile-10">
               <button type="submit" className="bt-submit btn-blue w-100">
@@ -166,7 +176,10 @@ const Login = ({
         <span className="d-block fs-lg-35 fs-mobile-30 fw-600 text-center">
           New to Blueprint Studios?
         </span>
-        <button className="btn-create-account btn-border-blue mx-auto mt-20">
+        <button
+          onClick={() => setToggleModal("create-account")}
+          className="btn-create-account btn-border-blue mx-auto mt-20"
+        >
           <i className="icon-arrow-diagonal-left"></i>
           <span>
             {" "}

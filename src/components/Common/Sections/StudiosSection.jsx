@@ -2,6 +2,8 @@ import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 
 const Studios = ({ content, studiosData }) => {
+  const url = process.env.CORPORATE_URL;
+
   return (
     <section className="section-studios">
       <div className="container-fluid">
@@ -28,7 +30,7 @@ const Studios = ({ content, studiosData }) => {
             <ul className="accordion-list-studios" data-aos="d:loop">
               {studiosData &&
                 studiosData.map((data, index) => {
-                  const { cardName, cardDescription, image } = data;
+                  const { cardName, slug, cardDescription, image } = data;
                   return (
                     <li key={index} className="accordion-item">
                       <div className="accordion-header">
@@ -55,8 +57,8 @@ const Studios = ({ content, studiosData }) => {
                         <div className="container-accordion-text">
                           <p className="accordion-text">{cardDescription}</p>
                           <AnimateLink
-                            to="/"
-                            // to={`/services/${data.slug}`}
+                            target={"_blank"}
+                            to={`${url}/services/${slug}`}
                           >
                             <span>See more</span>
                             <i className="icon-arrow-right"></i>

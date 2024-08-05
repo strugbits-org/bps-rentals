@@ -8,10 +8,7 @@ import CustomScripts from "@/Services/CustomScripts";
 import Footer from "@/components/Layout/Footer";
 import CookiesConsent from "@/components/Common/CookiesConsent";
 import Navbar from "@/components/Layout/Navbar";
-import ContactFormModal from "@/components/Common/Modals/ContactFormModal";
-import CartModal from "@/components/Common/Modals/CartModal";
 import QuoteViewModal from "@/components/Common/Modals/QuoteViewModal";
-import QuoteConfirmedModal from "@/components/Common/Modals/QuoteConfirmedModal";
 import StudiosFixedMenu from "@/components/Common/StudiosFixedMenu";
 import {
   getNavbarCategoriesData,
@@ -32,10 +29,11 @@ import {
   getMarketsData,
   getSocialSectionBlogs,
   getSocialSectionDetails,
+  getStudiosData,
 } from "@/Services/SectionsApis";
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
-import { getAuthToken } from "@/Services/GetAuthToken";
+import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
 
 export const metadata = {
   title: "BPS Rentals",
@@ -54,6 +52,7 @@ export default async function RootLayout({ children }) {
     navigationMenu,
     contactUsContent,
     marketsData,
+    studiosData,
     allCategoriesData,
     socialSectionDetails,
     socialSectionBlogs,
@@ -69,6 +68,7 @@ export default async function RootLayout({ children }) {
     getFooterNavigationMenu(),
     getContactUsContent(),
     getMarketsData(),
+    getStudiosData(),
     getNavbarCategoriesData(),
     getSocialSectionDetails(),
     getSocialSectionBlogs(),
@@ -85,29 +85,7 @@ export default async function RootLayout({ children }) {
           data-load="first-loading"
           className="overflow-hidden"
         >
-          <div className="external-triggers d-none">
-            <span className="initScript d-none"></span>
-            <span className="closeModals d-none"></span>
-            <span className="initializeCanvas d-none"></span>
-            <span className="home d-none"></span>
-            <span className="updateWatched d-none"></span>
-            <span className="galleryLightBox d-none"></span>
-            <span className="collections d-none"></span>
-            <span className="products d-none"></span>
-            <span className="productsPost d-none"></span>
-            <span className="cartPage d-none"></span>
-            <span className="myAccount d-none"></span>
-            <span className="savedProducts d-none"></span>
-            <span className="quotesHistory d-none"></span>
-            <span className="changePassword d-none"></span>
-            <span className="galleryImages d-none"></span>
-            <span className="addToCart d-none"></span>
-            <span className="modalLoad d-none"></span>
-            <span className="loadMore d-none"></span>
-            <span className="updateWatchedTrigger d-none"></span>
-            <span className="triggerSplitWordAnimation d-none"></span>
-            <span className="stickyAnimationTrigger d-none"></span>
-          </div>
+          <ExternalTriggers />
           <Loader />
           <Navbar
             locations={filterLocations}
@@ -134,7 +112,7 @@ export default async function RootLayout({ children }) {
               socialLinks={socialLinks}
             />
           </Wrapper>
-          <StudiosFixedMenu />
+          <StudiosFixedMenu data={studiosData} />
           {/* <CartModal /> */}
           <ContactUsModal
             contactUsContent={contactUsContent}

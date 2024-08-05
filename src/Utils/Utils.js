@@ -43,8 +43,35 @@ export const setCookie = (key, value) => {
     document.cookie = key + "=" + value + ";";
 }
 
-export const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+export const findCategoryData = (data, slug) => (data.find(x => x.parentCollection['link-copy-of-category-name-2'] === slug) || data.find((item) => item.level2Collections.some((x) => x['link-copy-of-category-name-2'] === slug))?.level2Collections.find((x) => x['link-copy-of-category-name-2'] === slug));
+
+export const getAllCategoriesPaths = (categoriesData) => {
+    const getSlug = (url) => url.match(/\/category\/(.+)/)[1];
+
+    const paths = categoriesData.flatMap(category => {
+        const parentCategory = category.parentCollection["link-copy-of-category-name-2"]
+            ? [getSlug(category.parentCollection["link-copy-of-category-name-2"])]
+            : [];
+
+        const subcategories = category.level2Collections.flatMap(subcategory =>
+            subcategory["link-copy-of-category-name-2"]
+                ? [getSlug(subcategory["link-copy-of-category-name-2"])]
+                : []
+        );
+
+        return [...parentCategory, ...subcategories];
+    });
+    return paths;
 }
 
-export const findCategoryData = (data, slug) => (data.find(x => x.parentCollection['link-copy-of-category-name-2'] === slug) || data.find((item) => item.level2Collections.some((x) => x['link-copy-of-category-name-2'] === slug))?.level2Collections.find((x) => x['link-copy-of-category-name-2'] === slug));
+export const hasMatchingColor = (colorsArray, variantColors) => {
+    const labels = colorsArray.map(item => item.label);
+    return variantColors.some(item => labels.includes(item));
+};
+export const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+};

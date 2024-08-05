@@ -3,9 +3,11 @@ const { isAuthenticated } = require("./IsAuthenticated");
 async function handleAuthentication(req) {
   try {
     const token = req.headers.get("authorization");
+
     if (!token) {
       throw new Error("Unauthorized: No token provided");
     }
+
     const authenticatedUserData = await isAuthenticated(token);
     if (!authenticatedUserData) {
       throw new Error("Unauthorized access");
@@ -13,7 +15,7 @@ async function handleAuthentication(req) {
     return authenticatedUserData;
   } catch (error) {
     console.error("Authentication error:", error);
-    return null; // Indicating that authentication failed
+    return null; 
   }
 }
 

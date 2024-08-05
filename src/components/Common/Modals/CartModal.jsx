@@ -212,7 +212,7 @@ const CartModal = ({
                         </ul>
                         <div class="container-product-description">
                           <div class="form-cart">
-                            <input type="hidden" name="sku[]" value="MODCH09" />
+                            <input type="hidden" name="sku[]" defaultValue="MODCH09" />
                             <div class="wrapper-product-name">
                               <div class="container-product-name">
                                 <h1

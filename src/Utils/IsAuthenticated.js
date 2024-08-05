@@ -5,22 +5,50 @@ import { createWixClient } from "./CreateWixClient";
 export const isAuthenticated = async (token) => {
   try {
     const unAuthCollections = [
-      "PrivacyandPolicyPageContentF1",
-      "TermsandConditionsPageContentF1",
-      "HomePageContentF1",
-      "SocialMediaLinksF1",
-      "HomePageBottomLeftLinksF1",
-      "SignInPageF1",
-      "CreateAccountPageF11",
-      "HospitalitySpaceLocatedOptionsF1",
-      "GalleryPageF1",
-      "CollectionsF1",
-      "BackgroundImagesF1",
-      "ModalLogos",
-      "ConfirmEmailPageContentF1",
-      "ResetPasswordPageContentF1",
-      "FooterDataF1",
-      "FooterLinksDataF1",
+      "RentalsBanners",
+      "RentalsHomeHero",
+      "RentalsNewArrivals",
+      "BestSellers",
+      "RentalsHomeStudios",
+      "RentalsHomeHotTrends",
+      "HighlightsProducts",
+      "MarketSection",
+      "RentalsHomeDreamBig",
+      "Footer",
+      "HighlightsSocial",
+      "HighlightsTradeshow",
+      "HighlightsWedding",
+      "HighlightsCorporate",
+      "ContactDetails",
+      "SocialLinks",
+      "ContactUsContent",
+      "colorFilterCache",
+      "PeopleReviewSlider",
+      "HomeSectionDetails",
+      "FooterNavigationMenu",
+      "StudiosSection",
+      "MarketSection",
+      "RentalsLoginModal",
+      "FilterLocations",
+      "RentalsCreateAccountModal",
+      "RentalsResetPasswordModal",
+      "RentalsFooter",
+      "PortfolioCollection",
+      "SocialSectionDetails",
+      "BlogProductData",
+      "RentalsFooterLinks",
+      "RentalsSocialMediaLinks",
+      "RentalsAddresses",
+      "DreamBigSection",
+      "RentalsMyAccountPage",
+      "RentalsChangePasswordPage",
+      "BPSCatalogStructure",
+      "HeaderCategoryMenu",
+      "locationFilteredVariant",
+      "Stores/Products",
+      "BPSPairItWith",
+      "BPSProductImages",
+      "Stores/Variants",
     ];
 
     // // Allow unauthenticated access for certain collections
@@ -28,18 +56,21 @@ export const isAuthenticated = async (token) => {
     //     return true; // Or some appropriate default object for unauthenticated users
     // }
 
+
     if (!token) {
       throw new Error("Unauthorized: No token provided");
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const wixClient = await createWixClient();
     const memberData = await wixClient.items
       .queryDataItems({
         dataCollectionId: "membersPassword",
       })
-      .eq("userEmail", decoded?.email)
+      .eq("userEmail", decoded.email)
       .find();
+
 
     if (memberData._items.length === 0) {
       throw new Error("Unauthorized: No matching user data");
@@ -59,7 +90,7 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
   }
   const unAuthCollections = [
     "RentalsHomeHero",
-    "RentalsHomeNewArrivals",
+    "RentalsNewArrivals",
     "RentalsHomeStudios",
     "RentalsHomeHotTrends",
     "RentalsHomeDreamBig",
@@ -86,11 +117,9 @@ export const apiAuth = async (apiKey, dataCollectionId) => {
     "RentalsFooterLinks",
     "RentalsSocialMediaLinks",
     "RentalsAddresses",
-    "RentalsHomeSectionsTitles",
     "DreamBigSection",
     "RentalsMyAccountPage",
     "RentalsChangePasswordPage",
-    "F1CategoriesStructure",
     "BPSCatalogStructure",
     "HeaderCategoryMenu",
     "locationFilteredVariant",

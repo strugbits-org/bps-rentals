@@ -5,7 +5,7 @@ import ProductCard from "../Category/ProductCard";
 const MatchItWith = ({ matchedProductsData }) => {
   const [selectedVariants, setSelectedVariants] = useState({});
 
-  const handleImageHover = (productIndex, variant) => {
+  const handleVariantChange = (productIndex, variant) => {
     setSelectedVariants((prevSelectedVariants) => ({
       ...prevSelectedVariants,
       [productIndex]: variant,
@@ -38,7 +38,7 @@ const MatchItWith = ({ matchedProductsData }) => {
                             selectedVariant={
                               selectedVariants[index] || variantData[0]
                             }
-                            handleImageHover={handleImageHover}
+                            handleVariantChange={handleVariantChange}
                           />
                         </div>
                       );

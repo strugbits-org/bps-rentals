@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 
 import { signUpUser } from "@/Services/AuthApis";
 import Disclaimer from "./Disclaimer";
+import { useRouter } from "next/navigation";
+import { pageLoadStart } from "@/Utils/AnimationFunctions";
 
 const CreateAccount = ({
   createAccountModalContent,
@@ -11,12 +13,14 @@ const CreateAccount = ({
   setErrorMessageVisible,
   setMessage,
 }) => {
-  const [submittingForm, setSubmittingForm] = useState(false);
+  const router = useRouter();
 
+  const [submittingForm, setSubmittingForm] = useState(false);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
     email: "",
+    phone: "",
     password: "",
   });
 
@@ -31,36 +35,41 @@ const CreateAccount = ({
     setSubmittingForm(true);
     setErrorMessageVisible(false);
     setSuccessMessageVisible(false);
-
+    const submenuLogin = document.querySelector(".submenu-login");
     try {
       const userData = {
         email: formData.email,
         password: formData.password,
-        confirmPassword: formData.confirm_password,
         firstName: formData.first_name,
         lastName: formData.last_name,
-        company: formData.company,
         phone: formData.phone,
-        hospitalityLoc: formData.hospitality_space,
       };
 
       const response = await signUpUser(userData);
-      if (response?.error) {
+
+      if (response.error) {
         setMessage(response.message);
         setErrorMessageVisible(true);
         return;
       }
 
-      if (response) {
+      if (!response.error) {
         setSuccessMessageVisible(true);
         setErrorMessageVisible(false);
         setFormData({
           first_name: "",
           last_name: "",
           email: "",
+          phone: "",
           password: "",
         });
       }
+
+      // if (!response.error) {
+      //   submenuLogin.classList.remove("active");
+      //   pageLoadStart();
+      //   router.push("/my-account");
+      // }
       return response;
     } catch (error) {
       console.error("Error:", error);
@@ -93,7 +102,7 @@ const CreateAccount = ({
           onSubmit={handleSubmit}
         >
           <div className="container-input col-md-12">
-            <label for="create-account-first-name">
+            <label htmlFor="create-account-first-name">
               {createAccountModalContent &&
                 createAccountModalContent.firstNameFieldLabel}
             </label>
@@ -108,7 +117,7 @@ const CreateAccount = ({
             />
           </div>
           <div className="container-input col-md-12">
-            <label for="create-account-last-name">
+            <label htmlFor="create-account-last-name">
               {createAccountModalContent &&
                 createAccountModalContent.lastNameFieldLabel}
             </label>
@@ -123,7 +132,7 @@ const CreateAccount = ({
             />
           </div>
           <div className="container-input col-md-12">
-            <label for="create-account-email">
+            <label htmlFor="create-account-email">
               {createAccountModalContent &&
                 createAccountModalContent.emailFieldLabel}
             </label>
@@ -138,9 +147,22 @@ const CreateAccount = ({
             />
           </div>
           <div className="container-input col-md-12">
-            <label for="create-account-phone">
+            <label htmlFor="create-account-phone">
               {createAccountModalContent &&
                 createAccountModalContent.phoneNumberFieldLabel}
+            </label>
+            <input
+              id="create-account-phone"
+              name="phone"
+              type="tel"
+              placeholder="+1 (415) 000-0000"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="container-input col-md-12">
+            <label htmlFor="create-account-phone">
+              {createAccountModalContent && createAccountModalContent.password}
             </label>
             <input
               id="create-account-phone"

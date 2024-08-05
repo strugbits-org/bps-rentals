@@ -8326,7 +8326,7 @@ var require_app2 = __commonJS({
     }
     function accordionGsap(list, toggle = true) {
       let isAnimating = false;
-      
+
       if (!list)
         list = document;
       let toggleItems = list.querySelectorAll(":scope > .accordion-item");
@@ -8357,7 +8357,7 @@ var require_app2 = __commonJS({
           }
           header.addEventListener("click", function () {
             if (isAnimating) return;
-            
+
             let content = element.querySelector(":scope > .accordion-content");
             if (element.classList.contains("active")) {
               element.removeActive();
@@ -9792,12 +9792,17 @@ var require_app2 = __commonJS({
     //   document.body.classList.add("page-leave-active");
     // }
     document.querySelector(".closeModals").addEventListener("click", manualModalCloseControls);
-
-    document.querySelector(".updateWatched").addEventListener("click", () => {
-      updateWatched();
-      productLinkColor();
-      manualModalClose();
+    document.querySelector(".scrollRefresh").addEventListener("refreshScroll", () => {
+      ScrollTrigger$1.refresh();
     });
+
+    document
+      .querySelector(".updateWatched")
+      .addEventListener("customUpdateWatch", () => {
+        updateWatched();
+        productLinkColor();
+        manualModalClose();
+      });
     // document.querySelector(".initScript").addEventListener("click", () => {
     //   whenContainerReady();
     //   if (!firstLoad) {
@@ -9872,9 +9877,9 @@ var require_app2 = __commonJS({
     //   loader.onFirstDone = () => {
     //     document.body.classList.remove("overflow-hidden");
     //   };
-      // setTimeout(() => {
-      //   loader.state.scriptReady = true;
-      // }, 10);
+    // setTimeout(() => {
+    //   loader.state.scriptReady = true;
+    // }, 10);
     // }
   },
 });

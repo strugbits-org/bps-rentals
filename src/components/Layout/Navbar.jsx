@@ -1,14 +1,19 @@
 "use client";
+import { useState } from "react";
+
 import CreateAccount from "../Authentication/CreateAccount";
 import ForgotPassword from "../Authentication/ForgotPassword";
 import Login from "../Authentication/Login";
-import AllCategories from "../Category/AllCategories";
-import AnimateLink from "../Common/AnimateLink";
+
+import LocationsFilter from "../Common/LocationsFilter";
 import SearchModal from "../Common/Modals/SearchModal";
 import MarketModal from "../Common/Modals/MarketModal";
-import LocationsFilter from "../Common/LocationsFilter";
+import AllCategories from "../Category/AllCategories";
 import ErrorModal from "../Common/Modals/ErrorModal";
-import { useState } from "react";
+import AnimateLink from "../Common/AnimateLink";
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/navigation";
+import { pageLoadStart } from "@/Utils/AnimationFunctions";
 
 const Navbar = ({
   locations,
@@ -21,6 +26,20 @@ const Navbar = ({
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [message, setMessage] = useState("Message");
+  const [toggleModal, setToggleModal] = useState("");
+  const [cookies, setCookie] = useCookies(["authToken"]);
+  const router = useRouter();
+
+  const checkUser = () => {
+    const loggedIn = cookies.authToken;
+    const submenuLogin = document.querySelector(".submenu-login");
+    if (loggedIn) {
+      pageLoadStart();
+      router.push("/my-account");
+    } else {
+      submenuLogin.classList.toggle("active", !submenuLogin.classList.contains("active"));
+    }
+  };
 
   return (
     <>
@@ -65,7 +84,20 @@ const Navbar = ({
                     </button>
                   </li>
                   <li className="login-item">
-                    <button data-set-submenu="login">
+                    {/* {"login" === "login" ? (
+                      <button
+                        data-set-submenu="login"
+                        className="new-login-button"
+                      >
+                        <i className="icon-user"></i>
+                        <span className="hide">Login</span>
+                      </button>
+                    ) : (
+                      )} */}
+                    <button
+                      data-set-submenu="login"
+                      className="new-login-button"
+                    >
                       <i className="icon-user"></i>
                       <span className="hide">Login</span>
                     </button>
@@ -86,7 +118,6 @@ const Navbar = ({
                   </li>{" "}
                 </ul>
                 <button
-                  href="javascript:void(0)"
                   id="bt-menu"
                   aria-label="Menu"
                   data-search-remove
@@ -223,7 +254,27 @@ const Navbar = ({
                       </button>
                     </li>
                     <li className="login-item">
-                      <button data-set-submenu="login">
+                      {/* {"login" !== "login" ? (
+                        <AnimateLink
+                          to="/my-account"
+                          className="new-login-button"
+                        >
+                          <i className="icon-user"></i>
+                          <span className="hide">Login</span>
+                        </AnimateLink>
+                      ) : (
+                        <button
+                          data-set-submenu="login"
+                          className="new-login-button"
+                        >
+                          <i className="icon-user"></i>
+                          <span className="hide">Login</span>
+                        </button>
+                      )} */}
+                      <button
+                        onClick={checkUser}
+                        className="new-login-button disable-click-outside"
+                      >
                         <i className="icon-user"></i>
                         <span className="hide">Login</span>
                       </button>
@@ -254,7 +305,7 @@ const Navbar = ({
               <div
                 className="submenu-login submenu"
                 data-get-submenu="login"
-                data-form-active=""
+                data-form-active={toggleModal}
               >
                 <div
                   className="wrapper-submenu-login wrapper-submenu"
@@ -292,6 +343,7 @@ const Navbar = ({
                         setSuccessMessageVisible={setSuccessMessageVisible}
                         setErrorMessageVisible={setErrorMessageVisible}
                         setMessage={setMessage}
+                        setToggleModal={setToggleModal}
                       />
                       <CreateAccount
                         createAccountModalContent={createAccountModalContent}

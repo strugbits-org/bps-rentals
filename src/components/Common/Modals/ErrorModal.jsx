@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
 import AnimateLink from "../AnimateLink";
 
 const ErrorModal = ({ buttonLabel, message, setErrorMessageVisible }) => {
@@ -12,7 +12,7 @@ const ErrorModal = ({ buttonLabel, message, setErrorMessageVisible }) => {
   useEffect(() => {
     setTimeout(() => {
       document.body.setAttribute("data-form-cart-state", "success");
-      markPageLoaded();
+      updatedWatched();
     }, 500);
   }, []);
   return (
@@ -40,7 +40,7 @@ const ErrorModal = ({ buttonLabel, message, setErrorMessageVisible }) => {
                       <div className="container-btn">
                         <button
                           onClick={closeModal}
-                          className="btn-border-blue btn-my-account btn-back-to-categories mt-md-30 mt-phone-20"
+                          className="btn-border-blue btn-my-account btn-back-to-categories mt-md-30 mt-phone-20 disable-click-outside"
                           data-close-feedback
                           data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                         >

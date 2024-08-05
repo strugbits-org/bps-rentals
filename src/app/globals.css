@@ -164,3 +164,26 @@ a {
     padding-right: 3rem;
   }
 }
+
+/* Custom css of save product icon */
+.hidden {
+  opacity: 0 !important;
+}
+
+.visible {
+  opacity: 1 !important;
+}
+
+.icon-bookmark {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.icon-bookmark-full {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+button:hover .icon-bookmark-full {
+  opacity: 1 !important;
+}

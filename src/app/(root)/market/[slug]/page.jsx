@@ -1,5 +1,4 @@
 import MarketPage from "@/components/Market/Index";
-import { getPageContentRentals } from "@/Services/HomeApis";
 import { fetchBestSellers, getBestSellerProducts } from "@/Services/ProductsApis";
 import {
   getDreamBigSectionContent,
@@ -23,20 +22,20 @@ export const generateStaticParams = async () => {
 }
 
 export default async function Page({ params }) {
-  const marketSection = await getMarketSection(params.id);
-  const bestSeller = await fetchBestSellers(params.id);
+
+  const marketSection = await getMarketSection(params.slug);
+  const bestSeller = await fetchBestSellers(params.slug);
   const collectionIds = {
     "tradeshows": "HighlightsTradeshow",
     "social": "HighlightsSocial",
     "weddings": "HighlightsWedding",
     "corporate": "HighlightsCorporate",
   }
-  const highlightsCollection = collectionIds[params.id];
+  const highlightsCollection = collectionIds[params.slug];
 
   const [
     homeNewArrivalSectionContent,
     homeSectionDetails,
-    pageContentRentals,
     homeDreamBigSectionContent,
     studiosData,
     marketsData,
@@ -44,29 +43,27 @@ export default async function Page({ params }) {
     highlightsSectionData,
     bestSellerProducts,
   ] = await Promise.all([
-    getNewArrivalSectionContent(),
+    getNewArrivalSectionContent(params.slug),
     getHomeSectionDetails(),
-    getPageContentRentals(),
     getDreamBigSectionContent(),
     getStudiosData(),
     getMarketsData(),
     getPeopleReviewSliderData(),
     getHighlightsSection(highlightsCollection),
-    getBestSellerProducts(bestSeller, 6),
+    getBestSellerProducts(bestSeller),
   ]);
 
   return (
     <MarketPage
       marketSection={marketSection}
       newArrivalSectionContent={homeNewArrivalSectionContent}
-      pageContentRentals={pageContentRentals}
       homeSectionDetails={homeSectionDetails}
       highlightsSectionData={highlightsSectionData}
       dreamBigSectionContent={homeDreamBigSectionContent}
       studiosData={studiosData}
       marketsData={marketsData}
       peopleReviewSliderData={peopleReviewSliderData}
-      bestSellerProducts={{ ...bestSellerProducts, bestSellerId: bestSeller }}
+      bestSellerProducts={bestSellerProducts}
     />
   );
 }
