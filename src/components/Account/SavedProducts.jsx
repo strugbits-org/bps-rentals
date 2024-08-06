@@ -11,7 +11,7 @@ import ProductCard from "../Category/ProductCard";
 
 const SavedProducts = ({ savedProducts }) => {
   useEffect(() => {
-    markPageLoaded();
+    setTimeout(markPageLoaded, 200);
   }, []);
 
   const [selectedVariants, setSelectedVariants] = useState({});

@@ -60,7 +60,7 @@ const ChangePassword = ({ changePasswordPageContent }) => {
   };
 
   useEffect(() => {
-    markPageLoaded();
+    setTimeout(markPageLoaded, 200);
   }, []);
 
   useEffect(() => {
