@@ -50,12 +50,12 @@ const ProductCard = ({
 
   return (
     <div
-      className={`${styleClassName ? styleClassName : "product-link large active"
-        }`}
+      className={`${
+        styleClassName ? styleClassName : "product-link large active"
+      }`}
       data-product-category
       data-product-location
       data-product-colors
-    // data-active-value="Red"
     >
       <div className="container-tags">
         {isBestSeller && (
@@ -68,10 +68,6 @@ const ProductCard = ({
           savedProductsData={savedProductsData}
           setSavedProductsData={setSavedProductsData}
         />
-        {/* <button className="btn-bookmark">
-          <i className="icon-bookmark"></i>
-          <i className="icon-bookmark-full"></i>
-          </button> */}
       </div>
       <div className="container-copy">
         <button className="btn-copy copy-link">
