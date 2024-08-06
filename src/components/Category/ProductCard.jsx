@@ -8,7 +8,7 @@ import { useCookies } from "react-cookie";
 const ProductCard = ({
   index,
   product,
-  styleClassName,
+  isSavedProduct,
   variantData,
   selectedVariant,
   getSelectedProductSnapShots,
@@ -50,14 +50,14 @@ const ProductCard = ({
 
   return (
     <div
-      className={`${styleClassName ? styleClassName : "product-link large active"
+      className={`${isSavedProduct ? isSavedProduct : "product-link large active"
         }`}
       data-product-category
       data-product-location
       data-product-colors
     >
       <div className="container-tags">
-        {!styleClassName && (
+        {!isSavedProduct && isBestSeller && (
           <div className="best-seller">
             <span>Best Seller</span>
           </div>
@@ -68,7 +68,7 @@ const ProductCard = ({
           setSavedProductsData={setSavedProductsData}
         />
       </div>
-      {!styleClassName && (
+      {!isSavedProduct && (
         <div className="container-copy">
           <button className="btn-copy copy-link">
             <span>{activeVariant.sku}</span>
@@ -89,7 +89,7 @@ const ProductCard = ({
       <AnimateLink to={`/product/${product.slug}`} className="link">
         <div className="container-top">
           <h2 className="product-title">{product.name}</h2>
-          {!styleClassName && (
+          {!isSavedProduct && (
             <div className="container-info">
               <div className="dimensions">
                 {product.additionalInfoSections?.map((data, index) => {
