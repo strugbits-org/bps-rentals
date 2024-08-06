@@ -35,6 +35,8 @@ import {
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
 import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
+import { getBlogsData, getPortfolioData } from "@/Services/SearchBarApis";
+import { getProductsByCategory } from "@/Services/ProductsApis";
 
 export const metadata = {
   title: "BPS Rentals",
@@ -52,6 +54,9 @@ export default async function RootLayout({ children }) {
     socialLinks,
     navigationMenu,
     contactUsContent,
+    productsData,
+    blogsData,
+    portfoliosData,
     marketsData,
     studiosData,
     allCategoriesData,
@@ -69,6 +74,9 @@ export default async function RootLayout({ children }) {
     getSocialLinks(),
     getFooterNavigationMenu(),
     getContactUsContent(),
+    getProductsByCategory({}),
+    getBlogsData(),
+    getPortfolioData(),
     getMarketsData(),
     getStudiosData(),
     getNavbarCategoriesData(),
@@ -95,6 +103,9 @@ export default async function RootLayout({ children }) {
             loginModalContent={loginModalContent}
             createAccountModalContent={createAccountModalContent}
             forgotPasswordModalContent={forgotPasswordModalContent}
+            productsData={productsData}
+            blogsData={blogsData}
+            portfoliosData={portfoliosData}
             marketsData={marketsData}
             studiosData={studiosData}
             searchSectionDetails={searchSectionDetails}

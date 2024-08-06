@@ -119,4 +119,7 @@
   }
 }
 
+.menu-search .wrapper-search .container-results .btn-border-blue {
+    opacity: 1;
+}
 /* remove #pg-category from app.css */
