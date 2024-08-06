@@ -3,12 +3,8 @@ import React, { useEffect, useState } from "react";
 import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
 import Markets from "../Common/Sections/MarketSection";
 import AnimateLink from "../Common/AnimateLink";
-import { HotTrendsCategory } from "../Common/Sections/HotTrendsSection";
 import ProductCard from "./ProductCard";
-import { BannerOurTeam } from "../Common/Sections/BannerOurTeam";
 import {
-  getProductVariants,
-  getProductVariantsImages,
   getSavedProductData,
 } from "@/Services/ProductsApis";
 import { useCookies } from "react-cookie";
@@ -16,7 +12,7 @@ import { useRouter } from "next/navigation";
 import CartModal from "../Common/Modals/CartModal";
 import useUserData from "@/Hooks/useUserData";
 import { Banner } from "./Banner";
-import { shuffleArray } from "@/Utils/Utils";
+import { compareArray, shuffleArray } from "@/Utils/Utils";
 
 const CategoryPage = ({
   pageContent,
@@ -25,9 +21,9 @@ const CategoryPage = ({
   marketsData,
   colorsData,
   selectedCategoryData,
+  bestSeller,
   productsData,
 }) => {
-  console.log("productsData", productsData[0]);
   const pageSize = 18;
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [pageLimit, setPageLimit] = useState(pageSize);
@@ -88,16 +84,24 @@ const CategoryPage = ({
             )
             : true;
 
-        const hasColor =
-          selectedColors.length > 0
-            ? product.colors.some((color) => selectedColors.includes(color))
+        let hasVariants, hasColor, hasLocation;
+        if (selectedColors.length !== 0) {
+          const variantFilter = selectedColors.map(x => `${cookies.location}-${x}`);
+          hasVariants = compareArray(variantFilter, product.variantColorLocation);
+
+          return hasVariants && hasCategory;
+
+        } else {
+          hasColor =
+            selectedColors.length > 0
+              ? product.colors.some((color) => selectedColors.includes(color))
+              : true;
+
+          hasLocation = selectedLocation
+            ? product.location.includes(selectedLocation)
             : true;
-
-        const hasLocation = selectedLocation
-          ? product.location.includes(selectedLocation)
-          : true;
-
-        return hasCategory && hasColor && hasLocation;
+          return hasLocation && hasColor && hasCategory;
+        }
       });
       setFilteredProducts(filteredProductsList);
       updatedWatched(true);
@@ -389,7 +393,9 @@ const CategoryPage = ({
                           <ProductCard
                             key={index}
                             index={index}
+                            bestSeller={bestSeller}
                             product={product}
+                            categories={data?.subCategory || []}
                             variantData={variantData}
                             selectedVariant={
                               selectedVariants[index] || variantData[0]

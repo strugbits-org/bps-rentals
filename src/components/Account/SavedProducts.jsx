@@ -9,6 +9,7 @@ import {
 import ProductCard from "../Category/ProductCard";
 
 const SavedProducts = ({ savedProducts }) => {
+
   const [selectedVariants, setSelectedVariants] = useState({});
   const [savedProductsData, setSavedProductsData] = useState(
     savedProducts || []
@@ -64,8 +65,9 @@ const SavedProducts = ({ savedProducts }) => {
   };
 
   useEffect(() => {
-    markPageLoaded();
+    setTimeout(markPageLoaded, 200);
   }, []);
+  
   return (
     <div class="wrapper-account">
       <div class="wrapper-top">

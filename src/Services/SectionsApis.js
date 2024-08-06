@@ -3,7 +3,7 @@ import getDataFetchFunction from "./FetchFunction";
 import { fetchProductsByIds } from "./ProductsApis";
 
 export const getNewArrivalSectionContent = async (slug) => {
-  try {
+  try {    
     const response = await getDataFetchFunction({
       dataCollectionId: "RentalsNewArrivals",
       includeReferencedItems: ["product"],
@@ -14,10 +14,10 @@ export const getNewArrivalSectionContent = async (slug) => {
         },
         {
           key: "slug",
-          value: slug,
+          value: slug || "/",
         }
       ]
-    });
+    });    
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
     } else {
@@ -130,6 +130,22 @@ export const getStudiosData = async () => {
     }
   } catch (error) {
     console.error("Error fetching StudiosData data:", error);
+    return [];
+  }
+};
+
+export const getRentalsTeamsBanner = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "RentalTeamsBanner",
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data)[0];
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching Rentals Teams Banner data:", error);
     return [];
   }
 };
