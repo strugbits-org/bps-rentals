@@ -25,6 +25,10 @@
     width: 100%;
 }
 
+.cursor-pointer{
+    cursor: pointer;
+}
+
 @media only screen and (min-width: 1024px) and (max-width: 1600px) {
     .list-pinterest>span>span:nth-child(2) {
         max-height: 40vh !important;

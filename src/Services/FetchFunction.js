@@ -1,7 +1,7 @@
 import { createWixClient } from "@/Utils/CreateWixClient";
 import { apiAuth } from "@/Utils/IsAuthenticated";
 import { unstable_cache } from 'next/cache';
-import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
+import { fetchBestSellers, getAllProductVariants, getAllProductVariantsImages, getBestSellerProducts } from "./ProductsApis";
 
 // Query data items from Wix data collections
 const getDataFetchFunction = async (payload) => {
@@ -17,6 +17,7 @@ const getDataFetchFunction = async (payload) => {
       hasSome,
       skip,
       includeVariants,
+      includeBestSellers,
       increasedLimit,
       log
     } = payload;
@@ -26,6 +27,7 @@ const getDataFetchFunction = async (payload) => {
 
     // List of collections requiring authentication
     const authCollections = [
+      "RentalTeamsBanner",
       "SearchSectionDetails",
       "RentalsBanners",
       "RentalsHomeHero",

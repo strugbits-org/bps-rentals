@@ -3,6 +3,7 @@ import { getRentalsBanners } from "@/Services/Index";
 import { getFilterLocations } from "@/Services/NavbarApis";
 import {
   fetchAllCategoriesData,
+  fetchBestSellers,
   getAllColorsData,
   getProductsByCategory,
 } from "@/Services/ProductsApis";
@@ -36,15 +37,17 @@ export default async function Page({ params }) {
     locations,
     marketsData,
     colorsData,
+    bestSeller,
     productsData,
-  ,] = await Promise.all([
-    getHomeSectionDetails(),
-    getRentalsBanners(),
-    getFilterLocations(),
-    getMarketsData(),
-    getAllColorsData(),
-    getProductsByCategory(categoryId),
-  ]);
+    ,] = await Promise.all([
+      getHomeSectionDetails(),
+      getRentalsBanners(),
+      getFilterLocations(),
+      getMarketsData(),
+      getAllColorsData(),
+      fetchBestSellers(),
+      getProductsByCategory({ category: categoryId }),
+    ]);
 
   return (
     <CategoryPage
@@ -55,6 +58,7 @@ export default async function Page({ params }) {
       colorsData={colorsData}
       categoriesData={categoriesData}
       selectedCategoryData={selectedCategoryData}
+      bestSeller={bestSeller}
       productsData={productsData}
     />
   );

@@ -5,7 +5,7 @@ import { markPageLoaded } from "@/Utils/AnimationFunctions";
 
 const QuotesHistory = () => {
   useEffect(() => {
-    markPageLoaded();
+    setTimeout(markPageLoaded, 200);
   }, []);
   return (
     <div className="wrapper-account">

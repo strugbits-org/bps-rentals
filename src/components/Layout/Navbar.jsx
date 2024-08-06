@@ -12,7 +12,7 @@ import AllCategories from "../Category/AllCategories";
 import ErrorModal from "../Common/Modals/ErrorModal";
 import AnimateLink from "../Common/AnimateLink";
 import { useCookies } from "react-cookie";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
 
 const Navbar = ({
@@ -31,13 +31,17 @@ const Navbar = ({
   const [toggleModal, setToggleModal] = useState("");
   const [cookies, setCookie] = useCookies(["authToken"]);
   const router = useRouter();
+  const path = usePathname();
 
   const checkUser = () => {
+    if (path === "/my-account") return;
     const loggedIn = cookies.authToken;
     const submenuLogin = document.querySelector(".submenu-login");
     if (loggedIn) {
       pageLoadStart();
-      router.push("/my-account");
+      setTimeout(() => {
+        router.push("/my-account");
+      }, 500);
     } else {
       submenuLogin.classList.toggle("active", !submenuLogin.classList.contains("active"));
     }

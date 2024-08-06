@@ -15,7 +15,7 @@ import {
 
 const MyAccount = ({ myAccountPageContent }) => {
   useEffect(() => {
-    markPageLoaded();
+    setTimeout(markPageLoaded, 200);
   }, []);
 
   const [cookies, setCookie] = useCookies(["authToken", "userData"]);
@@ -103,7 +103,7 @@ const MyAccount = ({ myAccountPageContent }) => {
 
       <div className="wrapper-account">
         <div className="wrapper-top" data-aos="d:loop">
-          <h1 className="fs--60 blue-1split-words" data-aos="d:loop">
+          <h1 className="fs--60 blue-1 split-words" data-aos="d:loop">
             {myAccountPageContent && myAccountPageContent.title}
           </h1>
           <p

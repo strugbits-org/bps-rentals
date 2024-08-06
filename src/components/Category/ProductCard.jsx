@@ -2,7 +2,8 @@ import { productImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
 import React, { useEffect, useState } from "react";
 import { SaveProductButton } from "../Common/SaveProductButton";
-import { hasMatchingColor } from "@/Utils/Utils";
+import { compareArray, hasMatchingColor } from "@/Utils/Utils";
+import { useCookies } from "react-cookie";
 
 const ProductCard = ({
   index,
@@ -10,47 +11,63 @@ const ProductCard = ({
   styleClassName,
   variantData,
   selectedVariant,
-  filteredProducts,
   getSelectedProductSnapShots,
   savedProductsData,
   setSavedProductsData,
-  filterColors = []
+  filteredProducts = [],
+  filterColors = [],
+  categories = [],
+  bestSeller = []
 }) => {
   const [filteredVariants, setFilteredVariants] = useState(variantData);
   const [activeVariant, setActiveVariant] = useState(selectedVariant);
+  const [isBestSeller, setIsBestSeller] = useState(false);
+  const [cookies, setCookie] = useCookies(["location"]);
 
   useEffect(() => {
-    const matchingVariants = variantData.filter(variant => hasMatchingColor(
-      filterColors.filter((x) => x.checked),
-      variant.color
-    ));
-    const newVariants = matchingVariants.length !== 0 ? matchingVariants : variantData;
+
+    const matchingVariants = variantData.filter(variant => {
+      const hasColor = hasMatchingColor(
+        filterColors.filter((x) => x.checked),
+        variant.color
+      );
+
+      const hasLocation = cookies.location
+        ? variant.location.includes(cookies.location)
+        : true;
+
+      return hasColor && hasLocation;
+    });
+    const checkedColors = filterColors.filter((x) => x.checked);
+    const newVariants = checkedColors.length !== 0 ? matchingVariants : variantData;
     setFilteredVariants(newVariants);
     setActiveVariant(newVariants[0]);
-  }, [filterColors]);
+
+    const isBestSellerProduct = compareArray(bestSeller, categories.map(x => x._id));
+    setIsBestSeller(isBestSellerProduct);
+
+  }, [filterColors, cookies.location, filteredProducts]);
 
   return (
     <div
-      className={`${styleClassName ? styleClassName : "product-link large active"
-        }`}
+      className={`${
+        styleClassName ? styleClassName : "product-link large active"
+      }`}
       data-product-category
       data-product-location
       data-product-colors
-    // data-active-value="Red"
     >
       <div className="container-tags">
-        <div className="best-seller">
-          <span>Best Seller</span>
-        </div>
+        {isBestSeller && (
+          <div className="best-seller">
+            <span>Best Seller</span>
+          </div>
+        )}
         <SaveProductButton
           productData={product}
           savedProductsData={savedProductsData}
           setSavedProductsData={setSavedProductsData}
         />
-        {/* <button className="btn-bookmark">
-          <i className="icon-bookmark"></i>
-          <i className="icon-bookmark-full"></i>
-          </button> */}
       </div>
       <div className="container-copy">
         <button className="btn-copy copy-link">

@@ -13,12 +13,9 @@ import {
   getNewArrivalSectionContent,
   getStudiosData,
 } from "@/Services/SectionsApis";
-import { headers } from 'next/headers'
 
 export default async function Page() {
   const bestSeller = await fetchBestSellers();
-  const headersList = headers();
-  const path = headersList.get('x-current-path');
 
   const [
     homeHeroSectionContent,
@@ -32,7 +29,7 @@ export default async function Page() {
     marketsData,
   ] = await Promise.all([
     getHomeHeroSectionContent(),
-    getNewArrivalSectionContent(path),
+    getNewArrivalSectionContent(),
     getHotTrendsSectionContent(),
     getHighlightsSection("HighlightsProducts"),
     getBestSellerProducts(bestSeller, 12),
