@@ -73,6 +73,7 @@ const getDataFetchFunction = async (payload) => {
       "Stores/Variants",
       "RentalsPrivacyPageContent",
       "RentalsTermsPageContent",
+      "RentalsQuoteRequestPage",
     ];
 
     // Validate collection ID

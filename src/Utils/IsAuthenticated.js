@@ -43,6 +43,7 @@ const unAuthCollections = [
   "Stores/Variants",
   "RentalsPrivacyPageContent",
   "RentalsTermsPageContent",
+  "RentalsQuoteRequestPage",
 ];
 
 export const isAuthenticated = async (token) => {

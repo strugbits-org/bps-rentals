@@ -174,7 +174,7 @@ const Login = ({
       </div>
       <div className="container-btn-create-account mt-auto d-flex-center pt-40">
         <span className="d-block fs-lg-35 fs-mobile-30 fw-600 text-center">
-          New to Blueprint Studios?
+          {loginModalContent && loginModalContent.taglineSignup}
         </span>
         <button
           onClick={() => setToggleModal("create-account")}
