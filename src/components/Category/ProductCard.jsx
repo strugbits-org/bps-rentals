@@ -57,7 +57,7 @@ const ProductCard = ({
       data-product-colors
     >
       <div className="container-tags">
-        {isBestSeller && (
+        {!styleClassName && (
           <div className="best-seller">
             <span>Best Seller</span>
           </div>
@@ -68,42 +68,46 @@ const ProductCard = ({
           setSavedProductsData={setSavedProductsData}
         />
       </div>
-      <div className="container-copy">
-        <button className="btn-copy copy-link">
-          <span>{activeVariant.sku}</span>
-          <i className="icon-copy"></i>
-        </button>
-        <input
-          type="text"
-          className="copy-link-url"
-          defaultValue={activeVariant.sku}
-          style={{
-            position: "absolute",
-            opacity: 0,
-            pointerEvents: "none",
-          }}
-        />
-      </div>
+      {!styleClassName && (
+        <div className="container-copy">
+          <button className="btn-copy copy-link">
+            <span>{activeVariant.sku}</span>
+            <i className="icon-copy"></i>
+          </button>
+          <input
+            type="text"
+            className="copy-link-url"
+            defaultValue={activeVariant.sku}
+            style={{
+              position: "absolute",
+              opacity: 0,
+              pointerEvents: "none",
+            }}
+          />
+        </div>
+      )}
       <AnimateLink to={`/product/${product.slug}`} className="link">
         <div className="container-top">
           <h2 className="product-title">{product.name}</h2>
-          <div className="container-info">
-            <div className="dimensions">
-              {product.additionalInfoSections?.map((data, index) => {
-                const { title, description } = data;
-                if (title == "Size") {
-                  return (
-                    <span
-                      key={index}
-                      dangerouslySetInnerHTML={{
-                        __html: description,
-                      }}
-                    ></span>
-                  );
-                }
-              })}
+          {!styleClassName && (
+            <div className="container-info">
+              <div className="dimensions">
+                {product.additionalInfoSections?.map((data, index) => {
+                  const { title, description } = data;
+                  if (title == "Size") {
+                    return (
+                      <span
+                        key={index}
+                        dangerouslySetInnerHTML={{
+                          __html: description,
+                        }}
+                      ></span>
+                    );
+                  }
+                })}
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="wrapper-product-img">
           {filteredVariants.map((selectedData, index) => {

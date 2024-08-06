@@ -36,3 +36,54 @@ export const getRentalsBanners = async () => {
     return [];
   }
 };
+
+export const getPrivacyAndPolicyPageContent = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "RentalsPrivacyPageContent",
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data)[0];
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching privacy and policy page data:", error);
+    return [];
+  }
+};
+
+export const getTermsOfUsePageContent = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "RentalsTermsPageContent",
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data)[0];
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching privacy and policy page data:", error);
+    return [];
+  }
+};
+
+export const getQuoteRequestPageContent = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "RentalsQuoteRequestPage",
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data)[0];
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching privacy and policy page data:", error);
+    return [];
+  }
+};
