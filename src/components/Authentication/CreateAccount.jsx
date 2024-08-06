@@ -16,6 +16,8 @@ const CreateAccount = ({
   const router = useRouter();
 
   const [submittingForm, setSubmittingForm] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -167,12 +169,19 @@ const CreateAccount = ({
             <input
               id="create-account-phone"
               name="password"
-              type="password"
               placeholder="* * * * * *"
+              type={showPassword ? "text" : "password"}
               value={formData.password}
               onChange={handleChange}
               required
             />
+            <div
+              onClick={() => setShowPassword((prev) => !prev)}
+              className={`toggle-password ${showPassword ? "show" : ""}`}
+            >
+              <i className="icon-password"></i>
+              <i className="icon-password-hide"></i>
+            </div>
           </div>
           <div className="container-submit flex-center col-lg-12 mt-lg-5 mt-mobile-10">
             <button

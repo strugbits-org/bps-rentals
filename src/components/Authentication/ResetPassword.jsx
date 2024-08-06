@@ -3,57 +3,64 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { resetPassword } from "@/Services/AuthApis";
-import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { markPageLoaded, pageLoadStart } from "@/Utils/AnimationFunctions";
 import ErrorModal from "../Common/Modals/ErrorModal";
 
 const ResetPassword = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const userId = searchParams.get("reset-id");
 
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [isDisabled, setDisabled] = useState(false);
-  const [message, setMessage] = useState("Message");
+  const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
     password: "",
     confirmPassword: "",
   });
+  const [modalState, setModalState] = useState({
+    success: false,
+    error: false,
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     setDisabled(true);
 
+    const { password, confirmPassword } = formData;
+
+    if (password !== confirmPassword) {
+      setMessage("Passwords should be matched.");
+      setModalState({ success: false, error: true });
+      setDisabled(false);
+      return;
+    }
+
     try {
-      e?.preventDefault();
-      setMessage("");
-      const { password, confirmPassword } = formData;
-      const userId = searchParams.get("reset-id");
-      if (password !== confirmPassword) {
-        setMessage("Passwords should be matched.");
-        setErrorMessageVisible(true);
-        return;
-      }
       const response = await resetPassword(
         { password, confirmPassword },
         userId
       );
+
       if (response?.error) {
         setMessage(response.message);
-        setErrorMessageVisible(true);
-        return;
+        setModalState({ success: false, error: true });
+      } else {
+        setMessage("Your password has been reset successfully.");
+        setModalState({ success: true, error: false });
+        pageLoadStart();
+        router.push("/");
       }
-      setMessage("Your password has been reset successfully.");
-      setSuccessMessageVisible(true);
     } catch (error) {
-      console.log("Error during confirm email:", error);
-      setErrorMessageVisible(true);
-      setMessage(error?.message);
+      console.error("Error during password reset:", error);
+      setMessage(error.message);
+      setModalState({ success: false, error: true });
     } finally {
       setDisabled(false);
     }
@@ -64,49 +71,45 @@ const ResetPassword = () => {
   };
 
   useEffect(() => {
-    if (searchParams.get("reset-id")) {
+    if (userId) {
       markPageLoaded();
     } else {
       handleClose();
     }
-  }, []);
+  }, [userId]);
 
   return (
     <div className="reset-password-main">
-      {errorMessageVisible && (
+      {modalState.error && (
         <ErrorModal
           message={message}
-          setErrorMessageVisible={setErrorMessageVisible}
+          setErrorMessageVisible={() =>
+            setModalState({ ...modalState, error: false })
+          }
         />
       )}
-      {/* {successMessageVisible && (
+      {/* Uncomment if you have a SuccessModal component */}
+      {/* {modalState.success && (
         <SuccessModal
           message={message}
-          setSuccessMessageVisible={setSuccessMessageVisible}
+          setSuccessMessageVisible={() => setModalState({ ...modalState, success: false })}
           onClose={handleClose}
         />
       )} */}
 
       <div className="reset-password-form-container">
         <div className="reset-password-form-logos">
-          <div class="container-img">
-            <img src="/images/logo.svg" class=" " />
+          <div className="container-img">
+            <img src="/images/logo.svg" alt="Logo" />
           </div>
           <h2
-            class="fs--30 mt-lg-30 mt-mobile-30 mb-lg-30 mb-mobile-30 text-center text-uppercase split-words"
+            className="fs--30 mt-lg-30 mt-mobile-30 mb-lg-30 mb-mobile-30 text-center text-uppercase split-words"
             data-aos="d:loop"
           >
             Reset Password
           </h2>
         </div>
-        {/* <p
-          className="container-input container-input-password "
-          style={{
-            fontSize: "4rem",
-          }}
-        >
-          Description
-        </p> */}
+
         <form className="form-sign-in form-base" onSubmit={handleSubmit}>
           <div className="container-input container-input-password col-12 pos-relative">
             <label htmlFor="login-password">New Password</label>
@@ -114,15 +117,15 @@ const ResetPassword = () => {
               id="login-password"
               className="password"
               name="password"
-              type="password"
+              type={showNewPassword ? "text" : "password"}
               placeholder="* * * * * *"
               value={formData.password}
               onChange={handleChange}
               required
             />
             <div
-              onClick={() => setShowPassword((prev) => !prev)}
-              className={`toggle-password ${showPassword ? "show" : ""}`}
+              onClick={() => setShowNewPassword((prev) => !prev)}
+              className={`toggle-password ${showNewPassword ? "show" : ""}`}
             >
               <i className="icon-password"></i>
               <i className="icon-password-hide"></i>
