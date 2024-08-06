@@ -27,6 +27,7 @@ const CategoryPage = ({
   selectedCategoryData,
   productsData,
 }) => {
+  console.log("productsData", productsData[0]);
   const pageSize = 18;
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [pageLimit, setPageLimit] = useState(pageSize);

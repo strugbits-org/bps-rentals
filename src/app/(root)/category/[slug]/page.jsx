@@ -37,14 +37,14 @@ export default async function Page({ params }) {
     marketsData,
     colorsData,
     productsData,
-  ,] = await Promise.all([
-    getHomeSectionDetails(),
-    getRentalsBanners(),
-    getFilterLocations(),
-    getMarketsData(),
-    getAllColorsData(),
-    getProductsByCategory(categoryId),
-  ]);
+    ,] = await Promise.all([
+      getHomeSectionDetails(),
+      getRentalsBanners(),
+      getFilterLocations(),
+      getMarketsData(),
+      getAllColorsData(),
+      getProductsByCategory({ category: categoryId }),
+    ]);
 
   return (
     <CategoryPage
