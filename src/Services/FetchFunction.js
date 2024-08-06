@@ -71,6 +71,8 @@ const getDataFetchFunction = async (payload) => {
       "BPSPairItWith",
       "BPSProductImages",
       "Stores/Variants",
+      "RentalsPrivacyPageContent",
+      "RentalsTermsPageContent",
     ];
 
     // Validate collection ID
