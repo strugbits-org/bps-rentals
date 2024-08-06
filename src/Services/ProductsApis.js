@@ -19,6 +19,7 @@ export const getProductsByCategory = async ({ category, searchTerm }) => {
         },
       ],
       includeVariants: true,
+      includeBestSellers: true,
       limit: "infinite",
       // limit: 50,
       // log:true
