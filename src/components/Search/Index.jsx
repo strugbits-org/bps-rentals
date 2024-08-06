@@ -9,24 +9,24 @@ import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import CartModal from "../Common/Modals/CartModal";
 import useUserData from "@/Hooks/useUserData";
-import { shuffleArray } from "@/Utils/Utils";
+import { compareArray, shuffleArray } from "@/Utils/Utils";
 import ProductCard from "../Category/ProductCard";
 import { Banner } from "../Category/Banner";
 
 const SearchPage = ({
+    searchFor,
     pageContent,
     bannersData,
     locations,
     marketsData,
     colorsData,
     productsData,
+    bestSeller
 }) => {
-    console.log("productsData", productsData);
     const pageSize = 18;
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [pageLimit, setPageLimit] = useState(pageSize);
     const [cookies, setCookie] = useCookies(["location"]);
-    const [filterCategories, setFilterCategories] = useState([]);
     const [filterColors, setFilterColors] = useState([]);
     const [filterLocations, setFilterLocations] = useState([]);
     const [enableFilterTrigger, setEnableFilterTrigger] = useState(false);
@@ -65,18 +65,26 @@ const SearchPage = ({
             const selectedLocation = cookies.location;
 
             const filteredProductsList = productsData.filter((product) => {
-
-                const hasColor =
+                let hasVariants, hasColor, hasLocation;
+                if (selectedColors.length !== 0) {
+                  const variantFilter = selectedColors.map(x => `${cookies.location}-${x}`);
+                  hasVariants = compareArray(variantFilter, product.variantColorLocation);
+        
+                  return hasVariants;
+        
+                } else {
+                  hasColor =
                     selectedColors.length > 0
-                        ? product.colors.some((color) => selectedColors.includes(color))
-                        : true;
-
-                const hasLocation = selectedLocation
+                      ? product.colors.some((color) => selectedColors.includes(color))
+                      : true;
+        
+                  hasLocation = selectedLocation
                     ? product.location.includes(selectedLocation)
                     : true;
-
-                return hasColor && hasLocation;
-            });
+                    
+                  return hasLocation && hasColor;
+                }
+              });
             setFilteredProducts(filteredProductsList);
             updatedWatched(true);
         } catch (error) {
@@ -88,18 +96,12 @@ const SearchPage = ({
         const updatedColors = filterColors.map((item) =>
             item.label === data.label ? { ...item, checked: !item.checked } : item
         );
+        
         setFilterColors(updatedColors);
         handleFilterChange({ colors: updatedColors });
     };
     const handleLocationChange = (data) => {
         setCookie("location", data.value, { path: "/" });
-    };
-    const handleCategoryChange = (data) => {
-        const updatedCategories = filterCategories.map((item) =>
-            item._id === data._id ? { ...item, checked: !item.checked } : item
-        );
-        setFilterCategories(updatedCategories);
-        handleFilterChange({ categories: updatedCategories });
     };
 
     const setInitialValues = async () => {
@@ -116,9 +118,7 @@ const SearchPage = ({
             }
         }
 
-        const products = productsData.filter((product) =>
-            product.location.some((x) => x === cookies.location)
-        );
+        const products = productsData.filter((product) => product.location.some((x) => x === cookies.location));
         setFilteredProducts(products);
 
         const savedProducts = await getSavedProductData();
@@ -233,6 +233,14 @@ const SearchPage = ({
             <section className="section-category-content section-category-fixed-pin">
                 <div className="container-fluid">
                     <div className="row pos-relative">
+                        <div className="col-12">
+                            <h1
+                                className="d-block section-category-title fs--60 fw-600 pb-lg-50 pb-tablet-20 pb-phone-30 split-words"
+                                data-aos
+                            >
+                                Search Results for: {searchFor}
+                            </h1>
+                        </div>
                         <div className="col-lg-2 col-tablet-6 z-7">
                             <div
                                 className="category-menu"
@@ -249,14 +257,6 @@ const SearchPage = ({
                                                 className="form-filter wrapper-list-filter"
                                                 data-aos
                                             >
-                                                {filterCategories.length !== 0 && (
-                                                    <FilterSection
-                                                        title="Category"
-                                                        styleClass="container-list order-mobile-0"
-                                                        items={filterCategories}
-                                                        handleChange={handleCategoryChange}
-                                                    />
-                                                )}
                                                 <FilterSection
                                                     title="Location"
                                                     styleClass="container-list order-mobile-2"
@@ -293,7 +293,9 @@ const SearchPage = ({
                                                     <ProductCard
                                                         key={index}
                                                         index={index}
+                                                        bestSeller={bestSeller}
                                                         product={product}
+                                                        categories={data?.subCategory || []}
                                                         variantData={variantData}
                                                         selectedVariant={
                                                             selectedVariants[index] || variantData[0]

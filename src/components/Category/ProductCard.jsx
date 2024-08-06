@@ -46,13 +46,12 @@ const ProductCard = ({
     const isBestSellerProduct = compareArray(bestSeller, categories.map(x => x._id));
     setIsBestSeller(isBestSellerProduct);
 
-  }, [filterColors, cookies.location, filteredProducts]);
+  }, [filteredProducts]);
 
   return (
     <div
-      className={`${
-        styleClassName ? styleClassName : "product-link large active"
-      }`}
+      className={`${styleClassName ? styleClassName : "product-link large active"
+        }`}
       data-product-category
       data-product-location
       data-product-colors
