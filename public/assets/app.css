@@ -840,7 +840,7 @@ html {
   src: url("GTWalsheim-Medium.woff2") format("woff2"), url("GTWalsheim-Medium.woff") format("woff");
   font-weight: 500;
 }
-.font-1, #pg-product .product-intro .column-2 .container-info-text.description .btn-read-more, #pg-category .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter, .chat .btn-chat, .container-product-description .container-add-to-cart .container-input-quantity input, .cart-product .quantity .container-input-quantity input, .cart-product .wrapper-product-info .container-specs .list-specs li input, .cart-product .wrapper-product-info .container-top .container-product-name .btn-view, .editor h3, .editor h2, .header-info-list li.local-item, .menu--wrapper .menu--list li .header-link, .submenu .container-title-mobile .btn-go-back, .password-link, .form-chat textarea, .form-cart .container-product-notes input::placeholder, .form-cart .container-product-notes input, .form-cart .container-input-quantity input::placeholder, .form-base .wrapper-select select, .form-my-account .wrapper-select select,
+.font-1, #pg-product .product-intro .column-2 .container-info-text.description .btn-read-more, .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter, .chat .btn-chat, .container-product-description .container-add-to-cart .container-input-quantity input, .cart-product .quantity .container-input-quantity input, .cart-product .wrapper-product-info .container-specs .list-specs li input, .cart-product .wrapper-product-info .container-top .container-product-name .btn-view, .editor h3, .editor h2, .header-info-list li.local-item, .menu--wrapper .menu--list li .header-link, .submenu .container-title-mobile .btn-go-back, .password-link, .form-chat textarea, .form-cart .container-product-notes input::placeholder, .form-cart .container-product-notes input, .form-cart .container-input-quantity input::placeholder, .form-base .wrapper-select select, .form-my-account .wrapper-select select,
 .form-quote .wrapper-select select,
 .form-password .wrapper-select select,
 .form-forgot-password .wrapper-select select, .form-create-account .wrapper-select select, .form-base input::placeholder, .form-my-account input::placeholder,
@@ -1044,7 +1044,7 @@ html {
   }
 }
 .fs--16, #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .container-btn .btn-view,
-#pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .container-btn .btn-order-again, #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .value, .my-account-intro.section-my-account .column-form .wrapper-bottom .container-text .email, #pg-market .section-slider-banner .slider-banner .swiper-slide a .container-project .list-tags li span, #pg-product .product-intro .column-2 .container-info-text.description .wrapper-text .text, #pg-product .product-intro .column-2 .container-info-text .title-info-text, #pg-product .product-intro .column-2 .list-breadcrumb .breadcrumb, #pg-category .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter, .category-menu-fixed .category-menu-wrapper .category-menu-list li a, .chat .container-chat .container-messages .message, .container-product-description .list-specs li .specs-text, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .text-order-pages, .menu-search .wrapper-search .container-results .column-results .result-portfolio .list-result-portfolio .grid-item .link-portfolio .title-portfolio, .menu-my-account .list-menu-my-account .link-account, .cart-product .wrapper-product-info .container-specs .list-specs li input, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-text, .cart-product .wrapper-product-info .container-top .container-product-name .btn-view, .editor, .footer .container-footer-menu .list-footer-menu .list-item .link-footer-menu, .header-info-list li.local-item .accordion-content, .header-info-list li.local-item .accordion-header span, .rental-product-link .product-link .product-name, .password-link, .wrapper-form-sign-in [data-form-error], .form-filter .container-checkbox label, .form-cart .container-product-notes label, .form-base label, .form-my-account label,
+#pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .container-btn .btn-order-again, #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .value, .my-account-intro.section-my-account .column-form .wrapper-bottom .container-text .email, #pg-market .section-slider-banner .slider-banner .swiper-slide a .container-project .list-tags li span, #pg-product .product-intro .column-2 .container-info-text.description .wrapper-text .text, #pg-product .product-intro .column-2 .container-info-text .title-info-text, #pg-product .product-intro .column-2 .list-breadcrumb .breadcrumb, .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter, .category-menu-fixed .category-menu-wrapper .category-menu-list li a, .chat .container-chat .container-messages .message, .container-product-description .list-specs li .specs-text, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .text-order-pages, .menu-search .wrapper-search .container-results .column-results .result-portfolio .list-result-portfolio .grid-item .link-portfolio .title-portfolio, .menu-my-account .list-menu-my-account .link-account, .cart-product .wrapper-product-info .container-specs .list-specs li input, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-text, .cart-product .wrapper-product-info .container-top .container-product-name .btn-view, .editor, .footer .container-footer-menu .list-footer-menu .list-item .link-footer-menu, .header-info-list li.local-item .accordion-content, .header-info-list li.local-item .accordion-header span, .rental-product-link .product-link .product-name, .password-link, .wrapper-form-sign-in [data-form-error], .form-filter .container-checkbox label, .form-cart .container-product-notes label, .form-base label, .form-my-account label,
 .form-quote label,
 .form-password label,
 .form-forgot-password label, .form-create-account label, .form-search .container-submit a,
@@ -1055,7 +1055,7 @@ html {
 }
 @media only screen and (min-width: 1025.1px) {
   .fs--16, #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .container-btn .btn-view,
-  #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .container-btn .btn-order-again, #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .value, .my-account-intro.section-my-account .column-form .wrapper-bottom .container-text .email, #pg-market .section-slider-banner .slider-banner .swiper-slide a .container-project .list-tags li span, #pg-product .product-intro .column-2 .container-info-text.description .wrapper-text .text, #pg-product .product-intro .column-2 .container-info-text .title-info-text, #pg-product .product-intro .column-2 .list-breadcrumb .breadcrumb, #pg-category .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter, .category-menu-fixed .category-menu-wrapper .category-menu-list li a, .chat .container-chat .container-messages .message, .container-product-description .list-specs li .specs-text, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .text-order-pages, .menu-search .wrapper-search .container-results .column-results .result-portfolio .list-result-portfolio .grid-item .link-portfolio .title-portfolio, .menu-my-account .list-menu-my-account .link-account, .cart-product .wrapper-product-info .container-specs .list-specs li input, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-text, .cart-product .wrapper-product-info .container-top .container-product-name .btn-view, .editor, .footer .container-footer-menu .list-footer-menu .list-item .link-footer-menu, .header-info-list li.local-item .accordion-content, .header-info-list li.local-item .accordion-header span, .rental-product-link .product-link .product-name, .password-link, .wrapper-form-sign-in [data-form-error], .form-filter .container-checkbox label, .form-cart .container-product-notes label, .form-base label, .form-my-account label,
+  #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .container-btn .btn-order-again, #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .value, .my-account-intro.section-my-account .column-form .wrapper-bottom .container-text .email, #pg-market .section-slider-banner .slider-banner .swiper-slide a .container-project .list-tags li span, #pg-product .product-intro .column-2 .container-info-text.description .wrapper-text .text, #pg-product .product-intro .column-2 .container-info-text .title-info-text, #pg-product .product-intro .column-2 .list-breadcrumb .breadcrumb, .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter, .category-menu-fixed .category-menu-wrapper .category-menu-list li a, .chat .container-chat .container-messages .message, .container-product-description .list-specs li .specs-text, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .text-order-pages, .menu-search .wrapper-search .container-results .column-results .result-portfolio .list-result-portfolio .grid-item .link-portfolio .title-portfolio, .menu-my-account .list-menu-my-account .link-account, .cart-product .wrapper-product-info .container-specs .list-specs li input, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-text, .cart-product .wrapper-product-info .container-top .container-product-name .btn-view, .editor, .footer .container-footer-menu .list-footer-menu .list-item .link-footer-menu, .header-info-list li.local-item .accordion-content, .header-info-list li.local-item .accordion-header span, .rental-product-link .product-link .product-name, .password-link, .wrapper-form-sign-in [data-form-error], .form-filter .container-checkbox label, .form-cart .container-product-notes label, .form-base label, .form-my-account label,
   .form-quote label,
   .form-password label,
   .form-forgot-password label, .form-create-account label, .form-search .container-submit a,
@@ -1065,7 +1065,7 @@ html {
 }
 @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
   .fs--16, #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .container-btn .btn-view,
-  #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .container-btn .btn-order-again, #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .value, .my-account-intro.section-my-account .column-form .wrapper-bottom .container-text .email, #pg-market .section-slider-banner .slider-banner .swiper-slide a .container-project .list-tags li span, #pg-product .product-intro .column-2 .container-info-text.description .wrapper-text .text, #pg-product .product-intro .column-2 .container-info-text .title-info-text, #pg-product .product-intro .column-2 .list-breadcrumb .breadcrumb, #pg-category .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter, .category-menu-fixed .category-menu-wrapper .category-menu-list li a, .chat .container-chat .container-messages .message, .container-product-description .list-specs li .specs-text, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .text-order-pages, .menu-search .wrapper-search .container-results .column-results .result-portfolio .list-result-portfolio .grid-item .link-portfolio .title-portfolio, .menu-my-account .list-menu-my-account .link-account, .cart-product .wrapper-product-info .container-specs .list-specs li input, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-text, .cart-product .wrapper-product-info .container-top .container-product-name .btn-view, .editor, .footer .container-footer-menu .list-footer-menu .list-item .link-footer-menu, .header-info-list li.local-item .accordion-content, .header-info-list li.local-item .accordion-header span, .rental-product-link .product-link .product-name, .password-link, .wrapper-form-sign-in [data-form-error], .form-filter .container-checkbox label, .form-cart .container-product-notes label, .form-base label, .form-my-account label,
+  #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .container-btn .btn-order-again, #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .value, .my-account-intro.section-my-account .column-form .wrapper-bottom .container-text .email, #pg-market .section-slider-banner .slider-banner .swiper-slide a .container-project .list-tags li span, #pg-product .product-intro .column-2 .container-info-text.description .wrapper-text .text, #pg-product .product-intro .column-2 .container-info-text .title-info-text, #pg-product .product-intro .column-2 .list-breadcrumb .breadcrumb, .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter, .category-menu-fixed .category-menu-wrapper .category-menu-list li a, .chat .container-chat .container-messages .message, .container-product-description .list-specs li .specs-text, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .text-order-pages, .menu-search .wrapper-search .container-results .column-results .result-portfolio .list-result-portfolio .grid-item .link-portfolio .title-portfolio, .menu-my-account .list-menu-my-account .link-account, .cart-product .wrapper-product-info .container-specs .list-specs li input, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-text, .cart-product .wrapper-product-info .container-top .container-product-name .btn-view, .editor, .footer .container-footer-menu .list-footer-menu .list-item .link-footer-menu, .header-info-list li.local-item .accordion-content, .header-info-list li.local-item .accordion-header span, .rental-product-link .product-link .product-name, .password-link, .wrapper-form-sign-in [data-form-error], .form-filter .container-checkbox label, .form-cart .container-product-notes label, .form-base label, .form-my-account label,
   .form-quote label,
   .form-password label,
   .form-forgot-password label, .form-create-account label, .form-search .container-submit a,
@@ -1075,7 +1075,7 @@ html {
 }
 @media only screen and (max-width: 767.98px) {
   .fs--16, #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .container-btn .btn-view,
-  #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .container-btn .btn-order-again, #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .value, .my-account-intro.section-my-account .column-form .wrapper-bottom .container-text .email, #pg-market .section-slider-banner .slider-banner .swiper-slide a .container-project .list-tags li span, #pg-product .product-intro .column-2 .container-info-text.description .wrapper-text .text, #pg-product .product-intro .column-2 .container-info-text .title-info-text, #pg-product .product-intro .column-2 .list-breadcrumb .breadcrumb, #pg-category .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter, .category-menu-fixed .category-menu-wrapper .category-menu-list li a, .chat .container-chat .container-messages .message, .container-product-description .list-specs li .specs-text, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .text-order-pages, .menu-search .wrapper-search .container-results .column-results .result-portfolio .list-result-portfolio .grid-item .link-portfolio .title-portfolio, .menu-my-account .list-menu-my-account .link-account, .cart-product .wrapper-product-info .container-specs .list-specs li input, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-text, .cart-product .wrapper-product-info .container-top .container-product-name .btn-view, .editor, .footer .container-footer-menu .list-footer-menu .list-item .link-footer-menu, .header-info-list li.local-item .accordion-content, .header-info-list li.local-item .accordion-header span, .rental-product-link .product-link .product-name, .password-link, .wrapper-form-sign-in [data-form-error], .form-filter .container-checkbox label, .form-cart .container-product-notes label, .form-base label, .form-my-account label,
+  #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .container-btn .btn-order-again, #pg-my-account-quotes-history .section-quotes-history .list-quotes-history .content .value, .my-account-intro.section-my-account .column-form .wrapper-bottom .container-text .email, #pg-market .section-slider-banner .slider-banner .swiper-slide a .container-project .list-tags li span, #pg-product .product-intro .column-2 .container-info-text.description .wrapper-text .text, #pg-product .product-intro .column-2 .container-info-text .title-info-text, #pg-product .product-intro .column-2 .list-breadcrumb .breadcrumb, .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter, .category-menu-fixed .category-menu-wrapper .category-menu-list li a, .chat .container-chat .container-messages .message, .container-product-description .list-specs li .specs-text, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .text-order-pages, .menu-search .wrapper-search .container-results .column-results .result-portfolio .list-result-portfolio .grid-item .link-portfolio .title-portfolio, .menu-my-account .list-menu-my-account .link-account, .cart-product .wrapper-product-info .container-specs .list-specs li input, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-text, .cart-product .wrapper-product-info .container-top .container-product-name .btn-view, .editor, .footer .container-footer-menu .list-footer-menu .list-item .link-footer-menu, .header-info-list li.local-item .accordion-content, .header-info-list li.local-item .accordion-header span, .rental-product-link .product-link .product-name, .password-link, .wrapper-form-sign-in [data-form-error], .form-filter .container-checkbox label, .form-cart .container-product-notes label, .form-base label, .form-my-account label,
   .form-quote label,
   .form-password label,
   .form-forgot-password label, .form-create-account label, .form-search .container-submit a,
@@ -1151,7 +1151,7 @@ html {
     font-size: 1.8rem;
   }
 }
-.fs--20, .section-studios .accordion-list-studios .accordion-item .accordion-header:before, #pg-market .market-heres-what-people-are-saying .slider-testimony .swiper-pagination, #pg-category .container-filter-products .wrapper-content .container-list .filter-title, .container-product-description .list-specs li .specs-title, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .title-order-pages, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-title, .container-account [data-form-error],
+.fs--20, .section-studios .accordion-list-studios .accordion-item .accordion-header:before, #pg-market .market-heres-what-people-are-saying .slider-testimony .swiper-pagination, .container-filter-products .wrapper-content .container-list .filter-title, .container-product-description .list-specs li .specs-title, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .title-order-pages, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-title, .container-account [data-form-error],
 .container-password [data-form-error],
 .container-form-quote [data-form-error], .btn-2, .btn-2-blue {
   line-height: 1.4em;
@@ -1159,21 +1159,21 @@ html {
   font-weight: 600;
 }
 @media only screen and (min-width: 1025.1px) {
-  .fs--20, .section-studios .accordion-list-studios .accordion-item .accordion-header:before, #pg-market .market-heres-what-people-are-saying .slider-testimony .swiper-pagination, #pg-category .container-filter-products .wrapper-content .container-list .filter-title, .container-product-description .list-specs li .specs-title, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .title-order-pages, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-title, .container-account [data-form-error],
+  .fs--20, .section-studios .accordion-list-studios .accordion-item .accordion-header:before, #pg-market .market-heres-what-people-are-saying .slider-testimony .swiper-pagination, .container-filter-products .wrapper-content .container-list .filter-title, .container-product-description .list-specs li .specs-title, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .title-order-pages, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-title, .container-account [data-form-error],
   .container-password [data-form-error],
   .container-form-quote [data-form-error], .btn-2, .btn-2-blue {
     font-size: clamp(13px,2rem,2rem);
   }
 }
 @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-  .fs--20, .section-studios .accordion-list-studios .accordion-item .accordion-header:before, #pg-market .market-heres-what-people-are-saying .slider-testimony .swiper-pagination, #pg-category .container-filter-products .wrapper-content .container-list .filter-title, .container-product-description .list-specs li .specs-title, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .title-order-pages, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-title, .container-account [data-form-error],
+  .fs--20, .section-studios .accordion-list-studios .accordion-item .accordion-header:before, #pg-market .market-heres-what-people-are-saying .slider-testimony .swiper-pagination, .container-filter-products .wrapper-content .container-list .filter-title, .container-product-description .list-specs li .specs-title, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .title-order-pages, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-title, .container-account [data-form-error],
   .container-password [data-form-error],
   .container-form-quote [data-form-error], .btn-2, .btn-2-blue {
     font-size: 2rem;
   }
 }
 @media only screen and (max-width: 767.98px) {
-  .fs--20, .section-studios .accordion-list-studios .accordion-item .accordion-header:before, #pg-market .market-heres-what-people-are-saying .slider-testimony .swiper-pagination, #pg-category .container-filter-products .wrapper-content .container-list .filter-title, .container-product-description .list-specs li .specs-title, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .title-order-pages, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-title, .container-account [data-form-error],
+  .fs--20, .section-studios .accordion-list-studios .accordion-item .accordion-header:before, #pg-market .market-heres-what-people-are-saying .slider-testimony .swiper-pagination, .container-filter-products .wrapper-content .container-list .filter-title, .container-product-description .list-specs li .specs-title, .menu-search .wrapper-search .container-results .result-order-pages .list-order-pages .link-order-pages .title-order-pages, .cart-product .wrapper-product-info .container-specs .list-specs li .specs-title, .container-account [data-form-error],
   .container-password [data-form-error],
   .container-form-quote [data-form-error], .btn-2, .btn-2-blue {
     font-size: 2rem;
@@ -1627,7 +1627,7 @@ html {
 #pg-market .market-heres-what-people-are-saying .slider-testimony .swiper-button-next, #pg-market .market-heres-what-people-are-saying .slider-testimony .swiper-pagination, #pg-market .market-heres-what-people-are-saying .slider-testimony .swiper-slide .container-text .container-profile, .list-slider-product .wrapper-slider-product .slider-product .container-btn-top .best-seller-tag, .menu-search .wrapper-search .container-results .result-all-studios .list-result-all-studios .grid-item .link-studios:before, .form-filter .container-checkbox label {
   font-weight: 500;
 }
-.fw-600, #pg-category .container-filter-products .wrapper-content .container-list .filter-title, .category-menu-fixed .category-menu-wrapper .category-menu-list li a, .product-link.large .link .price, .product-link.large .link .product-title, .product-link.small .link .price, .product-link.small .link .product-title, .menu-my-account .list-menu-my-account .link-account, .password-link, .wrapper-form-sign-in [data-form-error], .container-account [data-form-error],
+.fw-600, .container-filter-products .wrapper-content .container-list .filter-title, .category-menu-fixed .category-menu-wrapper .category-menu-list li a, .product-link.large .link .price, .product-link.large .link .product-title, .product-link.small .link .price, .product-link.small .link .product-title, .menu-my-account .list-menu-my-account .link-account, .password-link, .wrapper-form-sign-in [data-form-error], .container-account [data-form-error],
 .container-password [data-form-error],
 .container-form-quote [data-form-error] {
   font-weight: 600;
@@ -14843,18 +14843,18 @@ modal-item .shopify-buy-frame iframe {
   font-size: 1rem;
 }
 @media only screen and (min-width: 1025.1px) {
-  #pg-category .container-category-filter {
+  .container-category-filter {
     width: 66.6666666667%;
     margin-left: 16.6666666667%;
   }
 }
 @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-  #pg-category .container-category-filter {
+  .container-category-filter {
     padding-left: var(--px-side);
   }
 }
 @media only screen and (max-width: 1025px) {
-  #pg-category .container-category-filter .blog-tags {
+  .container-category-filter .blog-tags {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14865,25 +14865,25 @@ modal-item .shopify-buy-frame iframe {
   }
 }
 @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-  #pg-category .container-category-filter .blog-tags {
+  .container-category-filter .blog-tags {
     --list-px: 18.9rem;
   }
 }
 @media only screen and (max-width: 767.98px) {
-  #pg-category .container-category-filter .blog-tags {
+  .container-category-filter .blog-tags {
     --btn-w-phone: 100%;
   }
 }
-#pg-category .container-category-filter .btn-tag-mobile {
+.container-category-filter .btn-tag-mobile {
   --btn-w-tablet: 36.6rem;
   color: var(--blue-1);
 }
-#pg-category .container-category-filter .list-dropdown {
+.container-category-filter .list-dropdown {
   --btn-w-tablet: 36.6rem;
   --btn-w-phone: 36.6rem;
 }
 @media only screen and (max-width: 1025px) {
-  #pg-category .container-category-filter .list-dropdown {
+  .container-category-filter .list-dropdown {
     position: absolute;
     top: 100%;
     right: auto;
@@ -14892,7 +14892,7 @@ modal-item .shopify-buy-frame iframe {
   }
 }
 @media only screen and (min-width: 1025.1px) {
-  #pg-category .container-category-filter .list-blog-tags {
+  .container-category-filter .list-blog-tags {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -14904,29 +14904,29 @@ modal-item .shopify-buy-frame iframe {
   }
 }
 @media only screen and (min-width: 1025.1px) {
-  #pg-category .container-category-filter .list-blog-tags li {
+  .container-category-filter .list-blog-tags li {
     margin: 0.5rem 0.6rem;
   }
 }
-#pg-category .container-category-filter .list-blog-tags li a {
+.container-category-filter .list-blog-tags li a {
   color: var(--blue-1);
 }
-#pg-category .container-category-filter .list-blog-tags li a.active, #pg-category .container-category-filter .list-blog-tags li a:hover {
+.container-category-filter .list-blog-tags li a.active, .container-category-filter .list-blog-tags li a:hover {
   color: var(--white-1);
 }
 @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-  #pg-category .category-menu {
+  .category-menu {
     position: relative;
   }
 }
-#pg-category .container-filter-products {
+.container-filter-products {
   --btn-size: 5.5rem;
   position: relative;
   z-index: 6;
   padding-left: 4rem;
 }
 @media only screen and (max-width: 1025px) {
-  #pg-category .container-filter-products {
+  .container-filter-products {
     position: absolute;
     top: 0;
     right: 2.4rem;
@@ -14935,18 +14935,18 @@ modal-item .shopify-buy-frame iframe {
   }
 }
 @media only screen and (max-width: 767.98px) {
-  #pg-category .container-filter-products {
+  .container-filter-products {
     right: 0;
   }
 }
-#pg-category .container-filter-products .btn-filter {
+.container-filter-products .btn-filter {
   position: relative;
   width: var(--btn-size);
   height: var(--btn-size);
   z-index: 10;
   pointer-events: auto;
 }
-#pg-category .container-filter-products .btn-filter i {
+.container-filter-products .btn-filter i {
   position: relative;
   display: inline-block;
   font-size: 1.8rem;
@@ -14954,7 +14954,7 @@ modal-item .shopify-buy-frame iframe {
   z-index: 2;
 }
 @media only screen and (max-width: 1025px) {
-  #pg-category .container-filter-products .wrapper-content {
+  .container-filter-products .wrapper-content {
     position: absolute;
     top: 0;
     right: 0;
@@ -14963,7 +14963,7 @@ modal-item .shopify-buy-frame iframe {
     padding: 5rem 3.5rem 0;
     pointer-events: none;
   }
-  #pg-category .container-filter-products .wrapper-content:before {
+  .container-filter-products .wrapper-content:before {
     content: "";
     width: var(--btn-size);
     height: var(--btn-size);
@@ -14980,17 +14980,17 @@ modal-item .shopify-buy-frame iframe {
   }
 }
 @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-  #pg-category .container-filter-products .wrapper-content {
+  .container-filter-products .wrapper-content {
     width: 41rem;
   }
 }
 @media only screen and (max-width: 767.98px) {
-  #pg-category .container-filter-products .wrapper-content {
+  .container-filter-products .wrapper-content {
     width: calc(100vw - var(--padding-fluid) * 2 - 4rem);
   }
 }
 @media only screen and (max-width: 1025px) {
-  #pg-category .container-filter-products .wrapper-content .wrapper-overflow {
+  .container-filter-products .wrapper-content .wrapper-overflow {
     position: relative;
     max-height: 60vh;
     overflow-y: auto;
@@ -15003,19 +15003,19 @@ modal-item .shopify-buy-frame iframe {
     transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
     transition-delay: 0s;
   }
-  #pg-category .container-filter-products .wrapper-content .wrapper-overflow::-webkit-scrollbar {
+  .container-filter-products .wrapper-content .wrapper-overflow::-webkit-scrollbar {
     width: 2px;
   }
-  #pg-category .container-filter-products .wrapper-content .wrapper-overflow::-webkit-scrollbar-track {
+  .container-filter-products .wrapper-content .wrapper-overflow::-webkit-scrollbar-track {
     background: var(--white-1);
   }
-  #pg-category .container-filter-products .wrapper-content .wrapper-overflow::-webkit-scrollbar-thumb {
+  .container-filter-products .wrapper-content .wrapper-overflow::-webkit-scrollbar-thumb {
     background: var(--blue-2);
     border-radius: 1rem;
   }
 }
 @media only screen and (max-width: 1025px) {
-  #pg-category .container-filter-products .wrapper-content .wrapper-list-filter {
+  .container-filter-products .wrapper-content .wrapper-list-filter {
     position: relative;
     z-index: 5;
     column-count: 2;
@@ -15026,11 +15026,11 @@ modal-item .shopify-buy-frame iframe {
     pointer-events: none;
   }
 }
-#pg-category .container-filter-products .wrapper-content .wrapper-list-filter .container-list {
+.container-filter-products .wrapper-content .wrapper-list-filter .container-list {
   transform: translateY(5rem);
   opacity: 0;
 }
-#pg-category .container-filter-products .wrapper-content .wrapper-list-filter.aos-animate .container-list {
+.container-filter-products .wrapper-content .wrapper-list-filter.aos-animate .container-list {
   transform: translateY(0);
   opacity: 1;
   -webkit-transition: all 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -15040,20 +15040,20 @@ modal-item .shopify-buy-frame iframe {
   transition: all 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
   transition-delay: 0s;
 }
-#pg-category .container-filter-products .wrapper-content .wrapper-list-filter.aos-animate .container-list:nth-of-type(1) {
+.container-filter-products .wrapper-content .wrapper-list-filter.aos-animate .container-list:nth-of-type(1) {
   transition-delay: 0s;
 }
-#pg-category .container-filter-products .wrapper-content .wrapper-list-filter.aos-animate .container-list:nth-of-type(2) {
+.container-filter-products .wrapper-content .wrapper-list-filter.aos-animate .container-list:nth-of-type(2) {
   transition-delay: 0.1s;
 }
-#pg-category .container-filter-products .wrapper-content .wrapper-list-filter.aos-animate .container-list:nth-of-type(3) {
+.container-filter-products .wrapper-content .wrapper-list-filter.aos-animate .container-list:nth-of-type(3) {
   transition-delay: 0.2s;
 }
-#pg-category .container-filter-products .wrapper-content .container-list {
+.container-filter-products .wrapper-content .container-list {
   margin-bottom: 6rem;
 }
 @media only screen and (max-width: 1025px) {
-  #pg-category .container-filter-products .wrapper-content .container-list {
+  .container-filter-products .wrapper-content .container-list {
     position: relative;
     display: inline-block;
     width: 100%;
@@ -15062,11 +15062,11 @@ modal-item .shopify-buy-frame iframe {
   }
 }
 @media only screen and (max-width: 1025px) {
-  #pg-category .container-filter-products .wrapper-content .container-list .filter-title {
+  .container-filter-products .wrapper-content .container-list .filter-title {
     font-size: 1.6rem;
   }
 }
-#pg-category .container-filter-products .wrapper-content .container-list .list-filter {
+.container-filter-products .wrapper-content .container-list .list-filter {
   display: inline-flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -15077,23 +15077,23 @@ modal-item .shopify-buy-frame iframe {
   margin-top: 2rem;
 }
 @media only screen and (max-width: 1025px) {
-  #pg-category .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item {
+  .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item {
     pointer-events: none;
   }
-  #pg-category .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .checkbox-box {
+  .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .checkbox-box {
     pointer-events: none;
   }
 }
-#pg-category .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item:not(:last-child) {
+.container-filter-products .wrapper-content .container-list .list-filter .list-filter-item:not(:last-child) {
   margin-bottom: 1.3rem;
 }
-#pg-category .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter {
+.container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter {
   position: relative;
   text-align: left;
   color: var(--white-1);
   padding-left: 2.2rem;
 }
-#pg-category .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter:before {
+.container-filter-products .wrapper-content .container-list .list-filter .list-filter-item .check-filter:before {
   content: "";
   width: 1.2rem;
   height: 1.2rem;
@@ -15105,24 +15105,24 @@ modal-item .shopify-buy-frame iframe {
   left: 0;
   border: 1px solid var(--blue-1);
 }
-#pg-category .container-filter-products .wrapper-content .container-list .list-filter .list-filter-item.active .check-filter:before {
+.container-filter-products .wrapper-content .container-list .list-filter .list-filter-item.active .check-filter:before {
   background: var(--blue-1);
 }
 @media only screen and (max-width: 1025px) {
-  #pg-category .container-filter-products.active .wrapper-content {
+  .container-filter-products.active .wrapper-content {
     pointer-events: auto;
   }
-  #pg-category .container-filter-products.active .wrapper-content {
+  .container-filter-products.active .wrapper-content {
     pointer-events: auto;
   }
-  #pg-category .container-filter-products.active .wrapper-content:before {
+  .container-filter-products.active .wrapper-content:before {
     width: 100%;
     height: 100%;
     border-radius: 2.8rem;
     background: var(--blue-3);
     transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) 0s, border-radius 0.4s ease-in-out 0s;
   }
-  #pg-category .container-filter-products.active .wrapper-content:after {
+  .container-filter-products.active .wrapper-content:after {
     opacity: 1;
     -webkit-transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
     -moz-transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
@@ -15131,10 +15131,10 @@ modal-item .shopify-buy-frame iframe {
     transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
     transition-delay: 0.7s;
   }
-  #pg-category .container-filter-products.active .list-filter .checkbox-box {
+  .container-filter-products.active .list-filter .checkbox-box {
     pointer-events: auto !important;
   }
-  #pg-category .container-filter-products.active .wrapper-overflow {
+  .container-filter-products.active .wrapper-overflow {
     opacity: 1;
     -webkit-transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
     -moz-transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
@@ -15144,63 +15144,63 @@ modal-item .shopify-buy-frame iframe {
     transition-delay: 0.5s;
   }
 }
-#pg-category .section-category-content {
+.section-category-content {
   padding-top: calc(var(--header-height) + 4rem);
 }
 @media only screen and (max-width: 1025px) {
-  #pg-category .section-category-content > .container-fluid {
+  .section-category-content > .container-fluid {
     overflow-x: hidden;
   }
 }
 @media only screen and (max-width: 767.98px) {
-  #pg-category .section-category-content > .container-fluid {
+  .section-category-content > .container-fluid {
     padding-left: var(--px-side);
     padding-right: var(--px-side);
   }
 }
-#pg-category .section-category-content .column-content {
+.section-category-content .column-content {
   padding-bottom: 15rem;
 }
 @media only screen and (min-width: 1025.1px) {
-  #pg-category .section-category-content .column-content {
+  .section-category-content .column-content {
     padding-right: calc(var(--px-side) + var(--padding));
   }
 }
 @media only screen and (min-width: 1025.1px) {
-  #pg-category .section-category-content .section-category-title {
+  .section-category-content .section-category-title {
     text-align: center;
   }
 }
 @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-  #pg-category .section-category-content .section-category-title {
+  .section-category-content .section-category-title {
     padding-left: var(--px-side);
     padding-right: var(--px-side);
   }
 }
-#pg-category .section-category-content .product-list .grid-item .product-link {
+.section-category-content .product-list .grid-item .product-link {
   opacity: 0;
   transform: translateY(4rem);
 }
 @media only screen and (min-width: 1025.1px) {
-  #pg-category .section-category-content .product-list .grid-item.aos-animate:nth-child(3n+1) {
+  .section-category-content .product-list .grid-item.aos-animate:nth-child(3n+1) {
     --delay: .2s;
   }
-  #pg-category .section-category-content .product-list .grid-item.aos-animate:nth-child(3n+2) {
+  .section-category-content .product-list .grid-item.aos-animate:nth-child(3n+2) {
     --delay: .25s;
   }
-  #pg-category .section-category-content .product-list .grid-item.aos-animate:nth-child(3n+3) {
+  .section-category-content .product-list .grid-item.aos-animate:nth-child(3n+3) {
     --delay: .3s;
   }
 }
 @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-  #pg-category .section-category-content .product-list .grid-item.aos-animate:nth-child(2n+1) {
+  .section-category-content .product-list .grid-item.aos-animate:nth-child(2n+1) {
     --delay: .2s;
   }
-  #pg-category .section-category-content .product-list .grid-item.aos-animate:nth-child(2n+2) {
+  .section-category-content .product-list .grid-item.aos-animate:nth-child(2n+2) {
     --delay: .25s;
   }
 }
-#pg-category .section-category-content .product-list .grid-item.aos-animate .product-link {
+.section-category-content .product-list .grid-item.aos-animate .product-link {
   opacity: 1;
   transform: translateY(0);
   -webkit-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -15210,11 +15210,11 @@ modal-item .shopify-buy-frame iframe {
   transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition-delay: var(--delay, 0.2s);
 }
-#pg-category .section-markets {
+.section-markets {
   --pt: 0;
 }
 @media only screen and (min-width: 1025.1px) {
-  #pg-category .section-markets {
+  .section-markets {
     --pb: 0;
   }
 }

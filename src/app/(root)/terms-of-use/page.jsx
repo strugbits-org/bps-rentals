@@ -1,5 +1,7 @@
 import TermsAndCondition from "@/components/TermsAndCondition";
+import { getTermsOfUsePageContent } from "@/Services/Index";
 
 export default async function Page() {
-  return <TermsAndCondition />;
+  const [termsOfUse] = await Promise.all([getTermsOfUsePageContent()]);
+  return <TermsAndCondition data={termsOfUse} />;
 }

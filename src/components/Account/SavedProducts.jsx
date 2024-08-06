@@ -100,7 +100,7 @@ const SavedProducts = ({ savedProducts }) => {
                     <ProductCard
                       key={index}
                       index={index}
-                      styleClassName="product-link small saved-products active"
+                      isSavedProduct="product-link small saved-products active"
                       product={product}
                       variantData={variantData}
                       selectedVariant={
