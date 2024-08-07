@@ -98,7 +98,7 @@ export default async function Page({ params }) {
       productFoundData={productFound}
       categoriesData={categoriesData}
       blogsData={blogsData}
-      portfolioData={blogsData}
+      portfolioData={portfolioData}
     />
   );
 }

@@ -1,4 +1,7 @@
-const PortfolioSection = () => {
+import React from "react";
+import { generateImageUrl2 } from "@/Utils/GenerateImageURL";
+
+const PortfolioSection = ({ data }) => {
   return (
     <section className="product-post-explore-projects pt-md-100 pt-phone-50 pb-lg-190 pb-mobile-130">
       <div className="container-fluid">
@@ -13,7 +16,9 @@ const PortfolioSection = () => {
             <div className="slider-content-mobile">
               <div className="swiper-container">
                 <div className="swiper-wrapper list-portfolio list-slider-mobile">
-                  {[1, 2, 3, 4, 5].map((index) => {
+                  {data.slice(0, 8).map((portfolioData, index) => {
+                    const { portfolioRef, markets, studios } = portfolioData;
+                    const { title, coverImage } = portfolioRef;
                     return (
                       <div key={index} className="swiper-slide grid-item">
                         <a
@@ -27,29 +32,52 @@ const PortfolioSection = () => {
                           >
                             <div className="wrapper-img">
                               <img
-                                src="/images/lib/06_desktop.jpg"
+                                src={generateImageUrl2({
+                                  wix_url: coverImage.imageInfo,
+                                  w: "301",
+                                  h: "371",
+                                  q: "85",
+                                })}
                                 className=" "
                               />
                             </div>
                           </div>
                           <div className="container-text">
                             <ul className="list-tags-small">
-                              <li className="tag-small active">
-                                <span>Corporate</span>
-                              </li>
-                              <li className="tag-small">
-                                <span>Event Design and Production</span>
-                              </li>
-                              <li className="tag-small">
-                                <span>Creative Services Agency</span>
-                              </li>
-                              <li className="tag-small">
-                                <span>+ 3 studios</span>
-                              </li>
+                              {markets.map((market, index) => (
+                                <li
+                                  key={index}
+                                  className={`tag-small
+                                                   ? "active"
+                                                   : ""
+                                                   }`}
+                                >
+                                  <span>{market.cardname}</span>
+                                </li>
+                              ))}
+                              {studios.map((studio, index) => (
+                                <React.Fragment key={index}>
+                                  {index < 2 && (
+                                    <li
+                                      className={`tag-small 
+                                                          ? ${
+                                                            index === 0
+                                                          } "active"
+                                                          : ""
+                                                          }`}
+                                    >
+                                      <span>{studio.cardName}</span>a
+                                    </li>
+                                  )}
+                                </React.Fragment>
+                              ))}
+                              {studios.length > 2 ? (
+                                <li className="tag-small">
+                                  <span>+{studios.length - 2} studios</span>
+                                </li>
+                              ) : null}
                             </ul>
-                            <h2 className="title-portfolio">
-                              F1 Las Vegas Grand Prix
-                            </h2>
+                            <h2 className="title-portfolio">{title}</h2>
                           </div>
                         </a>
                       </div>

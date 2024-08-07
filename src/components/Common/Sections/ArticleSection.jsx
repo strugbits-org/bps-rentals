@@ -23,7 +23,7 @@ const ArticleSection = ({ data }) => {
                   className="swiper-wrapper list-blog list-slider-mobile"
                   data-aos="d:loop"
                 >
-                  {data.map((blogData, index) => {
+                  {data.slice(0, 8).map((blogData, index) => {
                     const { blogRef, studios, markets, author, slug } =
                       blogData;
 
