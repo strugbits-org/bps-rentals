@@ -1,4 +1,4 @@
-const { isAuthenticated } = require("./IsAuthenticated");
+import { isAuthenticated } from "./IsAuthenticated";
 
 async function handleAuthentication(req) {
   try {
@@ -15,7 +15,7 @@ async function handleAuthentication(req) {
     return authenticatedUserData;
   } catch (error) {
     console.error("Authentication error:", error);
-    return null; 
+    return null;
   }
 }
 

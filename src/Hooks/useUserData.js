@@ -6,24 +6,24 @@ function useUserData() {
   const [signedUserData, setUserData] = useState(null);
   const [cookies] = useCookies(["userData"]);
 
-  useEffect(() => {
-    if (cookies) {
-      try {
-        setUserData(cookies.userData);
-      } catch (error) {
-        console.error("Error parsing user data from cookie", error);
-      }
+useEffect(() => {
+  if (cookies) {
+    try {
+      setUserData(cookies.userData);
+    } catch (error) {
+      console.error("Error parsing user data from cookie", error);
     }
-  }, [cookies]);
+  }
+}, [cookies]);
 
-  return {
-    signedUserData,
-    id: signedUserData?._id,
-    email: signedUserData?.userEmail,
-    firstName: signedUserData?.firstName,
-    lastName: signedUserData?.lastName,
-    memberId: signedUserData?.memberId,
-  };
+return {
+  signedUserData,
+  email: signedUserData?.loginEmail,
+  firstName: signedUserData?.firstName,
+  lastName: signedUserData?.lastName,
+  memberId: signedUserData?.memberId,
+  phone: signedUserData?.mainPhone,
+};
 }
 
 export default useUserData;
