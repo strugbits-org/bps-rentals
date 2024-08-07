@@ -3,7 +3,7 @@
 import { generateImageURL, generateImageUrl2, productImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 import React, { useEffect, useState } from "react";
-import { formatDate } from "@/Utils/Utils";
+import { filterSearchData, formatDate } from "@/Utils/Utils";
 
 const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, products }) => {
 
@@ -24,7 +24,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const [filteredPortfolios, setFilteredPortfolios] = useState([]);
 
   const handleSearchFilter = (value) => {
-    const term = value || searchTerm;
+    const term = value !== undefined ? value : searchTerm;
     const filteredProductsData = products.filter(product => {
       const matchedTerm = term === "" || (product.search && product.search.toLowerCase().includes(term));
       return matchedTerm;
@@ -35,17 +35,19 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
       const matchedTerm = term === "" || (portfolio.titleAndDescription && portfolio.titleAndDescription.toLowerCase().includes(term));
       return matchedTerm;
     });
-    setFilteredPortfolios(filteredPortfoliosData.slice(0, 5));
+    setPortfoliosResult(filteredPortfoliosData);
 
     const filteredBlogsData = blogs.filter(blog => {
       const matchedTerm = term === "" || (blog.titleAndDescription && blog.titleAndDescription.toLowerCase().includes(term));
       return matchedTerm;
     });
-    setFilteredBlogs(filteredBlogsData.slice(0, 5));
+    setBlogsResult(filteredBlogsData);
   }
 
   const handleInputChange = (e) => {
     const value = e.target.value.toLowerCase();
+    setSelectedStudios([]);
+    setSelectedMarkets([]);
     setSearchTerm(value);
     handleSearchFilter(value);
   };
@@ -63,20 +65,26 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
       setSelectedMarkets([...selectedMarkets, market]);
     }
   };
+
   useEffect(() => {
-    console.log("selectedStudios", selectedStudios);
-    console.log("selectedMarkets", selectedMarkets);
+    const filteredPortfolioItems = filterSearchData(portfoliosResult, selectedStudios, selectedMarkets);
+    const filteredBlogItems = filterSearchData(BlogsResult, selectedStudios, selectedMarkets);
+    setFilteredPortfolios(filteredPortfolioItems.slice(0, 5))
+    setFilteredBlogs(filteredBlogItems.slice(0, 5))
   }, [selectedStudios, selectedMarkets])
 
   useEffect(() => {
-    const portfolioStudios = portfolios.flatMap(item => item.studios.map(studio => studio._id));
-    const blogStudios = blogs.flatMap(item => item.studios.map(studio => studio._id));
-    const portfolioMarkets = portfolios.flatMap(item => item.markets.map(market => market._id));
-    const blogMarkets = blogs.flatMap(item => item.markets.map(market => market._id));
+    const portfolioStudios = portfoliosResult.flatMap(item => item.studios.map(studio => studio._id));
+    const blogStudios = BlogsResult.flatMap(item => item.studios.map(studio => studio._id));
+    const portfolioMarkets = portfoliosResult.flatMap(item => item.markets.map(market => market._id));
+    const blogMarkets = BlogsResult.flatMap(item => item.markets.map(market => market._id));
 
     setResultStudios([...new Set([...portfolioStudios, ...blogStudios])]);
     setResultMarkets([...new Set([...portfolioMarkets, ...blogMarkets])]);
-  }, []);
+
+    setFilteredPortfolios(portfoliosResult.slice(0, 5));
+    setFilteredBlogs(BlogsResult.slice(0, 5));
+  }, [BlogsResult, portfoliosResult]);
 
 
   return (
@@ -304,8 +312,8 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                           </div>
                         </div>
                       </div>
-                      {filteredProducts.length === 0 && filteredPortfolios.length === 0 && <h6 style={{ width: "100%" }} className="ml-4 mt-3-cs fs--40">No products or projects were found for {searchTerm}</h6>}
                     </div>
+                    {filteredProducts.length === 0 && filteredPortfolios.length === 0 && <h6 style={{ width: "100%" }} className="ml-4 mt-3-cs fs--40">No products or projects were found for {searchTerm}</h6>}
                   </div>
                   <div className="result-our-markets">
                     <div className="container-title-results">

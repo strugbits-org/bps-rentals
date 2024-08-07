@@ -94,3 +94,22 @@ export const formatDate = (dateString) => {
         day: "2-digit",
     });
 };
+
+export const filterSearchData = (collection, selectedStudios, selectedMarkets) => {
+    let data = collection;
+    if (selectedStudios.length > 0 && selectedMarkets.length > 0) {
+      data = data.filter(item =>
+        item.studios.some(studio => selectedStudios.includes(studio._id)) ||
+        item.markets.some(market => selectedMarkets.includes(market._id))
+      );
+    } else if (selectedStudios.length > 0) {
+      data = data.filter(item =>
+        item.studios.some(studio => selectedStudios.includes(studio._id))
+      );
+    } else if (selectedMarkets.length > 0) {
+      data = data.filter(item =>
+        item.markets.some(market => selectedMarkets.includes(market._id))
+      );
+    }
+    return data;
+  }
