@@ -26,7 +26,7 @@ import { getBlogsData, getPortfolioData } from "@/Services/SectionsApis";
 // }
 
 export default async function Page({ params }) {
-  const { slug } = params;
+  const slug = decodeURIComponent(params.slug);
 
   const selectedProductRes = await getSelectedProductId(slug);
   if (!selectedProductRes?.length) {
