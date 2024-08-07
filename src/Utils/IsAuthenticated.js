@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 
 import { createWixClient } from "./CreateWixClient";
+import { authWixClient } from "@/app/api/auth/updateProfile/route";
 
 const unAuthCollections = [
   "RentalsHomeHero",
@@ -59,7 +60,16 @@ export const isAuthenticated = async (token) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    const authClient = await authWixClient();
     const wixClient = await createWixClient();
+
+    const privateMemberData = await authClient.items
+      .queryDataItems({
+        dataCollectionId: "Members/PrivateMembersData",
+      })
+      .eq("loginEmail", decoded.email)
+      .find();
+
     const memberData = await wixClient.items
       .queryDataItems({
         dataCollectionId: "membersPassword",
@@ -67,12 +77,16 @@ export const isAuthenticated = async (token) => {
       .eq("userEmail", decoded.email)
       .find();
 
+    const loggedInUserData = {
+      ...memberData._items[0].data,
+      memberId: privateMemberData._items[0].data._id,
+    };
+
     if (memberData._items.length === 0) {
       throw new Error("Unauthorized: No matching user data");
     }
 
-    const user = memberData._items[0].data;
-    return user;
+    return loggedInUserData;
   } catch (error) {
     console.error(error);
     throw new Error(`Unauthorized: ${error.message}`);

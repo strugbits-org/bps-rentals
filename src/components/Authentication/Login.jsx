@@ -72,7 +72,7 @@ const Login = ({
         }
       }
     } catch (error) {
-      console.log("Error during login:", error);
+      console.error("Error during login:", error);
       setMessage("Error during login:", error);
       setErrorMessageVisible(true);
       submenuLogin.classList.add("active");
