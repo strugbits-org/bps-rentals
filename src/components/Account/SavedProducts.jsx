@@ -5,15 +5,14 @@ import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
 import {
   getProductVariants,
   getProductVariantsImages,
+  getSavedProductData,
 } from "@/Services/ProductsApis";
 import ProductCard from "../Category/ProductCard";
 
 const SavedProducts = ({ savedProducts }) => {
 
   const [selectedVariants, setSelectedVariants] = useState({});
-  const [savedProductsData, setSavedProductsData] = useState(
-    savedProducts || []
-  );
+  const [savedProductsData, setSavedProductsData] = useState([]);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const pageSize = 20;
   const [pageLimit, setPageLimit] = useState(pageSize);
@@ -64,10 +63,15 @@ const SavedProducts = ({ savedProducts }) => {
     }
   };
 
-  useEffect(() => {
+  const fetchSavedProducts = async () => {
+    const savedProducts = await getSavedProductData();
+    setSavedProductsData(savedProducts);
     setTimeout(markPageLoaded, 200);
+  }
+  useEffect(() => {
+    fetchSavedProducts();
   }, []);
-  
+
   return (
     <div class="wrapper-account">
       <div class="wrapper-top">

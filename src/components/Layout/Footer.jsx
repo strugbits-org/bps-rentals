@@ -65,14 +65,14 @@ const Footer = ({ menu, footerData, contactData, socialLinks }) => {
                   {menu.map((item) => {
                     return (
                       <li key={item._id} className="list-item">
-                        <DynamicLink
+                        <CustomButton
                           customClasses={"link-footer-menu"}
                           data={{
                             label: item.title,
                             action: item.rentalsAction
                           }}
                         >
-                        </DynamicLink>
+                        </CustomButton>
                       </li>
                     )
                   })}
