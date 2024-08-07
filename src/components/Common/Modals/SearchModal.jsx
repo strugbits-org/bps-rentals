@@ -3,6 +3,7 @@
 import { generateImageURL, generateImageUrl2, productImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 import React, { useEffect, useState } from "react";
+import { formatDate } from "@/Utils/Utils";
 
 const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, products }) => {
 
@@ -19,37 +20,37 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [filteredPortfolios, setFilteredPortfolios] = useState([]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSearchFilter = (value) => {
+    const term = value || searchTerm;
     const filteredProductsData = products.filter(product => {
-      const matchedTerm = searchTerm === "" || (product.search && product.search.toLowerCase().includes(searchTerm));
+      const matchedTerm = term === "" || (product.search && product.search.toLowerCase().includes(term));
       return matchedTerm;
     });
     setFilteredProducts(filteredProductsData.slice(0, 3));
 
     const filteredPortfoliosData = portfolios.filter(portfolio => {
-      const matchedTerm = searchTerm === "" || (portfolio.titleAndDescription && portfolio.titleAndDescription.toLowerCase().includes(searchTerm));
+      const matchedTerm = term === "" || (portfolio.titleAndDescription && portfolio.titleAndDescription.toLowerCase().includes(term));
       return matchedTerm;
     });
     setFilteredPortfolios(filteredPortfoliosData.slice(0, 5));
 
     const filteredBlogsData = blogs.filter(blog => {
-      const matchedTerm = searchTerm === "" || (blog.titleAndDescription && blog.titleAndDescription.toLowerCase().includes(searchTerm));
+      const matchedTerm = term === "" || (blog.titleAndDescription && blog.titleAndDescription.toLowerCase().includes(term));
       return matchedTerm;
     });
     setFilteredBlogs(filteredBlogsData.slice(0, 5));
-    // document.body.setAttribute("data-search-state", "success");
-  };
+  }
 
   const handleInputChange = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
+    handleSearchFilter(value);
   };
   const handleStudioFilter = (studio) => {
     if (selectedStudios.includes(studio)) {
       setSelectedStudios(selectedStudios.filter((el) => el !== studio));
     } else {
-      setSelectedStudios([...selectedStudios, tag]);
+      setSelectedStudios([...selectedStudios, studio]);
     }
   };
   const handleMarketFilter = (market) => {
@@ -59,9 +60,10 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
       setSelectedMarkets([...selectedMarkets, market]);
     }
   };
-  // useEffect(() => {
-  //   console.log("helllo", searchTerm);
-  // }, [searchTerm])
+  useEffect(() => {
+    console.log("selectedStudios", selectedStudios);
+    console.log("selectedMarkets", selectedMarkets);
+  }, [selectedStudios, selectedMarkets])
 
   useEffect(() => {
     const portfolioStudios = portfolios.flatMap(item => item.studios.map(studio => studio._id));
@@ -84,7 +86,6 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                 <form
                   className="form-search header-search"
                   data-search-form
-                  onSubmit={handleSubmit}
                 >
                   <div className="container-input input-header">
                     <label
@@ -147,7 +148,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                     </ul>
                   </div>
                   <div className="column-results">
-                    <div className="result-rental">
+                    <div className={`result-rental ${filteredProducts.length === 0 ? "hidden" : ""}`}>
                       <div className="container-title-results">
                         <h2 className="title-results split-chars" data-aos>
                           {searchSectionDetails?.rentalTitle} <span>{`"${searchTerm}"`}</span>
@@ -176,7 +177,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                 >
                                   <div className="rental-product-link">
                                     <AnimateLink
-                                      to="/"
+                                      to={`/product/${product.slug}`}
                                       className="product-link"
                                       data-menu-close
                                     >
@@ -245,7 +246,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                         </div>
                       </div>
                     </div>
-                    <div className="result-portfolio mt-lg-60 mt-mobile-40">
+                    <div className={`result-portfolio mt-lg-60 mt-mobile-40 ${filteredPortfolios.length === 0 ? "hidden" : ""}`}>
                       <div className="container-title-results">
                         <h2 className="title-results split-chars" data-aos>
                           {searchSectionDetails?.portfolioTitle} <span>{`"${searchTerm}"`}</span>
@@ -300,6 +301,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                           </div>
                         </div>
                       </div>
+                      {filteredProducts.length === 0 && filteredPortfolios.length === 0 && <h6 style={{ width: "100%" }} className="ml-4 mt-3-cs fs--40">No products or projects were found for {searchTerm}</h6>}
                     </div>
                   </div>
                   <div className="result-our-markets">
@@ -345,7 +347,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                       })}
                     </ul>
                   </div>
-                  <div className="result-blog">
+                  <div className={`result-blog ${filteredBlogs.length === 0 ? "hidden" : ""}`}>
                     <div className="container-title-results">
                       <h2 className="title-results split-chars" data-aos>
                         {searchSectionDetails?.blogTitle} <span>{`"${searchTerm}"`}</span>
@@ -366,7 +368,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                           data-aos
                         >
                           {filteredBlogs.map((blog, index) => {
-                            const { blogRef } = blog;
+                            const { blogRef, author } = blog;
                             return (
                               <div
                                 key={index}
@@ -392,11 +394,14 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                     <div className="container-author-post-info">
                                       <div className="author">
                                         <span className="author-name">
-                                          Lily Yeung
+                                          {author.nickname}
+
                                         </span>
                                       </div>
                                       <div className="date">
-                                        <span>Sep 30</span>
+                                        <span>
+                                          {formatDate(blogRef.lastPublishedDate.$date)}
+                                        </span>
                                       </div>
                                     </div>
                                     <h2 className="title-blog">
