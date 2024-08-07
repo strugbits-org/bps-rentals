@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 
-import { createWixClient } from "@/Utils/CreateWixClient";
 import handleAuthentication from "@/Utils/HandleAuthentication";
+import { authWixClient } from "@/Utils/CreateWixClient";
 
-// POST method handler
 export const POST = async (req) => {
   try {
     const authenticatedUserData = await handleAuthentication(req);
@@ -13,32 +12,33 @@ export const POST = async (req) => {
     }
 
     const body = await req.json();
-    const { firstName, lastName } = body;
-    const { _id, userEmail } = authenticatedUserData;
+    const { firstName, lastName, phone } = body;
+    const { memberId } = authenticatedUserData;
 
-    const wixClient = await createWixClient();
-
-    const memberData = await wixClient.items
-      .queryDataItems({
-        dataCollectionId: "membersPassword",
-      })
-      .eq("userEmail", userEmail)
-      .find();
+    const wixClient = await authWixClient();
 
     const updatedData = {
-      ...memberData.items[0].data,
-      firstName,
-      lastName,
+      contact: {
+        firstName: firstName,
+        lastName: lastName,
+        phones: [phone],
+      },
     };
 
-    await wixClient.items.updateDataItem(_id, {
-      dataCollectionId: "membersPassword",
-      dataItemId: _id,
-      dataItem: { data: updatedData },
-    });
+    const response = await wixClient.members.updateMember(
+      memberId,
+      updatedData
+    );
+
+    const finalData = {
+      loginEmail: response.loginEmail,
+      firstName: response.contact.firstName,
+      lastName: response.contact.lastName,
+      mainPhone: response.contact.phones[0],
+    };
 
     return NextResponse.json(
-      { message: "Profile updated successfully", member: updatedData },
+      { message: "Profile updated successfully", updatedMember: finalData },
       { status: 200 }
     );
   } catch (error) {

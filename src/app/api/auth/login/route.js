@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import { createWixClient } from "@/Utils/CreateWixClient";
+import { authWixClient, createWixClient } from "@/Utils/CreateWixClient";
 
 export const POST = async (req) => {
   try {
@@ -30,13 +30,29 @@ export const POST = async (req) => {
         });
         delete memberData._items[0].data.password;
 
+        const authClient = await authWixClient();
+
+        const privateMemberData = await authClient.items
+          .queryDataItems({
+            dataCollectionId: "Members/PrivateMembersData",
+          })
+          .eq("loginEmail", email)
+          .find();
+
+        const selectedMemberData = privateMemberData._items[0].data;
+
+        const finalData = {
+          loginEmail: selectedMemberData.loginEmail,
+          firstName: selectedMemberData.firstName,
+          lastName: selectedMemberData.lastName,
+          mainPhone: selectedMemberData.mainPhone,
+        };
+
         return NextResponse.json(
           {
             message: "Login successful",
             jwtToken,
-            member: {
-              ...memberData._items[0].data,
-            },
+            member: finalData,
           },
           { status: 200 }
         );

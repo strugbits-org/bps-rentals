@@ -20,17 +20,19 @@ const MyAccount = ({ myAccountPageContent }) => {
 
   const [cookies, setCookie] = useCookies(["authToken", "userData"]);
 
-  const { firstName, lastName, email } = useUserData();
+  const { firstName, lastName, email, phone } = useUserData();
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    phone: "",
   });
   const [initialData, setInitialData] = useState({
     firstName: "",
     lastName: "",
+    phone: "",
   });
 
   const handleChange = (e) => {
@@ -50,9 +52,8 @@ const MyAccount = ({ myAccountPageContent }) => {
         return;
       }
       setSuccessMessageVisible(true);
-      console.log(response, "response");
-      
-      const userData = JSON.stringify(response.member);
+
+      const userData = JSON.stringify(response.updatedMember);
 
       setCookie("userData", userData, {
         path: "/",
@@ -78,11 +79,11 @@ const MyAccount = ({ myAccountPageContent }) => {
     const userData = {
       firstName: firstName || "",
       lastName: lastName || "",
-      // phone: phone || "",
+      phone: phone || "",
     };
     setFormData(userData);
     setInitialData(userData);
-  }, [firstName, lastName]);
+  }, [firstName, lastName, phone]);
 
   useEffect(() => {
     if (successMessageVisible) {
@@ -195,20 +196,20 @@ const MyAccount = ({ myAccountPageContent }) => {
                 />
               </div>
               <div className="container-input col-md-6">
-                {/* <label htmlFor="account-phone">
-                {" "}
-                {myAccountPageContent &&
-                  myAccountPageContent.phoneNumberFieldLabel}
-              </label>
-              <input
-                id="account-phone"
-                name="phone"
-                type="tel"
-                placeholder="+1 (415) 000-0000"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-              /> */}
+                <label htmlFor="account-phone">
+                  {" "}
+                  {myAccountPageContent &&
+                    myAccountPageContent.phoneNumberFieldLabel}
+                </label>
+                <input
+                  id="account-phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="+1 (415) 000-0000"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                />
               </div>
               <div className="container-discard flex-mobile-center order-mobile-2 mt-mobile-15">
                 <button
