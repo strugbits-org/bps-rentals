@@ -263,6 +263,7 @@ export const getPortfolioData = async () => {
       dataCollectionId: "PortfolioCollection",
       includeReferencedItems: ["portfolioRef", "studios", "markets"],
       limit: "infinite",
+      ne: [{ key: "isHidden", value: true }],
     });
     if (response && response._items) {
       return response._items.map((x) => x.data);
@@ -281,6 +282,7 @@ export const getBlogsData = async () => {
       dataCollectionId: "BlogProductData",
       includeReferencedItems: ["blogRef", "studios", "markets", "author"],
       limit: "infinite",
+      ne: [{ key: "isHidden", value: true }],
     });
 
     if (response && response._items) {

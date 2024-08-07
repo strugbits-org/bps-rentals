@@ -21,12 +21,13 @@ const PortfolioSection = ({ data }) => {
               <div className="swiper-container">
                 <div className="swiper-wrapper list-portfolio list-slider-mobile">
                   {data.slice(0, 8).map((portfolioData, index) => {
-                    const { portfolioRef, markets, studios } = portfolioData;
+                    const { portfolioRef, markets, studios, slug } =
+                      portfolioData;
                     const { title, coverImage } = portfolioRef;
                     return (
                       <div key={index} className="swiper-slide grid-item">
                         <a
-                          href={`product/${index}`}
+                          href={`${CORPORATE_URL}/project/${slug}`}
                           className="link-portfolio link-portfolio-animation"
                           data-aos="d:loop"
                         >
