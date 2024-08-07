@@ -26,8 +26,12 @@ export default async function Page({ params }) {
   const _slug = decodeURIComponent(params.slug);
 
   const slug = "/category/" + _slug;
+  console.log("slug", slug);
+  
   const categoriesData = await fetchAllCategoriesData();
   const selectedCategoryData = findCategoryData(categoriesData, slug);
+  console.log("selectedCategoryData", selectedCategoryData);
+  
   const categoryId =
     selectedCategoryData?.parentCollection?._id ||
     selectedCategoryData?._id ||

@@ -43,7 +43,7 @@ export const setCookie = (key, value) => {
     document.cookie = key + "=" + value + ";";
 }
 
-export const findCategoryData = (data, slug) => (data.find(x => x.parentCollection['link-copy-of-category-name-2'] === slug) || data.find((item) => item.level2Collections.some((x) => x['link-copy-of-category-name-2'] === slug))?.level2Collections.find((x) => x['link-copy-of-category-name-2'] === slug));
+export const findCategoryData = (data, slug) => (data.find(x => decodeURIComponent(x.parentCollection['link-copy-of-category-name-2']) === slug) || data.find((item) => item.level2Collections.some((x) => decodeURIComponent(x['link-copy-of-category-name-2']) === slug))?.level2Collections.find((x) => decodeURIComponent(x['link-copy-of-category-name-2']) === slug));
 
 export const getAllCategoriesPaths = (categoriesData) => {
     const getSlug = (url) => url.match(/\/category\/(.+)/)[1];
@@ -83,14 +83,14 @@ export const compareArray = (arr1, arr2) => {
             return true;
         }
     }
-    
+
     return false;
 }
 
 export const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "2-digit",
-  });
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+    });
 };
