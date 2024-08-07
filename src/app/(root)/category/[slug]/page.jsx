@@ -23,7 +23,9 @@ export const generateStaticParams = async () => {
 };
 
 export default async function Page({ params }) {
-  const slug = "/category/" + params.slug;
+  const _slug = decodeURIComponent(params.slug);
+
+  const slug = "/category/" + _slug;
   const categoriesData = await fetchAllCategoriesData();
   const selectedCategoryData = findCategoryData(categoriesData, slug);
   const categoryId =

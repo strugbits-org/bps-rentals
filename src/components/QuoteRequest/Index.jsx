@@ -3,8 +3,6 @@ import { useEffect } from "react";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 
 const QuoteRequestPage = ({ quoteRequestPageContent }) => {
-  console.log(quoteRequestPageContent, "quoteRequestPageContent>");
-
   useEffect(() => {
     setTimeout(() => {
       markPageLoaded();

@@ -10,7 +10,7 @@ import { getHomeSectionDetails, getMarketsData } from "@/Services/SectionsApis";
 
 export default async function Page({ params }) {
   
-  const searchTerm = decodeURIComponent(params.for);  
+  const searchTerm = decodeURIComponent(params.for);
 
   const [
     homePageContent,

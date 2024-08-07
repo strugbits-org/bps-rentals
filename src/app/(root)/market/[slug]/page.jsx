@@ -23,16 +23,17 @@ export const generateStaticParams = async () => {
 }
 
 export default async function Page({ params }) {
+  const slug = decodeURIComponent(params.slug);
 
-  const marketSection = await getMarketSection(params.slug);
-  const bestSeller = await fetchBestSellers(params.slug);
+  const marketSection = await getMarketSection(slug);
+  const bestSeller = await fetchBestSellers(slug);
   const collectionIds = {
     "tradeshows": "HighlightsTradeshow",
     "social": "HighlightsSocial",
     "weddings": "HighlightsWedding",
     "corporate": "HighlightsCorporate",
   }
-  const highlightsCollection = collectionIds[params.slug];
+  const highlightsCollection = collectionIds[slug];
 
   const [
     homeNewArrivalSectionContent,
@@ -45,7 +46,7 @@ export default async function Page({ params }) {
     highlightsSectionData,
     bestSellerProducts,
   ] = await Promise.all([
-    getNewArrivalSectionContent(params.slug),
+    getNewArrivalSectionContent(slug),
     getHomeSectionDetails(),
     getDreamBigSectionContent(),
     getMarketSliderData(marketSection._id),
