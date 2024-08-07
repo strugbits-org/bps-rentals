@@ -16,6 +16,9 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const [resultStudios, setResultStudios] = useState([]);
   const [resultMarkets, setResultMarkets] = useState([]);
 
+  const [BlogsResult, setBlogsResult] = useState([]);
+  const [portfoliosResult, setPortfoliosResult] = useState([]);
+
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [filteredPortfolios, setFilteredPortfolios] = useState([]);

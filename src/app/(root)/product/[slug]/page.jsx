@@ -15,15 +15,15 @@ import {
 } from '@/Services/ProductsApis';
 import { getBlogsData, getPortfolioData } from "@/Services/SectionsApis";
 
-export const generateStaticParams = async () => {
-  try {
-    const all_products = await fetchAllProducts() || [];
-    const paths = all_products.map((data) => ({ slug: data.product.slug }));
-    return paths;
-  } catch (error) {
-    console.log("Error:", error);
-  }
-}
+// export const generateStaticParams = async () => {
+//   try {
+//     const all_products = await fetchAllProducts() || [];
+//     const paths = all_products.map((data) => ({ slug: data.product.slug }));
+//     return paths;
+//   } catch (error) {
+//     console.log("Error:", error);
+//   }
+// }
 
 export default async function Page({ params }) {
   const slug = decodeURIComponent(params.slug);
