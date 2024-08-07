@@ -5,7 +5,7 @@ import {
   fetchAllCategoriesData,
   fetchBestSellers,
   getAllColorsData,
-  getProductsByCategory,
+  getAllProducts,
 } from "@/Services/ProductsApis";
 import { getHomeSectionDetails, getMarketsData } from "@/Services/SectionsApis";
 import { findCategoryData, getAllCategoriesPaths } from "@/Utils/Utils";
@@ -50,7 +50,7 @@ export default async function Page({ params }) {
       getMarketsData(),
       getAllColorsData(),
       fetchBestSellers(),
-      getProductsByCategory({ category: categoryId }),
+      getAllProducts({ category: categoryId }),
     ]);
 
   return (

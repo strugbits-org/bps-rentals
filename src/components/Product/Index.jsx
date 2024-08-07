@@ -17,26 +17,28 @@ import SnapShots from "./SnapShotsSection";
 import ArticleSection from "../Common/Sections/ArticleSection";
 import PortfolioSection from "../Common/Sections/PortfolioSection";
 import ModalCanvas3d from "../Common/ModalCanvas3d";
+import { compareArray } from "@/Utils/Utils";
 
 const ProductPostPage = ({
   selectedProductDetails,
   matchedProductsData,
-  productVariantsImages,
-  productFoundData,
   categoriesData,
   blogsData,
   portfolioData,
+  bestSeller
 }) => {
+  const { productSnapshotData } = selectedProductDetails;
   const router = useRouter();
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [savedProductsData, setSavedProductsData] = useState([]);
+  const [isBestSeller, setIsBestSeller] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState();
   const [cartQuantity, setCartQuantity] = useState(1);
   const descriptionRef = useRef(null);
   const [buttonLabel, setButtonLabel] = useState(false);
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
-    const selectedVariantFilteredData = productVariantsImages.find(
+    const selectedVariantFilteredData = productSnapshotData.find(
       (variant) => variant.colorVariation === selectedVariantData.variantId
     );
     if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
@@ -61,7 +63,7 @@ const ProductPostPage = ({
     resetSlideIndex();
   };
 
-  const productFondFilteredData = productFoundData.filter((data) => {
+  const productFondFilteredData = categoriesData.filter((data) => {
     const parentCollectionId = data.parentCollection._id;
     return selectedProductDetails.subCategory.some(
       (collection) => collection._id === parentCollectionId
@@ -69,9 +71,9 @@ const ProductPostPage = ({
   });
 
   useEffect(() => {
-    if (selectedProductDetails && productVariantsImages) {
+    if (selectedProductDetails && productSnapshotData) {
       const selectedVariantData = selectedProductDetails.variantData[0].variant;
-      const selectedVariantFilteredData = productVariantsImages.find(
+      const selectedVariantFilteredData = productSnapshotData.find(
         (variant) => variant.colorVariation === selectedVariantData.variantId
       );
 
@@ -94,8 +96,14 @@ const ProductPostPage = ({
         setSelectedVariantIndex(0);
         setSelectedVariant(combinedVariantData);
       }
+
+      const isBestSellerProduct = compareArray(bestSeller, categoriesData.map(x => x._id));
+      console.log("bestSeller", bestSeller);
+      console.log("isBestSellerProduct", isBestSellerProduct);
+      
+      setIsBestSeller(isBestSellerProduct);
     }
-  }, [productVariantsImages, selectedProductDetails]);
+  }, [selectedProductDetails]);
 
   const seatHeightData =
     selectedProductDetails.product.additionalInfoSections.find(
@@ -147,12 +155,12 @@ const ProductPostPage = ({
     const params = [
       selectedProductDetails,
       matchedProductsData,
-      productVariantsImages,
+      productSnapshotData,
     ];
     if (checkParameters(params)) {
       markPageLoaded();
     }
-  }, [selectedProductDetails, matchedProductsData, productVariantsImages]);
+  }, [selectedProductDetails, matchedProductsData, productSnapshotData]);
 
   const updatedDescription = selectedProductDetails.product.description.replace(
     /color:#000000;/g,
@@ -188,9 +196,11 @@ const ProductPostPage = ({
                 >
                   <div className="slider-product">
                     <div className="container-btn-top">
-                      <div className="best-seller-tag">
-                        <span>Best Seller</span>
-                      </div>
+                      {isBestSeller && (
+                        <div className="best-seller-tag">
+                          <span>Best Seller</span>
+                        </div>
+                      )}
                       <button className="btn-bookmark">
                         <i className="icon-bookmark"></i>
                         <i className="icon-bookmark-full"></i>
@@ -250,11 +260,10 @@ const ProductPostPage = ({
                               return (
                                 <div
                                   key={index}
-                                  class={`swiper-slide  ${
-                                    index === selectedVariantIndex
-                                      ? "active"
-                                      : ""
-                                  }`}
+                                  class={`swiper-slide  ${index === selectedVariantIndex
+                                    ? "active"
+                                    : ""
+                                    }`}
                                 >
                                   <div class="wrapper-img">
                                     <div class="container-img">
@@ -508,9 +517,8 @@ const ProductPostPage = ({
               {selectedProductDetails &&
                 selectedProductDetails.product.description && (
                   <div
-                    className={`container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50 ${
-                      buttonLabel ? "active" : ""
-                    }`}
+                    className={`container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50 ${buttonLabel ? "active" : ""
+                      }`}
                     data-aos=""
                   >
                     <h3 className="title-info-text split-words" data-aos="">

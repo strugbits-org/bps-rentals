@@ -3,7 +3,7 @@ import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
-export const getProductsByCategory = async ({ category, searchTerm }) => {
+export const getAllProducts = async ({ category, searchTerm }) => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
@@ -245,7 +245,7 @@ export const getSelectedColorsData = async (categoryId) => {
   }
 };
 
-export const fetchAllProducts = async () => {
+export const fetchAllProductsPaths = async () => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
@@ -265,7 +265,7 @@ export const fetchAllProducts = async () => {
     };
     const response = await getDataFetchFunction(payload);
     if (response && response._items) {
-      return response._items.map((x) => x.data);
+      return response._items.map((x) => ({ slug: x.data.product.slug }));
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -341,23 +341,12 @@ export const getSelectedProductDetails = async (slug) => {
     console.error("Error fetching selected product details:", error);
   }
 };
-export const getPairItWithProductsId = async (slug) => {
+export const getPairWithData = async () => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "BPSPairItWith",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: [
-        {
-          key: "productId",
-          value: slug,
-        },
-      ],
-      ne: null,
-      hasSome: null,
-      skip: null,
+      increasedLimit: 1000,
+      limit: "infinite",
     });
 
     if (response && response._items) {
@@ -366,7 +355,7 @@ export const getPairItWithProductsId = async (slug) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching products(getPairItWithProductsId):", error);
+    console.error("Error fetching products(getPairWithData):", error);
   }
 };
 
@@ -462,7 +451,7 @@ export const getAllCategoriesData = async () => {
         "level2Collections",
         "f1Collections",
       ],
-      limit: 50,
+      limit: "infinite",
     });
     if (response && response._items) {
       const categoriesData = response._items.map((x) => x.data);

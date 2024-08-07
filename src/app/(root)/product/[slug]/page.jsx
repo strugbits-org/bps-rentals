@@ -4,101 +4,67 @@ import ProductPostPage from '@/components/Product/Index';
 
 import {
   getAllCategoriesData,
-  getPairItWithProducts,
-  getPairItWithProductsId,
+  getPairWithData,
   getProductFound,
-  getProductVariantsImages,
-  getProductVariants,
-  getSelectedProductDetails,
-  getSelectedProductId,
-  fetchAllProducts,
+  fetchAllProductsPaths,
+  getAllProducts,
+  fetchBestSellers,
 } from '@/Services/ProductsApis';
 import { getBlogsData, getPortfolioData } from "@/Services/SectionsApis";
 
-// export const generateStaticParams = async () => {
-//   try {
-//     const all_products = await fetchAllProducts() || [];
-//     const paths = all_products.map((data) => ({ slug: data.product.slug }));
-//     return paths;
-//   } catch (error) {
-//     console.log("Error:", error);
-//   }
-// }
+export const generateStaticParams = async () => {
+  try {
+    const paths = await fetchAllProductsPaths() || [];
+    return paths;
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
 
 export default async function Page({ params }) {
   const slug = decodeURIComponent(params.slug);
 
-  const selectedProductRes = await getSelectedProductId(slug);
-  if (!selectedProductRes?.length) {
-    redirect("/error");
-    return null;
-  }
-
-  const selectedProductId = selectedProductRes[0]._id;
-
   const [
-    pairIWithRes,
-    productVariantsData,
-    selectedProductDetails,
-    productVariantsImages,
-    productFound,
+    pairWithData,
+    products,
     categoriesData,
     blogsData,
     portfolioData,
+    bestSeller
   ] = await Promise.all([
-    getPairItWithProductsId(selectedProductId),
-    getProductVariants(selectedProductId),
-    getSelectedProductDetails(selectedProductId),
-    getProductVariantsImages(selectedProductId),
-    getProductFound(),
+    getPairWithData(),
+    getAllProducts({}),
     getAllCategoriesData(),
     getBlogsData(),
     getPortfolioData(),
+    fetchBestSellers()
   ]);
+  const selectedProduct = products.find((x) => decodeURIComponent(x.product.slug) === slug);
+  if (!selectedProduct) redirect("/error");
 
-  const pairedProductIds = pairIWithRes.map((item) => item.pairedProductId);
-
-  const matchedProductsData = await getPairItWithProducts(pairedProductIds);
-  const productsData = await Promise.all(
-    matchedProductsData.map(async (productData) => {
-      const productId = productData.product._id;
-      const [productVariantsImages, productVariantsData] = await Promise.all([
-        getProductVariantsImages(productId),
-        getProductVariants(productId),
-      ]);
-      return {
-        ...productData,
-        productVariantsImages,
-        productVariantsData,
-      };
-    })
-  );
-
-  const dataMap = new Map(productVariantsData.map((item) => [item.sku, item]));
-  const filteredVariantData = selectedProductDetails[0].variantData.filter(
-    (variant) => {
-      if (dataMap.has(variant.sku)) {
-        const dataItem = dataMap.get(variant.sku);
-        variant.variant.variantId = dataItem._id;
-        return true;
-      }
-      return false;
+  const dataMap = new Map(selectedProduct.productVariantsData.map(({ sku, _id }) => [sku, _id]));
+  selectedProduct.variantData = selectedProduct.variantData.reduce((acc, variant) => {
+    const variantId = dataMap.get(variant.sku);
+    if (variantId) {
+      variant.variant.variantId = variantId;
+      acc.push(variant);
     }
-  );
+    return acc;
+  }, []);
+
+  const selectedProductId = selectedProduct.product._id;
+  const pairedProductsIds = pairWithData.filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);
+  const matchedProducts = products.filter(product => pairedProductsIds.includes(product.product._id));
 
   return (
     <ProductPostPage
-      selectedProductDetails={{
-        ...selectedProductDetails[0],
-        variantData: filteredVariantData,
-        productVariantsImages: productVariantsImages,
-      }}
-      matchedProductsData={productsData}
-      productVariantsImages={productVariantsImages}
-      productFoundData={productFound}
+      selectedProduct={selectedProduct}
+      selectedProductDetails={selectedProduct}
+      matchedProductsData={matchedProducts}
       categoriesData={categoriesData}
       blogsData={blogsData}
       portfolioData={portfolioData}
+      bestSeller={bestSeller}
     />
   );
 }
