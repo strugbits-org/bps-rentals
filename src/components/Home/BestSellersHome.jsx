@@ -1,10 +1,8 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { CustomButton } from '../Common/CustomButton';
 import ProductCard from '../Category/ProductCard';
 import CartModal from '../Common/Modals/CartModal';
-import { createClient, OAuthStrategy } from '@wix/sdk';
-import { currentCart } from "@wix/ecom";
 
 const BestSellersHome = ({ products, content }) => {
   const [selectedVariants, setSelectedVariants] = useState({});
@@ -15,20 +13,6 @@ const BestSellersHome = ({ products, content }) => {
       [index]: variant,
     }));
   };
-
-  const testCall = async () => {
-    const wixClient = createClient({
-      modules: {
-        currentCart
-      },
-      auth: OAuthStrategy({ clientId: process.env.CLIENT_ID_WIX }),
-    });
-    const response = await wixClient.currentCart.getCurrentCart();
-    console.log(response, ";response");
-  }
-  useEffect(() => {
-    testCall();
-  }, [])
 
   return (
     <>
