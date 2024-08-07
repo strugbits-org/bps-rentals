@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import { createWixClient } from "@/Utils/CreateWixClient";
-import { authWixClient } from "../updateProfile/route";
+import { authWixClient, createWixClient } from "@/Utils/CreateWixClient";
 
 export const POST = async (req) => {
   try {

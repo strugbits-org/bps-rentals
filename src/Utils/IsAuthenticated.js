@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import { createWixClient } from "./CreateWixClient";
-import { authWixClient } from "@/app/api/auth/updateProfile/route";
+import { authWixClient, createWixClient } from "./CreateWixClient";
 
 const unAuthCollections = [
   "RentalsHomeHero",
