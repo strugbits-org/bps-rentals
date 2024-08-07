@@ -1,8 +1,8 @@
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import React from 'react'
 import Newsletter from "../Common/NewsLetter";
-import { CustomButton } from "../Common/CustomButton";
 import AnimateLink from "../Common/AnimateLink";
+import { DynamicLink } from "../Common/DynamicLink";
 
 export const FooterAccount = ({ footerData }) => {
     const { footerContent, contactData, socialLinks, navigationMenu } = footerData;
@@ -49,14 +49,14 @@ export const FooterAccount = ({ footerData }) => {
                             {navigationMenu.map((item) => {
                                 return (
                                     <li key={item._id} className="list-item">
-                                        <CustomButton
+                                        <DynamicLink
                                             customClasses={"link-footer-menu"}
                                             data={{
                                                 label: item.title,
-                                                action: item.action
+                                                action: item.rentalsAction
                                             }}
                                         >
-                                        </CustomButton>
+                                        </DynamicLink>
                                     </li>
                                 )
                             })}

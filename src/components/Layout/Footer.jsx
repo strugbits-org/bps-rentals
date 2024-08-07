@@ -8,8 +8,9 @@ import { DynamicLink } from "../Common/DynamicLink";
 
 const Footer = ({ menu, footerData, contactData, socialLinks }) => {
   const pathname = usePathname();
+  const CORPORATE_URL = process.env.CORPORATE_URL;
 
-  const disabledPages = ["/my-account","/my-account-saved-products","/my-account-quotes-history","/my-account-change-password"];
+  const disabledPages = ["/my-account", "/my-account-saved-products", "/my-account-quotes-history", "/my-account-change-password"];
 
   if (disabledPages.includes(pathname)) return;
 

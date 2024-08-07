@@ -52,10 +52,20 @@ export const getSocialLinks = async () => {
 export const getFooterNavigationMenu = async () => {
   try {
     const response = await getDataFetchFunction({
-      "dataCollectionId": "FooterNavigationMenu"
+      "dataCollectionId": "FooterNavigationMenu",
+      ne: [
+        {
+          key: "isHidden",
+          value: true,
+        },
+        {
+          key: "rentalsAction",
+          value: "none",
+        },
+      ]
     });
     if (response && response._items) {
-      return response._items.filter(x => !x.data.isHidden).map((x) => x.data).sort((a, b) => a.orderNumber - b.orderNumber);
+      return response._items.map((x) => x.data).sort((a, b) => a.orderNumber - b.orderNumber);
     } else {
       throw new Error("Response does not contain _items");
     }

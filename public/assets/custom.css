@@ -25,7 +25,7 @@
     width: 100%;
 }
 
-.cursor-pointer{
+.cursor-pointer {
     cursor: pointer;
 }
 
@@ -88,6 +88,7 @@
     left: 0;
     color: var(--white-1);
 }
+
 .container-newsletter.letter-success .form-newsletter {
     opacity: 0.2;
     pointer-events: none;
@@ -104,22 +105,78 @@
 }
 
 .capitalize {
-  text-transform: lowercase;
+    text-transform: lowercase;
 }
+
 .capitalize:first-line {
-  text-transform: capitalize;
+    text-transform: capitalize;
 }
 
 @media only screen and (min-width: 1025.1px) {
-  [data-pg=pg-my-account] #footer,
-  [data-pg=pg-my-account-saved-products] #footer,
-  [data-pg=pg-my-account-change-password] #footer,
-  [data-pg=pg-my-account-quotes-history] #footer {
-    display: block;
-  }
+
+    [data-pg=pg-my-account] #footer,
+    [data-pg=pg-my-account-saved-products] #footer,
+    [data-pg=pg-my-account-change-password] #footer,
+    [data-pg=pg-my-account-quotes-history] #footer {
+        display: block;
+    }
 }
 
 .menu-search .wrapper-search .container-results .btn-border-blue {
     opacity: 1;
 }
+
+.hidden {
+    display: none;
+}
+
+.menu-search .wrapper-search .container-results .result-all-studios .list-result-all-studios .grid-item .link-studios:not(.active) {
+    background-color: white;
+    color: #0f41fa;
+}
+
+.menu-search .wrapper-search .container-results .result-all-studios .list-result-all-studios .grid-item .link-studios:not(.active):before {
+    color: #0f41fa;
+}
+
+.menu-search .wrapper-search .container-results .result-all-studios .list-result-all-studios .grid-item .link-studios.disabled {
+    background: var(--gray-3);
+    color: white;
+    user-select: none;
+    pointer-events: none;
+}
+
+.menu-search .wrapper-search .container-results .result-all-studios .list-result-all-studios .grid-item .link-studios.disabled:before {
+    color: white;
+}
+
+.menu-search .wrapper-search .container-results .result-our-markets .market-link.disabled {
+    user-select: none;
+    pointer-events: none;
+}
+
+.menu-search .wrapper-search .container-results .result-our-markets .market-link.disabled:after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: 0;
+    background: var(--white-2) !important;
+    z-index: 5;
+    opacity: 0.8;
+    border-radius: 2rem;
+}
+
+.result-our-markets .grid-item.active .market-link.project-link .container-text {
+    color: #0f41fa;
+}
+
+.mt-3-cs {
+    margin-top: 3rem;
+}
+
 /* remove #pg-category from app.css */
