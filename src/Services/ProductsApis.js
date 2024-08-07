@@ -250,8 +250,8 @@ export const fetchAllProducts = async () => {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: ["product"],
-      limit: 1000,
-      eq: [],
+      limit: "infinite",
+      increasedLimit: 1000,
       ne: [
         {
           key: "hidden",
