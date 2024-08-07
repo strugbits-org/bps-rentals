@@ -1,6 +1,7 @@
+import React from "react";
+
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
-import React from "react";
 import { formatDate } from "@/Utils/Utils";
 
 const ArticleSection = ({ data }) => {
@@ -120,9 +121,13 @@ const ArticleSection = ({ data }) => {
             </div>
           </div>
           <div className="col-lg-2 offset-lg-5 flex-center mt-70">
-            <a href="/#" className="btn-border-blue" data-cursor-style="off">
+            <AnimateLink
+              to={`${CORPORATE_URL}/blog`}
+              className="btn-border-blue"
+              data-cursor-style="off"
+            >
               <span>See all</span>
-            </a>
+            </AnimateLink>
           </div>
         </div>
       </div>

@@ -1,7 +1,11 @@
 import React from "react";
+
 import { generateImageUrl2 } from "@/Utils/GenerateImageURL";
+import AnimateLink from "../AnimateLink";
 
 const PortfolioSection = ({ data }) => {
+  const CORPORATE_URL = process.env.CORPORATE_URL;
+
   return (
     <section className="product-post-explore-projects pt-md-100 pt-phone-50 pb-lg-190 pb-mobile-130">
       <div className="container-fluid">
@@ -97,9 +101,13 @@ const PortfolioSection = ({ data }) => {
             className="col-lg-2 offset-lg-5 flex-center mt-lg-60 mt-mobile-40"
             data-aos="fadeIn .8s ease-in-out .2s, d:loop"
           >
-            <a href="/" className="btn-border-blue" data-cursor-style="off">
+            <AnimateLink
+              to={`${CORPORATE_URL}/portfolio`}
+              className="btn-border-blue"
+              data-cursor-style="off"
+            >
               <span>See more</span>
-            </a>
+            </AnimateLink>
           </div>
         </div>
       </div>
