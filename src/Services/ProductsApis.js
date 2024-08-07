@@ -28,14 +28,13 @@ export const getProductsByCategory = async ({ category, searchTerm }) => {
     const response = await getDataFetchFunction(payload);
     if (response && response._items) {
       const products = response._items.map((x) => x.data);
-      if (!category && searchTerm) {
-        console.log("searchTerm", searchTerm);
-        console.log("products", products.length);
+      if (!category && !searchTerm) {
+        return products;
+      } else if (!category && searchTerm) {
         const filteredProducts = products.filter(product => {
           const matchedTerm = searchTerm === "" || (product.search && product.search.toLowerCase().includes(searchTerm));
           return matchedTerm;
         });
-        console.log("filteredProducts", filteredProducts.length);
         return filteredProducts;
       }
       const filteredProducts = products.filter((product) =>

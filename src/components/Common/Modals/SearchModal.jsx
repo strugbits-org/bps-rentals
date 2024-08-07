@@ -1,10 +1,13 @@
 "use client";
 
-import { generateImageURL } from "@/Utils/GenerateImageURL";
+import { generateImageURL, generateImageUrl2, productImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { formatDate } from "@/Utils/Utils";
 
-const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
+const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, products }) => {
+
+  const CORPORATE_URL = process.env.CORPORATE_URL;
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStudios, setSelectedStudios] = useState([]);
@@ -13,21 +16,41 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
   const [resultStudios, setResultStudios] = useState([]);
   const [resultMarkets, setResultMarkets] = useState([]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Submitted");
-    // document.body.setAttribute("data-search-state", "success");
-  };
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
+  const [filteredPortfolios, setFilteredPortfolios] = useState([]);
+
+  const handleSearchFilter = (value) => {
+    const term = value || searchTerm;
+    const filteredProductsData = products.filter(product => {
+      const matchedTerm = term === "" || (product.search && product.search.toLowerCase().includes(term));
+      return matchedTerm;
+    });
+    setFilteredProducts(filteredProductsData.slice(0, 3));
+
+    const filteredPortfoliosData = portfolios.filter(portfolio => {
+      const matchedTerm = term === "" || (portfolio.titleAndDescription && portfolio.titleAndDescription.toLowerCase().includes(term));
+      return matchedTerm;
+    });
+    setFilteredPortfolios(filteredPortfoliosData.slice(0, 5));
+
+    const filteredBlogsData = blogs.filter(blog => {
+      const matchedTerm = term === "" || (blog.titleAndDescription && blog.titleAndDescription.toLowerCase().includes(term));
+      return matchedTerm;
+    });
+    setFilteredBlogs(filteredBlogsData.slice(0, 5));
+  }
 
   const handleInputChange = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
+    handleSearchFilter(value);
   };
   const handleStudioFilter = (studio) => {
     if (selectedStudios.includes(studio)) {
       setSelectedStudios(selectedStudios.filter((el) => el !== studio));
     } else {
-      setSelectedStudios([...selectedStudios, tag]);
+      setSelectedStudios([...selectedStudios, studio]);
     }
   };
   const handleMarketFilter = (market) => {
@@ -37,6 +60,20 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
       setSelectedMarkets([...selectedMarkets, market]);
     }
   };
+  useEffect(() => {
+    console.log("selectedStudios", selectedStudios);
+    console.log("selectedMarkets", selectedMarkets);
+  }, [selectedStudios, selectedMarkets])
+
+  useEffect(() => {
+    const portfolioStudios = portfolios.flatMap(item => item.studios.map(studio => studio._id));
+    const blogStudios = blogs.flatMap(item => item.studios.map(studio => studio._id));
+    const portfolioMarkets = portfolios.flatMap(item => item.markets.map(market => market._id));
+    const blogMarkets = blogs.flatMap(item => item.markets.map(market => market._id));
+
+    setResultStudios([...new Set([...portfolioStudios, ...blogStudios])]);
+    setResultMarkets([...new Set([...portfolioMarkets, ...blogMarkets])]);
+  }, []);
 
 
   return (
@@ -49,7 +86,6 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                 <form
                   className="form-search header-search"
                   data-search-form
-                  onSubmit={handleSubmit}
                 >
                   <div className="container-input input-header">
                     <label
@@ -112,16 +148,15 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                     </ul>
                   </div>
                   <div className="column-results">
-                    <div className="result-rental">
+                    <div className={`result-rental ${filteredProducts.length === 0 ? "hidden" : ""}`}>
                       <div className="container-title-results">
                         <h2 className="title-results split-chars" data-aos>
                           {searchSectionDetails?.rentalTitle} <span>{`"${searchTerm}"`}</span>
                         </h2>
                         <AnimateLink
-                          to="/"
+                          to={`/search/${searchTerm}`}
                           data-menu-close
                           className="btn-border-blue"
-                          data-aos
                         >
                           <span>See more</span>
                           <i className="icon-arrow-right"></i>
@@ -133,7 +168,8 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                             className="swiper-wrapper list-result-rental list-slider-phone grid-md-33"
                             data-aos
                           >
-                            {[1, 2, 3].map((index) => {
+                            {filteredProducts.map((data, index) => {
+                              const { product, variantData } = data;
                               return (
                                 <div
                                   key={index}
@@ -141,17 +177,23 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                                 >
                                   <div className="rental-product-link">
                                     <AnimateLink
-                                      to="/"
+                                      to={`/product/${product.slug}`}
                                       className="product-link"
                                       data-menu-close
                                     >
                                       <h3 className="product-name">
-                                        Bristol Chair
+                                        {product.name}
                                       </h3>
                                       <div className="wrapper-img">
                                         <div className="container-img">
                                           <img
-                                            src="/images/chairs/bristol-chair-color-1.webp"
+                                            src={generateImageURL({
+                                              wix_url: product.mainMedia,
+                                              w: "346",
+                                              h: "346",
+                                              fit: "fill",
+                                              q: "80",
+                                            })}
                                             className=" "
                                           />
                                         </div>
@@ -164,42 +206,36 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                                           <i className="icon-arrow-diagonal-right"></i>
                                         </div>
                                         <ul className="list-thumb">
-                                          <li>
-                                            <div className="container-img">
-                                              <img
-                                                src="/images/chairs/bristol-chair-color-1.webp"
-                                                className=" "
-                                              />
-                                            </div>
-                                          </li>
-                                          <li>
-                                            <div className="container-img">
-                                              <img
-                                                src="/images/chairs/bristol-chair-color-2.webp"
-                                                className=" "
-                                              />
-                                            </div>
-                                          </li>
-                                          <li>
-                                            <div className="container-img">
-                                              <img
-                                                src="/images/chairs/bristol-chair-color-3.webp"
-                                                className=" "
-                                              />
-                                            </div>
-                                          </li>
-                                          <li>
-                                            <div className="container-img">
-                                              <img
-                                                src="/images/chairs/bristol-chair-color-4.webp"
-                                                className=" "
-                                              />
-                                            </div>
-                                          </li>
+                                          {variantData.map((item, idx) => {
+                                            const { variant } = item;
+                                            return (
+                                              <React.Fragment key={idx}>
+                                                {idx < 4 && (
+                                                  <li>
+                                                    <div className="container-img">
+                                                      <img
+                                                        src={productImageURL({
+                                                          wix_url: variant.imageSrc,
+                                                          w: "40",
+                                                          h: "40",
+                                                          fit: "fill",
+                                                          q: "100",
+                                                        })}
+                                                        className=" "
+                                                      />
+                                                    </div>
+                                                  </li>
+                                                )}
+                                              </React.Fragment>
+                                            )
+                                          })}
                                         </ul>
-                                        <div className="colors-number">
-                                          <span>+3</span>
-                                        </div>
+                                        {variantData.length > 4 && (
+                                          <div className="colors-number">
+                                            <span>+{variantData.length - 4}</span>
+                                          </div>
+                                        )}
+
                                       </div>
                                     </AnimateLink>
                                   </div>
@@ -210,16 +246,15 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                         </div>
                       </div>
                     </div>
-                    <div className="result-portfolio mt-lg-60 mt-mobile-40">
+                    <div className={`result-portfolio mt-lg-60 mt-mobile-40 ${filteredPortfolios.length === 0 ? "hidden" : ""}`}>
                       <div className="container-title-results">
                         <h2 className="title-results split-chars" data-aos>
                           {searchSectionDetails?.portfolioTitle} <span>{`"${searchTerm}"`}</span>
                         </h2>
                         <AnimateLink
-                          to="/"
+                          to={`${CORPORATE_URL}/portfolio`}
                           data-menu-close
                           className="btn-border-blue"
-                          data-aos
                         >
                           <span>See more</span>
                           <i className="icon-arrow-right"></i>
@@ -231,14 +266,15 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                             className="swiper-wrapper list-result-portfolio list-slider-phone grid-md-20"
                             data-aos
                           >
-                            {[1, 2, 3, 4, 5].map((index) => {
+                            {filteredPortfolios.map((portfolio, index) => {
+                              const { portfolioRef } = portfolio;
                               return (
                                 <div
                                   key={index}
                                   className="swiper-slide grid-item"
                                 >
                                   <AnimateLink
-                                    to="/"
+                                    to={`${CORPORATE_URL}/project/${portfolio.slug}`}
                                     className="link-portfolio "
                                     data-menu-close
                                   >
@@ -248,14 +284,14 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                                     >
                                       <div className="wrapper-img">
                                         <img
-                                          src="/images/lib/06_desktop.jpg"
+                                          src={generateImageUrl2({ wix_url: portfolioRef.coverImage.imageInfo, fit: "fit", w: "220", h: "320", q: "95" })}
                                           className=" "
                                         />
                                       </div>
                                     </div>
                                     <div className="container-text">
                                       <h2 className="title-portfolio">
-                                        F1 Las Vegas Grand Prix
+                                        {portfolioRef.title}
                                       </h2>
                                     </div>
                                   </AnimateLink>
@@ -265,6 +301,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                           </div>
                         </div>
                       </div>
+                      {filteredProducts.length === 0 && filteredPortfolios.length === 0 && <h6 style={{ width: "100%" }} className="ml-4 mt-3-cs fs--40">No products or projects were found for {searchTerm}</h6>}
                     </div>
                   </div>
                   <div className="result-our-markets">
@@ -310,16 +347,15 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                       })}
                     </ul>
                   </div>
-                  <div className="result-blog">
+                  <div className={`result-blog ${filteredBlogs.length === 0 ? "hidden" : ""}`}>
                     <div className="container-title-results">
                       <h2 className="title-results split-chars" data-aos>
                         {searchSectionDetails?.blogTitle} <span>{`"${searchTerm}"`}</span>
                       </h2>
                       <AnimateLink
-                        to="/"
+                        to={`${CORPORATE_URL}/blog`}
                         data-menu-close
                         className="btn-border-blue"
-                        data-aos
                       >
                         <span>See more</span>
                         <i className="icon-arrow-right"></i>
@@ -331,14 +367,15 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                           className="swiper-wrapper list-result-blog list-slider-mobile list-blog grid-lg-20"
                           data-aos
                         >
-                          {[1, 2, 3, 4, 5].map((index) => {
+                          {filteredBlogs.map((blog, index) => {
+                            const { blogRef, author } = blog;
                             return (
                               <div
                                 key={index}
                                 className="swiper-slide grid-item"
                               >
                                 <AnimateLink
-                                  to="/"
+                                  to={`${CORPORATE_URL}/article/${blog.slug}`}
                                   className="link-blog "
                                   data-menu-close
                                 >
@@ -348,7 +385,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                                   >
                                     <div className="wrapper-img">
                                       <img
-                                        src="/images/lib/08_desktop.jpg"
+                                        src={generateImageURL({ wix_url: blogRef.coverImage, fit: "fit", w: "400", h: "180", q: "95" })}
                                         className=" "
                                       />
                                     </div>
@@ -357,23 +394,21 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData }) => {
                                     <div className="container-author-post-info">
                                       <div className="author">
                                         <span className="author-name">
-                                          Lily Yeung
+                                          {author.nickname}
+
                                         </span>
                                       </div>
                                       <div className="date">
-                                        <span>Sep 30</span>
+                                        <span>
+                                          {formatDate(blogRef.lastPublishedDate.$date)}
+                                        </span>
                                       </div>
                                     </div>
                                     <h2 className="title-blog">
-                                      A Taste Explosion: Event Design
-                                      Extravaganza at Boa Restaurant
+                                      {blogRef.title}
                                     </h2>
                                     <p className="text-blog">
-                                      Beverly Hills, renowned for its luxury and
-                                      panache, witnessed an unforgettable
-                                      evening that melded culinary wonders with
-                                      unmatched event Lorem ipsum dolor sit
-                                      amet, consectetur adipiscing elit.
+                                      {blogRef.excerpt}
                                     </p>
                                   </div>
                                 </AnimateLink>

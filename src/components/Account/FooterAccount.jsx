@@ -53,7 +53,7 @@ export const FooterAccount = ({ footerData }) => {
                                             customClasses={"link-footer-menu"}
                                             data={{
                                                 label: item.title,
-                                                action: item.action
+                                                action: item.rentalsAction
                                             }}
                                         >
                                         </CustomButton>

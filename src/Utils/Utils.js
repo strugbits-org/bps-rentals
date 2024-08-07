@@ -86,3 +86,11 @@ export const compareArray = (arr1, arr2) => {
     
     return false;
 }
+
+export const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+  });
+};

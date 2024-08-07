@@ -256,3 +256,42 @@ export const fetchInstaFeed = async () => {
     refreshToken({ access_token: process.env.INSTA_ACCESS_TOKEN });
   };
 }
+
+export const getPortfolioData = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "PortfolioCollection",
+      includeReferencedItems: ["portfolioRef", "studios", "markets"],
+      limit: "infinite",
+      ne: [{ key: "isHidden", value: true }],
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data);
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching Portfolio data:", error);
+    return [];
+  }
+};
+
+export const getBlogsData = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "BlogProductData",
+      includeReferencedItems: ["blogRef", "studios", "markets", "author"],
+      limit: "infinite",
+      ne: [{ key: "isHidden", value: true }],
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data);
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching Blogs data:", error);
+    return [];
+  }
+};

@@ -1,7 +1,6 @@
 import { createWixClient } from "@/Utils/CreateWixClient";
 import { apiAuth } from "@/Utils/IsAuthenticated";
-import { unstable_cache } from 'next/cache';
-import { fetchBestSellers, getAllProductVariants, getAllProductVariantsImages, getBestSellerProducts } from "./ProductsApis";
+import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
 
 // Query data items from Wix data collections
 const getDataFetchFunction = async (payload) => {

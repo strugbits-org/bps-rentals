@@ -9,6 +9,8 @@ import {
 import { getHomeSectionDetails, getMarketsData } from "@/Services/SectionsApis";
 
 export default async function Page({ params }) {
+  
+  const searchTerm = decodeURIComponent(params.for);  
 
   const [
     homePageContent,
@@ -25,12 +27,12 @@ export default async function Page({ params }) {
     getMarketsData(),
     getAllColorsData(),
     fetchBestSellers(),
-    getProductsByCategory({ searchTerm: params.for }),
+    getProductsByCategory({ searchTerm }),
   ]);
 
   return (
     <SearchPage
-      searchFor={params.for}
+      searchFor={searchTerm}
       pageContent={homePageContent}
       bannersData={bannersData}
       locations={locations}
@@ -41,3 +43,5 @@ export default async function Page({ params }) {
     />
   );
 }
+
+export const dynamic = 'force-static'

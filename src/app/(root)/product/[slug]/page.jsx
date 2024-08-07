@@ -13,6 +13,7 @@ import {
   getSelectedProductId,
   fetchAllProducts,
 } from '@/Services/ProductsApis';
+import { getBlogsData, getPortfolioData } from "@/Services/SectionsApis";
 
 // export const generateStaticParams = async () => {
 //   try {
@@ -29,7 +30,7 @@ export default async function Page({ params }) {
 
   const selectedProductRes = await getSelectedProductId(slug);
   if (!selectedProductRes?.length) {
-    redirect('/error');
+    redirect("/error");
     return null;
   }
 
@@ -42,6 +43,8 @@ export default async function Page({ params }) {
     productVariantsImages,
     productFound,
     categoriesData,
+    blogsData,
+    portfolioData,
   ] = await Promise.all([
     getPairItWithProductsId(selectedProductId),
     getProductVariants(selectedProductId),
@@ -49,6 +52,8 @@ export default async function Page({ params }) {
     getProductVariantsImages(selectedProductId),
     getProductFound(),
     getAllCategoriesData(),
+    getBlogsData(),
+    getPortfolioData(),
   ]);
 
   const pairedProductIds = pairIWithRes.map((item) => item.pairedProductId);
@@ -92,6 +97,8 @@ export default async function Page({ params }) {
       productVariantsImages={productVariantsImages}
       productFoundData={productFound}
       categoriesData={categoriesData}
+      blogsData={blogsData}
+      portfolioData={portfolioData}
     />
   );
 }
