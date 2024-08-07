@@ -27,7 +27,9 @@ import {
 } from "@/Services/FooterApis";
 import {
   fetchInstaFeed,
+  getBlogsData,
   getMarketsData,
+  getPortfolioData,
   getSocialSectionBlogs,
   getSocialSectionDetails,
   getStudiosData,
@@ -35,7 +37,6 @@ import {
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
 import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
-import { getBlogsData, getPortfolioData } from "@/Services/SearchBarApis";
 import { getProductsByCategory } from "@/Services/ProductsApis";
 
 export const metadata = {

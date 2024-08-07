@@ -14,6 +14,8 @@ import Breadcrumb from "../Common/BreadCrumbData";
 import AnimateLink from "../Common/AnimateLink";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
+import ArticleSection from "../Common/Sections/ArticleSection";
+import PortfolioSection from "../Common/Sections/PortfolioSection";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -21,6 +23,8 @@ const ProductPostPage = ({
   productVariantsImages,
   productFoundData,
   categoriesData,
+  blogsData,
+  portfolioData,
 }) => {
   const router = useRouter();
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
@@ -626,172 +630,10 @@ const ProductPostPage = ({
       {matchedProductsData.length > 0 && (
         <MatchItWith matchedProductsData={matchedProductsData} />
       )}
-      <section className="product-where-the-product-was-used pt-lg-295 pt-tablet-105 pt-phone-150 pb-lg-150 pb-mobile-100">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12 column-1">
-              <h2
-                className="fs--60 text-center mb-lg-45 mb-mobile-40 split-words"
-                data-aos="d:loop"
-              >
-                Where the product was used
-              </h2>
-              <div className="slider-content-mobile">
-                <div className="swiper-container">
-                  <div
-                    className="swiper-wrapper list-blog list-slider-mobile"
-                    data-aos="d:loop"
-                  >
-                    {[1, 2, 3, 4, 5, 6].map((index) => {
-                      return (
-                        <div key={index} className="swiper-slide grid-item">
-                          <AnimateLink to="/" className="link-blog">
-                            <div
-                              className="container-img bg-blue"
-                              data-cursor-style="view"
-                            >
-                              <div className="wrapper-img">
-                                <img
-                                  src="/images/lib/08_desktop.jpg"
-                                  className=" "
-                                />
-                              </div>
-                            </div>
-                            <div className="container-text">
-                              <div className="container-author-post-info">
-                                <div className="author">
-                                  <span className="author-name">
-                                    Lily Yeung
-                                  </span>
-                                </div>
-                                <div className="date">
-                                  <span>Sep 30</span>
-                                </div>
-                              </div>
-                              <h2 className="title-blog">
-                                A Taste Explosion: Event Design Extravaganza at
-                                Boa Restaurant
-                              </h2>
-                              <p className="text-blog">
-                                Beverly Hills, renowned for its luxury and
-                                panache, witnessed an unforgettable evening that
-                                melded culinary wonders with unmatched event
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit.
-                              </p>
-                              <ul className="list-tags-small">
-                                <li className="tag-small active">
-                                  <span>Corporate</span>
-                                </li>
-                                <li className="tag-small">
-                                  <span>Event Design and Production</span>
-                                </li>
-                                <li className="tag-small">
-                                  <span>Creative Services Agency</span>
-                                </li>
-                                <li className="tag-small">
-                                  <span>+ 3 studios</span>
-                                </li>
-                              </ul>
-                            </div>
-                          </AnimateLink>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-                <div className="swiper-button-prev swiper-button-01 no-mobile">
-                  <i className="icon-arrow-left-3"></i>
-                </div>
-                <div className="swiper-button-next swiper-button-01 no-mobile">
-                  <i className="icon-arrow-right-3"></i>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-2 offset-lg-5 flex-center mt-70">
-              <a href="/#" className="btn-border-blue" data-cursor-style="off">
-                <span>See all</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="product-post-explore-projects pt-md-100 pt-phone-50 pb-lg-190 pb-mobile-130">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12">
-              <h2
-                className="fs--60 text-center mb-lg-45 mb-tablet-35 mb-phone-40 split-words"
-                data-aos="d:loop"
-              >
-                As Seen In Our Articles
-              </h2>
-              <div className="slider-content-mobile">
-                <div className="swiper-container">
-                  <div className="swiper-wrapper list-portfolio list-slider-mobile">
-                    {[1, 2, 3, 4, 5].map((index) => {
-                      return (
-                        <div key={index} className="swiper-slide grid-item">
-                          <a
-                            href={`product/${index}`}
-                            className="link-portfolio link-portfolio-animation"
-                            data-aos="d:loop"
-                          >
-                            <div
-                              className="container-img bg-blue"
-                              data-cursor-style="view"
-                            >
-                              <div className="wrapper-img">
-                                <img
-                                  src="/images/lib/06_desktop.jpg"
-                                  className=" "
-                                />
-                              </div>
-                            </div>
-                            <div className="container-text">
-                              <ul className="list-tags-small">
-                                <li className="tag-small active">
-                                  <span>Corporate</span>
-                                </li>
-                                <li className="tag-small">
-                                  <span>Event Design and Production</span>
-                                </li>
-                                <li className="tag-small">
-                                  <span>Creative Services Agency</span>
-                                </li>
-                                <li className="tag-small">
-                                  <span>+ 3 studios</span>
-                                </li>
-                              </ul>
-                              <h2 className="title-portfolio">
-                                F1 Las Vegas Grand Prix
-                              </h2>
-                            </div>
-                          </a>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-                <div className="swiper-button-prev swiper-button-01 no-mobile">
-                  <i className="icon-arrow-left-3"></i>
-                </div>
-                <div className="swiper-button-next swiper-button-01 no-mobile">
-                  <i className="icon-arrow-right-3"></i>
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-lg-2 offset-lg-5 flex-center mt-lg-60 mt-mobile-40"
-              data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-            >
-              <a href="/" className="btn-border-blue" data-cursor-style="off">
-                <span>See more</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+
+      <ArticleSection data={blogsData} />
+
+      <PortfolioSection data={portfolioData} />
     </>
   );
 };
