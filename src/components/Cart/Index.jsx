@@ -10,7 +10,10 @@ import {
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
-import { updateProductsQuantityCart } from "@/Services/CartApis";
+import {
+  removeProductFromCart,
+  updateProductsQuantityCart,
+} from "@/Services/CartApis";
 import { useCookies } from "react-cookie";
 
 const CartPage = ({ cartData }) => {
@@ -63,6 +66,23 @@ const CartPage = ({ cartData }) => {
     }
   };
 
+  const removeProduct = async (id) => {
+    const memberTokens = cookies.userTokens;
+
+    try {
+      const response = await removeProductFromCart({
+        memberTokens,
+        lineItemIds: [id],
+      });
+      // const total = calculateTotalCartQuantity(response.cart.lineItems);
+      // setCookie("cartQuantity", total);
+      // setCartItems(response.cart.lineItems);
+      // setCart(response.cart);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   useEffect(() => {
     if (cartData.lineItems) {
       setCartItems(data.lineItems);
@@ -103,7 +123,6 @@ const CartPage = ({ cartData }) => {
                         descriptionLines,
                         catalogReference,
                       } = cart;
-                      console.log(cart, "cart");
 
                       const colors = findColor(descriptionLines).join("-");
                       const location = findLocation(descriptionLines);
@@ -140,7 +159,11 @@ const CartPage = ({ cartData }) => {
                                     <i className="icon-arrow-right"></i>
                                   </AnimateLink>
                                 </div>
-                                <button type="button" className="btn-cancel">
+                                <button
+                                  onClick={() => removeProduct(_id)}
+                                  type="button"
+                                  className="btn-cancel"
+                                >
                                   <i className="icon-close"></i>
                                 </button>
                               </div>

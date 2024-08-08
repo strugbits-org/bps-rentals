@@ -11,5 +11,5 @@ export default async function Page() {
     getProductsCart(JSON.parse(memberTokens)),
   ]);
 
-  return <CartPage cartData={cartData.cartData.lineItems || []} />;
+  return <CartPage cartData={cartData || []} />;
 }

@@ -1,30 +1,30 @@
-import { cartWixClient } from "@/Utils/CreateWixClient";
-import handleAuthentication from "@/Utils/HandleAuthentication";
-
 import { NextResponse } from "next/server";
 
-// GET method handler
-export const POST = async (req) => {
-  const memberTokens = await req.json();
+import handleAuthentication from "@/Utils/HandleAuthentication";
+import { cartWixClient } from "@/Utils/CreateWixClient";
 
+export const POST = async (req) => {
   try {
     const authenticatedUserData = await handleAuthentication(req);
     if (!authenticatedUserData) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+    const body = await req.json();
+    const { memberTokens, lineItemIds } = body;
 
     const cartClient = await cartWixClient(memberTokens);
-    const cartResponse = await cartClient.currentCart.getCurrentCart();
+    const response =
+      await cartClient.currentCart.removeLineItemsFromCurrentCart(lineItemIds);
 
     return NextResponse.json(
       {
-        message: "Cart Successfully fetched",
-        cartData: cartResponse,
+        message: "Cart item removed Successfully",
+        cartData: response,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error on Tokens", error);
+    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };
