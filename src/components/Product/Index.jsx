@@ -18,6 +18,9 @@ import ArticleSection from "../Common/Sections/ArticleSection";
 import PortfolioSection from "../Common/Sections/PortfolioSection";
 import ModalCanvas3d from "../Common/ModalCanvas3d";
 import { compareArray } from "@/Utils/Utils";
+import { getSavedProductData } from "@/Services/ProductsApis";
+import { SaveProductButton } from "../Common/SaveProductButton";
+import { AvailabilityCard } from "./AvailabilityCard";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -32,6 +35,7 @@ const ProductPostPage = ({
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [savedProductsData, setSavedProductsData] = useState([]);
   const [isBestSeller, setIsBestSeller] = useState(false);
+  const [productFoundInCategories, setProductFoundInCategories] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState();
   const [cartQuantity, setCartQuantity] = useState(1);
   const descriptionRef = useRef(null);
@@ -63,12 +67,7 @@ const ProductPostPage = ({
     resetSlideIndex();
   };
 
-  const productFondFilteredData = categoriesData.filter((data) => {
-    const parentCollectionId = data.parentCollection._id;
-    return selectedProductDetails.subCategory.some(
-      (collection) => collection._id === parentCollectionId
-    );
-  });
+
 
   useEffect(() => {
     if (selectedProductDetails && productSnapshotData) {
@@ -97,11 +96,24 @@ const ProductPostPage = ({
         setSelectedVariant(combinedVariantData);
       }
 
-      const isBestSellerProduct = compareArray(bestSeller, categoriesData.map(x => x._id));
-      console.log("bestSeller", bestSeller);
-      console.log("isBestSellerProduct", isBestSellerProduct);
-      
+      const isBestSellerProduct = compareArray(bestSeller, selectedProductDetails.subCategory.map(x => x._id));
       setIsBestSeller(isBestSellerProduct);
+
+      const categoriesFound = categoriesData.reduce((acc, subCategory) => {
+        const { parentCollection, level2Collections } = subCategory;
+        if (selectedProductDetails.subCategory.some(x => x.slug === parentCollection.slug)) {
+          acc.push(parentCollection);
+        }
+        level2Collections.forEach(level2Category => {
+          if (level2Category.slug && selectedProductDetails.subCategory.some(x => x.slug === level2Category.slug)) {
+            acc.push(level2Category);
+          }
+        });
+        return acc;
+      }, []);
+
+      setProductFoundInCategories(categoriesFound);
+
     }
   }, [selectedProductDetails]);
 
@@ -167,17 +179,14 @@ const ProductPostPage = ({
     "color:#0F41FA"
   );
 
-  // const fetchSavedProducts = async () => {
-  //   const savedProducts = await getSavedProductData();
-  //   setSavedProductsData(savedProducts);
-  // };
-  // useEffect(() => {
-  //   fetchSavedProducts();
-  // }, []);
+  const fetchSavedProducts = async () => {
+    const savedProducts = await getSavedProductData();
+    setSavedProductsData(savedProducts);
+  };
+
   useEffect(() => {
-    setTimeout(() => {
-      markPageLoaded();
-    }, 100);
+    fetchSavedProducts();
+    setTimeout(markPageLoaded, 100);
   }, []);
   return (
     <>
@@ -201,10 +210,15 @@ const ProductPostPage = ({
                           <span>Best Seller</span>
                         </div>
                       )}
-                      <button className="btn-bookmark">
+                      <SaveProductButton
+                        productData={selectedProductDetails.product}
+                        savedProductsData={savedProductsData}
+                        setSavedProductsData={setSavedProductsData}
+                      />
+                      {/* <button className="btn-bookmark">
                         <i className="icon-bookmark"></i>
                         <i className="icon-bookmark-full"></i>
-                      </button>
+                      </button> */}
                     </div>
                     <div className="swiper-container">
                       <div className="swiper-wrapper">
@@ -309,16 +323,6 @@ const ProductPostPage = ({
             <div className="col-lg-3 column-2 mt-tablet-20 mt-phone-25">
               <ul className="list-breadcrumb" data-aos="fadeIn .8s ease-in-out">
                 <Breadcrumb selectedProductDetails={selectedProductDetails} />
-
-                {/* {["Home", "Corporate"].map((data, index) => {
-                  return (
-                    <li key={index} className="list-breadcrumb-item">
-                      <AnimateLink to="/" className="breadcrumb">
-                        <span>{data}</span>
-                      </AnimateLink>
-                    </li>
-                  );
-                })} */}
               </ul>
               <div className="container-product-description">
                 <form action="cart.html" className="form-cart" data-pjax>
@@ -469,23 +473,7 @@ const ProductPostPage = ({
                       <i className="icon-arrow-right"></i>
                     </button>
                   </div>
-                  <div
-                    className="container-available font-2 blue-1 mt-md-40 mt-phone-30"
-                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                  >
-                    <div className="available-title">
-                      <i className="icon-pin"></i>
-                      <h3 className="fs--16 fs-phone-14">
-                        Available for national delivery (Conditions apply)
-                      </h3>
-                    </div>
-                    <p className="fs--10 fs-tablet-14 mt-5">
-                      Please note, screen colors may not accurately match actual
-                      product colors. Also, natural wood items can vary in
-                      color, grain, and texture, which is part of their unique
-                      charm.
-                    </p>
-                  </div>
+                  <AvailabilityCard />
 
                   {selectedProductDetails &&
                     selectedProductDetails.product.customTextFields.map(
@@ -578,7 +566,7 @@ const ProductPostPage = ({
                 )}
 
               {/* PRODUCT FOUND */}
-              {selectedProductDetails && productFondFilteredData.length > 0 && (
+              {selectedProductDetails && productFoundInCategories.length > 0 && (
                 <div className="container-info-text" data-aos="">
                   <h3 className="title-info-text split-words" data-aos="">
                     Product found in
@@ -587,8 +575,8 @@ const ProductPostPage = ({
                     className="container-btn"
                     data-aos="fadeIn .8s ease-in-out"
                   >
-                    {productFondFilteredData.map((data, index) => {
-                      const { name, slug } = data.parentCollection;
+                    {productFoundInCategories.map((data, index) => {
+                      const { name, slug } = data;
 
                       return (
                         <AnimateLink key={index} to={`/category/${slug}`}>
