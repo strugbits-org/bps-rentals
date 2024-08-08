@@ -295,7 +295,7 @@ const SearchPage = ({
                                                         index={index}
                                                         bestSeller={bestSeller}
                                                         product={product}
-                                                        categories={data?.subCategory || []}
+                                                        categories={data?.subCategoryData || []}
                                                         variantData={variantData}
                                                         selectedVariant={
                                                             selectedVariants[index] || variantData[0]

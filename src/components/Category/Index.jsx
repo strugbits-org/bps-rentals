@@ -79,7 +79,7 @@ const CategoryPage = ({
       const filteredProductsList = productsData.filter((product) => {
         const hasCategory =
           selectedCategories.length > 0
-            ? product.subCategory.some((subCat) =>
+            ? product.subCategoryData.some((subCat) =>
               selectedCategories.includes(subCat._id)
             )
             : true;
@@ -395,7 +395,7 @@ const CategoryPage = ({
                             index={index}
                             bestSeller={bestSeller}
                             product={product}
-                            categories={data?.subCategory || []}
+                            categories={data?.subCategoryData || []}
                             variantData={variantData}
                             selectedVariant={
                               selectedVariants[index] || variantData[0]

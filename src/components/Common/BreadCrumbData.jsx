@@ -26,7 +26,7 @@ const Breadcrumb = ({ selectedProductDetails }) => {
       const categoryID = router.components["/products"]?.query?.category;
 
       // Iterate over subcategoryData
-      for (const subcategory of selectedProductDetails.subCategory) {
+      for (const subcategory of selectedProductDetails.subCategoryData) {
         // Check if the categoryID matches the _id in subcategory
         if (categoryID === subcategory._id) {
           breadcrumbs.push({

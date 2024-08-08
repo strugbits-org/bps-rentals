@@ -5,7 +5,6 @@ import ProductPostPage from '@/components/Product/Index';
 import {
   getAllCategoriesData,
   getPairWithData,
-  getProductFound,
   fetchAllProductsPaths,
   getAllProducts,
   fetchBestSellers,
