@@ -27,6 +27,7 @@ import {
 } from "@/Services/FooterApis";
 import {
   fetchInstaFeed,
+  fetchSearchPages,
   getBlogsData,
   getMarketsData,
   getPortfolioData,
@@ -65,6 +66,7 @@ export default async function RootLayout({ children }) {
     socialSectionBlogs,
     instaFeed,
     searchSectionDetails,
+    searchPagesData
   ] = await Promise.all([
     getFilterLocations(),
     getLoginModalContent(),
@@ -85,6 +87,7 @@ export default async function RootLayout({ children }) {
     getSocialSectionBlogs(),
     fetchInstaFeed(),
     getSearchSectionDetails(),
+    fetchSearchPages()
   ]);
 
   return (
@@ -112,6 +115,7 @@ export default async function RootLayout({ children }) {
             studiosData={studiosData}
             searchSectionDetails={searchSectionDetails}
             categoriesData={allCategoriesData}
+            searchPagesData={searchPagesData}
           />
           <CookiesConsent />
           <Wrapper>

@@ -74,6 +74,28 @@ export const getHotTrendsSection = async () => {
   }
 };
 
+export const fetchSearchPages = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "TextCollectionPages",
+      eq: [
+        {
+          key: "showInSearch",
+          value: true
+        }
+      ],
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data);
+    } else {
+      throw new Error("Response does not contain _items", response);
+    }
+  } catch (error) {
+    console.error("Error fetching search pages data:", error);
+    return [];
+  }
+}
+
 export const getHomeSectionDetails = async () => {
   try {
     const response = await getDataFetchFunction({
