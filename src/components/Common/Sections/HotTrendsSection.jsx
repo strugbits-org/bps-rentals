@@ -1,8 +1,8 @@
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
-import { CustomButton } from "../CustomButton";
 
-export const HotTrendsHome = ({ content }) => {
+export const HotTrendsCategory = ({ pageContent, data }) => {
+
   return (
     <section className="section-hot-trends white-1">
       <div className="container-fluid">
@@ -12,20 +12,20 @@ export const HotTrendsHome = ({ content }) => {
               className="d-block fs--40 fs--mobile-25 fw-600"
               data-aos="fadeIn .6s ease-in-out 0s, d:loop"
             >
-              {content && content.title}
+              {data && data.name}
             </span>
             <h2
               className="fs--90 fs-tablet-40 fs-phone-60 lh-100 fw-600 pt-lg-35 pt-tablet-10 pt-phone-20 section-title split-words"
               data-aos="d:loop"
             >
-              {content && content.tagline}
+              {pageContent && pageContent.rentalsHotTrendsTagline}
             </h2>
           </div>
           <div className="col-12">
             <div className="container-img bg-img">
               <img
                 src={generateImageURL({
-                  wix_url: content.backgroundImage,
+                  wix_url: data.mainMedia,
                   w: "1374",
                   h: "547",
                   fit: "fill",
@@ -42,67 +42,13 @@ export const HotTrendsHome = ({ content }) => {
             className="col-lg-5 offset-lg-1 pos-relative z-2 column-btn"
             data-aos="fadeIn .6s ease-in-out 0s, d:loop"
           >
-            <CustomButton
-              customClasses={"btn-blue mt-lg-50 mt-mobile-20"}
-              data={{
-                label: content.buttonLabel,
-                action: content.buttonAction
-              }}
+            <AnimateLink to={`/category/${data.slug}`} className={"btn-blue mt-lg-50 mt-mobile-20"}
               attributes={{
                 "data-cursor-style": "off",
-              }}
-            >
-              {content && content.buttonLabel}
-
-            </CustomButton>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export const HotTrendsCategory = () => {
-  return (
-    <section className="section-hot-trends white-1 hot-category my-lg-60 my-tablet-40 my-phone-25">
-      <div className="container-fluid">
-        <div className="row pt-lg-90 pb-lg-40 pt-tablet-65 pt-phone-190 pb-tablet-60 pb-phone-145">
-          <div className="col-lg-5 offset-lg-1 col-tablet-6 pos-relative z-2 column-text">
-            <span
-              className="d-block fs--40 fs--mobile-25 fw-600"
-              data-aos="fadeIn .6s ease-in-out 0s, d:loop"
-            >
-              Hot Trends
-            </span>
-            <h2
-              className="fs--90 fs-tablet-40 fs-phone-60 lh-100 fw-600 pt-lg-35 pt-tablet-10 pt-phone-20 section-title split-words"
-              data-aos="d:loop"
-            >
-              Modern elegant to elevate your celebration
-            </h2>
-          </div>
-          <div className="col-12">
-            <div className="container-img bg-img">
-              <img
-                src="/images/hot-trends.jpg"
-                className=" "
-                data-parallax
-                data-translate-x-from="10vw"
-                data-translate-x-to="0"
-              />
-            </div>
-          </div>
-          <div
-            className="col-lg-5 offset-lg-1 pos-relative z-2 column-btn"
-            data-aos="fadeIn .6s ease-in-out 0s, d:loop"
-          >
-            <AnimateLink
-              to={`/category/${"123"}`}
-              className="btn-blue mt-lg-50 mt-mobile-20"
-              data-cursor-style="off"
-            >
-              <span>Show Now</span>
-              <i className="icon-arrow-right"></i>
+              }}>
+              <span>
+                {pageContent && pageContent.rentalsHotTrendsButtonLabel}
+              </span>
             </AnimateLink>
           </div>
         </div>

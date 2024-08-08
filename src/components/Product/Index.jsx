@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 import {
   markPageLoaded,
+  pageLoadEnd,
   pageLoadStart,
   resetSlideIndex,
 } from "@/Utils/AnimationFunctions";
@@ -30,6 +31,7 @@ const ProductPostPage = ({
   portfolioData,
   bestSeller
 }) => {
+  
   const { productSnapshotData } = selectedProductDetails;
   const router = useRouter();
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
@@ -40,6 +42,7 @@ const ProductPostPage = ({
   const [cartQuantity, setCartQuantity] = useState(1);
   const descriptionRef = useRef(null);
   const [buttonLabel, setButtonLabel] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
@@ -464,16 +467,36 @@ const ProductPostPage = ({
                         <i className="icon-plus"></i>
                       </button>
                     </div>
-                    <button
-                      onClick={handleAddToCart}
-                      className="btn-add-to-cart"
-                      type="submit"
-                    >
-                      <span>Add to cart</span>
-                      <i className="icon-arrow-right"></i>
-                    </button>
+                    {unavailable ? (
+                      <button
+                        disabled
+                        className="btn-add-to-cart btn-disabled"
+                      >
+                        <span>Add to cart</span>
+                        <i className="icon-arrow-right"></i>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleAddToCart}
+                        className="btn-add-to-cart"
+                        type="submit"
+                      >
+                        <span>Add to cart</span>
+                        <i className="icon-arrow-right"></i>
+                      </button>
+                    )}
                   </div>
-                  <AvailabilityCard />
+                  {unavailable && (
+                    <div className="unavailable-warning-wrapper font-2 mt-3-cs">
+                      <p className="unavailable-warning">Color Variant Not Available in Your Preferred Location. Please &nbsp;</p>
+                      <btn-modal-open
+                        group="modal-contact"
+                      >
+                        <bold>Contact Us</bold>
+                      </btn-modal-open>
+                    </div>
+                  )}
+                  <AvailabilityCard selectedVariantData={selectedProductDetails.variantData[selectedVariantIndex]} setUnavailable={setUnavailable} />
 
                   {selectedProductDetails &&
                     selectedProductDetails.product.customTextFields.map(
@@ -591,15 +614,17 @@ const ProductPostPage = ({
               )}
             </div>
           </div>
-        </div>
-      </section>
+        </div >
+      </section >
       {selectedVariant && selectedVariant.usecaseImages?.length > 0 && (
         <SnapShots data={selectedVariant.usecaseImages} />
       )}
 
-      {matchedProductsData.length > 0 && (
-        <MatchItWith matchedProductsData={matchedProductsData} />
-      )}
+      {
+        matchedProductsData.length > 0 && (
+          <MatchItWith matchedProductsData={matchedProductsData} />
+        )
+      }
 
       <ArticleSection data={blogsData} />
 

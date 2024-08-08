@@ -179,4 +179,26 @@
     margin-top: 3rem;
 }
 
+.btn-disabled {
+    background: #babab2 !important;
+    cursor: not-allowed;
+    pointer-events: none;
+    border: none;
+    user-select: none;
+}
+
+.btn-disabled::before {
+    background: #babab2 !important;
+}
+
+.unavailable-warning-wrapper {
+    display: flex;
+}
+
+.unavailable-warning {
+    color: red !important;
+}
+.unavailable-warning-wrapper btn-modal-open {
+    text-decoration: underline;
+}
 /* remove #pg-category from app.css */

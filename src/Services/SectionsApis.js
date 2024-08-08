@@ -3,7 +3,7 @@ import getDataFetchFunction from "./FetchFunction";
 import { fetchProductsByIds } from "./ProductsApis";
 
 export const getNewArrivalSectionContent = async (slug) => {
-  try {    
+  try {
     const response = await getDataFetchFunction({
       dataCollectionId: "RentalsNewArrivals",
       includeReferencedItems: ["product"],
@@ -17,7 +17,7 @@ export const getNewArrivalSectionContent = async (slug) => {
           value: slug || "/",
         }
       ]
-    });    
+    });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];
     } else {
@@ -52,10 +52,16 @@ export const getHighlightsSection = async (dataCollectionId) => {
   }
 };
 
-export const getHotTrendsSectionContent = async () => {
+export const getHotTrendsSection = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsHomeHotTrends",
+      dataCollectionId: "Stores/Collections",
+      eq: [
+        {
+          key: "name",
+          value: "Hot Trends"
+        }
+      ],
     });
     if (response && response._items) {
       return response._items.map((x) => x.data)[0];

@@ -55,7 +55,7 @@ export default async function RootLayout({ children }) {
     socialLinks,
     navigationMenu,
     contactUsContent,
-    productsData,
+    // productsData,
     blogsData,
     portfoliosData,
     marketsData,
@@ -75,7 +75,7 @@ export default async function RootLayout({ children }) {
     getSocialLinks(),
     getFooterNavigationMenu(),
     getContactUsContent(),
-    getAllProducts({}),
+    // getAllProducts({}),
     getBlogsData(),
     getPortfolioData(),
     getMarketsData(),
@@ -104,7 +104,8 @@ export default async function RootLayout({ children }) {
             loginModalContent={loginModalContent}
             createAccountModalContent={createAccountModalContent}
             forgotPasswordModalContent={forgotPasswordModalContent}
-            productsData={productsData}
+            productsData={[]}
+            // productsData={productsData}
             blogsData={blogsData}
             portfoliosData={portfoliosData}
             marketsData={marketsData}

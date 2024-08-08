@@ -37,7 +37,7 @@ const BestSellersHome = ({ products, content }) => {
                   customClasses={'btn-blue mt-20 no-mobile'}
                   data={{
                     label: content.buttonLabel,
-                    action: content.buttonAction,
+                    action: `/category/best-seller`,
                   }}
                   attributes={{
                     'data-aos':

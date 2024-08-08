@@ -147,7 +147,7 @@ export const fetchBestSellers = async (slug) => {
       payload.hasSome = [
         {
           key: "slug",
-          values: [`/${slug}`],
+          values: [slug],
         },
       ];
     }

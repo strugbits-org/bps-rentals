@@ -43,6 +43,7 @@ export default async function Page({ params }) {
   if (!selectedProduct) redirect("/error");
 
   const dataMap = new Map(selectedProduct.productVariantsData.map(({ sku, _id }) => [sku, _id]));
+
   selectedProduct.variantData = selectedProduct.variantData.reduce((acc, variant) => {
     const variantId = dataMap.get(variant.sku);
     if (variantId) {
@@ -51,6 +52,7 @@ export default async function Page({ params }) {
     }
     return acc;
   }, []);
+  if (selectedProduct.variantData.length === 0) redirect("/error");
 
   const selectedProductId = selectedProduct.product._id;
   const pairedProductsIds = pairWithData.filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);

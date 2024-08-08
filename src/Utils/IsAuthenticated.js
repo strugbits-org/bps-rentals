@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { authWixClient, createWixClient } from "./CreateWixClient";
 
 const unAuthCollections = [
+  "Stores/Collections",
   "RentalsHomeHero",
   "RentalsNewArrivals",
   "RentalsHomeStudios",
