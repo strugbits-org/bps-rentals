@@ -32,7 +32,7 @@ const Navbar = ({
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [message, setMessage] = useState("Message");
   const [toggleModal, setToggleModal] = useState("");
-  const [cookies, setCookie] = useCookies(["authToken"]);
+  const [cookies, setCookie] = useCookies(["authToken", "cartQuantity"]);
   const router = useRouter();
   const path = usePathname();
 
@@ -46,7 +46,10 @@ const Navbar = ({
         router.push("/my-account");
       }, 500);
     } else {
-      submenuLogin.classList.toggle("active", !submenuLogin.classList.contains("active"));
+      submenuLogin.classList.toggle(
+        "active",
+        !submenuLogin.classList.contains("active")
+      );
     }
   };
 
@@ -126,11 +129,7 @@ const Navbar = ({
                     </AnimateLink>
                   </li>{" "}
                 </ul>
-                <button
-                  id="bt-menu"
-                  aria-label="Menu"
-                  data-search-remove
-                >
+                <button id="bt-menu" aria-label="Menu" data-search-remove>
                   svg
                   {/* <svg
                   version="1.1"
@@ -309,7 +308,14 @@ const Navbar = ({
               {/* All categories */}
               <AllCategories categoriesData={categoriesData} />
               {/* Search */}
-              <SearchModal products={productsData} blogs={blogsData} portfolios={portfoliosData} searchSectionDetails={searchSectionDetails} studiosData={studiosData} marketsData={marketsData} />
+              <SearchModal
+                products={productsData}
+                blogs={blogsData}
+                portfolios={portfoliosData}
+                searchSectionDetails={searchSectionDetails}
+                studiosData={studiosData}
+                marketsData={marketsData}
+              />
               {/* User Authentication */}
               <div
                 className="submenu-login submenu"

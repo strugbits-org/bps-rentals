@@ -191,7 +191,8 @@ const MyAccount = ({ myAccountPageContent }) => {
                   id="account-email"
                   name="email"
                   type="email"
-                  placeholder={email}
+                  value={email}
+                  placeholder="exemple@myemail.com"
                   disabled
                 />
               </div>

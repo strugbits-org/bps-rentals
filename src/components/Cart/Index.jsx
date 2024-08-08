@@ -1,42 +1,66 @@
 "use client";
 import { useEffect } from "react";
-import AnimateLink from "../Common/AnimateLink";
-import { markPageLoaded } from "@/Utils/AnimationFunctions";
 
-const CartPage = () => {
+import { extractSlugFromUrl, findColor, findLocation } from "@/Utils/Utils";
+import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { generateImageURL } from "@/Utils/GenerateImageURL";
+import AnimateLink from "../Common/AnimateLink";
+
+const CartPage = ({ cartData }) => {
   useEffect(() => {
     setTimeout(() => {
       markPageLoaded();
     }, 1000);
   }, []);
   return (
-    <>
-      <section className="cart-intro pt-40 pb-lg-195 pb-tablet-70 pb-phone-135">
-        <div className="container-fluid pos-relative z-5">
-          <div className="row">
-            <div className="col-lg-8 offset-lg-2">
-              <div className="container-title flex-center">
-                <h1
-                  className="fs--60 blue-1 text-center split-words"
-                  data-aos="d:loop"
-                >
-                  Your Cart
-                </h1>
-              </div>
-              <div
-                data-form-container-cart
-                className="mt-lg-55 mt-tablet-40 mt-phone-30"
+    <section className="cart-intro pt-40 pb-lg-195 pb-tablet-70 pb-phone-135">
+      <div className="container-fluid pos-relative z-5">
+        <div className="row">
+          <div className="col-lg-8 offset-lg-2">
+            <div className="container-title flex-center">
+              <h1
+                className="fs--60 blue-1 text-center split-words"
+                data-aos="d:loop"
               >
-                <form action="" className="form-cart">
-                  <ul className="list-cart list-cart-product" data-aos="d:loop">
-                    {[1, 2, 3].map((index) => {
+                Your Cart
+              </h1>
+            </div>
+            <div
+              data-form-container-cart
+              className="mt-lg-55 mt-tablet-40 mt-phone-30"
+            >
+              <form action="" className="form-cart">
+                <ul className="list-cart list-cart-product" data-aos="d:loop">
+                  {cartData &&
+                    cartData.map((cart, index) => {
+                      const {
+                        _id,
+                        quantity,
+                        productName,
+                        url,
+                        image,
+                        physicalProperties,
+                        descriptionLines,
+                        catalogReference,
+                      } = cart;
+                      const colors = findColor(descriptionLines).join("-");
+                      const location = findLocation(descriptionLines);
+
                       return (
                         <li key={index} className="list-item">
-                          <input type="hidden" name="sku[]" defaultValue="MODCH09" />
+                          <input
+                            type="hidden"
+                            name="sku[]"
+                            defaultValue="MODCH09"
+                          />
                           <div className="cart-product">
                             <div className="container-img">
                               <img
-                                src="/images/chairs/bristol-chair-color-3.png"
+                                src={generateImageURL({
+                                  wix_url: image,
+                                  h: "63",
+                                  w: "63",
+                                })}
                                 className=" "
                               />
                             </div>
@@ -44,10 +68,10 @@ const CartPage = () => {
                               <div className="container-top">
                                 <div className="container-product-name">
                                   <h2 className="product-name">
-                                    Arm Chair - Tapas
+                                    {productName.original}
                                   </h2>
                                   <AnimateLink
-                                    to="/product/1"
+                                    to={"/product" + extractSlugFromUrl(url)}
                                     className="btn-view"
                                   >
                                     <span>View</span>
@@ -62,7 +86,9 @@ const CartPage = () => {
                                 <ul className="list-specs">
                                   <li className="sku">
                                     <span className="specs-title">SKU</span>
-                                    <span className="specs-text">MODCH09</span>
+                                    <span className="specs-text">
+                                      {physicalProperties.sku}
+                                    </span>
                                   </li>
                                   <li className="size">
                                     <span className="specs-title">Size</span>
@@ -72,16 +98,14 @@ const CartPage = () => {
                                   </li>
                                   <li className="color">
                                     <span className="specs-title">Color</span>
-                                    <span className="specs-text">
-                                      Yellow - Birch
-                                    </span>
+                                    <span className="specs-text">{colors}</span>
                                   </li>
                                   <li className="location">
                                     <span className="specs-title">
                                       Location
                                     </span>
                                     <span className="specs-text">
-                                      San francisco <i className="icon-pin"></i>
+                                      {location} <i className="icon-pin"></i>
                                     </span>
                                   </li>
                                   <li className="customize-text">
@@ -105,6 +129,7 @@ const CartPage = () => {
                                     <input
                                       type="number"
                                       min="1"
+                                      value={quantity}
                                       defaultValue="1"
                                       placeholder="1"
                                       className="input-number"
@@ -120,32 +145,31 @@ const CartPage = () => {
                         </li>
                       );
                     })}
-                  </ul>
-                  <div className="container-btn mt-md-40 mt-phone-40">
-                    <AnimateLink
-                      to="/quote-request"
-                      className="btn-1 btn-large btn-blue w-100 bt-submit"
-                      data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                    >
-                      <span>Request for quote</span>
-                      <i className="icon-arrow-right"></i>
-                    </AnimateLink>
-                    <AnimateLink
-                      to={`/category/${"123"}`}
-                      className="btn-1 btn-border btn-border-blue btn-shopping btn-icon-left mt-lg-35 mt-mobile-20"
-                      data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                    >
-                      <i className="icon-arrow-diagonal-left"></i>
-                      <span>Continue shopping</span>
-                    </AnimateLink>
-                  </div>
-                </form>
-              </div>
+                </ul>
+                <div className="container-btn mt-md-40 mt-phone-40">
+                  <AnimateLink
+                    to="/quote-request"
+                    className="btn-1 btn-large btn-blue w-100 bt-submit"
+                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                  >
+                    <span>Request for quote</span>
+                    <i className="icon-arrow-right"></i>
+                  </AnimateLink>
+                  <AnimateLink
+                    to={`/category/${"123"}`}
+                    className="btn-1 btn-border btn-border-blue btn-shopping btn-icon-left mt-lg-35 mt-mobile-20"
+                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                  >
+                    <i className="icon-arrow-diagonal-left"></i>
+                    <span>Continue shopping</span>
+                  </AnimateLink>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 
