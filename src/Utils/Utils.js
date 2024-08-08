@@ -20,6 +20,12 @@ export const extractUniqueColors = (data) => {
 export const findColor = (data) => {
     return data.filter((x) => x.colorInfo !== undefined).map((x) => x.colorInfo.original)
 }
+
+export const findLocation = (data) => {
+  return data
+    .filter((x) => x.plainText !== undefined)
+    .map((x) => x.plainText.original);
+};
 export const formatPrice = (price, quantity) => {
     const currencySymbol = price.formattedAmount.charAt(0);
     const totalPrice = price.amount * quantity;

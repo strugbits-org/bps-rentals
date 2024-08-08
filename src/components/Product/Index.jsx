@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 import {
   markPageLoaded,
+  pageLoadEnd,
   pageLoadStart,
   resetSlideIndex,
 } from "@/Utils/AnimationFunctions";
@@ -17,10 +18,12 @@ import SnapShots from "./SnapShotsSection";
 import ArticleSection from "../Common/Sections/ArticleSection";
 import PortfolioSection from "../Common/Sections/PortfolioSection";
 import ModalCanvas3d from "../Common/ModalCanvas3d";
-import { compareArray } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
 import { getSavedProductData } from "@/Services/ProductsApis";
 import { SaveProductButton } from "../Common/SaveProductButton";
 import { AvailabilityCard } from "./AvailabilityCard";
+import { AddProductToCart } from "@/Services/CartApis";
+import { useCookies } from "react-cookie";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -28,7 +31,7 @@ const ProductPostPage = ({
   categoriesData,
   blogsData,
   portfolioData,
-  bestSeller
+  bestSeller,
 }) => {
   const { productSnapshotData } = selectedProductDetails;
   const router = useRouter();
@@ -40,6 +43,12 @@ const ProductPostPage = ({
   const [cartQuantity, setCartQuantity] = useState(1);
   const descriptionRef = useRef(null);
   const [buttonLabel, setButtonLabel] = useState(false);
+  const [cookies, setCookie] = useCookies([
+    "authToken",
+    "userData",
+    "cartQuantity",
+    "userTokens",
+  ]);
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
@@ -66,8 +75,6 @@ const ProductPostPage = ({
     }
     resetSlideIndex();
   };
-
-
 
   useEffect(() => {
     if (selectedProductDetails && productSnapshotData) {
@@ -96,16 +103,28 @@ const ProductPostPage = ({
         setSelectedVariant(combinedVariantData);
       }
 
-      const isBestSellerProduct = compareArray(bestSeller, selectedProductDetails.subCategory.map(x => x._id));
+      const isBestSellerProduct = compareArray(
+        bestSeller,
+        selectedProductDetails.subCategory.map((x) => x._id)
+      );
       setIsBestSeller(isBestSellerProduct);
 
       const categoriesFound = categoriesData.reduce((acc, subCategory) => {
         const { parentCollection, level2Collections } = subCategory;
-        if (selectedProductDetails.subCategory.some(x => x.slug === parentCollection.slug)) {
+        if (
+          selectedProductDetails.subCategory.some(
+            (x) => x.slug === parentCollection.slug
+          )
+        ) {
           acc.push(parentCollection);
         }
-        level2Collections.forEach(level2Category => {
-          if (level2Category.slug && selectedProductDetails.subCategory.some(x => x.slug === level2Category.slug)) {
+        level2Collections.forEach((level2Category) => {
+          if (
+            level2Category.slug &&
+            selectedProductDetails.subCategory.some(
+              (x) => x.slug === level2Category.slug
+            )
+          ) {
             acc.push(level2Category);
           }
         });
@@ -113,7 +132,6 @@ const ProductPostPage = ({
       }, []);
 
       setProductFoundInCategories(categoriesFound);
-
     }
   }, [selectedProductDetails]);
 
@@ -128,36 +146,38 @@ const ProductPostPage = ({
     }
   };
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
     try {
       pageLoadStart();
+      const memberTokens = cookies.userTokens;
       const product_id = selectedProductDetails.product._id;
       const variant_id = selectedVariant.variantId
         .replace(product_id, "")
         .substring(1);
-      const collection = selectedProductDetails.f1Collection
-        .map((x) => x.collectionName)
-        .join(" - ");
 
-      const product = {
-        catalogReference: {
-          appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-          catalogItemId: product_id,
-          options: {
-            variantId: variant_id,
-            customTextFields: {
-              collection: collection,
-              additonalInfo: "",
+      const productData = {
+        lineItems: [
+          {
+            catalogReference: {
+              appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
+              catalogItemId: product_id,
+              options: {
+                variantId: variant_id,
+                customTextFields: {
+                  additonalInfo: "",
+                },
+              },
             },
+            quantity: 5,
           },
-        },
-        quantity: cartQuantity,
+        ],
       };
-      const data = await AddProductToCart([product]);
+      const data = await AddProductToCart({ memberTokens, productData });
       const total = calculateTotalCartQuantity(data.cart.lineItems);
       setCookie("cartQuantity", total);
 
-      router.push("/cart");
+      // router.push("/cart");
     } catch (error) {
       pageLoadEnd();
       console.log("Error:", error);
@@ -188,6 +208,7 @@ const ProductPostPage = ({
     fetchSavedProducts();
     setTimeout(markPageLoaded, 100);
   }, []);
+
   return (
     <>
       <section className="product-intro pt-lg-70" data-product-content>
@@ -274,10 +295,11 @@ const ProductPostPage = ({
                               return (
                                 <div
                                   key={index}
-                                  class={`swiper-slide  ${index === selectedVariantIndex
-                                    ? "active"
-                                    : ""
-                                    }`}
+                                  class={`swiper-slide  ${
+                                    index === selectedVariantIndex
+                                      ? "active"
+                                      : ""
+                                  }`}
                                 >
                                   <div class="wrapper-img">
                                     <div class="container-img">
@@ -325,7 +347,7 @@ const ProductPostPage = ({
                 <Breadcrumb selectedProductDetails={selectedProductDetails} />
               </ul>
               <div className="container-product-description">
-                <form action="cart.html" className="form-cart" data-pjax>
+                <form className="form-cart" onSubmit={handleAddToCart}>
                   <input type="hidden" name="sku[]" defaultValue="MODCH09" />
                   <div className="wrapper-product-name">
                     <div className="container-product-name">
@@ -464,11 +486,7 @@ const ProductPostPage = ({
                         <i className="icon-plus"></i>
                       </button>
                     </div>
-                    <button
-                      onClick={handleAddToCart}
-                      className="btn-add-to-cart"
-                      type="submit"
-                    >
+                    <button className="btn-add-to-cart" type="submit">
                       <span>Add to cart</span>
                       <i className="icon-arrow-right"></i>
                     </button>
@@ -505,8 +523,9 @@ const ProductPostPage = ({
               {selectedProductDetails &&
                 selectedProductDetails.product.description && (
                   <div
-                    className={`container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50 ${buttonLabel ? "active" : ""
-                      }`}
+                    className={`container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50 ${
+                      buttonLabel ? "active" : ""
+                    }`}
                     data-aos=""
                   >
                     <h3 className="title-info-text split-words" data-aos="">
@@ -566,29 +585,30 @@ const ProductPostPage = ({
                 )}
 
               {/* PRODUCT FOUND */}
-              {selectedProductDetails && productFoundInCategories.length > 0 && (
-                <div className="container-info-text" data-aos="">
-                  <h3 className="title-info-text split-words" data-aos="">
-                    Product found in
-                  </h3>
-                  <div
-                    className="container-btn"
-                    data-aos="fadeIn .8s ease-in-out"
-                  >
-                    {productFoundInCategories.map((data, index) => {
-                      const { name, slug } = data;
+              {selectedProductDetails &&
+                productFoundInCategories.length > 0 && (
+                  <div className="container-info-text" data-aos="">
+                    <h3 className="title-info-text split-words" data-aos="">
+                      Product found in
+                    </h3>
+                    <div
+                      className="container-btn"
+                      data-aos="fadeIn .8s ease-in-out"
+                    >
+                      {productFoundInCategories.map((data, index) => {
+                        const { name, slug } = data;
 
-                      return (
-                        <AnimateLink key={index} to={`/category/${slug}`}>
-                          <button className="btn-small-tag">
-                            <span>{name}</span>
-                          </button>
-                        </AnimateLink>
-                      );
-                    })}
+                        return (
+                          <AnimateLink key={index} to={`/category/${slug}`}>
+                            <button className="btn-small-tag">
+                              <span>{name}</span>
+                            </button>
+                          </AnimateLink>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           </div>
         </div>

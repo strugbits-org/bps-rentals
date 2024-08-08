@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import { authWixClient, createWixClient } from "@/Utils/CreateWixClient";
+import {
+  authWixClient,
+  cartWixClient,
+  createWixClient,
+} from "@/Utils/CreateWixClient";
 
 export const POST = async (req) => {
   try {
@@ -40,8 +44,19 @@ export const POST = async (req) => {
           .find();
 
         const selectedMemberData = privateMemberData._items[0].data;
+        console.log(selectedMemberData, "selectedMemberData");
+
+        const memberTokens =
+          await wixClient.auth.getMemberTokensForExternalLogin(
+            selectedMemberData._id,
+            process.env.CLIENT_API_KEY_WIX
+          );
+
+        // const cartClient = await cartWixClient(memberTokens);
+        // const cartResponse = await cartClient.currentCart.getCurrentCart();
 
         const finalData = {
+          memberId: selectedMemberData._id,
           loginEmail: selectedMemberData.loginEmail,
           firstName: selectedMemberData.firstName,
           lastName: selectedMemberData.lastName,
@@ -52,6 +67,7 @@ export const POST = async (req) => {
           {
             message: "Login successful",
             jwtToken,
+            userTokens: memberTokens,
             member: finalData,
           },
           { status: 200 }
