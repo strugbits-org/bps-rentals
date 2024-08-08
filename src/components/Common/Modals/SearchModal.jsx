@@ -5,7 +5,7 @@ import AnimateLink from "../AnimateLink";
 import React, { useEffect, useState } from "react";
 import { filterSearchData, formatDate } from "@/Utils/Utils";
 
-const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, products }) => {
+const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, products, searchPagesData }) => {
 
   const CORPORATE_URL = process.env.CORPORATE_URL;
 
@@ -22,6 +22,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [filteredPortfolios, setFilteredPortfolios] = useState([]);
+  const [filteredPages, setFilteredPages] = useState([]);
 
   const handleSearchFilter = (value) => {
     const term = value !== undefined ? value : searchTerm;
@@ -30,6 +31,12 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
       return matchedTerm;
     });
     setFilteredProducts(filteredProductsData.slice(0, 3));
+
+    const filteredPagesData = searchPagesData.filter(page => {
+      const matchedTerm = term === "" || (page.content && page.content.toLowerCase().includes(term));
+      return matchedTerm;
+    });
+    setFilteredPages(filteredPagesData);
 
     const filteredPortfoliosData = portfolios.filter(portfolio => {
       const matchedTerm = term === "" || (portfolio.titleAndDescription && portfolio.titleAndDescription.toLowerCase().includes(term));
@@ -85,6 +92,10 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
     setFilteredPortfolios(portfoliosResult.slice(0, 5));
     setFilteredBlogs(BlogsResult.slice(0, 5));
   }, [BlogsResult, portfoliosResult]);
+
+  useEffect(() => {
+    console.log("filteredPages", filteredPages);
+  }, [filteredPages])
 
 
   return (
@@ -430,7 +441,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                       </div>
                     </div>
                   </div>
-                  <div className="result-order-pages">
+                  <div className={`result-order-pages ${filteredPages.length === 0 ? "hidden" : ""}`}>
                     <div className="container-title-results">
                       <h2 className="title-results split-chars" data-aos>
                         {searchSectionDetails?.otherPagesTitle} <span>{`"${searchTerm}"`}</span>
@@ -440,7 +451,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                       className="list-order-pages grid-lg-25 grid-md-50"
                       data-aos
                     >
-                      {[1, 2, 3, 4, 5].map((index) => {
+                      {filteredPages.map((page, index) => {
                         return (
                           <li key={index} className="grid-item">
                             <AnimateLink
@@ -449,11 +460,9 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                               data-menu-close
                               className="link-order-pages"
                             >
-                              <h3 className="title-order-pages">About</h3>
+                              <h3 className="title-order-pages">{page.title}</h3>
                               <p className="text-order-pages">
-                                In the heart of the great outdoors, with nature
-                                as our backdrop, Blueprint Studios embarked on a
-                                creative journey - a photoshoot
+                                {page.description}
                               </p>
                             </AnimateLink>
                           </li>

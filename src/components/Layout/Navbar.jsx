@@ -27,6 +27,7 @@ const Navbar = ({
   productsData,
   blogsData,
   portfoliosData,
+  searchPagesData
 }) => {
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
@@ -315,6 +316,7 @@ const Navbar = ({
                 searchSectionDetails={searchSectionDetails}
                 studiosData={studiosData}
                 marketsData={marketsData}
+                searchPagesData={searchPagesData}
               />
               {/* User Authentication */}
               <div
