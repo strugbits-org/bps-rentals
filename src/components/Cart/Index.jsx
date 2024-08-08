@@ -1,17 +1,77 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-import { extractSlugFromUrl, findColor, findLocation } from "@/Utils/Utils";
+import {
+  calculateTotalCartQuantity,
+  extractSlugFromUrl,
+  findColor,
+  findLocation,
+} from "@/Utils/Utils";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
+import { updateProductsQuantityCart } from "@/Services/CartApis";
+import { useCookies } from "react-cookie";
 
 const CartPage = ({ cartData }) => {
+  const [cartItems, setCartItems] = useState([]);
+  const [cookies, setCookie] = useCookies([
+    "authToken",
+    "userData",
+    "cartQuantity",
+    "userTokens",
+  ]);
+
   useEffect(() => {
     setTimeout(() => {
       markPageLoaded();
     }, 1000);
   }, []);
+
+  const handleQuantityChange = async (id, quantity, disabled) => {
+    if (quantity < 10000 && quantity > 0) {
+      const updatedLineItems = cartItems.map((x) => {
+        if (id === x._id) {
+          x.quantity = Number(quantity);
+        }
+        return x;
+      });
+      setCartItems(updatedLineItems);
+      if (!disabled) updateProducts(id, quantity);
+    }
+  };
+
+  const updateProducts = async (id, quantity) => {
+    const memberTokens = cookies.userTokens;
+    try {
+      const lineItems = [
+        {
+          _id: id,
+          quantity: quantity,
+        },
+      ];
+
+      const response = await updateProductsQuantityCart({
+        memberTokens,
+        lineItems,
+      });
+      // const total = calculateTotalCartQuantity(response.cartData.lineItems);
+      // setCookie("cartQuantity", total);
+      // setCart(response.cart);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    if (cartData.lineItems) {
+      setCartItems(data.lineItems);
+      const total = calculateTotalCartQuantity(data.lineItems);
+      setCookie("cartQuantity", total);
+    }
+    markPageLoaded();
+  }, []);
+
   return (
     <section className="cart-intro pt-40 pb-lg-195 pb-tablet-70 pb-phone-135">
       <div className="container-fluid pos-relative z-5">
@@ -43,6 +103,8 @@ const CartPage = ({ cartData }) => {
                         descriptionLines,
                         catalogReference,
                       } = cart;
+                      console.log(cart, "cart");
+
                       const colors = findColor(descriptionLines).join("-");
                       const location = findLocation(descriptionLines);
 
@@ -123,18 +185,39 @@ const CartPage = ({ cartData }) => {
                                     Quantity
                                   </span>
                                   <div className="container-input container-input-quantity">
-                                    <button type="button" className="minus">
+                                    <button
+                                      onClick={() =>
+                                        handleQuantityChange(_id, quantity - 1)
+                                      }
+                                      type="button"
+                                      className="minus"
+                                    >
                                       <i className="icon-minus"></i>
                                     </button>
                                     <input
                                       type="number"
                                       min="1"
                                       value={quantity}
-                                      defaultValue="1"
                                       placeholder="1"
                                       className="input-number"
+                                      onInput={(e) =>
+                                        handleQuantityChange(
+                                          _id,
+                                          e.target.value,
+                                          true
+                                        )
+                                      }
+                                      onBlur={(e) =>
+                                        updateProducts(_id, e.target.value)
+                                      }
                                     />
-                                    <button type="button" className="plus">
+                                    <button
+                                      onClick={() =>
+                                        handleQuantityChange(_id, quantity + 1)
+                                      }
+                                      type="button"
+                                      className="plus"
+                                    >
                                       <i className="icon-plus"></i>
                                     </button>
                                   </div>
@@ -145,6 +228,15 @@ const CartPage = ({ cartData }) => {
                         </li>
                       );
                     })}
+                  {cartData.length === 0 && (
+                    <h6
+                      className="fs--40 text-center split-words white-1"
+                      style={{ margin: "28vh auto" }}
+                      data-aos="d:loop"
+                    >
+                      No Products in Cart
+                    </h6>
+                  )}
                 </ul>
                 <div className="container-btn mt-md-40 mt-phone-40">
                   <AnimateLink

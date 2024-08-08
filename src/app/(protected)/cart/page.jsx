@@ -10,5 +10,6 @@ export default async function Page() {
   const [cartData] = await Promise.all([
     getProductsCart(JSON.parse(memberTokens)),
   ]);
+
   return <CartPage cartData={cartData.cartData.lineItems || []} />;
 }
