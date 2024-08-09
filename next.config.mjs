@@ -13,6 +13,7 @@ const nextConfig = {
     BASE_URL: process.env.BASE_URL,
     CLIENT_SITE_ID_WIX: process.env.CLIENT_SITE_ID_WIX,
     CLIENT_API_KEY_WIX: process.env.CLIENT_API_KEY_WIX,
+    MAX_FETCH_SIZE: process.env.MAX_FETCH_SIZE,
   },
 };
 
