@@ -152,36 +152,32 @@ const Navbar = ({
                   </li>{" "}
                 </ul>
                 <button id="bt-menu" aria-label="Menu" data-search-remove>
-                  svg
-                  {/* <svg
-                  version="1.1"
-                  id="Layer_1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  x="0px"
-                  y="0px"
-                  viewBox="0 0 55 38.5"
-                  style="enable-background:new 0 0 55 38.5;"
-                  xml:space="preserve"
-                >
-                  <g id="bt-menu-bars">
-                    <rect
-                      id="bottombar"
-                      y="32.5"
-                      className="st0"
-                      width="55"
-                      height="6"
-                    />
-                    <rect
-                      id="middlebar"
-                      y="16.4"
-                      className="st0"
-                      width="55"
-                      height="6"
-                    />
-                    <rect id="topbar" className="st0" width="55" height="6" />
-                  </g>
-                </svg> */}
+                  <svg
+                    version="1.1"
+                    id="Layer_1"
+                    x="0px"
+                    y="0px"
+                    viewBox="0 0 55 38.5"
+                    style={{ enableBackground: "new 0 0 55 38.5" }}
+                  >
+                    <g id="bt-menu-bars">
+                      <rect
+                        id="bottombar"
+                        y="32.5"
+                        className="st0"
+                        width="55"
+                        height="6"
+                      />
+                      <rect
+                        id="middlebar"
+                        y="16.4"
+                        className="st0"
+                        width="55"
+                        height="6"
+                      />
+                      <rect id="topbar" className="st0" width="55" height="6" />
+                    </g>
+                  </svg>
                 </button>
               </div>
               <nav className="menu" data-cursor-style="default">
