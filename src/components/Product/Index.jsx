@@ -109,14 +109,14 @@ const ProductPostPage = ({
 
       const isBestSellerProduct = compareArray(
         bestSeller,
-        selectedProductDetails.subCategory.map((x) => x._id)
+        selectedProductDetails.subCategoryData.map((x) => x._id)
       );
       setIsBestSeller(isBestSellerProduct);
 
       const categoriesFound = categoriesData.reduce((acc, subCategory) => {
         const { parentCollection, level2Collections } = subCategory;
         if (
-          selectedProductDetails.subCategory.some(
+          selectedProductDetails.subCategoryData.some(
             (x) => x.slug === parentCollection.slug
           )
         ) {
@@ -125,7 +125,7 @@ const ProductPostPage = ({
         level2Collections.forEach((level2Category) => {
           if (
             level2Category.slug &&
-            selectedProductDetails.subCategory.some(
+            selectedProductDetails.subCategoryData.some(
               (x) => x.slug === level2Category.slug
             )
           ) {
