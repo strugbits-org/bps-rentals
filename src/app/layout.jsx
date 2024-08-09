@@ -38,6 +38,7 @@ import {
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
 import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
+import { getProductsCart } from "@/Services/CartApis";
 // import { getAllProducts } from "@/Services/ProductsApis";
 
 export const metadata = {
@@ -66,7 +67,7 @@ export default async function RootLayout({ children }) {
     socialSectionBlogs,
     instaFeed,
     searchSectionDetails,
-    searchPagesData
+    searchPagesData,
   ] = await Promise.all([
     getFilterLocations(),
     getLoginModalContent(),
@@ -87,7 +88,7 @@ export default async function RootLayout({ children }) {
     getSocialSectionBlogs(),
     fetchInstaFeed(),
     getSearchSectionDetails(),
-    fetchSearchPages()
+    fetchSearchPages(),
   ]);
 
   return (

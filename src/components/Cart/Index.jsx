@@ -73,8 +73,10 @@ const CartPage = ({ cartData }) => {
       const total = calculateTotalCartQuantity(cartData);
       setCookie("cartQuantity", total);
     }
-    markPageLoaded();
-  }, []);
+    setTimeout(() => {
+      markPageLoaded();
+    }, 1000);
+  }, [cartData]);
 
   return (
     <section className="cart-intro pt-40 pb-lg-195 pb-tablet-70 pb-phone-135">
