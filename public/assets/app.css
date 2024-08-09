@@ -10425,17 +10425,17 @@ modal-group:not([name=modal-contact]).leave section {
   -o-animation: unfadeInDown 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
   animation: unfadeInDown 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
 }
-modal-group[name=modal-product], modal-group[name=modal-quotes-history] {
+modal-group[name=modal-product],modal-group[name=modal-product-2], modal-group[name=modal-quotes-history] {
   z-index: 110;
 }
-modal-group[name=modal-product].active, modal-group[name=modal-quotes-history].active {
+modal-group[name=modal-product].active,modal-group[name=modal-product-2].active, modal-group[name=modal-quotes-history].active {
   -webkit-animation: bg-modal-fadeIn 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
   -moz-animation: bg-modal-fadeIn 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
   -ms-animation: bg-modal-fadeIn 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
   -o-animation: bg-modal-fadeIn 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
   animation: bg-modal-fadeIn 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
 }
-modal-group[name=modal-product].leave, modal-group[name=modal-quotes-history].leave {
+modal-group[name=modal-product].leave, modal-group[name=modal-product-2].leave, modal-group[name=modal-quotes-history].leave {
   -webkit-animation: bg-modal-fadeOut 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0.2s both 1;
   -moz-animation: bg-modal-fadeOut 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0.2s both 1;
   -ms-animation: bg-modal-fadeOut 0.4s cubic-bezier(0.42, 0, 0.58, 1) 0.2s both 1;
