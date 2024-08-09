@@ -14,6 +14,8 @@ import MarketModal from "../Common/Modals/MarketModal";
 import AllCategories from "../Category/AllCategories";
 import ErrorModal from "../Common/Modals/ErrorModal";
 import AnimateLink from "../Common/AnimateLink";
+import { getProductsCart } from "@/Services/CartApis";
+import { calculateTotalCartQuantity } from "@/Utils/Utils";
 
 const Navbar = ({
   locations,
@@ -56,11 +58,20 @@ const Navbar = ({
     }
   };
 
+  const getCartTotalQuantity = async () => {
+    const response = await getProductsCart();
+    const total = response ? calculateTotalCartQuantity(response) : "99+";
+    setCookie("cartQuantity", total);
+  };
+
   useEffect(() => {
+    getCartTotalQuantity();
+
     const quantity =
       cookies?.cartQuantity !== undefined && cookies.authToken !== undefined
         ? String(cookies.cartQuantity)
         : "99+";
+
     setCartQuantity(quantity);
   }, [cookies]);
 
