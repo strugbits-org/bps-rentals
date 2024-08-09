@@ -1,11 +1,13 @@
 "use server";
-import { getAuthToken } from "./GetAuthToken";
+import { getAuthToken, getMemberTokens } from "./GetAuthToken";
 
 const baseUrl = process.env.BASE_URL;
 
-export const getProductsCart = async (memberTokens) => {
+export const getProductsCart = async () => {
   try {
     const authToken = await getAuthToken();
+    const memberTokens = await getMemberTokens();
+    if (!authToken && !memberTokens) return;
     const response = await fetch(`${baseUrl}/api/cart/get`, {
       method: "POST",
       headers: {
@@ -20,21 +22,23 @@ export const getProductsCart = async (memberTokens) => {
       throw new Error(`API request failed with status ${response.status}`);
     }
     const data = await response.json();
-    return data.cartData.lineItems;
+
+    return data.cart.lineItems;
   } catch (error) {
     console.error("Error", error);
     return null;
   }
 };
 
-export const AddProductToCart = async ({ memberTokens, productData }) => {
-  const payload = {
-    memberTokens,
-    productData,
-  };
-
+export const AddProductToCart = async (productData) => {
   try {
     const authToken = await getAuthToken();
+    const memberTokens = await getMemberTokens();
+    const payload = {
+      memberTokens,
+      productData,
+    };
+
     const response = await fetch(`${baseUrl}/api/cart/add`, {
       method: "POST",
       headers: {
@@ -54,16 +58,15 @@ export const AddProductToCart = async ({ memberTokens, productData }) => {
   }
 };
 
-export const updateProductsQuantityCart = async ({
-  memberTokens,
-  lineItems,
-}) => {
-  const payload = {
-    memberTokens,
-    lineItems,
-  };
+export const updateProductsQuantityCart = async (lineItems) => {
   try {
     const authToken = await getAuthToken();
+    const memberTokens = await getMemberTokens();
+    const payload = {
+      memberTokens,
+      lineItems,
+    };
+
     const response = await fetch(`${baseUrl}/api/cart/updateQuantity`, {
       method: "POST",
       headers: {
@@ -83,13 +86,16 @@ export const updateProductsQuantityCart = async ({
   }
 };
 
-export const removeProductFromCart = async ({ memberTokens, lineItemIds }) => {
-  const payload = {
-    memberTokens,
-    lineItemIds,
-  };
+export const removeProductFromCart = async (lineItemIds) => {
   try {
     const authToken = await getAuthToken();
+    const memberTokens = await getMemberTokens();
+    const payload = {
+      memberTokens,
+      lineItemIds,
+    };
+    console.log(payload, "payload>>>>");
+
     const response = await fetch(`${baseUrl}/api/cart/remove`, {
       method: "POST",
       headers: {

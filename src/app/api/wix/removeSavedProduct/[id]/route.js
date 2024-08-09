@@ -1,8 +1,8 @@
-import { createWixClient } from "@/Utils/CreateWixClient";
-import handleAuthentication from "@/Utils/HandleAuthentication";
 import { NextResponse } from "next/server";
 
-// GET method handler
+import handleAuthentication from "@/Utils/HandleAuthentication";
+import { createWixClient } from "@/Utils/CreateWixClient";
+
 export const GET = async (req, context) => {
   try {
     const authenticatedUserData = await handleAuthentication(req);
@@ -34,10 +34,6 @@ export const GET = async (req, context) => {
       ...productData.data,
       members: membersData.filter((member) => member !== memberId),
     };
-    // delete dataObject._id;
-    // delete dataObject._owner;
-    // delete dataObject._createdDate;
-    // delete dataObject._updatedDate;
 
     const response = await wixClient.items.updateDataItem(productData._id, {
       dataCollectionId: "locationFilteredVariant",
@@ -54,7 +50,7 @@ export const GET = async (req, context) => {
         return val;
       }
     );
-    
+
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
     console.error(error);

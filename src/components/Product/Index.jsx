@@ -34,17 +34,19 @@ const ProductPostPage = ({
   bestSeller,
 }) => {
   
-  const { productSnapshotData } = selectedProductDetails;
+  const descriptionRef = useRef(null);
   const router = useRouter();
+
+  const { productSnapshotData } = selectedProductDetails;
+  const [productFoundInCategories, setProductFoundInCategories] = useState([]);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [savedProductsData, setSavedProductsData] = useState([]);
-  const [isBestSeller, setIsBestSeller] = useState(false);
-  const [productFoundInCategories, setProductFoundInCategories] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState();
-  const [cartQuantity, setCartQuantity] = useState(1);
-  const descriptionRef = useRef(null);
+  const [isBestSeller, setIsBestSeller] = useState(false);
   const [buttonLabel, setButtonLabel] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
+  const [cartQuantity, setCartQuantity] = useState(1);
+
   const [cookies, setCookie] = useCookies([
     "authToken",
     "userData",
@@ -171,18 +173,20 @@ const ProductPostPage = ({
                 },
               },
             },
-            quantity: 5,
+            quantity: cartQuantity,
           },
         ],
       };
-      const data = await AddProductToCart({ memberTokens, productData });
-      const total = calculateTotalCartQuantity(data.cart.lineItems);
+      const response = await AddProductToCart(productData);
+      console.log(response, "response");
+
+      const total = calculateTotalCartQuantity(response.cart.lineItems);
       setCookie("cartQuantity", total);
 
-      // router.push("/cart");
+      router.push("/cart");
     } catch (error) {
       pageLoadEnd();
-      console.log("Error:", error);
+      console.error("Error while adding item to cart:", error);
     }
   };
   useEffect(() => {

@@ -1,9 +1,8 @@
+import { NextResponse } from "next/server";
+
 import { cartWixClient } from "@/Utils/CreateWixClient";
 import handleAuthentication from "@/Utils/HandleAuthentication";
 
-import { NextResponse } from "next/server";
-
-// GET method handler
 export const POST = async (req) => {
   const memberTokens = await req.json();
 
@@ -14,17 +13,16 @@ export const POST = async (req) => {
     }
 
     const cartClient = await cartWixClient(memberTokens);
-    const cartResponse = await cartClient.currentCart.getCurrentCart();
+    const cart = await cartClient.currentCart.getCurrentCart();
 
     return NextResponse.json(
       {
         message: "Cart Successfully fetched",
-        cartData: cartResponse,
+        cart,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error on Tokens", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

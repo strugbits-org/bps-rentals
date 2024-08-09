@@ -1,8 +1,8 @@
-import { createWixClient } from "@/Utils/CreateWixClient";
-import handleAuthentication from "@/Utils/HandleAuthentication";
 import { NextResponse } from "next/server";
 
-// POST method handler
+import handleAuthentication from "@/Utils/HandleAuthentication";
+import { createWixClient } from "@/Utils/CreateWixClient";
+
 export const POST = async (req) => {
   try {
     const authenticatedUserData = await handleAuthentication(req);

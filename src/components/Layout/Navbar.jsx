@@ -1,19 +1,19 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
-import CreateAccount from "../Authentication/CreateAccount";
 import ForgotPassword from "../Authentication/ForgotPassword";
+import CreateAccount from "../Authentication/CreateAccount";
 import Login from "../Authentication/Login";
 
+import { pageLoadStart } from "@/Utils/AnimationFunctions";
+import { usePathname, useRouter } from "next/navigation";
 import LocationsFilter from "../Common/LocationsFilter";
 import SearchModal from "../Common/Modals/SearchModal";
 import MarketModal from "../Common/Modals/MarketModal";
 import AllCategories from "../Category/AllCategories";
 import ErrorModal from "../Common/Modals/ErrorModal";
 import AnimateLink from "../Common/AnimateLink";
-import { useCookies } from "react-cookie";
-import { usePathname, useRouter } from "next/navigation";
-import { pageLoadStart } from "@/Utils/AnimationFunctions";
 
 const Navbar = ({
   locations,
@@ -27,13 +27,15 @@ const Navbar = ({
   productsData,
   blogsData,
   portfoliosData,
-  searchPagesData
+  searchPagesData,
 }) => {
+  const [cookies, setCookie] = useCookies(["authToken", "cartQuantity"]);
+
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
-  const [message, setMessage] = useState("Message");
   const [toggleModal, setToggleModal] = useState("");
-  const [cookies, setCookie] = useCookies(["authToken", "cartQuantity"]);
+  const [cartQuantity, setCartQuantity] = useState();
+  const [message, setMessage] = useState("Message");
   const router = useRouter();
   const path = usePathname();
 
@@ -53,6 +55,14 @@ const Navbar = ({
       );
     }
   };
+
+  useEffect(() => {
+    const quantity =
+      cookies?.cartQuantity !== undefined && cookies.authToken !== undefined
+        ? String(cookies.cartQuantity)
+        : "99+";
+    setCartQuantity(quantity);
+  }, [cookies]);
 
   return (
     <>
@@ -117,7 +127,7 @@ const Navbar = ({
                   </li>
                   <li className="cart-item">
                     <div className="cart-number">
-                      <span>99+</span>
+                      <span>{cartQuantity}</span>
                     </div>
                     <AnimateLink
                       to="/cart"
@@ -233,7 +243,7 @@ const Navbar = ({
                     </li>
                     <li className="no-desktop cart-item">
                       <div className="cart-number">
-                        <span>99+</span>
+                        <span>{cartQuantity}</span>
                       </div>
                       <AnimateLink
                         to="/cart"
@@ -290,7 +300,7 @@ const Navbar = ({
                     </li>
                     <li className="cart-item">
                       <div className="cart-number">
-                        <span>99+</span>
+                        <span>{cartQuantity}</span>
                       </div>
                       <AnimateLink
                         to="/cart"

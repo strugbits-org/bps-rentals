@@ -1,12 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
-import {
-  calculateTotalCartQuantity,
-  extractSlugFromUrl,
-  findColor,
-  findLocation,
-} from "@/Utils/Utils";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
@@ -14,7 +9,12 @@ import {
   removeProductFromCart,
   updateProductsQuantityCart,
 } from "@/Services/CartApis";
-import { useCookies } from "react-cookie";
+import {
+  calculateTotalCartQuantity,
+  extractSlugFromUrl,
+  findColor,
+  findLocation,
+} from "@/Utils/Utils";
 
 const CartPage = ({ cartData }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -24,12 +24,6 @@ const CartPage = ({ cartData }) => {
     "cartQuantity",
     "userTokens",
   ]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      markPageLoaded();
-    }, 1000);
-  }, []);
 
   const handleQuantityChange = async (id, quantity, disabled) => {
     if (quantity < 10000 && quantity > 0) {
@@ -45,7 +39,6 @@ const CartPage = ({ cartData }) => {
   };
 
   const updateProducts = async (id, quantity) => {
-    const memberTokens = cookies.userTokens;
     try {
       const lineItems = [
         {
@@ -54,39 +47,30 @@ const CartPage = ({ cartData }) => {
         },
       ];
 
-      const response = await updateProductsQuantityCart({
-        memberTokens,
-        lineItems,
-      });
-      // const total = calculateTotalCartQuantity(response.cartData.lineItems);
-      // setCookie("cartQuantity", total);
-      // setCart(response.cart);
+      const response = await updateProductsQuantityCart(lineItems);
+
+      const total = calculateTotalCartQuantity(response.cart.lineItems);
+      setCookie("cartQuantity", total);
     } catch (error) {
-      console.log("error", error);
+      console.error("Error while updating cart:", error);
     }
   };
 
   const removeProduct = async (id) => {
-    const memberTokens = cookies.userTokens;
-
     try {
-      const response = await removeProductFromCart({
-        memberTokens,
-        lineItemIds: [id],
-      });
-      // const total = calculateTotalCartQuantity(response.cart.lineItems);
-      // setCookie("cartQuantity", total);
-      // setCartItems(response.cart.lineItems);
-      // setCart(response.cart);
+      const response = await removeProductFromCart([id]);
+      const total = calculateTotalCartQuantity(response.cart.lineItems);
+      setCartItems(response.cart.lineItems);
+      setCookie("cartQuantity", total);
     } catch (error) {
-      console.log("error", error);
+      console.error("Error while removing product", error);
     }
   };
 
   useEffect(() => {
-    if (cartData.lineItems) {
-      setCartItems(data.lineItems);
-      const total = calculateTotalCartQuantity(data.lineItems);
+    if (cartData) {
+      setCartItems(cartData);
+      const total = calculateTotalCartQuantity(cartData);
       setCookie("cartQuantity", total);
     }
     markPageLoaded();
@@ -111,8 +95,8 @@ const CartPage = ({ cartData }) => {
             >
               <form action="" className="form-cart">
                 <ul className="list-cart list-cart-product" data-aos="d:loop">
-                  {cartData &&
-                    cartData.map((cart, index) => {
+                  {cartItems &&
+                    cartItems.map((cart, index) => {
                       const {
                         _id,
                         quantity,
@@ -251,9 +235,9 @@ const CartPage = ({ cartData }) => {
                         </li>
                       );
                     })}
-                  {cartData.length === 0 && (
+                  {cartItems.length === 0 && (
                     <h6
-                      className="fs--40 text-center split-words white-1"
+                      className="fs--40 blue-1 text-center split-words"
                       style={{ margin: "28vh auto" }}
                       data-aos="d:loop"
                     >
