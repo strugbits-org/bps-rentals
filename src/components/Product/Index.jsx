@@ -52,6 +52,7 @@ const ProductPostPage = ({
     "userData",
     "cartQuantity",
     "userTokens",
+    "location",
   ]);
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
@@ -154,8 +155,9 @@ const ProductPostPage = ({
     e.preventDefault();
     try {
       pageLoadStart();
-      const memberTokens = cookies.userTokens;
+
       const product_id = selectedProductDetails.product._id;
+      const product_location = cookies?.location;
       const variant_id = selectedVariant.variantId
         .replace(product_id, "")
         .substring(1);
@@ -167,10 +169,8 @@ const ProductPostPage = ({
               appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
               catalogItemId: product_id,
               options: {
+                customTextFields: { location: product_location },
                 variantId: variant_id,
-                customTextFields: {
-                  additonalInfo: "",
-                },
               },
             },
             quantity: cartQuantity,
@@ -178,7 +178,6 @@ const ProductPostPage = ({
         ],
       };
       const response = await AddProductToCart(productData);
-      console.log(response, "response");
 
       const total = calculateTotalCartQuantity(response.cart.lineItems);
       setCookie("cartQuantity", total);

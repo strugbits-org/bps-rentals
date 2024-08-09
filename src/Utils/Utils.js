@@ -119,3 +119,9 @@ export const filterSearchData = (collection, selectedStudios, selectedMarkets) =
     }
     return data;
   }
+
+  export const locations = {
+    SF: "San Francisco",
+    LV: "Las Vegas",
+    NT: "National",
+  };

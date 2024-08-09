@@ -433,7 +433,7 @@ export const getAllCategoriesData = async () => {
 export const getSavedProductData = async () => {
   try {
     const authToken = await getAuthToken();
-    const response = await fetch(`${baseUrl}/api/wix/getSavedProducts`, {
+    const response = await fetch(`${baseUrl}/api/product/getSavedProducts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -462,7 +462,7 @@ export const saveProduct = async (id) => {
   try {
     const authToken = await getAuthToken();
 
-    const response = await fetch(`${baseUrl}/api/wix/saveProduct/${id}`, {
+    const response = await fetch(`${baseUrl}/api/product/saveProduct/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -487,7 +487,7 @@ export const unSaveProduct = async (id) => {
   try {
     const authToken = await getAuthToken();
     const response = await fetch(
-      `${baseUrl}/api/wix/removeSavedProduct/${id}`,
+      `${baseUrl}/api/product/removeSavedProduct/${id}`,
       {
         method: "GET",
         headers: {

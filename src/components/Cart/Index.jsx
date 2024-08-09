@@ -14,6 +14,7 @@ import {
   extractSlugFromUrl,
   findColor,
   findLocation,
+  locations,
 } from "@/Utils/Utils";
 
 const CartPage = ({ cartData }) => {
@@ -176,7 +177,8 @@ const CartPage = ({ cartData }) => {
                                       Location
                                     </span>
                                     <span className="specs-text">
-                                      {location} <i className="icon-pin"></i>
+                                      {locations[location]}{" "}
+                                      <i className="icon-pin"></i>
                                     </span>
                                   </li>
                                   <li className="customize-text">
