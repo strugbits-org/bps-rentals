@@ -2,34 +2,79 @@
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import React, { useEffect, useState } from "react";
 import ModalCanvas3d from "../ModalCanvas3d";
+import { reloadAddtoCartModal } from "@/Utils/AnimationFunctions";
 
 const CartModal = ({
+  group,
   productData,
   setProductData,
   setErrorMessageVisible,
   setSuccessMessageVisible,
   productSnapshots,
   productFilteredVariantData,
-  selectedVariantData,
-  setSelectedVariantData,
+  activeVariant,
+  setActiveVariant,
   handleImageChange,
   selectedVariantIndex,
   setProductSnapshots,
   setProductFilteredVariantData,
 }) => {
+
   const [cartQuantity, setCartQuantity] = useState(1);
+  const [snapShotData, setSnapShotData] = useState();
+  const { productSnapshotData, productVariantsData } = productData;
+
   const handleClose = () => {
     setTimeout(() => {
-      setProductData(null);
-      setSelectedVariantData(null);
-      setProductSnapshots(null);
-      setProductFilteredVariantData(null);
-      setCartQuantity(1);
-    }, 1000);
+      // setProductData(null);
+      // setActiveVariant(null);
+      // setProductSnapshots(null);
+      // setProductFilteredVariantData(null);
+      // setCartQuantity(1);
+    }, 500);
   };
 
   useEffect(() => {
-    document.querySelector(".addToCart").click();
+    console.log("activeVariant", activeVariant);
+    console.log("product", productData);
+
+    const currentVariantData = productVariantsData.find((x) => x.sku === activeVariant.sku);
+    console.log("currentVariantData", currentVariantData);
+    const snapShots = productSnapshotData.find((x) => x.colorVariation === currentVariantData._id);
+    console.log("snapShots", snapShots);
+    // if (snapShots.length !== 0) {
+
+    // }
+
+
+    // if (productSnapshots) {
+    //     const selectedVariantFilteredData = productSnapshots.find(
+    //       (variant) => variant.colorVariation === selectedVariantData.variantId
+    //     );
+
+    //     if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
+    //       const combinedVariantData = {
+    //         ...selectedVariantData,
+    //         ...selectedVariantFilteredData,
+    //         modalUrl: modalUrl,
+    //       };
+
+    //       setSelectedVariantIndex(index);
+    //       setSelectedVariantData(combinedVariantData);
+    //     } else {
+    //       const combinedVariantData = {
+    //         ...selectedVariantData,
+    //         ...selectedVariantFilteredData,
+    //         modalUrl: modalUrl,
+    //         images: [{ src: selectedVariantData.imageSrc }],
+    //       };
+    //       setSelectedVariantIndex(index);
+    //       setSelectedVariantData(combinedVariantData);
+    //     }
+    //   }
+
+    setSnapShotData(snapShots);
+    // reloadAddtoCartModal();
   }, [productData]);
 
   const seatHeightData =
@@ -49,7 +94,7 @@ const CartModal = ({
 
     try {
       const product_id = productData.product._id;
-      const variant_id = selectedVariantData.variantId
+      const variant_id = activeVariant.variantId
         .replace(product_id, "")
         .substring(1);
       const collection = productData.product.f1Collection
@@ -80,7 +125,7 @@ const CartModal = ({
   };
   return (
     <div id="scripts">
-      <modal-group name="modal-product-2" class="modal-product">
+      <modal-group name={group} class="modal-product">
         <modal-container>
           <modal-item>
             <div class="wrapper-section">
@@ -114,9 +159,11 @@ const CartModal = ({
                               </div>
                               <div class="swiper-container">
                                 <div class="swiper-wrapper">
-                                  {selectedVariantData &&
-                                    selectedVariantData.images?.map(
+                                  {snapShotData &&
+                                    snapShotData.images?.map(
                                       (imageData, index) => {
+                                        console.log("imageData", imageData);
+
                                         return (
                                           <div key={index} class="swiper-slide">
                                             <div class="wrapper-img">
@@ -137,13 +184,13 @@ const CartModal = ({
                                         );
                                       }
                                     )}
-                                  {selectedVariantData?.modalUrl && (
+                                  {activeVariant?.modalUrl && (
                                     <div class="swiper-slide slide-360">
                                       <div class="wrapper-img">
                                         <i class="icon-360"></i>
                                         <div class="container-img">
                                           <ModalCanvas3d
-                                            path={selectedVariantData?.modalUrl}
+                                            path={activeVariant?.modalUrl}
                                           />
                                         </div>
                                       </div>
@@ -162,8 +209,8 @@ const CartModal = ({
                               <div class="slider-product-thumb">
                                 <div class="swiper-container">
                                   <div class="swiper-wrapper">
-                                    {selectedVariantData &&
-                                      selectedVariantData.images?.map(
+                                    {snapShotData &&
+                                      snapShotData.images?.map(
                                         (data, index) => {
                                           const { src } = data;
                                           return (
@@ -190,7 +237,7 @@ const CartModal = ({
                                         }
                                       )}
 
-                                    {selectedVariantData?.modalUrl && (
+                                    {activeVariant?.modalUrl && (
                                       <div class="swiper-slide">
                                         <div class="wrapper-img">
                                           <div class="container-img">
@@ -225,31 +272,31 @@ const CartModal = ({
                               class="list-specs mt-tablet-20 mt-phone-15"
                               data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                             >
-                              {selectedVariantData?.sku && (
+                              {activeVariant?.sku && (
                                 <li class="sku">
                                   <span class="specs-title">SKU</span>
                                   <span class="specs-text">
-                                    {selectedVariantData &&
-                                      selectedVariantData.sku}
+                                    {activeVariant &&
+                                      activeVariant.sku}
                                   </span>
                                 </li>
                               )}
 
-                              {selectedVariantData?.size && (
+                              {activeVariant?.size && (
                                 <li class="size">
                                   <span class="specs-title">Size</span>
                                   <span class="specs-text">
-                                    {selectedVariantData &&
-                                      selectedVariantData.size}
+                                    {activeVariant &&
+                                      activeVariant.size}
                                   </span>
                                 </li>
                               )}
-                              {selectedVariantData?.color && (
+                              {activeVariant?.color && (
                                 <li class="color">
                                   <span class="specs-title">Color</span>
                                   <span class="specs-text">
-                                    {selectedVariantData &&
-                                      selectedVariantData.color}
+                                    {activeVariant &&
+                                      activeVariant.color}
                                   </span>
                                 </li>
                               )}
@@ -275,32 +322,34 @@ const CartModal = ({
                               class="list-colors"
                               data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                             >
-                              {productFilteredVariantData &&
-                                productFilteredVariantData.map(
+                              {productVariantsData &&
+                                productVariantsData.map(
                                   (variantData, index) => {
+                                    console.log("variantData", variantData);
+
                                     return (
                                       <li key={index} class="list-colors-item">
                                         <div
                                           class="container-input active"
                                           data-set-color={
-                                            variantData.variant.color
+                                            variantData.color
                                           }
-                                          onClick={() =>
-                                            handleImageChange({
-                                              index: index,
-                                              selectedVariantData:
-                                                variantData.variant,
-                                              productSnapshots:
-                                                productSnapshots,
-                                              modalUrl: variantData.zipUrl,
-                                            })
-                                          }
+                                        // onClick={() =>
+                                        //   handleImageChange({
+                                        //     index: index,
+                                        //     activeVariant:
+                                        //       variantData,
+                                        //     productSnapshots:
+                                        //       productSnapshots,
+                                        //     modalUrl: variantData.zipUrl,
+                                        //   })
+                                        // }
                                         >
                                           <label>
                                             <input
                                               type="radio"
                                               name="colors"
-                                              value={variantData.variant.color}
+                                              value={variantData.color}
                                               checked={
                                                 index === selectedVariantIndex
                                               }
@@ -308,7 +357,7 @@ const CartModal = ({
                                             <div class="container-img">
                                               <img
                                                 src={
-                                                  variantData.variant.imageSrc
+                                                  generateImageURL({ wix_url: variantData.media })
                                                 }
                                                 class=" "
                                               />

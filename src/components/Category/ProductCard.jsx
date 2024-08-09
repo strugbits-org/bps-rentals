@@ -4,23 +4,22 @@ import React, { useEffect, useState } from "react";
 import { SaveProductButton } from "../Common/SaveProductButton";
 import { compareArray, hasMatchingColor } from "@/Utils/Utils";
 import { useCookies } from "react-cookie";
+import CartModal from "../Common/Modals/CartModal";
 
 const ProductCard = ({
-  index,
-  product,
-  isSavedProduct,
-  variantData,
-  selectedVariant,
-  getSelectedProductSnapShots,
-  savedProductsData,
-  setSavedProductsData,
+  bestSeller = [],
+  productData,
+  categories = [],
   filteredProducts = [],
   filterColors = [],
-  categories = [],
-  bestSeller = []
+  savedProductsData,
+  setSavedProductsData,
+  isSavedProduct
 }) => {
+
+  const { product, variantData } = productData;
   const [filteredVariants, setFilteredVariants] = useState(variantData);
-  const [activeVariant, setActiveVariant] = useState(selectedVariant);
+  const [activeVariant, setActiveVariant] = useState(variantData[0]);
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [cookies, setCookie] = useCookies(["location"]);
 
@@ -49,138 +48,156 @@ const ProductCard = ({
   }, [filteredProducts]);
 
   return (
-    <div
-      className={`${isSavedProduct ? isSavedProduct : "product-link large active"
-        }`}
-      data-product-category
-      data-product-location
-      data-product-colors
-    >
-      <div className="container-tags">
-        {!isSavedProduct && isBestSeller && (
-          <div className="best-seller">
-            <span>Best Seller</span>
-          </div>
-        )}
-        <SaveProductButton
-          productData={product}
-          savedProductsData={savedProductsData}
-          setSavedProductsData={setSavedProductsData}
-        />
-      </div>
-      {!isSavedProduct && (
-        <div className="container-copy">
-          <button className="btn-copy copy-link">
-            <span>{activeVariant.sku}</span>
-            <i className="icon-copy"></i>
-          </button>
-          <input
-            type="text"
-            className="copy-link-url"
-            defaultValue={activeVariant.sku}
-            style={{
-              position: "absolute",
-              opacity: 0,
-              pointerEvents: "none",
-            }}
+    <>
+      <div
+        className={`${isSavedProduct ? isSavedProduct : "product-link large active"
+          }`}
+        data-product-category
+        data-product-location
+        data-product-colors
+      >
+        <div className="container-tags">
+          {!isSavedProduct && isBestSeller && (
+            <div className="best-seller">
+              <span>Best Seller</span>
+            </div>
+          )}
+          <SaveProductButton
+            productData={product}
+            savedProductsData={savedProductsData}
+            setSavedProductsData={setSavedProductsData}
           />
         </div>
-      )}
-      <AnimateLink to={`/product/${product.slug}`} className="link">
-        <div className="container-top">
-          <h2 className="product-title">{product.name}</h2>
-          {!isSavedProduct && (
-            <div className="container-info">
-              <div className="dimensions">
-                {product.additionalInfoSections?.map((data, index) => {
-                  const { title, description } = data;
-                  if (title == "Size") {
-                    return (
-                      <span
-                        key={index}
-                        dangerouslySetInnerHTML={{
-                          __html: description,
-                        }}
-                      ></span>
-                    );
-                  }
-                })}
+        {!isSavedProduct && (
+          <div className="container-copy">
+            <button className="btn-copy copy-link">
+              <span>{activeVariant && activeVariant.sku}</span>
+              <i className="icon-copy"></i>
+            </button>
+            <input
+              type="text"
+              className="copy-link-url"
+              defaultValue={activeVariant && activeVariant.sku}
+              style={{
+                position: "absolute",
+                opacity: 0,
+                pointerEvents: "none",
+              }}
+            />
+          </div>
+        )}
+        <AnimateLink to={`/product/${product.slug}`} className="link">
+          <div className="container-top">
+            <h2 className="product-title">{product.name}</h2>
+            {!isSavedProduct && (
+              <div className="container-info">
+                <div className="dimensions">
+                  {product.additionalInfoSections?.map((data, index) => {
+                    const { title, description } = data;
+                    if (title == "Size") {
+                      return (
+                        <span
+                          key={index}
+                          dangerouslySetInnerHTML={{
+                            __html: description,
+                          }}
+                        ></span>
+                      );
+                    }
+                  })}
+                </div>
               </div>
+            )}
+          </div>
+          <div className="wrapper-product-img">
+            {filteredVariants.map((selectedData, index) => {
+              return (
+                <React.Fragment key={index}>
+                  <div
+                    className="container-img product-img"
+                    data-get-product-link-color={selectedData.color[0]}
+                    data-default-product-link-active={index === 1}
+                  >
+                    {activeVariant && (
+                      <img
+                        src={productImageURL({
+                          wix_url: activeVariant.variant.imageSrc,
+                          w: "346",
+                          h: "346",
+                          fit: "fill",
+                          q: "80",
+                        })}
+                        className=" "
+                      />
+                    )}
+                  </div>
+                </React.Fragment>
+              );
+            })}
+          </div>
+        </AnimateLink>
+        <div className="container-color-options">
+          <ul className="list-color-options">
+            {filteredVariants.map((variant, idx) => {
+              return (
+                <React.Fragment key={idx}>
+                  {idx < 4 && (
+                    <li
+                      className="list-item"
+                      data-set-product-link-color={variant.color[0]}
+                      onMouseEnter={() => setActiveVariant(variant)}
+                      data-default-product-link-active={idx === 0}
+                    >
+                      <div className="container-img">
+                        <img
+                          src={productImageURL({
+                            wix_url: variant.variant.imageSrc,
+                            w: "40",
+                            h: "40",
+                            fit: "fill",
+                            q: "100",
+                          })}
+                          data-preload
+                          className="media"
+                          alt="product"
+                        />
+                      </div>
+                    </li>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </ul>
+          {filteredVariants.length > 4 && (
+            <div className="colors-number">
+              <span>+{filteredVariants.length - 4}</span>
             </div>
           )}
         </div>
-        <div className="wrapper-product-img">
-          {filteredVariants.map((selectedData, index) => {
-            return (
-              <React.Fragment key={index}>
-                <div
-                  className="container-img product-img"
-                  data-get-product-link-color={selectedData.color[0]}
-                  data-default-product-link-active={index === 1}
-                >
-                  <img
-                    src={productImageURL({
-                      wix_url: activeVariant.variant.imageSrc,
-                      w: "346",
-                      h: "346",
-                      fit: "fill",
-                      q: "80",
-                    })}
-                    className=" "
-                  />
-                </div>
-              </React.Fragment>
-            );
-          })}
-        </div>
-      </AnimateLink>
-      <div className="container-color-options">
-        <ul className="list-color-options">
-          {filteredVariants.map((variant, idx) => {
-            return (
-              <React.Fragment key={idx}>
-                {idx < 4 && (
-                  <li
-                    className="list-item"
-                    data-set-product-link-color={variant.color[0]}
-                    onMouseEnter={() => setActiveVariant(variant)}
-                    data-default-product-link-active={idx === 0}
-                  >
-                    <div className="container-img">
-                      <img
-                        src={productImageURL({
-                          wix_url: variant.variant.imageSrc,
-                          w: "40",
-                          h: "40",
-                          fit: "fill",
-                          q: "100",
-                        })}
-                        data-preload
-                        className="media"
-                        alt="product"
-                      />
-                    </div>
-                  </li>
-                )}
-              </React.Fragment>
-            );
-          })}
-        </ul>
-        {filteredVariants.length > 4 && (
-          <div className="colors-number">
-            <span>+{filteredVariants.length - 4}</span>
-          </div>
-        )}
+        <btn-modal-open
+          group={`modal-product-${product.slug}`}
+          class="modal-add-to-cart"
+        >
+          <span>Add to cart</span>
+          <i className="icon-cart"></i>
+        </btn-modal-open>
       </div>
-      <btn-modal-open
-        onClick={() => getSelectedProductSnapShots(filteredProducts[index])}
-        group="modal-product-2"
-        class="modal-add-to-cart"
-      >
-        <span>Add to cart</span>
-        <i className="icon-cart"></i>
-      </btn-modal-open>
-    </div>
+      <CartModal
+        group={`modal-product-${product.slug}`}
+        // setProductData={setSelectedProductData}
+        // setErrorMessageVisible={setErrorMessageVisible}
+        // setSuccessMessageVisible={setSuccessMessageVisible}
+        productData={productData}
+        // productSnapshots={productSnapshots}
+        filteredVariants={filteredVariants}
+        activeVariant={activeVariant}
+      // setSelectedVariantData={setSelectedVariantData}
+      // handleImageChange={handleImageChange}
+      // selectedVariantIndex={selectedVariantIndex}
+      // setProductSnapshots={setProductSnapshots}
+      // setProductFilteredVariantData={setProductFilteredVariantData}
+      />
+    </>
   );
 };
 export default ProductCard;
