@@ -143,7 +143,7 @@ export default async function RootLayout({ children }) {
             socialLinks={socialLinks}
           />
           {/* <ContactFormModal /> */}
-          <QuoteViewModal />
+          {/* <QuoteViewModal /> */}
           {/* <QuoteConfirmedModal /> */}
         </body>
       </html>
