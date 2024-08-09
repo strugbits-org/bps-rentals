@@ -174,7 +174,7 @@ const ProductCard = ({
       </div>
       <btn-modal-open
         onClick={() => getSelectedProductSnapShots(filteredProducts[index])}
-        group="modal-product"
+        group="modal-product-2"
         class="modal-add-to-cart"
       >
         <span>Add to cart</span>

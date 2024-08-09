@@ -1,6 +1,7 @@
 "use client";
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import React, { useEffect, useState } from "react";
+import ModalCanvas3d from "../ModalCanvas3d";
 
 const CartModal = ({
   productData,
@@ -79,7 +80,7 @@ const CartModal = ({
   };
   return (
     <div id="scripts">
-      <modal-group name="modal-product" class="modal-product">
+      <modal-group name="modal-product-2" class="modal-product">
         <modal-container>
           <modal-item>
             <div class="wrapper-section">
@@ -141,12 +142,9 @@ const CartModal = ({
                                       <div class="wrapper-img">
                                         <i class="icon-360"></i>
                                         <div class="container-img">
-                                          <canvas
-                                            class="infinite-image-scroller"
-                                            data-frames="49"
-                                            data-path="/images/chairs/chair/0_"
-                                            data-extension="jpg"
-                                          ></canvas>
+                                          <ModalCanvas3d
+                                            path={selectedVariantData?.modalUrl}
+                                          />
                                         </div>
                                       </div>
                                     </div>
@@ -197,7 +195,7 @@ const CartModal = ({
                                         <div class="wrapper-img">
                                           <div class="container-img">
                                             <img
-                                              src="/images/chairs/bristol-chair-color-1.webp"
+                                              src="/images/3d.svg"
                                               class=" "
                                             />
                                           </div>
@@ -385,7 +383,7 @@ const CartModal = ({
                             </div>
                             {productData &&
                               productData.product.customTextFields.length >
-                                0 && (
+                              0 && (
                                 <div
                                   style={{ paddingTop: "20px" }}
                                   className="container-product-notes container-info-text "

@@ -1,5 +1,19 @@
 import { D as DataSetGet, S as Swiper, N as Navigation, T as Thumb, I as InfiniteImageScroller } from "./infinite-image-scroller.js";
 import "./all.js";
+export function initializeCanvas() {
+  let productContent2 = document.querySelectorAll("[data-product-content]");
+  productContent2.forEach((element) => {
+    element.querySelectorAll(".infinite-image-scroller").forEach((ele) => {
+      const imageScroller = new InfiniteImageScroller(
+        ele,
+        ele.dataset.frames,
+        ele.dataset.path,
+        ele.dataset.extension
+      );
+      ele.InfiniteImageScroller = imageScroller;
+    });
+  });
+}
 function productContent() {
   let productContent2 = document.querySelectorAll("[data-product-content]:not(.js-cart-running)");
   productContent2.forEach((element) => {
@@ -84,7 +98,7 @@ function productContent() {
       const imageScroller = new InfiniteImageScroller(ele, ele.dataset.frames, ele.dataset.path, ele.dataset.extension);
       ele.InfiniteImageScroller = imageScroller;
     });
-    element.addEventListener("modal:open", function() {
+    element.addEventListener("modal:open", function () {
       setTimeout(() => {
         resizeImages();
       }, 100);
@@ -97,7 +111,7 @@ function productContent() {
       });
     }
     element.querySelectorAll("[data-set-color]").forEach((ele) => {
-      ele.addEventListener("click", function() {
+      ele.addEventListener("click", function () {
         setTimeout(() => {
           resizeImages();
         }, 100);
@@ -105,7 +119,7 @@ function productContent() {
     });
     element.querySelectorAll(".slider-product .swiper-container").forEach((ele) => {
       if (ele.swiper) {
-        ele.swiper.on("slideChange", function() {
+        ele.swiper.on("slideChange", function () {
           setTimeout(() => {
             resizeImages();
           }, 100);

@@ -41,6 +41,7 @@ import {
   c as ScrollSmoother,
   d as Power1,
 } from "./all.js";
+import { initializeCanvas } from "./product-content.js";
 
 var require_app2 = __commonJS({
   "assets/app2.js"(exports, module) {
@@ -9856,6 +9857,17 @@ var require_app2 = __commonJS({
       manualModalCloseControls();
     });
 
+    document
+    .querySelector(".initializeCanvas")
+    .addEventListener("customInit", initializeCanvas);
+
+    document.querySelector(".addToCart").addEventListener("reloadModal", () => {
+      productLinkColor();
+      formCart();
+      filterProducts();
+      addToCartSlider();
+      productContent();
+    });
     // const pages = new PageController();
     // pages.add(pgHome);
     // pages.add(pgMarket);

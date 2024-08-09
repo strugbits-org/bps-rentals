@@ -198,7 +198,17 @@
 .unavailable-warning {
     color: red !important;
 }
+
 .unavailable-warning-wrapper btn-modal-open {
     text-decoration: underline;
 }
+
 /* remove #pg-category from app.css */
+
+
+body[data-modal-state="active"][data-modal="modal-product-2"] .wrapper[data-scroll-container] {
+    transform: none!important;
+}
+body[data-modal-state="active"][data-modal="modal-product-2"] #header {
+    z-index: 0;
+}
