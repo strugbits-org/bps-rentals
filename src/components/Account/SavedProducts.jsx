@@ -1,76 +1,38 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
-import {
-  getProductVariants,
-  getProductVariantsImages,
-  getSavedProductData,
-} from "@/Services/ProductsApis";
+import { closeModals, markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
+import { getSavedProductData } from "@/Services/ProductsApis";
 import ProductCard from "../Category/ProductCard";
 
-const SavedProducts = ({ savedProducts }) => {
+const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
 
-  const [selectedVariants, setSelectedVariants] = useState({});
   const [savedProductsData, setSavedProductsData] = useState([]);
-  const [selectedProductData, setSelectedProductData] = useState(null);
   const pageSize = 20;
   const [pageLimit, setPageLimit] = useState(pageSize);
 
-  const handleImageHover = (productIndex, variant) => {
-    setSelectedVariants((prevSelectedVariants) => ({
-      ...prevSelectedVariants,
-      [productIndex]: variant,
-    }));
-  };
-
-  const getSelectedProductSnapShots = async (productData) => {
-    setSelectedProductData(productData);
-    try {
-      const product_id = productData.product._id;
-      const [productSnapshotData, productVariantsData] = await Promise.all([
-        getProductVariantsImages(product_id),
-        getProductVariants(product_id),
-      ]);
-
-      let dataMap = new Map(
-        productVariantsData.map((item) => [item.sku.toLowerCase(), item])
-      );
-      let filteredVariantData;
-      if (productVariantsData && productData) {
-        filteredVariantData = productData.variantData.filter((variant) => {
-          const normalizedSku = variant.sku.toLowerCase();
-          if (dataMap.has(normalizedSku)) {
-            const dataItem = dataMap.get(normalizedSku);
-            variant.variant.variantId = dataItem._id;
-            return true;
-          }
-          return false;
-        });
-      }
-      setProductSnapshots(productSnapshotData);
-      setProductFilteredVariantData(filteredVariantData);
-      if (filteredVariantData && filteredVariantData.length > 0) {
-        handleImageChange({
-          index: 0,
-          selectedVariantData: filteredVariantData[0].variant,
-          productSnapshots: productSnapshotData,
-          modalUrl: filteredVariantData[0].zipUrl,
-        });
-      }
-    } catch (error) {
-      console.log("Error:", error);
-    }
-  };
 
   const fetchSavedProducts = async () => {
     const savedProducts = await getSavedProductData();
-    setSavedProductsData(savedProducts);
+
+    const items = savedProducts.map((product) => {
+      if (!product._id) return;
+      const productId = product.product._id;
+      product.productSnapshotData = productsVariantImagesData.filter(x => x.productId === productId);
+      product.productVariantsData = productsVariantsData.filter(x => x.productId === productId);
+      return product;
+    });
+
+    setSavedProductsData(items);
     setTimeout(markPageLoaded, 200);
   }
   useEffect(() => {
     fetchSavedProducts();
   }, []);
+
+  useEffect(() => {
+    closeModals();
+  }, [savedProductsData]);
 
   return (
     <div class="wrapper-account">
@@ -92,31 +54,15 @@ const SavedProducts = ({ savedProducts }) => {
             </div>
           ) : (
             savedProductsData.slice(0, pageLimit).map((data, index) => {
-              const { product, variantData } = data;
               return (
                 <li key={index} className="grid-item">
-                  <div
-                    className="product-link small saved-products active"
-                    data-product-category
-                    data-product-location
-                    data-product-colors
-                  >
-                    <ProductCard
-                      key={index}
-                      index={index}
-                      isSavedProduct="product-link small saved-products active"
-                      product={product}
-                      variantData={variantData}
-                      selectedVariant={
-                        selectedVariants[index] || variantData[0]
-                      }
-                      filteredProducts={savedProducts}
-                      handleVariantChange={handleImageHover}
-                      getSelectedProductSnapShots={getSelectedProductSnapShots}
-                      savedProductsData={savedProductsData}
-                      setSavedProductsData={setSavedProductsData}
-                    />
-                  </div>
+                  <ProductCard
+                    key={index}
+                    isSavedProduct="product-link small saved-products active"
+                    productData={data}
+                    savedProductsData={savedProductsData}
+                    setSavedProductsData={setSavedProductsData}
+                  />
                 </li>
               );
             })

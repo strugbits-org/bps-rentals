@@ -54,18 +54,14 @@ const BestSellersHome = ({ products, content }) => {
                 <div className="swiper-container">
                   <div className="swiper-wrapper">
                     {products.map((item, index) => {
-                      const { product, variantData } = item;
                       return (
                         <div key={index} className="swiper-slide">
                           <ProductCard
                             key={index}
-                            index={index}
-                            product={product}
-                            variantData={variantData}
-                            selectedVariant={
-                              selectedVariants[index] || variantData[0]
-                            }
-                            handleVariantChange={handleVariantChange}
+                            bestSeller={[]}
+                            productData={item}
+                            // savedProductsData={savedProductsData}
+                            // setSavedProductsData={setSavedProductsData}
                           />
                         </div>
                       );

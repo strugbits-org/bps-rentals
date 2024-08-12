@@ -27,7 +27,7 @@ export const initializeCanvasTrigger = () => {
   }
 };
 
-export const initializeCanvasAddToCart = () => {
+export const reloadCartModal = () => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
       const customEvent = new Event("reloadModal");

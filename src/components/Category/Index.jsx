@@ -8,9 +8,6 @@ import {
   getSavedProductData,
 } from "@/Services/ProductsApis";
 import { useCookies } from "react-cookie";
-import { useRouter } from "next/navigation";
-import CartModal from "../Common/Modals/CartModal";
-import useUserData from "@/Hooks/useUserData";
 import { Banner } from "./Banner";
 import { compareArray, shuffleArray } from "@/Utils/Utils";
 
@@ -35,27 +32,8 @@ const CategoryPage = ({
 
   const [shuffledBanners, setShuffledBanners] = useState([]);
 
-  const [selectedVariants, setSelectedVariants] = useState({});
   const [savedProductsData, setSavedProductsData] = useState([]);
-  const router = useRouter();
-  const { memberId } = useUserData();
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
-  const [selectedProductData, setSelectedProductData] = useState(null);
-  const [productSnapshots, setProductSnapshots] = useState();
-  const [selectedVariant, setSelectedVariant] = useState(null);
-  const [selectedVariantData, setSelectedVariantData] = useState(null);
-  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-  const [categoryTitle, setCategoryTitle] = useState("");
-  const [productFilteredVariantData, setProductFilteredVariantData] =
-    useState();
 
-  const handleVariantChange = (productIndex, variant) => {
-    setSelectedVariants((prevSelectedVariants) => ({
-      ...prevSelectedVariants,
-      [productIndex]: variant,
-    }));
-  };
 
   const handleFilterChange = async ({ categories = [], colors = [] }) => {
     try {
@@ -191,90 +169,8 @@ const CategoryPage = ({
     setInitialValues();
   }, []);
 
-  const getSelectedProductSnapShots = async (productData) => {
-    setSelectedProductData(productData);
-    try {
-      const { productSnapshotData, productVariantsData } = productData;
-
-      let dataMap = new Map(
-        productVariantsData.map((item) => [item.sku.toLowerCase(), item])
-      );
-      let filteredVariantData;
-      if (productVariantsData && productData) {
-        filteredVariantData = productData.variantData.filter((variant) => {
-          const normalizedSku = variant.sku.toLowerCase();
-          if (dataMap.has(normalizedSku)) {
-            const dataItem = dataMap.get(normalizedSku);
-            variant.variant.variantId = dataItem._id;
-            return true;
-          }
-          return false;
-        });
-      }
-      setProductSnapshots(productSnapshotData);
-      setProductFilteredVariantData(filteredVariantData);
-      if (filteredVariantData && filteredVariantData.length > 0) {
-        handleImageChange({
-          index: 0,
-          selectedVariantData: filteredVariantData[0].variant,
-          productSnapshots: productSnapshotData,
-          modalUrl: filteredVariantData[0].zipUrl,
-        });
-      }
-    } catch (error) {
-      console.log("Error:", error);
-    }
-  };
-
-  const handleImageChange = ({
-    index,
-    selectedVariantData,
-    productSnapshots,
-    modalUrl,
-  }) => {
-    if (productSnapshots) {
-      const selectedVariantFilteredData = productSnapshots.find(
-        (variant) => variant.colorVariation === selectedVariantData.variantId
-      );
-
-      if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
-        const combinedVariantData = {
-          ...selectedVariantData,
-          ...selectedVariantFilteredData,
-          modalUrl: modalUrl,
-        };
-
-        setSelectedVariantIndex(index);
-        setSelectedVariantData(combinedVariantData);
-      } else {
-        const combinedVariantData = {
-          ...selectedVariantData,
-          ...selectedVariantFilteredData,
-          modalUrl: modalUrl,
-          images: [{ src: selectedVariantData.imageSrc }],
-        };
-        setSelectedVariantIndex(index);
-        setSelectedVariantData(combinedVariantData);
-      }
-    }
-  };
-
   return (
     <>
-      <CartModal
-        setProductData={setSelectedProductData}
-        setErrorMessageVisible={setErrorMessageVisible}
-        setSuccessMessageVisible={setSuccessMessageVisible}
-        productData={selectedProductData}
-        productSnapshots={productSnapshots}
-        productFilteredVariantData={productFilteredVariantData}
-        selectedVariantData={selectedVariantData}
-        setSelectedVariantData={setSelectedVariantData}
-        handleImageChange={handleImageChange}
-        selectedVariantIndex={selectedVariantIndex}
-        setProductSnapshots={setProductSnapshots}
-        setProductFilteredVariantData={setProductFilteredVariantData}
-      />
       <section className="section-category-content section-category-fixed-pin">
         <div className="container-fluid">
           <div className="row pos-relative">
@@ -381,7 +277,6 @@ const CategoryPage = ({
               <div className="product-list-wrapper container-wrapper-list">
                 <ul className="product-list grid-lg-33 grid-tablet-50 grid-list">
                   {filteredProducts.slice(0, pageLimit).map((data, index) => {
-                    const { product, variantData } = data;
                     return (
                       <React.Fragment key={index}>
                         <li
@@ -392,19 +287,9 @@ const CategoryPage = ({
                         >
                           <ProductCard
                             key={index}
-                            index={index}
                             bestSeller={bestSeller}
-                            product={product}
-                            categories={data?.subCategoryData || []}
-                            variantData={variantData}
-                            selectedVariant={
-                              selectedVariants[index] || variantData[0]
-                            }
+                            productData={data}
                             filteredProducts={filteredProducts}
-                            handleVariantChange={handleVariantChange}
-                            getSelectedProductSnapShots={
-                              getSelectedProductSnapShots
-                            }
                             filterColors={filterColors}
                             savedProductsData={savedProductsData}
                             setSavedProductsData={setSavedProductsData}

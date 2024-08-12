@@ -29,19 +29,35 @@ const Highlights = ({ pageContent, data }) => {
               <div className="swiper-container">
                 <div className="swiper-wrapper">
                   {data && data.map((item, index) => {
-                    const { product, variantData } = item;
                     return (
                       <div key={index} className="swiper-slide">
                         <div className="highlight-content">
-                          <ProductCard
+                        {/* <ProductCard
                             key={index}
-                            index={index}
-                            product={product}
-                            variantData={variantData}
-                            selectedVariant={
-                              selectedVariants[index] || variantData[0]
-                            }
-                            handleVariantChange={handleVariantChange}
+                            bestSeller={bestSeller}
+                            productData={data}
+                            categories={data?.subCategoryData || []}
+                            filteredProducts={filteredProducts}
+                            filterColors={filterColors}
+                            savedProductsData={savedProductsData}
+                            setSavedProductsData={setSavedProductsData}
+                          /> */}
+                          <ProductCard
+                           key={index}
+                           productData={item}
+                          //  bestSeller={bestSeller}
+                           bestSeller={[]}
+                           categories={item?.subCategoryData || []}
+                           
+                          //  bestSeller={bestSeller}
+                            // key={index}
+                            // index={index}
+                            // product={item}
+                            // variantData={variantData}
+                            // selectedVariant={
+                            //   selectedVariants[index] || variantData[0]
+                            // }
+                            // handleVariantChange={handleVariantChange}
                           />
                           <AnimateLink to={`product/${item.product.slug}`} className="link-highlight">
                             <div className="container-img bg-blue-1">
