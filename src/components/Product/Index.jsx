@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCookies } from "react-cookie";
 
 import {
   markPageLoaded,
@@ -9,21 +10,22 @@ import {
   resetSlideIndex,
 } from "@/Utils/AnimationFunctions";
 import { generateImageURL, productImageURL } from "@/Utils/GenerateImageURL";
+import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
 import { checkParameters } from "@/Utils/CheckParams";
 
+import { getSavedProductData } from "@/Services/ProductsApis";
+import { AddProductToCart } from "@/Services/CartApis";
+
+import PortfolioSection from "../Common/Sections/PortfolioSection";
+import { SaveProductButton } from "../Common/SaveProductButton";
+import ArticleSection from "../Common/Sections/ArticleSection";
+import ModalCanvas3d from "../Common/ModalCanvas3d";
 import Breadcrumb from "../Common/BreadCrumbData";
 import AnimateLink from "../Common/AnimateLink";
+
+import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
-import ArticleSection from "../Common/Sections/ArticleSection";
-import PortfolioSection from "../Common/Sections/PortfolioSection";
-import ModalCanvas3d from "../Common/ModalCanvas3d";
-import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
-import { getSavedProductData } from "@/Services/ProductsApis";
-import { SaveProductButton } from "../Common/SaveProductButton";
-import { AvailabilityCard } from "./AvailabilityCard";
-import { AddProductToCart } from "@/Services/CartApis";
-import { useCookies } from "react-cookie";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -33,9 +35,15 @@ const ProductPostPage = ({
   portfolioData,
   bestSeller,
 }) => {
-  
   const descriptionRef = useRef(null);
   const router = useRouter();
+  const [cookies, setCookie] = useCookies([
+    "authToken",
+    "userData",
+    "cartQuantity",
+    "userTokens",
+    "location",
+  ]);
 
   const { productSnapshotData } = selectedProductDetails;
   const [productFoundInCategories, setProductFoundInCategories] = useState([]);
@@ -46,14 +54,6 @@ const ProductPostPage = ({
   const [buttonLabel, setButtonLabel] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(1);
-
-  const [cookies, setCookie] = useCookies([
-    "authToken",
-    "userData",
-    "cartQuantity",
-    "userTokens",
-    "location",
-  ]);
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
@@ -181,8 +181,9 @@ const ProductPostPage = ({
 
       const total = calculateTotalCartQuantity(response.cart.lineItems);
       setCookie("cartQuantity", total);
-
-      router.push("/cart");
+      if (response) {
+        router.push("/cart");
+      }
     } catch (error) {
       pageLoadEnd();
       console.error("Error while adding item to cart:", error);
@@ -501,10 +502,7 @@ const ProductPostPage = ({
                         <i className="icon-arrow-right"></i>
                       </button>
                     ) : (
-                      <button
-                        className="btn-add-to-cart"
-                        type="submit"
-                      >
+                      <button className="btn-add-to-cart" type="submit">
                         <span>Add to cart</span>
                         <i className="icon-arrow-right"></i>
                       </button>
@@ -512,15 +510,21 @@ const ProductPostPage = ({
                   </div>
                   {unavailable && (
                     <div className="unavailable-warning-wrapper font-2 mt-3-cs">
-                      <p className="unavailable-warning">Color Variant Not Available in Your Preferred Location. Please &nbsp;</p>
-                      <btn-modal-open
-                        group="modal-contact"
-                      >
+                      <p className="unavailable-warning">
+                        Color Variant Not Available in Your Preferred Location.
+                        Please &nbsp;
+                      </p>
+                      <btn-modal-open group="modal-contact">
                         Contact Us
                       </btn-modal-open>
                     </div>
                   )}
-                  <AvailabilityCard selectedVariantData={selectedProductDetails.variantData[selectedVariantIndex]} setUnavailable={setUnavailable} />
+                  <AvailabilityCard
+                    selectedVariantData={
+                      selectedProductDetails.variantData[selectedVariantIndex]
+                    }
+                    setUnavailable={setUnavailable}
+                  />
 
                   {selectedProductDetails &&
                     selectedProductDetails.product.customTextFields.map(
@@ -640,17 +644,15 @@ const ProductPostPage = ({
                 )}
             </div>
           </div>
-        </div >
-      </section >
+        </div>
+      </section>
       {selectedVariant && selectedVariant.usecaseImages?.length > 0 && (
         <SnapShots data={selectedVariant.usecaseImages} />
       )}
 
-      {
-        matchedProductsData.length > 0 && (
-          <MatchItWith matchedProductsData={matchedProductsData} />
-        )
-      }
+      {matchedProductsData.length > 0 && (
+        <MatchItWith matchedProductsData={matchedProductsData} />
+      )}
 
       <ArticleSection data={blogsData} />
 

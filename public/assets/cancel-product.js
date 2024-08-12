@@ -4,7 +4,7 @@ function cancelProduct() {
     element.classList.add("js-running-cancel-product");
     let btnCancel = element.querySelector(".btn-cancel");
     btnCancel.addEventListener("click", function() {
-      element.classList.add("fadeOutCancel");
+      element.classList.add("fadeOut");
       setTimeout(() => {
         element.classList.add("d-none");
       }, 400);

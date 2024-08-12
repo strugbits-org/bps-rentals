@@ -43,9 +43,11 @@ const Navbar = ({
 
   const checkUser = () => {
     if (path === "/my-account") return;
+
     const loggedIn = cookies.authToken;
+
     const submenuLogin = document.querySelector(".submenu-login");
-    if (loggedIn) {
+    if (loggedIn && loggedIn !== "undefined") {
       pageLoadStart();
       setTimeout(() => {
         router.push("/my-account");
@@ -66,7 +68,8 @@ const Navbar = ({
 
   useEffect(() => {
     getCartTotalQuantity();
-
+  }, []);
+  useEffect(() => {
     const quantity =
       cookies?.cartQuantity !== undefined && cookies.authToken !== undefined
         ? String(cookies.cartQuantity)

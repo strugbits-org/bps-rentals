@@ -4,11 +4,6 @@ import { useCookies } from "react-cookie";
 
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import { generateImageURL } from "@/Utils/GenerateImageURL";
-import AnimateLink from "../Common/AnimateLink";
-import {
-  removeProductFromCart,
-  updateProductsQuantityCart,
-} from "@/Services/CartApis";
 import {
   calculateTotalCartQuantity,
   extractSlugFromUrl,
@@ -16,6 +11,13 @@ import {
   findLocation,
   locations,
 } from "@/Utils/Utils";
+
+import {
+  removeProductFromCart,
+  updateProductsQuantityCart,
+} from "@/Services/CartApis";
+
+import AnimateLink from "../Common/AnimateLink";
 
 const CartPage = ({ cartData }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -61,6 +63,7 @@ const CartPage = ({ cartData }) => {
     try {
       const response = await removeProductFromCart([id]);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
+
       setCartItems(response.cart.lineItems);
       setCookie("cartQuantity", total);
     } catch (error) {
@@ -72,7 +75,7 @@ const CartPage = ({ cartData }) => {
     if (cartData) {
       setCartItems(cartData);
       const total = calculateTotalCartQuantity(cartData);
-      setCookie("cartQuantity", total);
+      setCookie("cartQuantity", total > 0 ? String(total) : "99+");
     }
     setTimeout(() => {
       markPageLoaded();

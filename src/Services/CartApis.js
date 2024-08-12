@@ -94,8 +94,6 @@ export const removeProductFromCart = async (lineItemIds) => {
       memberTokens,
       lineItemIds,
     };
-    console.log(payload, "payload>>>>");
-
     const response = await fetch(`${baseUrl}/api/cart/remove`, {
       method: "POST",
       headers: {
@@ -134,7 +132,6 @@ export const createPriceQuote = async ({ lineItems, customerDetails }) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.log("error", error);
     throw new Error(error);
   }
 };

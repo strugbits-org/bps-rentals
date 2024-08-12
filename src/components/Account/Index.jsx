@@ -42,6 +42,7 @@ const Account = ({ children, footerData, banner }) => {
     "authToken",
     "userData",
     "userTokens",
+    "cartQuantity",
   ]);
 
   const activeSection = accountSections[pathname] || "";
@@ -54,6 +55,7 @@ const Account = ({ children, footerData, banner }) => {
         removeCookie("authToken", { path: "/" });
         removeCookie("userData", { path: "/" });
         removeCookie("userTokens", { path: "/" });
+        removeCookie("cartQuantity", { path: "/" });
         router.push("/");
       }
     } catch (error) {
