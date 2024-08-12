@@ -5,7 +5,9 @@ import ModalCanvas3d from "../ModalCanvas3d";
 import { reloadCartModal, resetSlideIndex } from "@/Utils/AnimationFunctions";
 import { AvailabilityCard } from "@/components/Product/AvailabilityCard";
 import { SaveProductButton } from "../SaveProductButton";
-import { compareArray } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
+import { AddProductToCart } from "@/Services/CartApis";
+import { useCookies } from "react-cookie";
 
 const CartModal = ({
   productData,
@@ -29,6 +31,8 @@ const CartModal = ({
   const [unavailable, setUnavailable] = useState(false);
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(1);
+  const [cookies, setCookie] = useCookies(["location"]);
+
   const handleClose = () => {
     setTimeout(() => {
       setProductData(null);
@@ -45,8 +49,6 @@ const CartModal = ({
   }, [selectedVariantData]);
   useEffect(() => {
     if (productData) {
-      console.log("productData",productData);
-      
       const isBestSellerProduct = compareArray(bestSeller, productData.subCategoryData.map(x => x._id));
       setIsBestSeller(bestSellerProducts || isBestSellerProduct);
     }
@@ -64,6 +66,7 @@ const CartModal = ({
       setCartQuantity(value);
     }
   };
+
   const handleAddToCart = async () => {
     setSuccessMessageVisible(false);
     setErrorMessageVisible(false);
@@ -73,25 +76,27 @@ const CartModal = ({
       const variant_id = selectedVariantData.variantId
         .replace(product_id, "")
         .substring(1);
-      const collection = productData.product.f1Collection
-        .map((x) => x.collectionName)
-        .join(" - ");
+      const product_location = cookies?.location;
 
-      const product = {
-        catalogReference: {
-          appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-          catalogItemId: product_id,
-          options: {
-            variantId: variant_id,
-            customTextFields: {
-              collection: collection,
-              additonalInfo: "",
+      const cartData = {
+        lineItems: [
+          {
+            catalogReference: {
+              appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
+              catalogItemId: product_id,
+              options: {
+                customTextFields: { location: product_location },
+                variantId: variant_id,
+              },
             },
+            quantity: cartQuantity,
           },
-        },
-        quantity: cartQuantity,
+        ],
       };
-      await AddProductToCart([product]);
+
+      const response = await AddProductToCart(cartData);
+      const total = calculateTotalCartQuantity(response.cart.lineItems);
+      setCookie("cartQuantity", total);
       handleClose();
       setSuccessMessageVisible(true);
     } catch (error) {
