@@ -125,3 +125,18 @@ export const filterSearchData = (collection, selectedStudios, selectedMarkets) =
     LV: "Las Vegas",
     NT: "National",
   };
+
+  export const formatCustomDate = (dateString) => {
+    if (dateString) {
+      const date = new Date(dateString);
+      const options = { year: "numeric", month: "long", day: "2-digit" };
+      const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+        date
+      );
+
+      const day = date.getDate();
+      const dayWithSuffix = `${day < 10 ? "0" : ""}${day}h`;
+
+      return formattedDate.replace(/\d{2}/, dayWithSuffix);
+    }
+  };
