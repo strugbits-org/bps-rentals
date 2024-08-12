@@ -13,7 +13,7 @@ export const GET = async (req) => {
     const wixClient = await createWixClient();
     const data = await wixClient.items
       .queryDataItems({
-        dataCollectionId: "F1RequestQuote",
+        dataCollectionId: "RequestQuote",
       })
       .eq("memberId", authenticatedUserData.memberId)
       .find();

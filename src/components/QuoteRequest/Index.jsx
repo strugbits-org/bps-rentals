@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
-import { createPriceQuote } from "@/Services/CartApis";
+import { createPriceQuote } from "@/Services/QuoteApis";
 
 const QuoteRequestPage = ({ quoteRequestPageContent, cartData }) => {
   const [cartItems, setCartItems] = useState();
@@ -19,10 +19,11 @@ const QuoteRequestPage = ({ quoteRequestPageContent, cartData }) => {
     state: "",
     zipCode: "",
     instructions: "",
-    instructionsCity: "",
-    instructionsState: "",
-    name: "",
-    email: "",
+    onSiteContact: "",
+    telephone: "",
+    preferredSalesPerson: "",
+    customerName: "",
+    customerEmail: "",
   });
 
   const handleChange = (e) => {
@@ -92,7 +93,7 @@ const QuoteRequestPage = ({ quoteRequestPageContent, cartData }) => {
               <div className="container-form-quote" data-form-container>
                 <form
                   className="form-quote"
-                  data-aos="fadeIn .6s ease-in-out .3s, d:loop"
+                  // data-aos="fadeIn .6s ease-in-out .3s, d:loop"
                   onSubmit={handleSubmit}
                 >
                   <div className="col-12 column-container-input-top">
@@ -274,7 +275,7 @@ const QuoteRequestPage = ({ quoteRequestPageContent, cartData }) => {
                   <div className="divisor"></div>
                   <div className="container-input col-lg-4 col-12">
                     <label htmlFor="quote-instructions">
-                      Special instructions or order comments
+                      {quoteRequestPageContent?.orderCommentsFieldLabel}
                     </label>
                     <input
                       id="quote-instructions"
@@ -285,45 +286,72 @@ const QuoteRequestPage = ({ quoteRequestPageContent, cartData }) => {
                     />
                   </div>
                   <div className="container-input col-lg-4">
-                    <label htmlFor="quote-instructions-city">City</label>
+                    <label htmlFor="on-site-contact-field">
+                      {" "}
+                      {quoteRequestPageContent?.onSiteContactFieldLabel}
+                    </label>
                     <input
-                      id="quote-instructions-city"
-                      name="instructionsCity"
+                      id="on-site-contact-field"
+                      name="onSiteContact"
                       type="text"
-                      value={formData.instructionsCity}
+                      value={formData.onSiteContact}
                       onChange={handleChange}
                     />
                   </div>
                   <div className="container-input col-lg-4">
-                    <label htmlFor="quote-instructions-state">State</label>
+                    <label htmlFor="telephone">
+                      {" "}
+                      {quoteRequestPageContent?.telephoneFieldLabel}
+                    </label>
                     <input
-                      id="quote-instructions-state"
-                      name="instructionsState"
+                      id="telephone"
+                      name="telephone"
                       type="text"
-                      value={formData.instructionsState}
+                      value={formData.telephone}
                       onChange={handleChange}
                     />
                   </div>
+                  <div className="container-input col-lg-4">
+                    <label htmlFor="preferred-sales-person">
+                      {" "}
+                      {quoteRequestPageContent?.preferredSalesPersonFieldLabel}
+                    </label>
+                    <input
+                      id="preferred-sales-person"
+                      name="preferredSalesPerson"
+                      type="text"
+                      value={formData.preferredSalesPerson}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="divisor"></div>
+
                   <div className="container-input col-lg-6">
-                    <label htmlFor="quote-name">Name</label>
+                    <label htmlFor="quote-name">
+                      {" "}
+                      {quoteRequestPageContent?.nameFieldLabel}
+                    </label>
                     <input
                       id="quote-name"
-                      name="name"
+                      name="customerName"
                       type="text"
                       placeholder="Full name"
-                      value={formData.name}
+                      value={formData.customerName}
                       onChange={handleChange}
                       required
                     />
                   </div>
                   <div className="container-input col-lg-6">
-                    <label htmlFor="quote-email">Email</label>
+                    <label htmlFor="quote-email">
+                      {" "}
+                      {quoteRequestPageContent?.emailFieldLabel}
+                    </label>
                     <input
                       id="quote-email"
-                      name="email"
+                      name="customerEmail"
                       type="email"
                       placeholder="Enter email"
-                      value={formData.email}
+                      value={formData.customerEmail}
                       onChange={handleChange}
                       required
                     />

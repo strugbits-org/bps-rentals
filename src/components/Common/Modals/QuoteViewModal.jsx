@@ -2,6 +2,7 @@ import {
   extractSlugFromUrl,
   findColor,
   findLocation,
+  formatCustomDate,
   locations,
 } from "@/Utils/Utils";
 import AnimateLink from "../AnimateLink";
@@ -9,6 +10,7 @@ import { generateImageURL } from "@/Utils/GenerateImageURL";
 
 const QuoteViewModal = ({ data }) => {
   console.log(data, "data");
+  const issueDate = formatCustomDate(data?.dates.issueDate);
 
   return (
     <div id="scripts">
@@ -28,10 +30,10 @@ const QuoteViewModal = ({ data }) => {
                         <div class="container-title">
                           <div class="title">
                             <h2 class="fs--60 blue-1 text-uppercase">
-                              Mclaren
+                              {data && data.title}
                             </h2>
                             <p class="font-2 fs--12 text-uppercase">
-                              February, 09h, 2024
+                              {issueDate}
                             </p>
                           </div>
                         </div>

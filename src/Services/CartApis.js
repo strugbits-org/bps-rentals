@@ -113,25 +113,3 @@ export const removeProductFromCart = async (lineItemIds) => {
   }
 };
 
-export const createPriceQuote = async ({ lineItems, customerDetails }) => {
-  const payload = { lineItems, customerDetails };
-  try {
-    const authToken = await getAuthToken();
-    const response = await fetch(`${baseUrl}/api/createPriceQuote`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: authToken,
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
