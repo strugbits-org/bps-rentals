@@ -9863,9 +9863,9 @@ var require_app2 = __commonJS({
 
     document.querySelector(".addToCart").addEventListener("reloadModal", () => {
       productLinkColor();
-      formCart();
+      // formCart();
       filterProducts();
-      addToCartSlider();
+      // addToCartSlider();
       productContent();
     });
     // const pages = new PageController();

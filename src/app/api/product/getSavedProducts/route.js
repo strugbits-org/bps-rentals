@@ -22,7 +22,6 @@ export const POST = async (req) => {
         ],
       })
       .hasSome("members", [authenticatedUserData.memberId])
-      .limit(10)
       .find();
 
     let items = locationFilterVariantData._items;

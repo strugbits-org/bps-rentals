@@ -8,9 +8,7 @@ import {
   getSavedProductData,
 } from "@/Services/ProductsApis";
 import { useCookies } from "react-cookie";
-import { useRouter } from "next/navigation";
 import CartModal from "../Common/Modals/CartModal";
-import useUserData from "@/Hooks/useUserData";
 import { Banner } from "./Banner";
 import { compareArray, shuffleArray } from "@/Utils/Utils";
 
@@ -35,27 +33,15 @@ const CategoryPage = ({
 
   const [shuffledBanners, setShuffledBanners] = useState([]);
 
-  const [selectedVariants, setSelectedVariants] = useState({});
   const [savedProductsData, setSavedProductsData] = useState([]);
-  const router = useRouter();
-  const { memberId } = useUserData();
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
-  const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedVariantData, setSelectedVariantData] = useState(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-  const [categoryTitle, setCategoryTitle] = useState("");
   const [productFilteredVariantData, setProductFilteredVariantData] =
     useState();
-
-  const handleVariantChange = (productIndex, variant) => {
-    setSelectedVariants((prevSelectedVariants) => ({
-      ...prevSelectedVariants,
-      [productIndex]: variant,
-    }));
-  };
 
   const handleFilterChange = async ({ categories = [], colors = [] }) => {
     try {
@@ -163,14 +149,14 @@ const CategoryPage = ({
     const products = productsData.filter((product) =>
       product.location.some((x) => x === cookies.location)
     );
-    console.log("products", products.length);
     setFilteredProducts(products);
+
+    setTimeout(markPageLoaded, 500);
+    setTimeout(setEnableFilterTrigger(true), 500);
 
     const savedProducts = await getSavedProductData();
     setSavedProductsData(savedProducts);
 
-    setTimeout(markPageLoaded, 500);
-    setTimeout(setEnableFilterTrigger(true), 500);
   };
   useEffect(() => {
     setFilterLocations(
@@ -262,10 +248,10 @@ const CategoryPage = ({
   return (
     <>
       <CartModal
+        productData={selectedProductData}
         setProductData={setSelectedProductData}
         setErrorMessageVisible={setErrorMessageVisible}
         setSuccessMessageVisible={setSuccessMessageVisible}
-        productData={selectedProductData}
         productSnapshots={productSnapshots}
         productFilteredVariantData={productFilteredVariantData}
         selectedVariantData={selectedVariantData}
@@ -274,6 +260,9 @@ const CategoryPage = ({
         selectedVariantIndex={selectedVariantIndex}
         setProductSnapshots={setProductSnapshots}
         setProductFilteredVariantData={setProductFilteredVariantData}
+        bestSeller={bestSeller}
+        savedProductsData={savedProductsData}
+        setSavedProductsData={setSavedProductsData}
       />
       <section className="section-category-content section-category-fixed-pin">
         <div className="container-fluid">
@@ -381,7 +370,6 @@ const CategoryPage = ({
               <div className="product-list-wrapper container-wrapper-list">
                 <ul className="product-list grid-lg-33 grid-tablet-50 grid-list">
                   {filteredProducts.slice(0, pageLimit).map((data, index) => {
-                    const { product, variantData } = data;
                     return (
                       <React.Fragment key={index}>
                         <li
@@ -392,16 +380,9 @@ const CategoryPage = ({
                         >
                           <ProductCard
                             key={index}
-                            index={index}
                             bestSeller={bestSeller}
-                            product={product}
-                            categories={data?.subCategoryData || []}
-                            variantData={variantData}
-                            selectedVariant={
-                              selectedVariants[index] || variantData[0]
-                            }
+                            productData={data}
                             filteredProducts={filteredProducts}
-                            handleVariantChange={handleVariantChange}
                             getSelectedProductSnapShots={
                               getSelectedProductSnapShots
                             }

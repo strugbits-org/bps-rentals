@@ -27,6 +27,7 @@ export default async function Page() {
     homeDreamBigSectionContent,
     studiosData,
     marketsData,
+    bestSellers
   ] = await Promise.all([
     getHomeHeroSectionContent(),
     getNewArrivalSectionContent(),
@@ -36,7 +37,8 @@ export default async function Page() {
     getHomeSectionDetails(),
     getDreamBigSectionContent(),
     getStudiosData(),
-    getMarketsData()
+    getMarketsData(),
+    fetchBestSellers()
   ]);
 
   return (
@@ -50,6 +52,7 @@ export default async function Page() {
       dreamBigSectionContent={homeDreamBigSectionContent}
       studiosData={studiosData}
       marketsData={marketsData}
+      bestSellers={bestSellers}
     />
   );
 }

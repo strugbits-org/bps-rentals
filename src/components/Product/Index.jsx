@@ -211,8 +211,8 @@ const ProductPostPage = ({
   };
 
   useEffect(() => {
-    fetchSavedProducts();
     setTimeout(markPageLoaded, 100);
+    fetchSavedProducts();
   }, []);
 
   return (
@@ -651,7 +651,7 @@ const ProductPostPage = ({
       )}
 
       {matchedProductsData.length > 0 && (
-        <MatchItWith matchedProductsData={matchedProductsData} />
+        <MatchItWith matchedProductsData={matchedProductsData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} bestSeller={bestSeller} />
       )}
 
       <ArticleSection data={blogsData} />

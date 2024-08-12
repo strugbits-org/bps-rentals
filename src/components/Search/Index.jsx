@@ -6,9 +6,7 @@ import {
     getSavedProductData,
 } from "@/Services/ProductsApis";
 import { useCookies } from "react-cookie";
-import { useRouter } from "next/navigation";
 import CartModal from "../Common/Modals/CartModal";
-import useUserData from "@/Hooks/useUserData";
 import { compareArray, shuffleArray } from "@/Utils/Utils";
 import ProductCard from "../Category/ProductCard";
 import { Banner } from "../Category/Banner";
@@ -33,27 +31,15 @@ const SearchPage = ({
 
     const [shuffledBanners, setShuffledBanners] = useState([]);
 
-    const [selectedVariants, setSelectedVariants] = useState({});
     const [savedProductsData, setSavedProductsData] = useState([]);
-    const router = useRouter();
-    const { memberId } = useUserData();
     const [successMessageVisible, setSuccessMessageVisible] = useState(false);
     const [errorMessageVisible, setErrorMessageVisible] = useState(false);
     const [selectedProductData, setSelectedProductData] = useState(null);
     const [productSnapshots, setProductSnapshots] = useState();
-    const [selectedVariant, setSelectedVariant] = useState(null);
     const [selectedVariantData, setSelectedVariantData] = useState(null);
     const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-    const [categoryTitle, setCategoryTitle] = useState("");
     const [productFilteredVariantData, setProductFilteredVariantData] =
         useState();
-
-    const handleVariantChange = (productIndex, variant) => {
-        setSelectedVariants((prevSelectedVariants) => ({
-            ...prevSelectedVariants,
-            [productIndex]: variant,
-        }));
-    };
 
     const handleFilterChange = async ({ colors = [] }) => {
         try {
@@ -67,24 +53,24 @@ const SearchPage = ({
             const filteredProductsList = productsData.filter((product) => {
                 let hasVariants, hasColor, hasLocation;
                 if (selectedColors.length !== 0) {
-                  const variantFilter = selectedColors.map(x => `${cookies.location}-${x}`);
-                  hasVariants = compareArray(variantFilter, product.variantColorLocation);
-        
-                  return hasVariants;
-        
+                    const variantFilter = selectedColors.map(x => `${cookies.location}-${x}`);
+                    hasVariants = compareArray(variantFilter, product.variantColorLocation);
+
+                    return hasVariants;
+
                 } else {
-                  hasColor =
-                    selectedColors.length > 0
-                      ? product.colors.some((color) => selectedColors.includes(color))
-                      : true;
-        
-                  hasLocation = selectedLocation
-                    ? product.location.includes(selectedLocation)
-                    : true;
-                    
-                  return hasLocation && hasColor;
+                    hasColor =
+                        selectedColors.length > 0
+                            ? product.colors.some((color) => selectedColors.includes(color))
+                            : true;
+
+                    hasLocation = selectedLocation
+                        ? product.location.includes(selectedLocation)
+                        : true;
+
+                    return hasLocation && hasColor;
                 }
-              });
+            });
             setFilteredProducts(filteredProductsList);
             updatedWatched(true);
         } catch (error) {
@@ -96,7 +82,7 @@ const SearchPage = ({
         const updatedColors = filterColors.map((item) =>
             item.label === data.label ? { ...item, checked: !item.checked } : item
         );
-        
+
         setFilterColors(updatedColors);
         handleFilterChange({ colors: updatedColors });
     };
@@ -217,10 +203,10 @@ const SearchPage = ({
     return (
         <>
             <CartModal
+                productData={selectedProductData}
                 setProductData={setSelectedProductData}
                 setErrorMessageVisible={setErrorMessageVisible}
                 setSuccessMessageVisible={setSuccessMessageVisible}
-                productData={selectedProductData}
                 productSnapshots={productSnapshots}
                 productFilteredVariantData={productFilteredVariantData}
                 selectedVariantData={selectedVariantData}
@@ -229,6 +215,9 @@ const SearchPage = ({
                 selectedVariantIndex={selectedVariantIndex}
                 setProductSnapshots={setProductSnapshots}
                 setProductFilteredVariantData={setProductFilteredVariantData}
+                bestSeller={bestSeller}
+                savedProductsData={savedProductsData}
+                setSavedProductsData={setSavedProductsData}
             />
             <section className="section-category-content section-category-fixed-pin">
                 <div className="container-fluid">
@@ -281,7 +270,6 @@ const SearchPage = ({
                             <div className="product-list-wrapper container-wrapper-list">
                                 <ul className="product-list grid-lg-33 grid-tablet-50 grid-list">
                                     {filteredProducts.slice(0, pageLimit).map((data, index) => {
-                                        const { product, variantData } = data;
                                         return (
                                             <React.Fragment key={index}>
                                                 <li
@@ -292,16 +280,9 @@ const SearchPage = ({
                                                 >
                                                     <ProductCard
                                                         key={index}
-                                                        index={index}
                                                         bestSeller={bestSeller}
-                                                        product={product}
-                                                        categories={data?.subCategoryData || []}
-                                                        variantData={variantData}
-                                                        selectedVariant={
-                                                            selectedVariants[index] || variantData[0]
-                                                        }
+                                                        productData={data}
                                                         filteredProducts={filteredProducts}
-                                                        handleVariantChange={handleVariantChange}
                                                         getSelectedProductSnapShots={
                                                             getSelectedProductSnapShots
                                                         }

@@ -2,6 +2,10 @@
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import React, { useEffect, useState } from "react";
 import ModalCanvas3d from "../ModalCanvas3d";
+import { reloadCartModal, resetSlideIndex } from "@/Utils/AnimationFunctions";
+import { AvailabilityCard } from "@/components/Product/AvailabilityCard";
+import { SaveProductButton } from "../SaveProductButton";
+import { compareArray } from "@/Utils/Utils";
 
 const CartModal = ({
   productData,
@@ -16,7 +20,14 @@ const CartModal = ({
   selectedVariantIndex,
   setProductSnapshots,
   setProductFilteredVariantData,
+  bestSeller = [],
+  bestSellerProducts,
+  savedProductsData,
+  setSavedProductsData,
 }) => {
+
+  const [unavailable, setUnavailable] = useState(false);
+  const [isBestSeller, setIsBestSeller] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(1);
   const handleClose = () => {
     setTimeout(() => {
@@ -29,8 +40,18 @@ const CartModal = ({
   };
 
   useEffect(() => {
-    document.querySelector(".addToCart").click();
-  }, [productData]);
+    reloadCartModal();
+    resetSlideIndex();
+  }, [selectedVariantData]);
+  useEffect(() => {
+    if (productData) {
+      console.log("productData",productData);
+      
+      const isBestSellerProduct = compareArray(bestSeller, productData.subCategoryData.map(x => x._id));
+      setIsBestSeller(bestSellerProducts || isBestSellerProduct);
+    }
+  }, [productData])
+
 
   const seatHeightData =
     productData &&
@@ -104,15 +125,20 @@ const CartModal = ({
                           >
                             <div class="slider-product">
                               <div class="container-btn-top">
-                                <div class="best-seller-tag">
-                                  <span>Best Seller</span>
-                                </div>
-                                <button class="btn-bookmark">
-                                  <i class="icon-bookmark"></i>
-                                  <i class="icon-bookmark-full"></i>
-                                </button>
+                                {isBestSeller && (
+                                  <div class="best-seller-tag">
+                                    <span>Best Seller</span>
+                                  </div>
+                                )}
+                                {productData && (
+                                  <SaveProductButton
+                                    productData={productData.product}
+                                    savedProductsData={savedProductsData}
+                                    setSavedProductsData={setSavedProductsData}
+                                  />
+                                )}
                               </div>
-                              <div class="swiper-container">
+                              <div class="swiper-container reset-slide-enabled">
                                 <div class="swiper-wrapper">
                                   {selectedVariantData &&
                                     selectedVariantData.images?.map(
@@ -354,33 +380,40 @@ const CartModal = ({
                                   <i class="icon-plus"></i>
                                 </button>
                               </div>
-                              <button
-                                onClick={handleAddToCart}
-                                class="btn-add-to-cart"
-                                type="submit"
-                              >
-                                <span>Add to cart</span>
-                                <i class="icon-arrow-right"></i>
-                              </button>
+                              {unavailable ? (
+                                <button
+                                  disabled
+                                  className="btn-add-to-cart btn-disabled"
+                                  type="submit"
+                                >
+                                  <span>Add to cart</span>
+                                  <i className="icon-arrow-right"></i>
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={handleAddToCart}
+                                  className="btn-add-to-cart"
+                                  type="submit"
+                                >
+                                  <span>Add to cart</span>
+                                  <i className="icon-arrow-right"></i>
+                                </button>
+                              )}
                             </div>
-                            <div
-                              class="container-available font-2 blue-1 mt-md-40 mt-phone-30"
-                              data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                            >
-                              <div class="available-title">
-                                <i class="icon-pin"></i>
-                                <h3 class="fs--16 fs-phone-14">
-                                  Available for national delivery (Conditions
-                                  apply)
-                                </h3>
+
+                            {unavailable && (
+                              <div className="unavailable-warning-wrapper font-2 mt-3-cs">
+                                <p className="unavailable-warning">Color Variant Not Available in Your Preferred Location. Please &nbsp;</p>
+                                <btn-modal-open
+                                  group="modal-contact"
+                                >
+                                  Contact Us
+                                </btn-modal-open>
                               </div>
-                              <p class="fs--10 fs-tablet-14 mt-5">
-                                Please note, screen colors may not accurately
-                                match actual product colors. Also, natural wood
-                                items can vary in color, grain, and texture,
-                                which is part of their unique charm.
-                              </p>
-                            </div>
+                            )}
+                            {productData && (
+                              <AvailabilityCard selectedVariantData={productData.variantData[selectedVariantIndex]} setUnavailable={setUnavailable} />
+                            )}
                             {productData &&
                               productData.product.customTextFields.length >
                               0 && (
