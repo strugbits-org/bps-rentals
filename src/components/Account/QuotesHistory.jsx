@@ -36,13 +36,13 @@ const QuotesHistory = ({ quotesData }) => {
           ) : (
             quotesData.map((quote, index) => {
               const { data } = quote;
-              const issueDate = formatCustomDate(data.dates.issueDate);
+              // const issueDate = formatCustomDate(data.dates.issueDate);
               return (
                 <li key={index} className="list-item">
                   <div className="content">
                     <div className="name-date">
                       <h2 className="name">{data.title}</h2>
-                      <div className="date">{issueDate}</div>
+                      {/* <div className="date">{issueDate}</div> */}
                     </div>
                     <div className="value">$ 45.000</div>
                     <div className="container-btn">

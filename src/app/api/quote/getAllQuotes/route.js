@@ -19,19 +19,19 @@ export const GET = async (req) => {
       .find();
 
     if (data._items.length === 0) {
-      return NextResponse.json({ error: "Quote not found" }, { status: 404 });
+      return NextResponse.json({ message: "Quote not found" }, { status: 404 });
     }
 
-    data._items = data._items.map((val) => {
-      val.data.lineItems = val.data.lineItems.map((val2) => {
-        delete val2.price;
-        delete val2.fullItem.price;
-        delete val2.fullItem.priceBeforeDiscounts;
-        delete val2.fullItem.fullPrice;
-        return val2;
-      });
-      return val;
-    });
+    // data._items = data._items.map((val) => {
+    //   val.data.lineItems = val.data.lineItems.map((val2) => {
+    //     delete val2.price;
+    //     delete val2.fullItem.price;
+    //     delete val2.fullItem.priceBeforeDiscounts;
+    //     delete val2.fullItem.fullPrice;
+    //     return val2;
+    //   });
+    //   return val;
+    // });
     return NextResponse.json(
       {
         message: "Quotes data Successfully fetched",

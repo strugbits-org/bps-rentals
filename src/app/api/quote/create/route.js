@@ -16,6 +16,27 @@ export const POST = async (req) => {
     }
     const body = await req.json();
     const { lineItems, customerDetails } = body;
+    console.log(authenticatedUserData, "authenticatedUserData");
+    console.log(lineItems[0], "lineItems");
+
+    // let customizedLineItems = "";
+
+    // for (let i = 0; i < lineItems.length; i++) {
+    //   let item = lineItems[i];
+
+    //   let { location } =
+    //     item.fullItem.catalogReference.options.customTextFields;
+    //   console.log(item.fullItem, "item.fullItem");
+
+    //   const locationMapping = {
+    //     LV: "Las Vegas",
+    //     SF: "San Francisco",
+    //     NT: "National",
+    //   };
+    //   let locationName = locationMapping[location] || location;
+
+    //   customizedLineItems += `${item.quantity.toString()} ${item.fullItem.physicalProperties.sku.toString()} ${item.name.toString()} ${locationName.toString()}\n`;
+    // }
 
     const {
       orderType,
@@ -98,6 +119,7 @@ export const POST = async (req) => {
       title: `Rentals Test Quote`,
       customer: customer,
       customerDetails: customerObj,
+      customerData: authenticatedUserData,
       lineItems,
       paymentTerms: {
         termData: "",
