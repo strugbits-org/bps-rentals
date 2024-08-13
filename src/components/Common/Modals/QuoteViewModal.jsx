@@ -9,7 +9,6 @@ import AnimateLink from "../AnimateLink";
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 
 const QuoteViewModal = ({ data }) => {
-  console.log(data, "data");
   const issueDate = formatCustomDate(data?.dates.issueDate);
 
   return (
