@@ -8,8 +8,6 @@ export const MarketBestSeller = ({ products, bestSeller }) => {
     const pageSize = 6;
     const [pageLimit, setPageLimit] = useState(pageSize);
     const [savedProductsData, setSavedProductsData] = useState([]);
-    const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-    const [errorMessageVisible, setErrorMessageVisible] = useState(false);
     const [selectedProductData, setSelectedProductData] = useState(null);
     const [productSnapshots, setProductSnapshots] = useState();
     const [selectedVariantData, setSelectedVariantData] = useState(null);
@@ -100,8 +98,6 @@ export const MarketBestSeller = ({ products, bestSeller }) => {
             <CartModal
                 productData={selectedProductData}
                 setProductData={setSelectedProductData}
-                setErrorMessageVisible={setErrorMessageVisible}
-                setSuccessMessageVisible={setSuccessMessageVisible}
                 productSnapshots={productSnapshots}
                 productFilteredVariantData={productFilteredVariantData}
                 selectedVariantData={selectedVariantData}

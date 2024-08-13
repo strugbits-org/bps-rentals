@@ -4,8 +4,6 @@ import ProductCard from "../Category/ProductCard";
 import CartModal from "../Common/Modals/CartModal";
 
 const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsData, bestSeller }) => {
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
   const [selectedVariantData, setSelectedVariantData] = useState(null);
@@ -85,8 +83,6 @@ const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsD
       <CartModal
         productData={selectedProductData}
         setProductData={setSelectedProductData}
-        setErrorMessageVisible={setErrorMessageVisible}
-        setSuccessMessageVisible={setSuccessMessageVisible}
         productSnapshots={productSnapshots}
         productFilteredVariantData={productFilteredVariantData}
         selectedVariantData={selectedVariantData}

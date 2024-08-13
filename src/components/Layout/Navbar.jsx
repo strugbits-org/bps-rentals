@@ -12,7 +12,7 @@ import LocationsFilter from "../Common/LocationsFilter";
 import SearchModal from "../Common/Modals/SearchModal";
 import MarketModal from "../Common/Modals/MarketModal";
 import AllCategories from "../Category/AllCategories";
-import ErrorModal from "../Common/Modals/ErrorModal";
+import Modal from "../Common/Modals/Modal";
 import AnimateLink from "../Common/AnimateLink";
 import { getProductsCart } from "@/Services/CartApis";
 import { calculateTotalCartQuantity } from "@/Utils/Utils";
@@ -81,9 +81,9 @@ const Navbar = ({
   return (
     <>
       {errorMessageVisible && (
-        <ErrorModal
+        <Modal
           message={message}
-          setErrorMessageVisible={setErrorMessageVisible}
+          setModalStatus={setErrorMessageVisible}
         />
       )}
       <div className="cursor-wrapper" id="wrapper-cursor">

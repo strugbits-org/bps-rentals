@@ -25,8 +25,6 @@ const HomePage = ({
   bestSellers
 }) => {
   const [savedProductsData, setSavedProductsData] = useState([]);
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
   const [selectedVariantData, setSelectedVariantData] = useState(null);
@@ -126,8 +124,6 @@ const HomePage = ({
       <CartModal
         productData={selectedProductData}
         setProductData={setSelectedProductData}
-        setErrorMessageVisible={setErrorMessageVisible}
-        setSuccessMessageVisible={setSuccessMessageVisible}
         productSnapshots={productSnapshots}
         productFilteredVariantData={productFilteredVariantData}
         selectedVariantData={selectedVariantData}

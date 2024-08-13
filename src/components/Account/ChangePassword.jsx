@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import ErrorModal from "../Common/Modals/ErrorModal";
+import Modal from "../Common/Modals/Modal";
 
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import { changePassword } from "@/Services/AuthApis";
@@ -80,9 +80,9 @@ const ChangePassword = ({ changePasswordPageContent }) => {
     <>
       {" "}
       {errorMessageVisible && (
-        <ErrorModal
+        <Modal
           message={errorMessage}
-          setErrorMessageVisible={setErrorMessageVisible}
+          setModalStatus={setErrorMessageVisible}
         />
       )}
       <div class="wrapper-account">

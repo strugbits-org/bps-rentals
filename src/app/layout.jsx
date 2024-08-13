@@ -136,7 +136,6 @@ export default async function RootLayout({ children }) {
             />
           </Wrapper>
           <StudiosFixedMenu data={studiosData} />
-          {/* <CartModal /> */}
           <ContactUsModal
             contactUsContent={contactUsContent}
             contactData={contactData}

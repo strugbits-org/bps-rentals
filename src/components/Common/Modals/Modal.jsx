@@ -1,12 +1,16 @@
 "use client";
 import { useEffect } from "react";
-import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
-import AnimateLink from "../AnimateLink";
+import { updatedWatched } from "@/Utils/AnimationFunctions";
+import { useRouter } from "next/navigation";
 
-const ErrorModal = ({ buttonLabel, message, setErrorMessageVisible }) => {
+const Modal = ({ buttonLabel, message, setModalStatus, redirectUrl }) => {
+  const router = useRouter();
   function closeModal() {
     document.body.setAttribute("data-form-cart-state", "");
-    setErrorMessageVisible(false);
+    setModalStatus(false);
+    if (redirectUrl) {
+      router.push(redirectUrl);
+    }
   }
 
   useEffect(() => {
@@ -30,7 +34,7 @@ const ErrorModal = ({ buttonLabel, message, setErrorMessageVisible }) => {
                       </div>
                       {message && (
                         <h2
-                          className="fs--20 mt-lg-105 mt-mobile-110 mb-lg-75 mb-mobile-90 text-center text-uppercase split-words"
+                          className="fs--40 mt-lg-105 mt-mobile-110 mb-lg-75 mb-mobile-90 text-center text-uppercase split-words"
                           data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                         >
                           {message}
@@ -59,4 +63,4 @@ const ErrorModal = ({ buttonLabel, message, setErrorMessageVisible }) => {
   );
 };
 
-export default ErrorModal;
+export default Modal;

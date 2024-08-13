@@ -17,8 +17,6 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
   const [pageLimit, setPageLimit] = useState(pageSize);
 
   const [savedProductsData, setSavedProductsData] = useState([]);
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
   const [selectedVariantData, setSelectedVariantData] = useState(null);
@@ -170,8 +168,6 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
       <CartModal
         productData={selectedProductData}
         setProductData={setSelectedProductData}
-        setErrorMessageVisible={setErrorMessageVisible}
-        setSuccessMessageVisible={setSuccessMessageVisible}
         productSnapshots={productSnapshots}
         productFilteredVariantData={productFilteredVariantData}
         selectedVariantData={selectedVariantData}
