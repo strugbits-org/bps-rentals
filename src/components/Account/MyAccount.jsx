@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-import ErrorModal from "../Common/Modals/ErrorModal";
+import Modal from "../Common/Modals/Modal";
 
 import { updateProfile } from "@/Services/AuthApis";
 import useUserData from "@/Hooks/useUserData";
@@ -96,9 +96,9 @@ const MyAccount = ({ myAccountPageContent }) => {
   return (
     <>
       {errorMessageVisible && (
-        <ErrorModal
+        <Modal
           message={errorMessage}
-          setErrorMessageVisible={setErrorMessageVisible}
+          setModalStatus={setErrorMessageVisible}
         />
       )}
 

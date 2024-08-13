@@ -17,14 +17,13 @@ const ProductCard = ({
 }) => {
   const { product, variantData } = productData;
   const categories = productData?.subCategoryData || [];
-  
+
   const [filteredVariants, setFilteredVariants] = useState(variantData);
   const [activeVariant, setActiveVariant] = useState(variantData[0]);
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [cookies, setCookie] = useCookies(["location"]);
 
-  useEffect(() => {
-
+  const handleFilteredData = () => {
     const matchingVariants = variantData.filter(variant => {
       const hasColor = hasMatchingColor(
         filterColors.filter((x) => x.checked),
@@ -44,9 +43,14 @@ const ProductCard = ({
 
     const isBestSellerProduct = compareArray(bestSeller, categories.map(x => x._id));
     setIsBestSeller(isBestSellerProduct);
-
+  }
+  useEffect(() => {
+    if (filteredProducts.length !== 0) handleFilteredData();
   }, [filteredProducts]);
 
+  useEffect(() => {
+    handleFilteredData();
+  }, []);
   return (
     <div
       className={`${isSavedProduct ? isSavedProduct : "product-link large active"
@@ -113,13 +117,12 @@ const ProductCard = ({
             return (
               <React.Fragment key={index}>
                 <div
-                  className="container-img product-img"
-                  data-get-product-link-color={selectedData.color[0]}
-                  data-default-product-link-active={index === 1}
+                  key={index}
+                  className={`container-img product-img ${selectedData.sku === activeVariant.sku ? "active" : ""}`}
                 >
                   <img
                     src={productImageURL({
-                      wix_url: activeVariant.variant.imageSrc,
+                      wix_url: selectedData.variant.imageSrc,
                       w: "346",
                       h: "346",
                       fit: "fill",
@@ -140,10 +143,9 @@ const ProductCard = ({
               <React.Fragment key={idx}>
                 {idx < 4 && (
                   <li
-                    className="list-item"
-                    data-set-product-link-color={variant.color[0]}
+                    key={idx}
                     onMouseEnter={() => setActiveVariant(variant)}
-                    data-default-product-link-active={idx === 0}
+                    className={`list-item ${variant.sku === activeVariant.sku ? "active" : ""}`}
                   >
                     <div className="container-img">
                       <img

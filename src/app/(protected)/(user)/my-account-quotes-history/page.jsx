@@ -11,7 +11,6 @@ export default async function Page() {
     socialLinks,
     navigationMenu,
     teamsBanner,
-    quotesData,
   ] = await Promise.all([
     getFooterData(),
     getContactData(),
@@ -21,11 +20,8 @@ export default async function Page() {
     getAllQuotes(),
   ]);
   return (
-    <Account
-      banner={teamsBanner}
-      footerData={{ footerContent, contactData, socialLinks, navigationMenu }}
-    >
-      <QuotesHistory quotesData={quotesData || []} />
+    <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }}>
+      <QuotesHistory />
     </Account>
   );
 }

@@ -146,6 +146,9 @@ const getDataFetchFunction = async (payload) => {
       if (dataCollectionId === "Stores/Products") {
         data._items = data._items.map(val => {
           delete val.data.formattedDiscountedPrice;
+          delete val.data.pricePerUnitData;
+          delete val.data.pricePerUnit;
+          delete val.data.formattedPricePerUnit;
           delete val.data.formattedPrice;
           delete val.data.price;
           delete val.data.discountedPrice;
@@ -157,11 +160,17 @@ const getDataFetchFunction = async (payload) => {
           val.data.variantData = val.data.variantData.map(val2 => {
             delete val2.variant.discountedPrice;
             delete val2.variant.price;
+            delete val2.variant?.pricePerUnitData;
+            delete val2.variant?.pricePerUnit;
+            delete val2.variant?.formattedPricePerUnit;
             return val2;
           });
           delete val?.data?.product?.formattedDiscountedPrice;
           delete val?.data?.product?.discountedPrice;
           delete val?.data?.product?.formattedPrice;
+          delete val?.data?.product?.pricePerUnitData;
+          delete val?.data?.product?.pricePerUnit;
+          delete val?.data?.product?.formattedPricePerUnit;
           delete val?.data?.product?.price;
           return val;
         });

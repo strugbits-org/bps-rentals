@@ -206,9 +206,11 @@
 /* remove #pg-category from app.css */
 
 
-body[data-modal-state="active"][data-modal="modal-product-2"] .wrapper[data-scroll-container] {
+body[data-modal-state="active"][data-modal="modal-product-2"] .wrapper[data-scroll-container],
+body[data-form-cart-state="success"] .wrapper[data-scroll-container]{
     transform: none!important;
 }
-body[data-modal-state="active"][data-modal="modal-product-2"] #header {
+body[data-modal-state="active"][data-modal="modal-product-2"] #header,
+body[data-form-cart-state="success"] #header{
     z-index: 0;
 }

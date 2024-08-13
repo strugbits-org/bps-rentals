@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { resetPassword } from "@/Services/AuthApis";
 import { markPageLoaded, pageLoadStart } from "@/Utils/AnimationFunctions";
-import ErrorModal from "../Common/Modals/ErrorModal";
+import Modal from "../Common/Modals/Modal";
 
 const ResetPassword = () => {
   const searchParams = useSearchParams();
@@ -81,9 +81,9 @@ const ResetPassword = () => {
   return (
     <div className="reset-password-main">
       {modalState.error && (
-        <ErrorModal
+        <Modal
           message={message}
-          setErrorMessageVisible={() =>
+          setModalStatus={() =>
             setModalState({ ...modalState, error: false })
           }
         />

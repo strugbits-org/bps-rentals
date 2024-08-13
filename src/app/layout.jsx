@@ -8,7 +8,6 @@ import CustomScripts from "@/Services/CustomScripts";
 import Footer from "@/components/Layout/Footer";
 import CookiesConsent from "@/components/Common/CookiesConsent";
 import Navbar from "@/components/Layout/Navbar";
-import QuoteViewModal from "@/components/Common/Modals/QuoteViewModal";
 import StudiosFixedMenu from "@/components/Common/StudiosFixedMenu";
 import {
   getNavbarCategoriesData,
@@ -38,7 +37,6 @@ import {
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
 import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
-import { getProductsCart } from "@/Services/CartApis";
 // import { getAllProducts } from "@/Services/ProductsApis";
 
 export const metadata = {
@@ -108,8 +106,8 @@ export default async function RootLayout({ children }) {
             loginModalContent={loginModalContent}
             createAccountModalContent={createAccountModalContent}
             forgotPasswordModalContent={forgotPasswordModalContent}
-            productsData={[]}
             // productsData={productsData}
+            productsData={[]}
             blogsData={blogsData}
             portfoliosData={portfoliosData}
             marketsData={marketsData}
@@ -136,7 +134,6 @@ export default async function RootLayout({ children }) {
             />
           </Wrapper>
           <StudiosFixedMenu data={studiosData} />
-          {/* <CartModal /> */}
           <ContactUsModal
             contactUsContent={contactUsContent}
             contactData={contactData}

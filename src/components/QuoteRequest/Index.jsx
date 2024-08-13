@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import { createPriceQuote } from "@/Services/QuoteApis";
+import { getProductsCart } from "@/Services/CartApis";
 
-const QuoteRequestPage = ({ quoteRequestPageContent, cartData }) => {
+const QuoteRequestPage = ({ quoteRequestPageContent }) => {
   const [cartItems, setCartItems] = useState();
   const [formData, setFormData] = useState({
     orderType: "Delivered",
@@ -57,11 +58,14 @@ const QuoteRequestPage = ({ quoteRequestPageContent, cartData }) => {
     }
   };
 
-  useEffect(() => {
+  const getCart = async () => {
+    const cartData = await getProductsCart();
     setCartItems(cartData);
-    setTimeout(() => {
-      markPageLoaded();
-    }, 1000);
+    setTimeout(markPageLoaded, 200);
+  }
+
+  useEffect(() => {
+    getCart();
   }, []);
 
   return (

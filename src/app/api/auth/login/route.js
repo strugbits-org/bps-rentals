@@ -53,6 +53,10 @@ export const POST = async (req) => {
 
     const selectedMemberData = privateMemberData._items[0].data;
 
+    const memberBadges = await wixClient.badges.listBadgesPerMember([selectedMemberData._id]);
+    const ADMIN_BADGE_ID = process.env.ADMIN_BADGE_ID;
+    const isAdmin = memberBadges?.memberBadgeIds[0]?.badgeIds?.includes(ADMIN_BADGE_ID);
+
     const memberTokens = await wixClient.auth.getMemberTokensForExternalLogin(
       selectedMemberData._id,
       process.env.CLIENT_API_KEY_WIX
@@ -64,6 +68,7 @@ export const POST = async (req) => {
       firstName: selectedMemberData.firstName,
       lastName: selectedMemberData.lastName,
       mainPhone: selectedMemberData.mainPhone,
+      role: isAdmin ? "admin" : "user",
     };
 
     return NextResponse.json(

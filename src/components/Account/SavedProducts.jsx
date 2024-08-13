@@ -10,15 +10,13 @@ import {
 import ProductCard from "../Category/ProductCard";
 import CartModal from "../Common/Modals/CartModal";
 
-const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
+const SavedProducts = () => {
 
 
   const pageSize = 20;
   const [pageLimit, setPageLimit] = useState(pageSize);
 
   const [savedProductsData, setSavedProductsData] = useState([]);
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
   const [selectedVariantData, setSelectedVariantData] = useState(null);
@@ -29,7 +27,11 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
   const getSelectedProductSnapShots = async (productData) => {
     setSelectedProductData(productData);
     try {
-      const { productSnapshotData, productVariantsData } = productData;
+      const product_id = productData.product._id;
+      const [productSnapshotData, productVariantsData] = await Promise.all([
+        getProductVariantsImages(product_id),
+        getProductVariants(product_id),
+      ]);
 
       let dataMap = new Map(
         productVariantsData.map((item) => [item.sku.toLowerCase(), item])
@@ -96,14 +98,7 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
 
   const fetchSavedProducts = async () => {
     const savedProducts = await getSavedProductData();
-    const items = savedProducts.map((product) => {
-      if (!product._id) return;
-      const productId = product.product._id;
-      product.productSnapshotData = productsVariantImagesData.filter(x => x.productId === productId);
-      product.productVariantsData = productsVariantsData.filter(x => x.productId === productId);
-      return product;
-    });
-    setSavedProductsData(items);
+    setSavedProductsData(savedProducts);
     setTimeout(markPageLoaded, 200);
   }
   useEffect(() => {
@@ -132,12 +127,6 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
             savedProductsData.slice(0, pageLimit).map((data, index) => {
               return (
                 <li key={index} className="grid-item">
-                  <div
-                    className="product-link small saved-products active"
-                    data-product-category
-                    data-product-location
-                    data-product-colors
-                  >
                     <ProductCard
                       key={index}
                       isSavedProduct="product-link small saved-products active"
@@ -146,7 +135,6 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
                       savedProductsData={savedProductsData}
                       setSavedProductsData={setSavedProductsData}
                     />
-                  </div>
                 </li>
               );
             })
@@ -170,8 +158,6 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
       <CartModal
         productData={selectedProductData}
         setProductData={setSelectedProductData}
-        setErrorMessageVisible={setErrorMessageVisible}
-        setSuccessMessageVisible={setSuccessMessageVisible}
         productSnapshots={productSnapshots}
         productFilteredVariantData={productFilteredVariantData}
         selectedVariantData={selectedVariantData}

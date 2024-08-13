@@ -8,12 +8,11 @@ import { SaveProductButton } from "../SaveProductButton";
 import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
 import { AddProductToCart } from "@/Services/CartApis";
 import { useCookies } from "react-cookie";
+import Modal from "./Modal";
 
 const CartModal = ({
   productData,
   setProductData,
-  setErrorMessageVisible,
-  setSuccessMessageVisible,
   productSnapshots,
   productFilteredVariantData,
   selectedVariantData,
@@ -32,6 +31,8 @@ const CartModal = ({
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(1);
   const [cookies, setCookie] = useCookies(["location"]);
+  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
+  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
 
   const handleClose = () => {
     setTimeout(() => {
@@ -474,6 +475,21 @@ const CartModal = ({
           </modal-item>
         </modal-container>
       </modal-group>
+
+      {successMessageVisible && (
+        <Modal
+          buttonLabel={'Continue Shopping'}
+          message={'Product Successfully Added to Cart!'}
+          setModalStatus={setSuccessMessageVisible}
+        />
+      )}
+      {errorMessageVisible && (
+        <Modal
+          buttonLabel={'Try Again!'}
+          message={'Failed to Add Product to Cart'}
+          setModalStatus={setErrorMessageVisible}
+        />
+      )}
     </div>
   );
 };

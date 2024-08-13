@@ -26,6 +26,7 @@ import AnimateLink from "../Common/AnimateLink";
 import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
+import useUserData from "@/Hooks/useUserData";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -54,6 +55,7 @@ const ProductPostPage = ({
   const [buttonLabel, setButtonLabel] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(1);
+  const { role } = useUserData();
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
@@ -301,11 +303,10 @@ const ProductPostPage = ({
                               return (
                                 <div
                                   key={index}
-                                  class={`swiper-slide  ${
-                                    index === selectedVariantIndex
-                                      ? "active"
-                                      : ""
-                                  }`}
+                                  class={`swiper-slide  ${index === selectedVariantIndex
+                                    ? "active"
+                                    : ""
+                                    }`}
                                 >
                                   <div class="wrapper-img">
                                     <div class="container-img">
@@ -556,9 +557,8 @@ const ProductPostPage = ({
               {selectedProductDetails &&
                 selectedProductDetails.product.description && (
                   <div
-                    className={`container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50 ${
-                      buttonLabel ? "active" : ""
-                    }`}
+                    className={`container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50 ${buttonLabel ? "active" : ""
+                      }`}
                     data-aos=""
                   >
                     <h3 className="title-info-text split-words" data-aos="">
@@ -591,24 +591,18 @@ const ProductPostPage = ({
                 )}
 
               {/* DOWNLOADS */}
-              {selectedProductDetails &&
+              {selectedProductDetails && role === "admin" &&
                 selectedProductDetails.productDocs?.length > 0 && (
-                  <div className="container-info-text" data-aos="">
-                    <h3 className="title-info-text split-words" data-aos="">
-                      Downloads
-                    </h3>
-                    <div
-                      className="container-btn container-btn-downloads"
-                      data-aos="fadeIn .8s ease-in-out"
-                    >
+                  <div class="container-info-text" data-aos="">
+                    <h3 class="title-info-text split-words" data-aos="">Downloads</h3>
+                    <div class="container-btn container-btn-downloads" data-aos="fadeIn .8s ease-in-out">
                       {selectedProductDetails.productDocs.map((data, index) => {
                         const { fileName, downloadUrl } = data;
                         return (
                           <a key={index} href={downloadUrl} download={fileName}>
-                            <button class="btn-small-tag btn-gray btn-hover-red">
-                              <div class="split-chars">
-                                <span>{fileName}</span>
-                              </div>
+                            <button class="btn-small-tag">
+                              <span>{fileName}</span>
+                              <i class="icon-arrow-down"></i>
                             </button>
                           </a>
                         );
