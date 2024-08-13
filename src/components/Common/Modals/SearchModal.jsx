@@ -93,10 +93,6 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
     setFilteredBlogs(BlogsResult.slice(0, 5));
   }, [BlogsResult, portfoliosResult]);
 
-  useEffect(() => {
-    console.log("filteredPages", filteredPages);
-  }, [filteredPages])
-
 
   return (
     <section className="menu-search" data-get-submenu="search">

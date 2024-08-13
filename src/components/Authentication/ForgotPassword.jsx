@@ -15,8 +15,6 @@ const ForgotPassword = ({
 
   const handleSubmit = async (e) => {
     setDisabled(true);
-    console.log("called");
-    console.log(formData, "formData");
     try {
       e.preventDefault();
       setMessage("");
