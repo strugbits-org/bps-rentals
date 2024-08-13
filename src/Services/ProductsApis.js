@@ -229,26 +229,6 @@ export const fetchAllCategoriesData = async () => {
     return [];
   }
 };
-export const getSelectedColorsData = async (categoryId) => {
-  try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "colorFilterCache",
-      limit: "infinite",
-    });
-
-    if (response && response._items) {
-      return categoryId
-        ? response._items
-          .map((x) => x.data)
-          .find((x) => x.category === categoryId)
-        : response._items.map((x) => x.data);
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    console.error("Error fetching colors:", error);
-  }
-};
 
 export const fetchAllProductsPaths = async () => {
   try {
@@ -276,32 +256,6 @@ export const fetchAllProductsPaths = async () => {
     }
   } catch (error) {
     console.error("Error fetching all products:", error);
-  }
-};
-export const getSelectedProductId = async (slug) => {
-  try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "Stores/Products",
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: [
-        {
-          key: "slug",
-          value: slug,
-        },
-      ],
-      ne: null,
-      hasSome: null,
-      skip: null,
-    });
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    console.error("Error fetching selected ProductId:", error);
   }
 };
 export const getPairWithData = async () => {
@@ -376,33 +330,6 @@ export const getProductVariantsImages = async (id) => {
   } catch (error) {
     console.error("Error fetching product snapshots:", error);
     return [];
-  }
-};
-export const getProductFound = async () => {
-  try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "BPSCatalogStructure",
-      includeReferencedItems: ["parentCollection"],
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: null,
-      ne: null,
-      hasSome: null,
-      skip: null,
-    });
-
-    if (response && response._items) {
-      const categoriesData = response._items.map((x) => x.data);
-      const filteredData = categoriesData.filter(
-        (x) => x.parentCollection.slug !== "all-products"
-      );
-      return filteredData;
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    console.error("Error fetching products(getProductFound):", error);
   }
 };
 export const getAllCategoriesData = async () => {

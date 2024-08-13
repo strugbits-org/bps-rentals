@@ -19,8 +19,6 @@ export const GET = async (req) => {
       .eq("quoteNumber", "0000835")
       .find();
 
-    console.log(data, "quote data");
-
     if (data._items.length === 0) {
       return NextResponse.json({ error: "Quotes not found" }, { status: 404 });
     }
@@ -48,3 +46,5 @@ export const GET = async (req) => {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };
+
+export const dynamic = 'force-dynamic';

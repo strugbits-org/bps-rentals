@@ -4,13 +4,19 @@ import { useEffect, useState } from "react";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import QuoteViewModal from "../Common/Modals/QuoteViewModal";
 import { formatCustomDate } from "@/Utils/Utils";
+import { getQuotes } from "@/Services/QuoteApis";
 
-const QuotesHistory = ({ quotesData }) => {
-  console.log(quotesData, "quotesData");
+const QuotesHistory = () => {
+  const [quotesData, setQuotesData] = useState([]);
   const [itemData, setItemData] = useState();
 
-  useEffect(() => {
+  const fetchQuotes = async () => {
+    const data = await getQuotes();
+    setQuotesData(data);
     setTimeout(markPageLoaded, 200);
+  }
+  useEffect(() => {
+    fetchQuotes();
   }, []);
   return (
     <>
