@@ -127,12 +127,6 @@ const SavedProducts = () => {
             savedProductsData.slice(0, pageLimit).map((data, index) => {
               return (
                 <li key={index} className="grid-item">
-                  <div
-                    className="product-link small saved-products active"
-                    data-product-category
-                    data-product-location
-                    data-product-colors
-                  >
                     <ProductCard
                       key={index}
                       isSavedProduct="product-link small saved-products active"
@@ -141,7 +135,6 @@ const SavedProducts = () => {
                       savedProductsData={savedProductsData}
                       setSavedProductsData={setSavedProductsData}
                     />
-                  </div>
                 </li>
               );
             })

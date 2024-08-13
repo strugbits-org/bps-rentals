@@ -142,31 +142,31 @@ const getDataFetchFunction = async (payload) => {
     }
 
     // Data cleanup for specific collections
-    if (data._items.length > 0) {
-      if (dataCollectionId === "Stores/Products") {
-        data._items = data._items.map(val => {
-          delete val.data.formattedDiscountedPrice;
-          delete val.data.formattedPrice;
-          delete val.data.price;
-          delete val.data.discountedPrice;
-          return val;
-        });
-      }
-      if (dataCollectionId === "locationFilteredVariant") {
-        data._items = data._items.map(val => {
-          val.data.variantData = val.data.variantData.map(val2 => {
-            delete val2.variant.discountedPrice;
-            delete val2.variant.price;
-            return val2;
-          });
-          delete val?.data?.product?.formattedDiscountedPrice;
-          delete val?.data?.product?.discountedPrice;
-          delete val?.data?.product?.formattedPrice;
-          delete val?.data?.product?.price;
-          return val;
-        });
-      }
-    }
+    // if (data._items.length > 0) {
+    //   if (dataCollectionId === "Stores/Products") {
+    //     data._items = data._items.map(val => {
+    //       delete val.data.formattedDiscountedPrice;
+    //       delete val.data.formattedPrice;
+    //       delete val.data.price;
+    //       delete val.data.discountedPrice;
+    //       return val;
+    //     });
+    //   }
+    //   if (dataCollectionId === "locationFilteredVariant") {
+    //     data._items = data._items.map(val => {
+    //       val.data.variantData = val.data.variantData.map(val2 => {
+    //         delete val2.variant.discountedPrice;
+    //         delete val2.variant.price;
+    //         return val2;
+    //       });
+    //       delete val?.data?.product?.formattedDiscountedPrice;
+    //       delete val?.data?.product?.discountedPrice;
+    //       delete val?.data?.product?.formattedPrice;
+    //       delete val?.data?.product?.price;
+    //       return val;
+    //     });
+    //   }
+    // }
 
     return data;
 
