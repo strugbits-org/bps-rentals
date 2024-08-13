@@ -23,6 +23,7 @@ return {
   lastName: signedUserData?.lastName,
   memberId: signedUserData?.memberId,
   phone: signedUserData?.mainPhone,
+  role: signedUserData?.role,
 };
 }
 

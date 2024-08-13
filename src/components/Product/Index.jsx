@@ -26,6 +26,7 @@ import AnimateLink from "../Common/AnimateLink";
 import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
+import useUserData from "@/Hooks/useUserData";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -54,6 +55,7 @@ const ProductPostPage = ({
   const [buttonLabel, setButtonLabel] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(1);
+  const { role } = useUserData();
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
@@ -589,7 +591,7 @@ const ProductPostPage = ({
                 )}
 
               {/* DOWNLOADS */}
-              {selectedProductDetails && cookies?.userData?.role === "admin" &&
+              {selectedProductDetails && role === "admin" &&
                 selectedProductDetails.productDocs?.length > 0 && (
                   <div class="container-info-text" data-aos="">
                     <h3 class="title-info-text split-words" data-aos="">Downloads</h3>
