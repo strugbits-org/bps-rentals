@@ -1,5 +1,7 @@
+import { getProductsCart } from "@/Services/CartApis";
 import CartPage from "@/components/Cart/Index";
 
-export default function Page() {
-  return <CartPage />;
+export default async function Page() {
+  const [cartData] = await Promise.all([getProductsCart()]);
+  return <CartPage cartData={cartData || []} />;
 }

@@ -8,14 +8,14 @@ import {
   getDreamBigSectionContent,
   getHighlightsSection,
   getHomeSectionDetails,
-  getHotTrendsSectionContent,
+  getHotTrendsSection,
   getMarketsData,
   getNewArrivalSectionContent,
   getStudiosData,
 } from "@/Services/SectionsApis";
 
 export default async function Page() {
-  const bestSeller = await fetchBestSellers();
+  const bestSeller = await fetchBestSellers("all");  
 
   const [
     homeHeroSectionContent,
@@ -27,16 +27,18 @@ export default async function Page() {
     homeDreamBigSectionContent,
     studiosData,
     marketsData,
+    bestSellers
   ] = await Promise.all([
     getHomeHeroSectionContent(),
     getNewArrivalSectionContent(),
-    getHotTrendsSectionContent(),
+    getHotTrendsSection(),
     getHighlightsSection("HighlightsProducts"),
     getBestSellerProducts(bestSeller, 12),
     getHomeSectionDetails(),
     getDreamBigSectionContent(),
     getStudiosData(),
-    getMarketsData()
+    getMarketsData(),
+    fetchBestSellers()
   ]);
 
   return (
@@ -50,6 +52,7 @@ export default async function Page() {
       dreamBigSectionContent={homeDreamBigSectionContent}
       studiosData={studiosData}
       marketsData={marketsData}
+      bestSellers={bestSellers}
     />
   );
 }

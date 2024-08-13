@@ -1,42 +1,137 @@
 "use client";
-import { useEffect } from "react";
-import AnimateLink from "../Common/AnimateLink";
-import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
-const CartPage = () => {
+import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { generateImageURL } from "@/Utils/GenerateImageURL";
+import {
+  calculateTotalCartQuantity,
+  extractSlugFromUrl,
+  findColor,
+  findLocation,
+  locations,
+} from "@/Utils/Utils";
+
+import {
+  removeProductFromCart,
+  updateProductsQuantityCart,
+} from "@/Services/CartApis";
+
+import AnimateLink from "../Common/AnimateLink";
+
+const CartPage = ({ cartData }) => {
+  const [cartItems, setCartItems] = useState([]);
+  const [cookies, setCookie] = useCookies([
+    "authToken",
+    "userData",
+    "cartQuantity",
+    "userTokens",
+  ]);
+
+  const handleQuantityChange = async (id, quantity, disabled) => {
+    if (quantity < 10000 && quantity > 0) {
+      const updatedLineItems = cartItems.map((x) => {
+        if (id === x._id) {
+          x.quantity = Number(quantity);
+        }
+        return x;
+      });
+      setCartItems(updatedLineItems);
+      if (!disabled) updateProducts(id, quantity);
+    }
+  };
+
+  const updateProducts = async (id, quantity) => {
+    try {
+      const lineItems = [
+        {
+          _id: id,
+          quantity: quantity,
+        },
+      ];
+
+      const response = await updateProductsQuantityCart(lineItems);
+
+      const total = calculateTotalCartQuantity(response.cart.lineItems);
+      setCookie("cartQuantity", total);
+    } catch (error) {
+      console.error("Error while updating cart:", error);
+    }
+  };
+
+  const removeProduct = async (id) => {
+    try {
+      const response = await removeProductFromCart([id]);
+      const total = calculateTotalCartQuantity(response.cart.lineItems);
+
+      setCartItems(response.cart.lineItems);
+      setCookie("cartQuantity", total);
+    } catch (error) {
+      console.error("Error while removing product", error);
+    }
+  };
+
   useEffect(() => {
+    if (cartData) {
+      setCartItems(cartData);
+      const total = calculateTotalCartQuantity(cartData);
+      setCookie("cartQuantity", total > 0 ? String(total) : "99+");
+    }
     setTimeout(() => {
       markPageLoaded();
     }, 1000);
-  }, []);
+  }, [cartData]);
+
   return (
-    <>
-      <section className="cart-intro pt-40 pb-lg-195 pb-tablet-70 pb-phone-135">
-        <div className="container-fluid pos-relative z-5">
-          <div className="row">
-            <div className="col-lg-8 offset-lg-2">
-              <div className="container-title flex-center">
-                <h1
-                  className="fs--60 blue-1 text-center split-words"
-                  data-aos="d:loop"
-                >
-                  Your Cart
-                </h1>
-              </div>
-              <div
-                data-form-container-cart
-                className="mt-lg-55 mt-tablet-40 mt-phone-30"
+    <section className="cart-intro pt-40 pb-lg-195 pb-tablet-70 pb-phone-135">
+      <div className="container-fluid pos-relative z-5">
+        <div className="row">
+          <div className="col-lg-8 offset-lg-2">
+            <div className="container-title flex-center">
+              <h1
+                className="fs--60 blue-1 text-center split-words"
+                data-aos="d:loop"
               >
-                <form action="" className="form-cart">
-                  <ul className="list-cart list-cart-product" data-aos="d:loop">
-                    {[1, 2, 3].map((index) => {
+                Your Cart
+              </h1>
+            </div>
+            <div
+              data-form-container-cart
+              className="mt-lg-55 mt-tablet-40 mt-phone-30"
+            >
+              <form action="" className="form-cart">
+                <ul className="list-cart list-cart-product" data-aos="d:loop">
+                  {cartItems &&
+                    cartItems.map((cart, index) => {
+                      const {
+                        _id,
+                        quantity,
+                        productName,
+                        url,
+                        image,
+                        physicalProperties,
+                        descriptionLines,
+                        catalogReference,
+                      } = cart;
+
+                      const colors = findColor(descriptionLines).join("-");
+                      const location = findLocation(descriptionLines);
+
                       return (
                         <li key={index} className="list-item">
-                          <input type="hidden" name="sku[]" defaultValue="MODCH09" />
+                          <input
+                            type="hidden"
+                            name="sku[]"
+                            defaultValue="MODCH09"
+                          />
                           <div className="cart-product">
                             <div className="container-img">
                               <img
-                                src="/images/chairs/bristol-chair-color-3.png"
+                                src={generateImageURL({
+                                  wix_url: image,
+                                  h: "63",
+                                  w: "63",
+                                })}
                                 className=" "
                               />
                             </div>
@@ -44,17 +139,21 @@ const CartPage = () => {
                               <div className="container-top">
                                 <div className="container-product-name">
                                   <h2 className="product-name">
-                                    Arm Chair - Tapas
+                                    {productName.original}
                                   </h2>
                                   <AnimateLink
-                                    to="/product/1"
+                                    to={"/product" + extractSlugFromUrl(url)}
                                     className="btn-view"
                                   >
                                     <span>View</span>
                                     <i className="icon-arrow-right"></i>
                                   </AnimateLink>
                                 </div>
-                                <button type="button" className="btn-cancel">
+                                <button
+                                  onClick={() => removeProduct(_id)}
+                                  type="button"
+                                  className="btn-cancel"
+                                >
                                   <i className="icon-close"></i>
                                 </button>
                               </div>
@@ -62,7 +161,9 @@ const CartPage = () => {
                                 <ul className="list-specs">
                                   <li className="sku">
                                     <span className="specs-title">SKU</span>
-                                    <span className="specs-text">MODCH09</span>
+                                    <span className="specs-text">
+                                      {physicalProperties.sku}
+                                    </span>
                                   </li>
                                   <li className="size">
                                     <span className="specs-title">Size</span>
@@ -72,16 +173,15 @@ const CartPage = () => {
                                   </li>
                                   <li className="color">
                                     <span className="specs-title">Color</span>
-                                    <span className="specs-text">
-                                      Yellow - Birch
-                                    </span>
+                                    <span className="specs-text">{colors}</span>
                                   </li>
                                   <li className="location">
                                     <span className="specs-title">
                                       Location
                                     </span>
                                     <span className="specs-text">
-                                      San francisco <i className="icon-pin"></i>
+                                      {locations[location]}{" "}
+                                      <i className="icon-pin"></i>
                                     </span>
                                   </li>
                                   <li className="customize-text">
@@ -99,17 +199,39 @@ const CartPage = () => {
                                     Quantity
                                   </span>
                                   <div className="container-input container-input-quantity">
-                                    <button type="button" className="minus">
+                                    <button
+                                      onClick={() =>
+                                        handleQuantityChange(_id, quantity - 1)
+                                      }
+                                      type="button"
+                                      className="minus"
+                                    >
                                       <i className="icon-minus"></i>
                                     </button>
                                     <input
                                       type="number"
                                       min="1"
-                                      defaultValue="1"
+                                      value={quantity}
                                       placeholder="1"
                                       className="input-number"
+                                      onInput={(e) =>
+                                        handleQuantityChange(
+                                          _id,
+                                          e.target.value,
+                                          true
+                                        )
+                                      }
+                                      onBlur={(e) =>
+                                        updateProducts(_id, e.target.value)
+                                      }
                                     />
-                                    <button type="button" className="plus">
+                                    <button
+                                      onClick={() =>
+                                        handleQuantityChange(_id, quantity + 1)
+                                      }
+                                      type="button"
+                                      className="plus"
+                                    >
                                       <i className="icon-plus"></i>
                                     </button>
                                   </div>
@@ -120,32 +242,40 @@ const CartPage = () => {
                         </li>
                       );
                     })}
-                  </ul>
-                  <div className="container-btn mt-md-40 mt-phone-40">
-                    <AnimateLink
-                      to="/quote-request"
-                      className="btn-1 btn-large btn-blue w-100 bt-submit"
-                      data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                  {cartItems.length === 0 && (
+                    <h6
+                      className="fs--40 blue-1 text-center split-words"
+                      style={{ margin: "28vh auto" }}
+                      data-aos="d:loop"
                     >
-                      <span>Request for quote</span>
-                      <i className="icon-arrow-right"></i>
-                    </AnimateLink>
-                    <AnimateLink
-                      to={`/category/${"123"}`}
-                      className="btn-1 btn-border btn-border-blue btn-shopping btn-icon-left mt-lg-35 mt-mobile-20"
-                      data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                    >
-                      <i className="icon-arrow-diagonal-left"></i>
-                      <span>Continue shopping</span>
-                    </AnimateLink>
-                  </div>
-                </form>
-              </div>
+                      No Products in Cart
+                    </h6>
+                  )}
+                </ul>
+                <div className="container-btn mt-md-40 mt-phone-40">
+                  <AnimateLink
+                    to="/quote-request"
+                    className="btn-1 btn-large btn-blue w-100 bt-submit"
+                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                  >
+                    <span>Request for quote</span>
+                    <i className="icon-arrow-right"></i>
+                  </AnimateLink>
+                  <AnimateLink
+                    to={`/category/${"123"}`}
+                    className="btn-1 btn-border btn-border-blue btn-shopping btn-icon-left mt-lg-35 mt-mobile-20"
+                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                  >
+                    <i className="icon-arrow-diagonal-left"></i>
+                    <span>Continue shopping</span>
+                  </AnimateLink>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 

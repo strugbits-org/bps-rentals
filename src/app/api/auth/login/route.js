@@ -18,58 +18,64 @@ export const POST = async (req) => {
       .eq("userEmail", email)
       .find();
 
-    if (memberData._items.length > 0) {
-      const isMatch = await bcrypt.compare(
-        password,
-        memberData._items[0]?.data?.userPassword
-      );
-
-      if (isMatch) {
-        const jwtToken = jwt.sign({ email: email }, process.env.JWT_SECRET, {
-          expiresIn: "30d",
-        });
-        delete memberData._items[0].data.password;
-
-        const authClient = await authWixClient();
-
-        const privateMemberData = await authClient.items
-          .queryDataItems({
-            dataCollectionId: "Members/PrivateMembersData",
-          })
-          .eq("loginEmail", email)
-          .find();
-
-        const selectedMemberData = privateMemberData._items[0].data;
-
-        const finalData = {
-          loginEmail: selectedMemberData.loginEmail,
-          firstName: selectedMemberData.firstName,
-          lastName: selectedMemberData.lastName,
-          mainPhone: selectedMemberData.mainPhone,
-        };
-
-        return NextResponse.json(
-          {
-            message: "Login successful",
-            jwtToken,
-            member: finalData,
-          },
-          { status: 200 }
-        );
-      } else {
-        return NextResponse.json(
-          { message: "Invalid email or password" },
-          { status: 401 }
-        );
-      }
-    } else {
+    if (memberData._items.length === 0) {
       return NextResponse.json(
-        { message: "Invalid email or password" },
+        { message: "No user found with the provided email" },
         { status: 401 }
       );
     }
+
+    const isMatch = await bcrypt.compare(
+      password,
+      memberData._items[0]?.data?.userPassword
+    );
+
+    if (!isMatch) {
+      return NextResponse.json(
+        { message: "Invalid Password" },
+        { status: 401 }
+      );
+    }
+
+    const jwtToken = jwt.sign({ email: email }, process.env.JWT_SECRET, {
+      expiresIn: "30d",
+    });
+    delete memberData._items[0].data.password;
+
+    const authClient = await authWixClient();
+
+    const privateMemberData = await authClient.items
+      .queryDataItems({
+        dataCollectionId: "Members/PrivateMembersData",
+      })
+      .eq("loginEmail", email)
+      .find();
+
+    const selectedMemberData = privateMemberData._items[0].data;
+
+    const memberTokens = await wixClient.auth.getMemberTokensForExternalLogin(
+      selectedMemberData._id,
+      process.env.CLIENT_API_KEY_WIX
+    );
+
+    const finalData = {
+      memberId: selectedMemberData._id,
+      loginEmail: selectedMemberData.loginEmail,
+      firstName: selectedMemberData.firstName,
+      lastName: selectedMemberData.lastName,
+      mainPhone: selectedMemberData.mainPhone,
+    };
+
+    return NextResponse.json(
+      {
+        message: "Login successful",
+        jwtToken,
+        userTokens: memberTokens,
+        member: finalData,
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    console.log(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 };

@@ -6,21 +6,20 @@ import { compareArray, hasMatchingColor } from "@/Utils/Utils";
 import { useCookies } from "react-cookie";
 
 const ProductCard = ({
-  index,
-  product,
+  productData,
   isSavedProduct,
-  variantData,
-  selectedVariant,
   getSelectedProductSnapShots,
   savedProductsData,
   setSavedProductsData,
   filteredProducts = [],
   filterColors = [],
-  categories = [],
   bestSeller = []
 }) => {
+  const { product, variantData } = productData;
+  const categories = productData?.subCategoryData || [];
+  
   const [filteredVariants, setFilteredVariants] = useState(variantData);
-  const [activeVariant, setActiveVariant] = useState(selectedVariant);
+  const [activeVariant, setActiveVariant] = useState(variantData[0]);
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [cookies, setCookie] = useCookies(["location"]);
 
@@ -173,8 +172,8 @@ const ProductCard = ({
         )}
       </div>
       <btn-modal-open
-        onClick={() => getSelectedProductSnapShots(filteredProducts[index])}
-        group="modal-product"
+        onClick={() => getSelectedProductSnapShots(productData)}
+        group="modal-product-2"
         class="modal-add-to-cart"
       >
         <span>Add to cart</span>

@@ -20,6 +20,12 @@ export const extractUniqueColors = (data) => {
 export const findColor = (data) => {
     return data.filter((x) => x.colorInfo !== undefined).map((x) => x.colorInfo.original)
 }
+
+export const findLocation = (data) => {
+  return data
+    .filter((x) => x.plainText !== undefined)
+    .map((x) => x.plainText.original);
+};
 export const formatPrice = (price, quantity) => {
     const currencySymbol = price.formattedAmount.charAt(0);
     const totalPrice = price.amount * quantity;
@@ -113,3 +119,24 @@ export const filterSearchData = (collection, selectedStudios, selectedMarkets) =
     }
     return data;
   }
+
+  export const locations = {
+    SF: "San Francisco",
+    LV: "Las Vegas",
+    NT: "National",
+  };
+
+  export const formatCustomDate = (dateString) => {
+    if (dateString) {
+      const date = new Date(dateString);
+      const options = { year: "numeric", month: "long", day: "2-digit" };
+      const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+        date
+      );
+
+      const day = date.getDate();
+      const dayWithSuffix = `${day < 10 ? "0" : ""}${day}h`;
+
+      return formattedDate.replace(/\d{2}/, dayWithSuffix);
+    }
+  };

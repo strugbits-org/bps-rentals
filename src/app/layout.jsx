@@ -8,7 +8,6 @@ import CustomScripts from "@/Services/CustomScripts";
 import Footer from "@/components/Layout/Footer";
 import CookiesConsent from "@/components/Common/CookiesConsent";
 import Navbar from "@/components/Layout/Navbar";
-import QuoteViewModal from "@/components/Common/Modals/QuoteViewModal";
 import StudiosFixedMenu from "@/components/Common/StudiosFixedMenu";
 import {
   getNavbarCategoriesData,
@@ -27,6 +26,7 @@ import {
 } from "@/Services/FooterApis";
 import {
   fetchInstaFeed,
+  fetchSearchPages,
   getBlogsData,
   getMarketsData,
   getPortfolioData,
@@ -37,7 +37,7 @@ import {
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
 import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
-import { getProductsByCategory } from "@/Services/ProductsApis";
+import { getAllProducts } from "@/Services/ProductsApis";
 
 export const metadata = {
   title: "BPS Rentals",
@@ -64,7 +64,8 @@ export default async function RootLayout({ children }) {
     socialSectionDetails,
     socialSectionBlogs,
     instaFeed,
-    searchSectionDetails
+    searchSectionDetails,
+    searchPagesData,
   ] = await Promise.all([
     getFilterLocations(),
     getLoginModalContent(),
@@ -75,7 +76,7 @@ export default async function RootLayout({ children }) {
     getSocialLinks(),
     getFooterNavigationMenu(),
     getContactUsContent(),
-    getProductsByCategory({}),
+    getAllProducts({}),
     getBlogsData(),
     getPortfolioData(),
     getMarketsData(),
@@ -84,7 +85,8 @@ export default async function RootLayout({ children }) {
     getSocialSectionDetails(),
     getSocialSectionBlogs(),
     fetchInstaFeed(),
-    getSearchSectionDetails()
+    getSearchSectionDetails(),
+    fetchSearchPages(),
   ]);
 
   return (
@@ -111,6 +113,7 @@ export default async function RootLayout({ children }) {
             studiosData={studiosData}
             searchSectionDetails={searchSectionDetails}
             categoriesData={allCategoriesData}
+            searchPagesData={searchPagesData}
           />
           <CookiesConsent />
           <Wrapper>
@@ -130,14 +133,13 @@ export default async function RootLayout({ children }) {
             />
           </Wrapper>
           <StudiosFixedMenu data={studiosData} />
-          {/* <CartModal /> */}
           <ContactUsModal
             contactUsContent={contactUsContent}
             contactData={contactData}
             socialLinks={socialLinks}
           />
           {/* <ContactFormModal /> */}
-          <QuoteViewModal />
+          {/* <QuoteViewModal /> */}
           {/* <QuoteConfirmedModal /> */}
         </body>
       </html>

@@ -16,7 +16,6 @@ const getDataFetchFunction = async (payload) => {
       hasSome,
       skip,
       includeVariants,
-      includeBestSellers,
       increasedLimit,
       log
     } = payload;
@@ -26,6 +25,8 @@ const getDataFetchFunction = async (payload) => {
 
     // List of collections requiring authentication
     const authCollections = [
+      "TextCollectionPages",
+      "Stores/Collections",
       "RentalTeamsBanner",
       "SearchSectionDetails",
       "RentalsBanners",

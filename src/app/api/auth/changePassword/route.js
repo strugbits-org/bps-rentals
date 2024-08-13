@@ -4,7 +4,6 @@ import bcrypt from "bcryptjs";
 import handleAuthentication from "@/Utils/HandleAuthentication";
 import { createWixClient } from "@/Utils/CreateWixClient";
 
-// POST method handler
 export const POST = async (req) => {
   try {
     const authenticatedUserData = await handleAuthentication(req);

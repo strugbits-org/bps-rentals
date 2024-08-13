@@ -8,30 +8,26 @@ import {
   getSavedProductData,
 } from "@/Services/ProductsApis";
 import ProductCard from "../Category/ProductCard";
+import CartModal from "../Common/Modals/CartModal";
 
-const SavedProducts = ({ savedProducts }) => {
+const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
 
-  const [selectedVariants, setSelectedVariants] = useState({});
-  const [savedProductsData, setSavedProductsData] = useState([]);
-  const [selectedProductData, setSelectedProductData] = useState(null);
+
   const pageSize = 20;
   const [pageLimit, setPageLimit] = useState(pageSize);
 
-  const handleImageHover = (productIndex, variant) => {
-    setSelectedVariants((prevSelectedVariants) => ({
-      ...prevSelectedVariants,
-      [productIndex]: variant,
-    }));
-  };
+  const [savedProductsData, setSavedProductsData] = useState([]);
+  const [selectedProductData, setSelectedProductData] = useState(null);
+  const [productSnapshots, setProductSnapshots] = useState();
+  const [selectedVariantData, setSelectedVariantData] = useState(null);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const [productFilteredVariantData, setProductFilteredVariantData] =
+    useState();
 
   const getSelectedProductSnapShots = async (productData) => {
     setSelectedProductData(productData);
     try {
-      const product_id = productData.product._id;
-      const [productSnapshotData, productVariantsData] = await Promise.all([
-        getProductVariantsImages(product_id),
-        getProductVariants(product_id),
-      ]);
+      const { productSnapshotData, productVariantsData } = productData;
 
       let dataMap = new Map(
         productVariantsData.map((item) => [item.sku.toLowerCase(), item])
@@ -63,9 +59,49 @@ const SavedProducts = ({ savedProducts }) => {
     }
   };
 
+  const handleImageChange = ({
+    index,
+    selectedVariantData,
+    productSnapshots,
+    modalUrl,
+  }) => {
+    if (productSnapshots) {
+      const selectedVariantFilteredData = productSnapshots.find(
+        (variant) => variant.colorVariation === selectedVariantData.variantId
+      );
+
+      if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
+        const combinedVariantData = {
+          ...selectedVariantData,
+          ...selectedVariantFilteredData,
+          modalUrl: modalUrl,
+        };
+
+        setSelectedVariantIndex(index);
+        setSelectedVariantData(combinedVariantData);
+      } else {
+        const combinedVariantData = {
+          ...selectedVariantData,
+          ...selectedVariantFilteredData,
+          modalUrl: modalUrl,
+          images: [{ src: selectedVariantData.imageSrc }],
+        };
+        setSelectedVariantIndex(index);
+        setSelectedVariantData(combinedVariantData);
+      }
+    }
+  };
+
   const fetchSavedProducts = async () => {
     const savedProducts = await getSavedProductData();
-    setSavedProductsData(savedProducts);
+    const items = savedProducts.map((product) => {
+      if (!product._id) return;
+      const productId = product.product._id;
+      product.productSnapshotData = productsVariantImagesData.filter(x => x.productId === productId);
+      product.productVariantsData = productsVariantsData.filter(x => x.productId === productId);
+      return product;
+    });
+    setSavedProductsData(items);
     setTimeout(markPageLoaded, 200);
   }
   useEffect(() => {
@@ -92,7 +128,6 @@ const SavedProducts = ({ savedProducts }) => {
             </div>
           ) : (
             savedProductsData.slice(0, pageLimit).map((data, index) => {
-              const { product, variantData } = data;
               return (
                 <li key={index} className="grid-item">
                   <div
@@ -103,15 +138,8 @@ const SavedProducts = ({ savedProducts }) => {
                   >
                     <ProductCard
                       key={index}
-                      index={index}
                       isSavedProduct="product-link small saved-products active"
-                      product={product}
-                      variantData={variantData}
-                      selectedVariant={
-                        selectedVariants[index] || variantData[0]
-                      }
-                      filteredProducts={savedProducts}
-                      handleVariantChange={handleImageHover}
+                      productData={data}
                       getSelectedProductSnapShots={getSelectedProductSnapShots}
                       savedProductsData={savedProductsData}
                       setSavedProductsData={setSavedProductsData}
@@ -137,6 +165,20 @@ const SavedProducts = ({ savedProducts }) => {
           </div>
         )}
       </div>
+      <CartModal
+        productData={selectedProductData}
+        setProductData={setSelectedProductData}
+        productSnapshots={productSnapshots}
+        productFilteredVariantData={productFilteredVariantData}
+        selectedVariantData={selectedVariantData}
+        setSelectedVariantData={setSelectedVariantData}
+        handleImageChange={handleImageChange}
+        selectedVariantIndex={selectedVariantIndex}
+        setProductSnapshots={setProductSnapshots}
+        setProductFilteredVariantData={setProductFilteredVariantData}
+        savedProductsData={savedProductsData}
+        setSavedProductsData={setSavedProductsData}
+      />
     </div>
   );
 };

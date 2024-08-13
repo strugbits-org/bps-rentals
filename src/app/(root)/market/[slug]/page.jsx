@@ -27,6 +27,7 @@ export default async function Page({ params }) {
 
   const marketSection = await getMarketSection(slug);
   const bestSeller = await fetchBestSellers(slug);
+  
   const collectionIds = {
     "tradeshows": "HighlightsTradeshow",
     "social": "HighlightsSocial",

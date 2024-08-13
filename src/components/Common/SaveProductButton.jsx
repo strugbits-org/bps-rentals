@@ -14,7 +14,7 @@ export const SaveProductButton = ({
   const productId = productData?._id;
 
   useEffect(() => {
-    if (savedProductsData?.length) {
+    if (savedProductsData?.length) {      
       setProductSaved(
         savedProductsData.some((i) => i?.product?._id === productId)
       );

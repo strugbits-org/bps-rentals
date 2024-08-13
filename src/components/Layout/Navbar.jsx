@@ -1,19 +1,21 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
-import CreateAccount from "../Authentication/CreateAccount";
 import ForgotPassword from "../Authentication/ForgotPassword";
+import CreateAccount from "../Authentication/CreateAccount";
 import Login from "../Authentication/Login";
 
+import { pageLoadStart } from "@/Utils/AnimationFunctions";
+import { usePathname, useRouter } from "next/navigation";
 import LocationsFilter from "../Common/LocationsFilter";
 import SearchModal from "../Common/Modals/SearchModal";
 import MarketModal from "../Common/Modals/MarketModal";
 import AllCategories from "../Category/AllCategories";
-import ErrorModal from "../Common/Modals/ErrorModal";
+import Modal from "../Common/Modals/Modal";
 import AnimateLink from "../Common/AnimateLink";
-import { useCookies } from "react-cookie";
-import { usePathname, useRouter } from "next/navigation";
-import { pageLoadStart } from "@/Utils/AnimationFunctions";
+import { getProductsCart } from "@/Services/CartApis";
+import { calculateTotalCartQuantity } from "@/Utils/Utils";
 
 const Navbar = ({
   locations,
@@ -27,35 +29,61 @@ const Navbar = ({
   productsData,
   blogsData,
   portfoliosData,
+  searchPagesData,
 }) => {
+  const [cookies, setCookie] = useCookies(["authToken", "cartQuantity"]);
+
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
-  const [message, setMessage] = useState("Message");
   const [toggleModal, setToggleModal] = useState("");
-  const [cookies, setCookie] = useCookies(["authToken"]);
+  const [cartQuantity, setCartQuantity] = useState();
+  const [message, setMessage] = useState("Message");
   const router = useRouter();
   const path = usePathname();
 
   const checkUser = () => {
     if (path === "/my-account") return;
+
     const loggedIn = cookies.authToken;
+
     const submenuLogin = document.querySelector(".submenu-login");
-    if (loggedIn) {
+    if (loggedIn && loggedIn !== "undefined") {
       pageLoadStart();
       setTimeout(() => {
         router.push("/my-account");
       }, 500);
     } else {
-      submenuLogin.classList.toggle("active", !submenuLogin.classList.contains("active"));
+      submenuLogin.classList.toggle(
+        "active",
+        !submenuLogin.classList.contains("active")
+      );
     }
   };
+
+  const getCartTotalQuantity = async () => {
+    const response = await getProductsCart();
+    const total = response ? calculateTotalCartQuantity(response) : "99+";
+    setCookie("cartQuantity", total);
+  };
+
+  useEffect(() => {
+    getCartTotalQuantity();
+  }, []);
+  useEffect(() => {
+    const quantity =
+      cookies?.cartQuantity !== undefined && cookies.authToken !== undefined
+        ? String(cookies.cartQuantity)
+        : "99+";
+
+    setCartQuantity(quantity);
+  }, [cookies]);
 
   return (
     <>
       {errorMessageVisible && (
-        <ErrorModal
+        <Modal
           message={message}
-          setErrorMessageVisible={setErrorMessageVisible}
+          setModalStatus={setErrorMessageVisible}
         />
       )}
       <div className="cursor-wrapper" id="wrapper-cursor">
@@ -113,7 +141,7 @@ const Navbar = ({
                   </li>
                   <li className="cart-item">
                     <div className="cart-number">
-                      <span>99+</span>
+                      <span>{cartQuantity}</span>
                     </div>
                     <AnimateLink
                       to="/cart"
@@ -126,41 +154,33 @@ const Navbar = ({
                     </AnimateLink>
                   </li>{" "}
                 </ul>
-                <button
-                  id="bt-menu"
-                  aria-label="Menu"
-                  data-search-remove
-                >
-                  svg
-                  {/* <svg
-                  version="1.1"
-                  id="Layer_1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  x="0px"
-                  y="0px"
-                  viewBox="0 0 55 38.5"
-                  style="enable-background:new 0 0 55 38.5;"
-                  xml:space="preserve"
-                >
-                  <g id="bt-menu-bars">
-                    <rect
-                      id="bottombar"
-                      y="32.5"
-                      className="st0"
-                      width="55"
-                      height="6"
-                    />
-                    <rect
-                      id="middlebar"
-                      y="16.4"
-                      className="st0"
-                      width="55"
-                      height="6"
-                    />
-                    <rect id="topbar" className="st0" width="55" height="6" />
-                  </g>
-                </svg> */}
+                <button id="bt-menu" aria-label="Menu" data-search-remove>
+                  <svg
+                    version="1.1"
+                    id="Layer_1"
+                    x="0px"
+                    y="0px"
+                    viewBox="0 0 55 38.5"
+                    style={{ enableBackground: "new 0 0 55 38.5" }}
+                  >
+                    <g id="bt-menu-bars">
+                      <rect
+                        id="bottombar"
+                        y="32.5"
+                        className="st0"
+                        width="55"
+                        height="6"
+                      />
+                      <rect
+                        id="middlebar"
+                        y="16.4"
+                        className="st0"
+                        width="55"
+                        height="6"
+                      />
+                      <rect id="topbar" className="st0" width="55" height="6" />
+                    </g>
+                  </svg>
                 </button>
               </div>
               <nav className="menu" data-cursor-style="default">
@@ -233,7 +253,7 @@ const Navbar = ({
                     </li>
                     <li className="no-desktop cart-item">
                       <div className="cart-number">
-                        <span>99+</span>
+                        <span>{cartQuantity}</span>
                       </div>
                       <AnimateLink
                         to="/cart"
@@ -290,7 +310,7 @@ const Navbar = ({
                     </li>
                     <li className="cart-item">
                       <div className="cart-number">
-                        <span>99+</span>
+                        <span>{cartQuantity}</span>
                       </div>
                       <AnimateLink
                         to="/cart"
@@ -309,7 +329,15 @@ const Navbar = ({
               {/* All categories */}
               <AllCategories categoriesData={categoriesData} />
               {/* Search */}
-              <SearchModal products={productsData} blogs={blogsData} portfolios={portfoliosData} searchSectionDetails={searchSectionDetails} studiosData={studiosData} marketsData={marketsData} />
+              <SearchModal
+                products={productsData}
+                blogs={blogsData}
+                portfolios={portfoliosData}
+                searchSectionDetails={searchSectionDetails}
+                studiosData={studiosData}
+                marketsData={marketsData}
+                searchPagesData={searchPagesData}
+              />
               {/* User Authentication */}
               <div
                 className="submenu-login submenu"

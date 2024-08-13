@@ -26,23 +26,27 @@ const links = [
     href: "/my-account-change-password",
   },
 ];
+
+const accountSections = {
+  "/my-account": "section-my-account",
+  "/my-account-saved-products": "section-saved-products",
+  "/my-account-quotes-history": "section-quotes-history",
+  "/my-account-change-password": "section-change-password",
+};
+
 const Account = ({ children, footerData, banner }) => {
-
-  const pathname = usePathname();
-  const accountSections = {
-    '/my-account': 'section-my-account',
-    '/my-account-saved-products': 'section-saved-products',
-    '/my-account-quotes-history': 'section-quotes-history',
-    '/my-account-change-password': 'section-change-password',
-  };
-  const activeSection = accountSections[pathname] || '';
   const { firstName } = useUserData();
-
-  const [cookies, setCookie, removeCookie] = useCookies([
+  const pathname = usePathname();
+  const router = useRouter();
+  const [cookies, removeCookie] = useCookies([
     "authToken",
     "userData",
+    "userTokens",
+    "cartQuantity",
   ]);
-  const router = useRouter()
+
+  const activeSection = accountSections[pathname] || "";
+
   const handleLogOut = () => {
     pageLoadStart();
     try {
@@ -50,62 +54,65 @@ const Account = ({ children, footerData, banner }) => {
       if (loggedIn) {
         removeCookie("authToken", { path: "/" });
         removeCookie("userData", { path: "/" });
-        router.push('/')
+        removeCookie("userTokens", { path: "/" });
+        removeCookie("cartQuantity", { path: "/" });
+        router.push("/");
       }
     } catch (error) {
-      console.log("Error:", error);
+      console.error("Error:", error);
     }
   };
   return (
-    <>
-      <section className={`my-account-intro ${activeSection}`}>
-        <div
-          className="menu-my-account"
-          data-sticky
-          data-trigger="parent"
-          data-sticky-no-mobile
-          data-offset="#header"
-        >
-          <div className="container-my-account">
-            <h2 className="fs--35 blue-1">
-              Hello, <br className="no-tablet" /> {firstName}
-            </h2>
-            <ul className="list-menu-my-account mt-lg-65 mt-tablet-30">
-              {links.map((data, index) => {
-                const { name, href, icon } = data;
-                return (
-                  <li
-                    key={index}
-                    style={{ cursor: "pointer" }}
-                    className="list-item"
-                  >
-                    <AnimateLink key={index} to={href} className="link-account">
-                      <i className={icon}></i>
-                      <span>{name}</span>
-                    </AnimateLink>
-                  </li>
-                );
-              })}
-              <li className="list-item">
-                <span onClick={handleLogOut} className="link-account cursor-pointer">
-                  <i className="icon-logout"></i>
-                  <span>Log Out</span>
-                </span>
-              </li>
-            </ul>
+    <section className={`my-account-intro ${activeSection}`}>
+      <div
+        className="menu-my-account"
+        data-sticky
+        data-trigger="parent"
+        data-sticky-no-mobile
+        data-offset="#header"
+      >
+        <div className="container-my-account">
+          <h2 className="fs--35 blue-1">
+            Hello, <br className="no-tablet" /> {firstName}
+          </h2>
+          <ul className="list-menu-my-account mt-lg-65 mt-tablet-30">
+            {links.map((data, index) => {
+              const { name, href, icon } = data;
+              return (
+                <li
+                  key={index}
+                  style={{ cursor: "pointer" }}
+                  className="list-item"
+                >
+                  <AnimateLink key={index} to={href} className="link-account">
+                    <i className={icon}></i>
+                    <span>{name}</span>
+                  </AnimateLink>
+                </li>
+              );
+            })}
+            <li className="list-item">
+              <span
+                onClick={handleLogOut}
+                className="link-account cursor-pointer"
+              >
+                <i className="icon-logout"></i>
+                <span>Log Out</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-lg-10 offset-lg-2 column-form">{children}</div>
+          <div className="col-lg-10 offset-lg-2">
+            <TeamsBannerAccount data={banner} />
+            <FooterAccount footerData={footerData} />
           </div>
         </div>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-lg-10 offset-lg-2 column-form">{children}</div>
-            <div className="col-lg-10 offset-lg-2">
-              <TeamsBannerAccount data={banner} />
-              <FooterAccount footerData={footerData} />
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 export default Account;

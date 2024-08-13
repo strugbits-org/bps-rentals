@@ -1,42 +1,62 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCookies } from "react-cookie";
 
 import {
   markPageLoaded,
+  pageLoadEnd,
   pageLoadStart,
   resetSlideIndex,
 } from "@/Utils/AnimationFunctions";
 import { generateImageURL, productImageURL } from "@/Utils/GenerateImageURL";
+import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
 import { checkParameters } from "@/Utils/CheckParams";
 
+import { getSavedProductData } from "@/Services/ProductsApis";
+import { AddProductToCart } from "@/Services/CartApis";
+
+import PortfolioSection from "../Common/Sections/PortfolioSection";
+import { SaveProductButton } from "../Common/SaveProductButton";
+import ArticleSection from "../Common/Sections/ArticleSection";
+import ModalCanvas3d from "../Common/ModalCanvas3d";
 import Breadcrumb from "../Common/BreadCrumbData";
 import AnimateLink from "../Common/AnimateLink";
+
+import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
-import ArticleSection from "../Common/Sections/ArticleSection";
-import PortfolioSection from "../Common/Sections/PortfolioSection";
-import ModalCanvas3d from "../Common/ModalCanvas3d";
 
 const ProductPostPage = ({
   selectedProductDetails,
   matchedProductsData,
-  productVariantsImages,
-  productFoundData,
   categoriesData,
   blogsData,
   portfolioData,
+  bestSeller,
 }) => {
+  const descriptionRef = useRef(null);
   const router = useRouter();
+  const [cookies, setCookie] = useCookies([
+    "authToken",
+    "userData",
+    "cartQuantity",
+    "userTokens",
+    "location",
+  ]);
+
+  const { productSnapshotData } = selectedProductDetails;
+  const [productFoundInCategories, setProductFoundInCategories] = useState([]);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [savedProductsData, setSavedProductsData] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState();
-  const [cartQuantity, setCartQuantity] = useState(1);
-  const descriptionRef = useRef(null);
+  const [isBestSeller, setIsBestSeller] = useState(false);
   const [buttonLabel, setButtonLabel] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
+  const [cartQuantity, setCartQuantity] = useState(1);
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
-    const selectedVariantFilteredData = productVariantsImages.find(
+    const selectedVariantFilteredData = productSnapshotData.find(
       (variant) => variant.colorVariation === selectedVariantData.variantId
     );
     if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
@@ -61,17 +81,10 @@ const ProductPostPage = ({
     resetSlideIndex();
   };
 
-  const productFondFilteredData = productFoundData.filter((data) => {
-    const parentCollectionId = data.parentCollection._id;
-    return selectedProductDetails.subCategory.some(
-      (collection) => collection._id === parentCollectionId
-    );
-  });
-
   useEffect(() => {
-    if (selectedProductDetails && productVariantsImages) {
+    if (selectedProductDetails && productSnapshotData) {
       const selectedVariantData = selectedProductDetails.variantData[0].variant;
-      const selectedVariantFilteredData = productVariantsImages.find(
+      const selectedVariantFilteredData = productSnapshotData.find(
         (variant) => variant.colorVariation === selectedVariantData.variantId
       );
 
@@ -94,8 +107,38 @@ const ProductPostPage = ({
         setSelectedVariantIndex(0);
         setSelectedVariant(combinedVariantData);
       }
+
+      const isBestSellerProduct = compareArray(
+        bestSeller,
+        selectedProductDetails.subCategoryData.map((x) => x._id)
+      );
+      setIsBestSeller(isBestSellerProduct);
+
+      const categoriesFound = categoriesData.reduce((acc, subCategory) => {
+        const { parentCollection, level2Collections } = subCategory;
+        if (
+          selectedProductDetails.subCategoryData.some(
+            (x) => x.slug === parentCollection.slug
+          )
+        ) {
+          acc.push(parentCollection);
+        }
+        level2Collections.forEach((level2Category) => {
+          if (
+            level2Category.slug &&
+            selectedProductDetails.subCategoryData.some(
+              (x) => x.slug === level2Category.slug
+            )
+          ) {
+            acc.push(level2Category);
+          }
+        });
+        return acc;
+      }, []);
+
+      setProductFoundInCategories(categoriesFound);
     }
-  }, [productVariantsImages, selectedProductDetails]);
+  }, [selectedProductDetails]);
 
   const seatHeightData =
     selectedProductDetails.product.additionalInfoSections.find(
@@ -108,69 +151,70 @@ const ProductPostPage = ({
     }
   };
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
     try {
       pageLoadStart();
+
       const product_id = selectedProductDetails.product._id;
+      const product_location = cookies?.location;
       const variant_id = selectedVariant.variantId
         .replace(product_id, "")
         .substring(1);
-      const collection = selectedProductDetails.f1Collection
-        .map((x) => x.collectionName)
-        .join(" - ");
 
-      const product = {
-        catalogReference: {
-          appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-          catalogItemId: product_id,
-          options: {
-            variantId: variant_id,
-            customTextFields: {
-              collection: collection,
-              additonalInfo: "",
+      const productData = {
+        lineItems: [
+          {
+            catalogReference: {
+              appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
+              catalogItemId: product_id,
+              options: {
+                customTextFields: { location: product_location },
+                variantId: variant_id,
+              },
             },
+            quantity: cartQuantity,
           },
-        },
-        quantity: cartQuantity,
+        ],
       };
-      const data = await AddProductToCart([product]);
-      const total = calculateTotalCartQuantity(data.cart.lineItems);
-      setCookie("cartQuantity", total);
+      const response = await AddProductToCart(productData);
 
-      router.push("/cart");
+      const total = calculateTotalCartQuantity(response.cart.lineItems);
+      setCookie("cartQuantity", total);
+      if (response) {
+        router.push("/cart");
+      }
     } catch (error) {
       pageLoadEnd();
-      console.log("Error:", error);
+      console.error("Error while adding item to cart:", error);
     }
   };
   useEffect(() => {
     const params = [
       selectedProductDetails,
       matchedProductsData,
-      productVariantsImages,
+      productSnapshotData,
     ];
     if (checkParameters(params)) {
       markPageLoaded();
     }
-  }, [selectedProductDetails, matchedProductsData, productVariantsImages]);
+  }, [selectedProductDetails, matchedProductsData, productSnapshotData]);
 
   const updatedDescription = selectedProductDetails.product.description.replace(
     /color:#000000;/g,
     "color:#0F41FA"
   );
 
-  // const fetchSavedProducts = async () => {
-  //   const savedProducts = await getSavedProductData();
-  //   setSavedProductsData(savedProducts);
-  // };
-  // useEffect(() => {
-  //   fetchSavedProducts();
-  // }, []);
+  const fetchSavedProducts = async () => {
+    const savedProducts = await getSavedProductData();
+    setSavedProductsData(savedProducts);
+  };
+
   useEffect(() => {
-    setTimeout(() => {
-      markPageLoaded();
-    }, 100);
+    setTimeout(markPageLoaded, 100);
+    fetchSavedProducts();
   }, []);
+
   return (
     <>
       <section className="product-intro pt-lg-70" data-product-content>
@@ -188,13 +232,20 @@ const ProductPostPage = ({
                 >
                   <div className="slider-product">
                     <div className="container-btn-top">
-                      <div className="best-seller-tag">
-                        <span>Best Seller</span>
-                      </div>
-                      <button className="btn-bookmark">
+                      {isBestSeller && (
+                        <div className="best-seller-tag">
+                          <span>Best Seller</span>
+                        </div>
+                      )}
+                      <SaveProductButton
+                        productData={selectedProductDetails.product}
+                        savedProductsData={savedProductsData}
+                        setSavedProductsData={setSavedProductsData}
+                      />
+                      {/* <button className="btn-bookmark">
                         <i className="icon-bookmark"></i>
                         <i className="icon-bookmark-full"></i>
-                      </button>
+                      </button> */}
                     </div>
                     <div className="swiper-container">
                       <div className="swiper-wrapper">
@@ -300,19 +351,9 @@ const ProductPostPage = ({
             <div className="col-lg-3 column-2 mt-tablet-20 mt-phone-25">
               <ul className="list-breadcrumb" data-aos="fadeIn .8s ease-in-out">
                 <Breadcrumb selectedProductDetails={selectedProductDetails} />
-
-                {/* {["Home", "Corporate"].map((data, index) => {
-                  return (
-                    <li key={index} className="list-breadcrumb-item">
-                      <AnimateLink to="/" className="breadcrumb">
-                        <span>{data}</span>
-                      </AnimateLink>
-                    </li>
-                  );
-                })} */}
               </ul>
               <div className="container-product-description">
-                <form action="cart.html" className="form-cart" data-pjax>
+                <form className="form-cart" onSubmit={handleAddToCart}>
                   <input type="hidden" name="sku[]" defaultValue="MODCH09" />
                   <div className="wrapper-product-name">
                     <div className="container-product-name">
@@ -451,32 +492,39 @@ const ProductPostPage = ({
                         <i className="icon-plus"></i>
                       </button>
                     </div>
-                    <button
-                      onClick={handleAddToCart}
-                      className="btn-add-to-cart"
-                      type="submit"
-                    >
-                      <span>Add to cart</span>
-                      <i className="icon-arrow-right"></i>
-                    </button>
+                    {unavailable ? (
+                      <button
+                        disabled
+                        className="btn-add-to-cart btn-disabled"
+                        type="submit"
+                      >
+                        <span>Add to cart</span>
+                        <i className="icon-arrow-right"></i>
+                      </button>
+                    ) : (
+                      <button className="btn-add-to-cart" type="submit">
+                        <span>Add to cart</span>
+                        <i className="icon-arrow-right"></i>
+                      </button>
+                    )}
                   </div>
-                  <div
-                    className="container-available font-2 blue-1 mt-md-40 mt-phone-30"
-                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                  >
-                    <div className="available-title">
-                      <i className="icon-pin"></i>
-                      <h3 className="fs--16 fs-phone-14">
-                        Available for national delivery (Conditions apply)
-                      </h3>
+                  {unavailable && (
+                    <div className="unavailable-warning-wrapper font-2 mt-3-cs">
+                      <p className="unavailable-warning">
+                        Color Variant Not Available in Your Preferred Location.
+                        Please &nbsp;
+                      </p>
+                      <btn-modal-open group="modal-contact">
+                        Contact Us
+                      </btn-modal-open>
                     </div>
-                    <p className="fs--10 fs-tablet-14 mt-5">
-                      Please note, screen colors may not accurately match actual
-                      product colors. Also, natural wood items can vary in
-                      color, grain, and texture, which is part of their unique
-                      charm.
-                    </p>
-                  </div>
+                  )}
+                  <AvailabilityCard
+                    selectedVariantData={
+                      selectedProductDetails.variantData[selectedVariantIndex]
+                    }
+                    setUnavailable={setUnavailable}
+                  />
 
                   {selectedProductDetails &&
                     selectedProductDetails.product.customTextFields.map(
@@ -570,29 +618,30 @@ const ProductPostPage = ({
                 )}
 
               {/* PRODUCT FOUND */}
-              {selectedProductDetails && productFondFilteredData.length > 0 && (
-                <div className="container-info-text" data-aos="">
-                  <h3 className="title-info-text split-words" data-aos="">
-                    Product found in
-                  </h3>
-                  <div
-                    className="container-btn"
-                    data-aos="fadeIn .8s ease-in-out"
-                  >
-                    {productFondFilteredData.map((data, index) => {
-                      const { name, slug } = data.parentCollection;
+              {selectedProductDetails &&
+                productFoundInCategories.length > 0 && (
+                  <div className="container-info-text" data-aos="">
+                    <h3 className="title-info-text split-words" data-aos="">
+                      Product found in
+                    </h3>
+                    <div
+                      className="container-btn"
+                      data-aos="fadeIn .8s ease-in-out"
+                    >
+                      {productFoundInCategories.map((data, index) => {
+                        const { name, slug } = data;
 
-                      return (
-                        <AnimateLink key={index} to={`/category/${slug}`}>
-                          <button className="btn-small-tag">
-                            <span>{name}</span>
-                          </button>
-                        </AnimateLink>
-                      );
-                    })}
+                        return (
+                          <AnimateLink key={index} to={`/category/${slug}`}>
+                            <button className="btn-small-tag">
+                              <span>{name}</span>
+                            </button>
+                          </AnimateLink>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           </div>
         </div>
@@ -602,7 +651,7 @@ const ProductPostPage = ({
       )}
 
       {matchedProductsData.length > 0 && (
-        <MatchItWith matchedProductsData={matchedProductsData} />
+        <MatchItWith matchedProductsData={matchedProductsData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} bestSeller={bestSeller} />
       )}
 
       <ArticleSection data={blogsData} />

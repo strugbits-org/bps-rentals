@@ -1,19 +1,9 @@
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 import ProductCard from "@/components/Category/ProductCard";
-import { useState } from "react";
 
-const Highlights = ({ pageContent, data }) => {
+const Highlights = ({ pageContent, data, savedProductsData, setSavedProductsData, getSelectedProductSnapShots }) => {
   if (data.length === 0) return;
-  const [selectedVariants, setSelectedVariants] = useState({});
-
-  const handleVariantChange = (index, variant) => {
-    setSelectedVariants((prevSelectedVariants) => ({
-      ...prevSelectedVariants,
-      [index]: variant,
-    }));
-  };
-
   return (
     <section className="section-highlights">
       <div className="container-fluid">
@@ -29,19 +19,15 @@ const Highlights = ({ pageContent, data }) => {
               <div className="swiper-container">
                 <div className="swiper-wrapper">
                   {data && data.map((item, index) => {
-                    const { product, variantData } = item;
                     return (
                       <div key={index} className="swiper-slide">
                         <div className="highlight-content">
                           <ProductCard
                             key={index}
-                            index={index}
-                            product={product}
-                            variantData={variantData}
-                            selectedVariant={
-                              selectedVariants[index] || variantData[0]
-                            }
-                            handleVariantChange={handleVariantChange}
+                            productData={item}
+                            getSelectedProductSnapShots={getSelectedProductSnapShots}
+                            savedProductsData={savedProductsData}
+                            setSavedProductsData={setSavedProductsData}
                           />
                           <AnimateLink to={`product/${item.product.slug}`} className="link-highlight">
                             <div className="container-img bg-blue-1">

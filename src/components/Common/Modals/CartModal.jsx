@@ -1,12 +1,18 @@
 "use client";
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import React, { useEffect, useState } from "react";
+import ModalCanvas3d from "../ModalCanvas3d";
+import { reloadCartModal, resetSlideIndex } from "@/Utils/AnimationFunctions";
+import { AvailabilityCard } from "@/components/Product/AvailabilityCard";
+import { SaveProductButton } from "../SaveProductButton";
+import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
+import { AddProductToCart } from "@/Services/CartApis";
+import { useCookies } from "react-cookie";
+import Modal from "./Modal";
 
 const CartModal = ({
   productData,
   setProductData,
-  setErrorMessageVisible,
-  setSuccessMessageVisible,
   productSnapshots,
   productFilteredVariantData,
   selectedVariantData,
@@ -15,8 +21,19 @@ const CartModal = ({
   selectedVariantIndex,
   setProductSnapshots,
   setProductFilteredVariantData,
+  bestSeller = [],
+  bestSellerProducts,
+  savedProductsData,
+  setSavedProductsData,
 }) => {
+
+  const [unavailable, setUnavailable] = useState(false);
+  const [isBestSeller, setIsBestSeller] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(1);
+  const [cookies, setCookie] = useCookies(["location"]);
+  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
+  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+
   const handleClose = () => {
     setTimeout(() => {
       setProductData(null);
@@ -28,8 +45,16 @@ const CartModal = ({
   };
 
   useEffect(() => {
-    document.querySelector(".addToCart").click();
-  }, [productData]);
+    reloadCartModal();
+    resetSlideIndex();
+  }, [selectedVariantData]);
+  useEffect(() => {
+    if (productData) {
+      const isBestSellerProduct = compareArray(bestSeller, productData.subCategoryData.map(x => x._id));
+      setIsBestSeller(bestSellerProducts || isBestSellerProduct);
+    }
+  }, [productData])
+
 
   const seatHeightData =
     productData &&
@@ -42,6 +67,7 @@ const CartModal = ({
       setCartQuantity(value);
     }
   };
+
   const handleAddToCart = async () => {
     setSuccessMessageVisible(false);
     setErrorMessageVisible(false);
@@ -51,25 +77,27 @@ const CartModal = ({
       const variant_id = selectedVariantData.variantId
         .replace(product_id, "")
         .substring(1);
-      const collection = productData.product.f1Collection
-        .map((x) => x.collectionName)
-        .join(" - ");
+      const product_location = cookies?.location;
 
-      const product = {
-        catalogReference: {
-          appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-          catalogItemId: product_id,
-          options: {
-            variantId: variant_id,
-            customTextFields: {
-              collection: collection,
-              additonalInfo: "",
+      const cartData = {
+        lineItems: [
+          {
+            catalogReference: {
+              appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
+              catalogItemId: product_id,
+              options: {
+                customTextFields: { location: product_location },
+                variantId: variant_id,
+              },
             },
+            quantity: cartQuantity,
           },
-        },
-        quantity: cartQuantity,
+        ],
       };
-      await AddProductToCart([product]);
+
+      const response = await AddProductToCart(cartData);
+      const total = calculateTotalCartQuantity(response.cart.lineItems);
+      setCookie("cartQuantity", total);
       handleClose();
       setSuccessMessageVisible(true);
     } catch (error) {
@@ -79,7 +107,7 @@ const CartModal = ({
   };
   return (
     <div id="scripts">
-      <modal-group name="modal-product" class="modal-product">
+      <modal-group name="modal-product-2" class="modal-product">
         <modal-container>
           <modal-item>
             <div class="wrapper-section">
@@ -103,15 +131,20 @@ const CartModal = ({
                           >
                             <div class="slider-product">
                               <div class="container-btn-top">
-                                <div class="best-seller-tag">
-                                  <span>Best Seller</span>
-                                </div>
-                                <button class="btn-bookmark">
-                                  <i class="icon-bookmark"></i>
-                                  <i class="icon-bookmark-full"></i>
-                                </button>
+                                {isBestSeller && (
+                                  <div class="best-seller-tag">
+                                    <span>Best Seller</span>
+                                  </div>
+                                )}
+                                {productData && (
+                                  <SaveProductButton
+                                    productData={productData.product}
+                                    savedProductsData={savedProductsData}
+                                    setSavedProductsData={setSavedProductsData}
+                                  />
+                                )}
                               </div>
-                              <div class="swiper-container">
+                              <div class="swiper-container reset-slide-enabled">
                                 <div class="swiper-wrapper">
                                   {selectedVariantData &&
                                     selectedVariantData.images?.map(
@@ -141,12 +174,9 @@ const CartModal = ({
                                       <div class="wrapper-img">
                                         <i class="icon-360"></i>
                                         <div class="container-img">
-                                          <canvas
-                                            class="infinite-image-scroller"
-                                            data-frames="49"
-                                            data-path="/images/chairs/chair/0_"
-                                            data-extension="jpg"
-                                          ></canvas>
+                                          <ModalCanvas3d
+                                            path={selectedVariantData?.modalUrl}
+                                          />
                                         </div>
                                       </div>
                                     </div>
@@ -197,7 +227,7 @@ const CartModal = ({
                                         <div class="wrapper-img">
                                           <div class="container-img">
                                             <img
-                                              src="/images/chairs/bristol-chair-color-1.webp"
+                                              src="/images/3d.svg"
                                               class=" "
                                             />
                                           </div>
@@ -356,36 +386,43 @@ const CartModal = ({
                                   <i class="icon-plus"></i>
                                 </button>
                               </div>
-                              <button
-                                onClick={handleAddToCart}
-                                class="btn-add-to-cart"
-                                type="submit"
-                              >
-                                <span>Add to cart</span>
-                                <i class="icon-arrow-right"></i>
-                              </button>
+                              {unavailable ? (
+                                <button
+                                  disabled
+                                  className="btn-add-to-cart btn-disabled"
+                                  type="submit"
+                                >
+                                  <span>Add to cart</span>
+                                  <i className="icon-arrow-right"></i>
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={handleAddToCart}
+                                  className="btn-add-to-cart"
+                                  type="submit"
+                                >
+                                  <span>Add to cart</span>
+                                  <i className="icon-arrow-right"></i>
+                                </button>
+                              )}
                             </div>
-                            <div
-                              class="container-available font-2 blue-1 mt-md-40 mt-phone-30"
-                              data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                            >
-                              <div class="available-title">
-                                <i class="icon-pin"></i>
-                                <h3 class="fs--16 fs-phone-14">
-                                  Available for national delivery (Conditions
-                                  apply)
-                                </h3>
+
+                            {unavailable && (
+                              <div className="unavailable-warning-wrapper font-2 mt-3-cs">
+                                <p className="unavailable-warning">Color Variant Not Available in Your Preferred Location. Please &nbsp;</p>
+                                <btn-modal-open
+                                  group="modal-contact"
+                                >
+                                  Contact Us
+                                </btn-modal-open>
                               </div>
-                              <p class="fs--10 fs-tablet-14 mt-5">
-                                Please note, screen colors may not accurately
-                                match actual product colors. Also, natural wood
-                                items can vary in color, grain, and texture,
-                                which is part of their unique charm.
-                              </p>
-                            </div>
+                            )}
+                            {productData && (
+                              <AvailabilityCard selectedVariantData={productData.variantData[selectedVariantIndex]} setUnavailable={setUnavailable} />
+                            )}
                             {productData &&
                               productData.product.customTextFields.length >
-                                0 && (
+                              0 && (
                                 <div
                                   style={{ paddingTop: "20px" }}
                                   className="container-product-notes container-info-text "
@@ -438,6 +475,21 @@ const CartModal = ({
           </modal-item>
         </modal-container>
       </modal-group>
+
+      {successMessageVisible && (
+        <Modal
+          buttonLabel={'Continue Shopping'}
+          message={'Product Successfully Added to Cart!'}
+          setModalStatus={setSuccessMessageVisible}
+        />
+      )}
+      {errorMessageVisible && (
+        <Modal
+          buttonLabel={'Try Again!'}
+          message={'Failed to Add Product to Cart'}
+          setModalStatus={setErrorMessageVisible}
+        />
+      )}
     </div>
   );
 };

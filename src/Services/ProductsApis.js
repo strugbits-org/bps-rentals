@@ -3,11 +3,11 @@ import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
-export const getProductsByCategory = async ({ category, searchTerm }) => {
+export const getAllProducts = async ({ category, searchTerm }) => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: ["product", "subCategory"],
+      includeReferencedItems: ["product"],
       ne: [
         {
           key: "hidden",
@@ -19,31 +19,35 @@ export const getProductsByCategory = async ({ category, searchTerm }) => {
         },
       ],
       includeVariants: true,
-      includeBestSellers: true,
       limit: "infinite",
-      // limit: 50,
-      // log:true
+      increasedLimit: 1000,
     };
 
     const response = await getDataFetchFunction(payload);
-    if (response && response._items) {
-      const products = response._items.map((x) => x.data);
-      if (!category && !searchTerm) {
-        return products;
-      } else if (!category && searchTerm) {
-        const filteredProducts = products.filter(product => {
-          const matchedTerm = searchTerm === "" || (product.search && product.search.toLowerCase().includes(searchTerm));
-          return matchedTerm;
-        });
-        return filteredProducts;
-      }
-      const filteredProducts = products.filter((product) =>
-        product.subCategory.some((x) => x._id === category)
-      );
-      return filteredProducts;
-    } else {
+
+    if (!response || !response._items) {
       throw new Error("Response does not contain _items", response);
     }
+
+    const products = response._items.map((x) => ({
+      subCategoryData: [],
+      ...x.data,
+      ...x.data.subCategoryData && { subCategoryData: x.data.subCategoryData }
+    }));
+
+    if (!category && !searchTerm) {
+      return products;
+    }
+
+    if (!category && searchTerm) {
+      return products.filter(product =>
+        searchTerm === "" || (product.search && product.search.toLowerCase().includes(searchTerm))
+      );
+    }
+
+    return products.filter(product =>
+      product.subCategoryData.some(x => x._id === category)
+    );
   } catch (error) {
     console.error("Error fetching products:", error);
     return [];
@@ -147,7 +151,7 @@ export const fetchBestSellers = async (slug) => {
       payload.hasSome = [
         {
           key: "slug",
-          values: [`/${slug}`],
+          values: [slug],
         },
       ];
     }
@@ -167,10 +171,7 @@ export const fetchProductsByIds = async (products) => {
     const response = await getDataFetchFunction({
       dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: [
-        "category",
-        "product",
-        "subCategory",
-        "f1Collection",
+        "product"
       ],
       ne: [
         {
@@ -188,9 +189,13 @@ export const fetchProductsByIds = async (products) => {
           values: products,
         },
       ],
+      includeSubCategory: true,
+      includeVariants: true,
+      limit: "infinite",
+      increasedLimit: 1000,
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data);
+      return response._items.map((x) => x.data.subCategoryData ? x.data : { subCategoryData: [], ...x.data });
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -245,7 +250,7 @@ export const getSelectedColorsData = async (categoryId) => {
   }
 };
 
-export const fetchAllProducts = async () => {
+export const fetchAllProductsPaths = async () => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
@@ -265,7 +270,7 @@ export const fetchAllProducts = async () => {
     };
     const response = await getDataFetchFunction(payload);
     if (response && response._items) {
-      return response._items.map((x) => x.data);
+      return response._items.map((x) => ({ slug: x.data.product.slug }));
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -299,65 +304,12 @@ export const getSelectedProductId = async (slug) => {
     console.error("Error fetching selected ProductId:", error);
   }
 };
-export const getSelectedProductDetails = async (slug) => {
-  try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: [
-        "category",
-        "product",
-        "subCategory",
-        "f1Collection",
-      ],
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: [
-        {
-          key: "product",
-          value: slug,
-        },
-      ],
-      ne: [
-        {
-          key: "hidden",
-          value: true,
-        },
-        {
-          key: "isF1Exclusive",
-          value: true,
-        },
-      ],
-      hasSome: null,
-      skip: null,
-    });
-
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    console.error("Error fetching selected product details:", error);
-  }
-};
-export const getPairItWithProductsId = async (slug) => {
+export const getPairWithData = async () => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "BPSPairItWith",
-      includeReferencedItems: null,
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: [
-        {
-          key: "productId",
-          value: slug,
-        },
-      ],
-      ne: null,
-      hasSome: null,
-      skip: null,
+      increasedLimit: 1000,
+      limit: "infinite",
     });
 
     if (response && response._items) {
@@ -366,7 +318,7 @@ export const getPairItWithProductsId = async (slug) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching products(getPairItWithProductsId):", error);
+    console.error("Error fetching products(getPairWithData):", error);
   }
 };
 
@@ -462,7 +414,7 @@ export const getAllCategoriesData = async () => {
         "level2Collections",
         "f1Collections",
       ],
-      limit: 50,
+      limit: "infinite",
     });
     if (response && response._items) {
       const categoriesData = response._items.map((x) => x.data);
@@ -478,52 +430,10 @@ export const getAllCategoriesData = async () => {
     return [];
   }
 };
-export const getPairItWithProducts = async (productIds) => {
-  try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: [
-        "category",
-        "product",
-        "subCategory",
-        "f1Collection",
-      ],
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      eq: [
-        {
-          key: "isF1",
-          value: true,
-        },
-      ],
-      ne: [
-        {
-          key: "hidden",
-          value: true,
-        },
-      ],
-      hasSome: [
-        {
-          key: "product",
-          values: productIds,
-        },
-      ],
-      skip: null,
-    });
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    console.error("Error fetching products(getPairItWithProducts):", error);
-  }
-};
 export const getSavedProductData = async () => {
   try {
     const authToken = await getAuthToken();
-    const response = await fetch(`${baseUrl}/api/wix/getSavedProducts`, {
+    const response = await fetch(`${baseUrl}/api/product/getSavedProducts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -552,7 +462,7 @@ export const saveProduct = async (id) => {
   try {
     const authToken = await getAuthToken();
 
-    const response = await fetch(`${baseUrl}/api/wix/saveProduct/${id}`, {
+    const response = await fetch(`${baseUrl}/api/product/saveProduct/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -577,7 +487,7 @@ export const unSaveProduct = async (id) => {
   try {
     const authToken = await getAuthToken();
     const response = await fetch(
-      `${baseUrl}/api/wix/removeSavedProduct/${id}`,
+      `${baseUrl}/api/product/removeSavedProduct/${id}`,
       {
         method: "GET",
         headers: {
