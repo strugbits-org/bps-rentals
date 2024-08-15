@@ -1,6 +1,7 @@
 import { createWixClient } from "@/Utils/CreateWixClient";
 import { apiAuth } from "@/Utils/IsAuthenticated";
 import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
+import { encryptPriceFields } from "@/Utils/encrypt";
 
 // Query data items from Wix data collections
 const getDataFetchFunction = async (payload) => {
@@ -141,40 +142,18 @@ const getDataFetchFunction = async (payload) => {
       });
     }
 
-    // Data cleanup for specific collections
-    if (data._items.length > 0) {
-      if (dataCollectionId === "Stores/Products") {
-        data._items = data._items.map(val => {
-          delete val.data.formattedDiscountedPrice;
-          delete val.data.pricePerUnitData;
-          delete val.data.pricePerUnit;
-          delete val.data.formattedPricePerUnit;
-          delete val.data.formattedPrice;
-          delete val.data.price;
-          delete val.data.discountedPrice;
-          return val;
-        });
-      }
-      if (dataCollectionId === "locationFilteredVariant") {
-        data._items = data._items.map(val => {
+    const collectionsToEncrypt = ["Stores/Products", "locationFilteredVariant", "RentalsNewArrivals"];
+    if (data._items.length > 0 && collectionsToEncrypt.includes(dataCollectionId)) {
+      data._items = data._items.map(val => {
+        if (dataCollectionId === "locationFilteredVariant" && val.data.variantData) {
           val.data.variantData = val.data.variantData.map(val2 => {
-            delete val2.variant.discountedPrice;
-            delete val2.variant.price;
-            delete val2.variant?.pricePerUnitData;
-            delete val2.variant?.pricePerUnit;
-            delete val2.variant?.formattedPricePerUnit;
+            encryptPriceFields(val2.variant);
             return val2;
           });
-          delete val?.data?.product?.formattedDiscountedPrice;
-          delete val?.data?.product?.discountedPrice;
-          delete val?.data?.product?.formattedPrice;
-          delete val?.data?.product?.pricePerUnitData;
-          delete val?.data?.product?.pricePerUnit;
-          delete val?.data?.product?.formattedPricePerUnit;
-          delete val?.data?.product?.price;
-          return val;
-        });
-      }
+        }
+        encryptPriceFields(val.data.product);
+        return val;
+      });
     }
 
     return data;

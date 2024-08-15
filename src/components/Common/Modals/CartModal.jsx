@@ -9,6 +9,8 @@ import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
 import { AddProductToCart } from "@/Services/CartApis";
 import { useCookies } from "react-cookie";
 import Modal from "./Modal";
+import useUserData from "@/Hooks/useUserData";
+import { decryptField } from "@/Utils/encrypt";
 
 const CartModal = ({
   productData,
@@ -33,6 +35,7 @@ const CartModal = ({
   const [cookies, setCookie] = useCookies(["location"]);
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const { role } = useUserData();
 
   const handleClose = () => {
     setTimeout(() => {
@@ -300,6 +303,14 @@ const CartModal = ({
                                       __html: seatHeightData.description,
                                     }}
                                   ></span>
+                                </li>
+                              )}
+                              {productData && role === "admin" && productData.product.formattedPrice && (
+                                <li className="seat-height">
+                                  <span className="specs-title">
+                                    Price
+                                  </span>
+                                  <span className="specs-text">{decryptField(productData.product.formattedPrice)}</span>
                                 </li>
                               )}
                             </ul>
