@@ -1,15 +1,8 @@
-import {
-  extractSlugFromUrl,
-  findColor,
-  findLocation,
-  formatCustomDate,
-  locations,
-} from "@/Utils/Utils";
-import AnimateLink from "../AnimateLink";
-import { generateImageURL } from "@/Utils/GenerateImageURL";
+import { quoteDateFormatter } from "@/Utils/Utils";
+import QuoteItems from "@/components/QuoteRequest/QuoteItems";
 
 const QuoteViewModal = ({ data }) => {
-  const issueDate = formatCustomDate(data?.dates.issueDate);
+  const issueDate = quoteDateFormatter(data?.dates.issueDate);
 
   return (
     <div id="scripts">
@@ -41,23 +34,20 @@ const QuoteViewModal = ({ data }) => {
                             class="list-cart list-cart-product"
                             data-aos="d:loop"
                           >
-                            {data &&
+                            <QuoteItems quoteData={data?.lineItems} />
+
+                            {/* {data &&
                               data.lineItems.length > 0 &&
-                              data.lineItems.map((data, index) => {
+                              data.lineItems.map((cart, index) => {
                                 const {
-                                  productName,
-                                  physicalProperties,
                                   quantity,
-                                  image,
-                                  descriptionLines,
-                                  url,
-                                  catalogReference,
-                                } = data.fullItem;
-                                const colors =
-                                  findColor(descriptionLines).join("-");
-                                const customTextFields =
-                                  catalogReference.options.customTextFields;
-                                const location = findLocation(descriptionLines);
+                                  name,
+                                  productUrl,
+                                  src,
+                                  description,
+                                  location,
+                                } = cart;
+
                                 return (
                                   <li key={index} class="list-item">
                                     <input
@@ -68,8 +58,8 @@ const QuoteViewModal = ({ data }) => {
                                     <div class="cart-product">
                                       <div class="container-img">
                                         <img
-                                          src={generateImageURL({
-                                            wix_url: image,
+                                          src={generateImageUrl2({
+                                            wix_url: src,
                                             h: "74",
                                             w: "74",
                                           })}
@@ -80,12 +70,12 @@ const QuoteViewModal = ({ data }) => {
                                         <div class="container-top">
                                           <div class="container-product-name">
                                             <h2 class="product-name">
-                                              {productName.original}
+                                              {description}
                                             </h2>
                                             <AnimateLink
                                               to={
                                                 "/product" +
-                                                extractSlugFromUrl(url)
+                                                extractSlugFromUrl(productUrl)
                                               }
                                               className="btn-view"
                                             >
@@ -95,7 +85,7 @@ const QuoteViewModal = ({ data }) => {
                                           </div>
                                           <button
                                             type="button"
-                                            class="btn-cancel"
+                                            class="btn-cancel hidden"
                                           >
                                             <i class="icon-close"></i>
                                           </button>
@@ -107,10 +97,10 @@ const QuoteViewModal = ({ data }) => {
                                                 SKU
                                               </span>
                                               <span class="specs-text">
-                                                {physicalProperties.sku}
+                                                {name}
                                               </span>
                                             </li>
-                                            <li class="size">
+                                            <li class="size hidden">
                                               <span class="specs-title">
                                                 Size
                                               </span>
@@ -118,12 +108,12 @@ const QuoteViewModal = ({ data }) => {
                                                 19”L X 15.5”W X 27.5”H
                                               </span>
                                             </li>
-                                            <li class="color">
+                                            <li class="color hidden">
                                               <span class="specs-title">
                                                 Color
                                               </span>
                                               <span class="specs-text">
-                                                {colors}
+                                                color
                                               </span>
                                             </li>
                                             <li class="location">
@@ -135,7 +125,7 @@ const QuoteViewModal = ({ data }) => {
                                                 <i class="icon-pin"></i>
                                               </span>
                                             </li>
-                                            <li class="customize-text">
+                                            <li class="customize-text hidden">
                                               <span class="specs-title">
                                                 Customize text
                                               </span>
@@ -154,6 +144,7 @@ const QuoteViewModal = ({ data }) => {
                                                 type="button"
                                                 class="minus"
                                                 disabled
+                                                hidden
                                               >
                                                 <i class="icon-minus"></i>
                                               </button>
@@ -163,12 +154,13 @@ const QuoteViewModal = ({ data }) => {
                                                 class="input-number"
                                                 readOnly
                                                 defaultValue={quantity}
-                                                placeholder={quantity}
+                                                placeholder="Item quantity"
                                               />
                                               <button
                                                 type="button"
                                                 class="plus"
                                                 disabled
+                                                hidden
                                               >
                                                 <i class="icon-plus"></i>
                                               </button>
@@ -179,7 +171,7 @@ const QuoteViewModal = ({ data }) => {
                                     </div>
                                   </li>
                                 );
-                              })}
+                              })} */}
                           </ul>
                           <div class="flex-center mt-lg-105 mt-tablet-55 mt-phone-35">
                             <button

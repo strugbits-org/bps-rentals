@@ -64,8 +64,8 @@ console.log(quoteData, "quoteData>");
                           id="quote-will-call"
                           name="orderType"
                           type="radio"
-                          value="Will Call"
-                          checked={quoteData.orderis === "Will Call"}
+                          value="Will call"
+                          checked={quoteData.orderis === "Will call"}
                           required
                           disabled
                         />
@@ -300,7 +300,16 @@ console.log(quoteData, "quoteData>");
             </div>
 
             {/* Quote Items */}
-            <QuoteItems quoteData={quoteData.lineItems} />
+            <div className="mt-lg-55 mt-tablet-40 mt-phone-30">
+              <span className="divisor-title fs--40 fw-600 d-block text-left w-100 pb-40">
+                Your Quote Details
+              </span>
+              <form className="form-cart">
+                <ul className="list-cart list-cart-product" data-aos="d:loop">
+                  <QuoteItems quoteData={quoteData.lineItems} />
+                </ul>
+              </form>
+            </div>
           </div>
         </div>
       </div>

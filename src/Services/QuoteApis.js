@@ -1,12 +1,14 @@
 "use server";
-import { getAuthToken } from "./GetAuthToken";
+import { getAuthToken, getMemberTokens } from "./GetAuthToken";
 
 const baseUrl = process.env.BASE_URL;
 
 export const createPriceQuote = async ({ lineItems, customerDetails }) => {
-  const payload = { lineItems, customerDetails };
   try {
     const authToken = await getAuthToken();
+    const memberTokens = await getMemberTokens();
+    const payload = { memberTokens, lineItems, customerDetails };
+
     const response = await fetch(`${baseUrl}/api/quote/create`, {
       method: "POST",
       headers: {
@@ -15,6 +17,7 @@ export const createPriceQuote = async ({ lineItems, customerDetails }) => {
       },
       body: JSON.stringify(payload),
     });
+    console.log(response, "response>>>>>>");
 
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`);

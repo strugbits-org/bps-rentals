@@ -6,6 +6,7 @@ import {
   locations,
 } from "@/Utils/Utils";
 import AnimateLink from "../Common/AnimateLink";
+import React from "react";
 
 const QuoteItems = ({ quoteData }) => {
   if (!quoteData || quoteData.length === 0) return null;
@@ -168,20 +169,13 @@ const QuoteItems = ({ quoteData }) => {
   };
 
   return (
-    <div className="mt-lg-55 mt-tablet-40 mt-phone-30">
-      <span className="divisor-title fs--40 fw-600 d-block text-left w-100 pb-40">
-        Your Quote Details
-      </span>
-      <form className="form-cart">
-        <ul className="list-cart list-cart-product" data-aos="d:loop">
-          {quoteData.map((cart, index) =>
-            cart.fullItem
-              ? renderFullItem(cart, index)
-              : renderSimpleItem(cart, index)
-          )}
-        </ul>
-      </form>
-    </div>
+    <React.Fragment>
+      {quoteData.map((cart, index) =>
+        cart.fullItem
+          ? renderFullItem(cart, index)
+          : renderSimpleItem(cart, index)
+      )}
+    </React.Fragment>
   );
 };
 

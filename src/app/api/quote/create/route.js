@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import handleAuthentication from "@/Utils/HandleAuthentication";
+import { cartWixClient } from "@/Utils/CreateWixClient";
 
 async function fetchData(url, options) {
   const response = await fetch(url, options);
@@ -17,7 +18,8 @@ export const POST = async (req) => {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     const body = await req.json();
-    const { lineItems, customerDetails } = body;
+    const { memberTokens, lineItems, customerDetails } = body;
+    const lineItemsIdArr = lineItems.map((item) => item.lineItId);
 
     const {
       orderType,
@@ -66,6 +68,7 @@ export const POST = async (req) => {
         prefferedSalesPerson: preferredSalesPerson ? preferredSalesPerson : "",
       },
     };
+
     let customer = {
       email: authenticatedUserData.userEmail,
       contactId: authenticatedUserData.memberId,
@@ -96,7 +99,7 @@ export const POST = async (req) => {
     };
 
     const payload = {
-      title: `Rentals Test Quote`,
+      title: eventDescription,
       customer: customer,
       customerDetails: customerObj,
       customerData: authenticatedUserData,
@@ -118,6 +121,9 @@ export const POST = async (req) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+    const cartClient = await cartWixClient(memberTokens);
+
+    await cartClient.currentCart.removeLineItemsFromCurrentCart(lineItemsIdArr);
 
     return NextResponse.json(
       {
