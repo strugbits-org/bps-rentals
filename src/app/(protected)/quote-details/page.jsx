@@ -2,7 +2,7 @@ import QuoteRequestPage from "@/components/QuoteRequest/Index";
 import QuoteDetails from "@/components/QuoteRequest/QuoteDetails";
 import { getProductsCart } from "@/Services/CartApis";
 import { getQuoteRequestPageContent } from "@/Services/Index";
-import { getQuotes, getQuotesById } from "@/Services/QuoteApis";
+import { getQuotesById } from "@/Services/QuoteApis";
 
 export default async function Page({ searchParams }) {
   const id = searchParams.id;

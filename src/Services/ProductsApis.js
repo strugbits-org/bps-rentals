@@ -20,7 +20,7 @@ export const getAllProducts = async ({ category, searchTerm }) => {
       ],
       includeVariants: true,
       limit: "infinite",
-      increasedLimit: 1000,
+      increasedLimit: 700,
     };
 
     const response = await getDataFetchFunction(payload);
@@ -74,7 +74,7 @@ export const getAllProductVariantsImages = async () => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "BPSProductImages",
-      increasedLimit: 1000,
+      increasedLimit: 700,
       limit: "infinite",
     });
 
@@ -125,7 +125,7 @@ export const getBestSellerProducts = async (bestSeller, limit) => {
         key: "subCategory",
         values: bestSeller
       }],
-      increasedLimit: 1000,
+      increasedLimit: 700,
       includeVariants: true,
       limit: "infinite",
     });
@@ -192,7 +192,7 @@ export const fetchProductsByIds = async (products) => {
       includeSubCategory: true,
       includeVariants: true,
       limit: "infinite",
-      increasedLimit: 1000,
+      increasedLimit: 700,
     });
     if (response && response._items) {
       return response._items.map((x) => x.data.subCategoryData ? x.data : { subCategoryData: [], ...x.data });
@@ -236,7 +236,7 @@ export const fetchAllProductsPaths = async () => {
       dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: ["product"],
       limit: "infinite",
-      increasedLimit: 1000,
+      increasedLimit: 700,
       ne: [
         {
           key: "hidden",
@@ -262,7 +262,7 @@ export const getPairWithData = async () => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "BPSPairItWith",
-      increasedLimit: 1000,
+      increasedLimit: 700,
       limit: "infinite",
     });
 
