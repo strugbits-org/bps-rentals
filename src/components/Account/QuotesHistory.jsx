@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-import { markPageLoaded, pageLoadStart } from "@/Utils/AnimationFunctions";
+import {
+  markPageLoaded,
+  pageLoadStart,
+  updatedWatched,
+} from "@/Utils/AnimationFunctions";
 import QuoteViewModal from "../Common/Modals/QuoteViewModal";
 import { calculateTotalCartQuantity, quoteDateFormatter } from "@/Utils/Utils";
 import { getAllQuotes } from "@/Services/QuoteApis";
@@ -11,10 +15,13 @@ import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 
 const QuotesHistory = () => {
+  const [cookies, setCookie] = useCookies(["cartQuantity"]);
   const [quotesData, setQuotesData] = useState([]);
   const [itemData, setItemData] = useState();
-  const [cookies, setCookie] = useCookies(["cartQuantity"]);
   const router = useRouter();
+
+  const pageSize = 4;
+  const [pageLimit, setPageLimit] = useState(pageSize);
 
   const handleAddToCart = async (data) => {
     try {
@@ -92,7 +99,7 @@ const QuotesHistory = () => {
               </h6>
             </div>
           ) : (
-            quotesData.map((quote, index) => {
+            quotesData.slice(0, pageLimit).map((quote, index) => {
               const { data } = quote;
               const issueDate = quoteDateFormatter(data.dates.issueDate);
               return (
@@ -126,7 +133,13 @@ const QuotesHistory = () => {
             })
           )}
         </ul>
-        <button className="btn-2-blue mt-lg-65 mt-mobile-45">
+        <button
+          onClick={() => {
+            setPageLimit((prev) => prev + pageSize);
+            updatedWatched();
+          }}
+          className="btn-2-blue mt-lg-65 mt-mobile-45"
+        >
           <span>Load more</span>
           <i className="icon-arrow-right-2"></i>
         </button>

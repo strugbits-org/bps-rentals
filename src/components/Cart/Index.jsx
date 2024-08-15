@@ -177,7 +177,9 @@ const CartPage = ({ cartData }) => {
                                   {role === "admin" && (
                                     <li className="price">
                                       <span className="specs-title">Price</span>
-                                      <span className="specs-text">{formatPrice(price, quantity)}</span>
+                                      <span className="specs-text">
+                                        {formatPrice(price, quantity)}
+                                      </span>
                                     </li>
                                   )}
                                   <li className="color">
@@ -271,7 +273,7 @@ const CartPage = ({ cartData }) => {
                     <i className="icon-arrow-right"></i>
                   </AnimateLink>
                   <AnimateLink
-                    to={`/category/${"123"}`}
+                    to={`/category/${"new"}`}
                     className="btn-1 btn-border btn-border-blue btn-shopping btn-icon-left mt-lg-35 mt-mobile-20"
                     data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                   >
