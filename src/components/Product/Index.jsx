@@ -143,11 +143,6 @@ const ProductPostPage = ({
     }
   }, [selectedProductDetails]);
 
-  const seatHeightData =
-    selectedProductDetails.product.additionalInfoSections.find(
-      (data) => data.title.toLowerCase() === "seat height".toLowerCase()
-    );
-
   const handleQuantityChange = async (value) => {
     if (value < 10000 && value > 0) {
       setCartQuantity(value);
@@ -380,18 +375,6 @@ const ProductPostPage = ({
                       </li>
                     )}
 
-                    {selectedVariant && selectedVariant.size && (
-                      <li class="size">
-                        <span class="specs-title">Size</span>
-                        <span
-                          class="specs-text"
-                          dangerouslySetInnerHTML={{
-                            __html: selectedVariant.size,
-                          }}
-                        ></span>
-                      </li>
-                    )}
-
                     {selectedVariant && selectedVariant.color && (
                       <li class="color">
                         <span class="specs-title">Color</span>
@@ -401,22 +384,19 @@ const ProductPostPage = ({
                       </li>
                     )}
 
-                    <li className="weight">
-                      <span className="specs-title">Weight</span>
-                      <span className="specs-text">11.5lbs</span>
-                    </li>
+                    {selectedProductDetails && selectedProductDetails.product?.additionalInfoSections && selectedProductDetails.product.additionalInfoSections.map((sec, index) => {
+                      return (
+                        <li class={sec.title} key={index}>
+                          <span class="specs-title">{sec.title}</span>
+                          <span class="specs-text"
+                            dangerouslySetInnerHTML={{
+                              __html: sec.description,
+                            }}
+                          ></span>
+                        </li>
+                      )
+                    })}
 
-                    {seatHeightData && (
-                      <li class="seat-height">
-                        <span class="specs-title">Seat Height</span>
-                        <span
-                          class="specs-text"
-                          dangerouslySetInnerHTML={{
-                            __html: seatHeightData.description,
-                          }}
-                        ></span>
-                      </li>
-                    )}
                     {selectedProductDetails && role === "admin" && selectedProductDetails.product.formattedPrice && (
                       <li className="seat-height">
                         <span className="specs-title">

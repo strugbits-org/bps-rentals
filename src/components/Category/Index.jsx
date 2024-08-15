@@ -171,7 +171,7 @@ const CategoryPage = ({
     setShuffledBanners(shuffleArray([...bannersData]));
   }, [bannersData]);
 
-  useEffect(() => {
+  useEffect(() => {    
     setInitialValues();
   }, []);
 

@@ -263,15 +263,6 @@ const CartModal = ({
                                 </li>
                               )}
 
-                              {/* {selectedVariantData?.size && (
-                                <li class="size">
-                                  <span class="specs-title">Size</span>
-                                  <span class="specs-text">
-                                    {selectedVariantData &&
-                                      selectedVariantData.size}
-                                  </span>
-                                </li>
-                              )} */}
                               {selectedVariantData?.color && (
                                 <li class="color">
                                   <span class="specs-title">Color</span>

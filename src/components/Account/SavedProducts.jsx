@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
+// getProductVariants,
+// getProductVariantsImages,
 import {
-  getProductVariants,
-  getProductVariantsImages,
   getSavedProductData,
 } from "@/Services/ProductsApis";
 import ProductCard from "../Category/ProductCard";
 import CartModal from "../Common/Modals/CartModal";
 
-const SavedProducts = () => {
+const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
 
 
   const pageSize = 20;
@@ -27,11 +27,12 @@ const SavedProducts = () => {
   const getSelectedProductSnapShots = async (productData) => {
     setSelectedProductData(productData);
     try {
-      const product_id = productData.product._id;
-      const [productSnapshotData, productVariantsData] = await Promise.all([
-        getProductVariantsImages(product_id),
-        getProductVariants(product_id),
-      ]);
+      // const product_id = productData.product._id;
+      // const [productSnapshotData, productVariantsData] = await Promise.all([
+      //   getProductVariantsImages(product_id),
+      //   getProductVariants(product_id),
+      // ]);
+      const { productSnapshotData, productVariantsData } = productData;
 
       let dataMap = new Map(
         productVariantsData.map((item) => [item.sku.toLowerCase(), item])
@@ -98,7 +99,14 @@ const SavedProducts = () => {
 
   const fetchSavedProducts = async () => {
     const savedProducts = await getSavedProductData();
-    setSavedProductsData(savedProducts);
+    const items = savedProducts.map((product) => {
+      if (!product._id) return;
+      const productId = product.product._id;
+      product.productSnapshotData = productsVariantImagesData.filter(x => x.productId === productId);
+      product.productVariantsData = productsVariantsData.filter(x => x.productId === productId);
+      return product;
+    });
+    setSavedProductsData(items);
     setTimeout(markPageLoaded, 200);
   }
   useEffect(() => {
