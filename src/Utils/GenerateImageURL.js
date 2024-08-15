@@ -94,3 +94,14 @@ export const blogGalleryImageURL = ({
     w = "1920",
   }) =>
     `${wix_url}/v1/${fit}/w_${w},h_${h},al_c,q_${q},usm_0.66_1.00_0.01,enc_auto/compress.webp`;
+
+    export const productImageURLForQuote = (url) => {
+      const [beforeHash, afterHash] = url.split("#");
+      const [protocol, path] = beforeHash.split("v1/");
+      const parts = path.split("/");
+      const idPart = parts[0].split("~")[0];
+      const extension = path.split(".").pop();
+
+      const newUrl = `${protocol}v1/https:/${idPart}~mv2.${extension}#${afterHash}`;
+      return newUrl;
+    };

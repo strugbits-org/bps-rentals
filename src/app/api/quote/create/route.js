@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import handleAuthentication from "@/Utils/HandleAuthentication";
+
 async function fetchData(url, options) {
   const response = await fetch(url, options);
   if (!response.ok) {
@@ -8,6 +9,7 @@ async function fetchData(url, options) {
   }
   return await response.json();
 }
+
 export const POST = async (req) => {
   try {
     const authenticatedUserData = await handleAuthentication(req);
@@ -16,27 +18,6 @@ export const POST = async (req) => {
     }
     const body = await req.json();
     const { lineItems, customerDetails } = body;
-    console.log(authenticatedUserData, "authenticatedUserData");
-    console.log(lineItems[0], "lineItems");
-
-    // let customizedLineItems = "";
-
-    // for (let i = 0; i < lineItems.length; i++) {
-    //   let item = lineItems[i];
-
-    //   let { location } =
-    //     item.fullItem.catalogReference.options.customTextFields;
-    //   console.log(item.fullItem, "item.fullItem");
-
-    //   const locationMapping = {
-    //     LV: "Las Vegas",
-    //     SF: "San Francisco",
-    //     NT: "National",
-    //   };
-    //   let locationName = locationMapping[location] || location;
-
-    //   customizedLineItems += `${item.quantity.toString()} ${item.fullItem.physicalProperties.sku.toString()} ${item.name.toString()} ${locationName.toString()}\n`;
-    // }
 
     const {
       orderType,
@@ -58,17 +39,16 @@ export const POST = async (req) => {
       customerName,
       customerEmail,
     } = customerDetails;
-    // const lineItemsIdArr = lineItems.map((item) => item.id);
 
-    let formatedEventDate = new Date(eventDate);
-    let formatedDeliveryDate = new Date(deliveryDate);
-    let formatedPickupDate = new Date(pickupDate);
+    let formattedDeliveryDate = new Date(deliveryDate);
+    let formattedPickupDate = new Date(pickupDate);
+    let formattedEventDate = new Date(eventDate);
 
     let customerObj = {
       orderis: orderType,
-      eventDate: formatedEventDate.toISOString(),
-      dilvDate: formatedDeliveryDate.toISOString(),
-      pickupDate: formatedPickupDate.toISOString(),
+      eventDate: formattedEventDate.toISOString(),
+      dilvDate: formattedDeliveryDate.toISOString(),
+      pickupDate: formattedPickupDate.toISOString(),
       eventLocation: eventLocation,
       eventDescript: eventDescription,
       billingDetails: {
@@ -133,16 +113,11 @@ export const POST = async (req) => {
       },
     };
 
-    const response = await fetchData(
-      `${process.env.RENTALS_URL}/rentalsPriceQuote`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      }
-    );
-
-    console.log(response, "quote response");
+    await fetchData(`${process.env.RENTALS_URL}/rentalsPriceQuote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
     return NextResponse.json(
       {
@@ -151,7 +126,6 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

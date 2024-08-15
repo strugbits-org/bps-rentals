@@ -1,8 +1,8 @@
-import { createWixClient } from "@/Utils/CreateWixClient";
-import handleAuthentication from "@/Utils/HandleAuthentication";
 import { NextResponse } from "next/server";
 
-// GET method handler
+import handleAuthentication from "@/Utils/HandleAuthentication";
+import { createWixClient } from "@/Utils/CreateWixClient";
+
 export const GET = async (req) => {
   try {
     const authenticatedUserData = await handleAuthentication(req);
@@ -22,16 +22,6 @@ export const GET = async (req) => {
       return NextResponse.json({ message: "Quote not found" }, { status: 404 });
     }
 
-    // data._items = data._items.map((val) => {
-    //   val.data.lineItems = val.data.lineItems.map((val2) => {
-    //     delete val2.price;
-    //     delete val2.fullItem.price;
-    //     delete val2.fullItem.priceBeforeDiscounts;
-    //     delete val2.fullItem.fullPrice;
-    //     return val2;
-    //   });
-    //   return val;
-    // });
     return NextResponse.json(
       {
         message: "Quotes data Successfully fetched",
@@ -40,8 +30,7 @@ export const GET = async (req) => {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";

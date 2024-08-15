@@ -6,6 +6,8 @@ import QuoteItems from "./QuoteItems";
 import { quoteDateFormatter } from "@/Utils/Utils";
 
 const QuoteDetails = ({ quoteRequestPageContent, quoteData }) => {
+console.log(quoteData, "quoteData>");
+
   useEffect(() => {
     setTimeout(() => {
       markPageLoaded();

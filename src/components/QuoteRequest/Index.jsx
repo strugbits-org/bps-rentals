@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import { createPriceQuote } from "@/Services/QuoteApis";
 import { getProductsCart } from "@/Services/CartApis";
+import { productImageURLForQuote } from "@/Utils/GenerateImageURL";
 
 const QuoteRequestPage = ({ quoteRequestPageContent }) => {
   const [cartItems, setCartItems] = useState();
@@ -37,16 +38,21 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    const lineItems = cartItems.map((product) => {
+    const lineItems = cartItems.map((product, index) => {
+      const newUrl = productImageURLForQuote(product.image);
+
       return {
-        id: product._id,
+        id: String(index + 1),
         name: product.physicalProperties.sku,
         description: product.productName.original,
         quantity: product.quantity,
+        location: product.catalogReference.options.customTextFields.location,
+        price: Number(product.price.convertedAmount),
+        src: newUrl,
         fullItem: product,
       };
     });
+
     try {
       const response = await createPriceQuote({
         lineItems,
@@ -62,7 +68,7 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
     const cartData = await getProductsCart();
     setCartItems(cartData);
     setTimeout(markPageLoaded, 200);
-  }
+  };
 
   useEffect(() => {
     getCart();
@@ -110,7 +116,7 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                           id="quote-delivered"
                           name="orderType"
                           type="radio"
-                          value="Order Delivered"
+                          value="Delivered"
                           onChange={handleChange}
                           checked={formData.orderType === "Delivered"}
                           required
@@ -122,9 +128,9 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                           id="quote-will-call"
                           name="orderType"
                           type="radio"
-                          value="Will Call"
+                          value="Will call"
                           onChange={handleChange}
-                          checked={formData.orderType === "Will Call"}
+                          checked={formData.orderType === "Will call"}
                           required
                         />
                         <label htmlFor="quote-will-call">Will Call</label>

@@ -1,7 +1,8 @@
-import { createWixClient } from "@/Utils/CreateWixClient";
-import handleAuthentication from "@/Utils/HandleAuthentication";
 import { NextResponse } from "next/server";
-// GET method handler
+
+import handleAuthentication from "@/Utils/HandleAuthentication";
+import { createWixClient } from "@/Utils/CreateWixClient";
+
 export const GET = async (req, context) => {
   try {
     const authenticatedUserData = await handleAuthentication(req);
@@ -29,9 +30,8 @@ export const GET = async (req, context) => {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
