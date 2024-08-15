@@ -4,9 +4,7 @@ import {
   getFooterNavigationMenu,
   getSocialLinks,
 } from "@/Services/FooterApis";
-import Account from "@/components/Account/Index";
-import QuotesHistory from "@/components/Account/QuotesHistory";
-import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
+
 import { getRentalsTeamsBanner } from "@/Services/SectionsApis";
 
 import QuotesHistory from "@/components/Account/QuotesHistory";

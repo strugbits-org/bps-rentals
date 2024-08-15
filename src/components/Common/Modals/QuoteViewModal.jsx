@@ -1,5 +1,6 @@
 import { quoteDateFormatter } from "@/Utils/Utils";
-import QuoteItems from "@/components/QuoteRequest/QuoteItems";
+import QuoteItems from "@/components/Quote/QuoteItems";
+import AnimateLink from "../AnimateLink";
 
 const QuoteViewModal = ({ data }) => {
   const issueDate = quoteDateFormatter(data?.dates.issueDate);
@@ -29,7 +30,7 @@ const QuoteViewModal = ({ data }) => {
                             </p>
                           </div>
                         </div>
-                        <form action="" class="form-cart mt-lg-50 mt-mobile-40">
+                        <form class="form-cart mt-lg-50 mt-mobile-40">
                           <ul
                             class="list-cart list-cart-product"
                             data-aos="d:loop"
@@ -174,13 +175,13 @@ const QuoteViewModal = ({ data }) => {
                               })} */}
                           </ul>
                           <div class="flex-center mt-lg-105 mt-tablet-55 mt-phone-35">
-                            <button
-                              type="submit"
-                              class="btn-1 btn-large btn-blue btn-request w-100 manual-modal-close"
+                            <AnimateLink
+                              to="/quote-request"
+                              className="btn-1 btn-large btn-blue btn-request w-100 manual-modal-close"
                             >
                               <span>Request For Quote</span>
                               <i class="icon-arrow-right-2"></i>
-                            </button>
+                            </AnimateLink>
                           </div>
                         </form>
                         <div class="container-btn-modal-close">

@@ -1,6 +1,5 @@
-import QuoteRequestPage from "@/components/QuoteRequest/Index";
-import QuoteDetails from "@/components/QuoteRequest/QuoteDetails";
-import { getProductsCart } from "@/Services/CartApis";
+import QuoteDetails from "@/components/Quote/QuoteDetails";
+
 import { getQuoteRequestPageContent } from "@/Services/Index";
 import { getQuotesById } from "@/Services/QuoteApis";
 

@@ -8,7 +8,7 @@ import { getProductsCart } from "@/Services/CartApis";
 
 import Modal from "../Common/Modals/Modal";
 
-const QuoteRequestPage = ({ quoteRequestPageContent }) => {
+const QuoteRequest = ({ quoteRequestPageContent }) => {
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [cartItems, setCartItems] = useState();
   const [message, setMessage] = useState("");
@@ -452,4 +452,4 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
   );
 };
 
-export default QuoteRequestPage;
+export default QuoteRequest;

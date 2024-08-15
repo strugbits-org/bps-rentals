@@ -2,24 +2,72 @@
 
 import { useEffect, useState } from "react";
 
-import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { markPageLoaded, pageLoadStart } from "@/Utils/AnimationFunctions";
 import QuoteViewModal from "../Common/Modals/QuoteViewModal";
-import { quoteDateFormatter } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, quoteDateFormatter } from "@/Utils/Utils";
 import { getAllQuotes } from "@/Services/QuoteApis";
+import { AddProductToCart } from "@/Services/CartApis";
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/navigation";
 
 const QuotesHistory = () => {
   const [quotesData, setQuotesData] = useState([]);
   const [itemData, setItemData] = useState();
+  const [cookies, setCookie] = useCookies(["cartQuantity"]);
+  const router = useRouter();
+
+  const handleAddToCart = async (data) => {
+    try {
+      const products = [];
+      data.forEach((item) => {
+        const {
+          catalogReference: {
+            appId,
+            catalogItemId,
+            options: {
+              variantId,
+              customTextFields: { location: product_location },
+            },
+          },
+          quantity,
+        } = item.fullItem;
+
+        const product = {
+          catalogReference: {
+            appId,
+            catalogItemId,
+            options: {
+              variantId,
+              customTextFields: { location: product_location },
+            },
+          },
+          quantity,
+        };
+
+        products.push(product);
+      });
+      const productData = {
+        lineItems: products,
+      };
+      const response = await AddProductToCart(productData);
+      const total = calculateTotalCartQuantity(response.cart.lineItems);
+      setCookie("cartQuantity", total);
+      pageLoadStart();
+      router.push("/cart");
+    } catch (error) {
+      console.error("Error while order again:", error);
+    }
+  };
 
   const fetchQuotes = async () => {
     const data = await getAllQuotes();
     setQuotesData(data);
     setTimeout(markPageLoaded, 200);
-  }
+  };
   useEffect(() => {
     fetchQuotes();
   }, []);
-  
+
   return (
     <>
       <QuoteViewModal data={itemData} />
@@ -46,7 +94,6 @@ const QuotesHistory = () => {
           ) : (
             quotesData.map((quote, index) => {
               const { data } = quote;
-
               const issueDate = quoteDateFormatter(data.dates.issueDate);
               return (
                 <li key={index} className="list-item">
@@ -65,10 +112,13 @@ const QuotesHistory = () => {
                         <span>View</span>
                         <i className="icon-arrow-diagonal"></i>
                       </btn-modal-open>
-                      <a href="cart.html" className="btn-order-again">
+                      <button
+                        onClick={() => handleAddToCart(data.lineItems)}
+                        className="btn-order-again"
+                      >
                         <span>Order again</span>
                         <i className="icon-arrow-diagonal"></i>
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </li>
