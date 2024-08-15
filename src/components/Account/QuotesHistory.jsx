@@ -1,25 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import QuoteViewModal from "../Common/Modals/QuoteViewModal";
-import { formatCustomDate } from "@/Utils/Utils";
-import { getQuotes } from "@/Services/QuoteApis";
+import { quoteDateFormatter } from "@/Utils/Utils";
 
-const QuotesHistory = () => {
-  const [quotesData, setQuotesData] = useState([]);
+const QuotesHistory = ({ quotesData }) => {
   const [itemData, setItemData] = useState();
 
-  const fetchQuotes = async () => {
-    const data = await getQuotes();
-    setQuotesData(data);
-    setTimeout(markPageLoaded, 200);
-  }
   useEffect(() => {
-    fetchQuotes();
+    setTimeout(markPageLoaded, 200);
   }, []);
   return (
     <>
+      <QuoteViewModal data={itemData} />
+
       <div className="wrapper-account">
         <h1 className="fs--60 blue-1 split-words" data-aos="d:loop">
           Quotes history
@@ -42,13 +38,14 @@ const QuotesHistory = () => {
           ) : (
             quotesData.map((quote, index) => {
               const { data } = quote;
-              // const issueDate = formatCustomDate(data.dates.issueDate);
+
+              const issueDate = quoteDateFormatter(data.dates.issueDate);
               return (
                 <li key={index} className="list-item">
                   <div className="content">
                     <div className="name-date">
                       <h2 className="name">{data.title}</h2>
-                      {/* <div className="date">{issueDate}</div> */}
+                      <div className="date">{issueDate}</div>
                     </div>
                     <div className="value">$ 45.000</div>
                     <div className="container-btn">
@@ -76,7 +73,6 @@ const QuotesHistory = () => {
           <i className="icon-arrow-right-2"></i>
         </button>
       </div>
-      <QuoteViewModal data={itemData} />
     </>
   );
 };

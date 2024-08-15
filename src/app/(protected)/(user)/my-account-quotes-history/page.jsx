@@ -1,8 +1,14 @@
-import Account from "@/components/Account/Index";
-import QuotesHistory from "@/components/Account/QuotesHistory";
-import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
-import { getAllQuotes, getQuotes } from "@/Services/QuoteApis";
+import {
+  getContactData,
+  getFooterData,
+  getFooterNavigationMenu,
+  getSocialLinks,
+} from "@/Services/FooterApis";
 import { getRentalsTeamsBanner } from "@/Services/SectionsApis";
+import { getAllQuotes } from "@/Services/QuoteApis";
+
+import QuotesHistory from "@/components/Account/QuotesHistory";
+import Account from "@/components/Account/Index";
 
 export default async function Page() {
   const [
@@ -11,6 +17,7 @@ export default async function Page() {
     socialLinks,
     navigationMenu,
     teamsBanner,
+    allQuotes,
   ] = await Promise.all([
     getFooterData(),
     getContactData(),
@@ -20,8 +27,11 @@ export default async function Page() {
     getAllQuotes(),
   ]);
   return (
-    <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }}>
-      <QuotesHistory />
+    <Account
+      banner={teamsBanner}
+      footerData={{ footerContent, contactData, socialLinks, navigationMenu }}
+    >
+      <QuotesHistory quotesData={allQuotes || []} />
     </Account>
   );
 }
