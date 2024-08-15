@@ -27,6 +27,7 @@ import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
 import useUserData from "@/Hooks/useUserData";
+import { decryptField } from "@/Utils/encrypt";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -414,6 +415,14 @@ const ProductPostPage = ({
                             __html: seatHeightData.description,
                           }}
                         ></span>
+                      </li>
+                    )}
+                    {selectedProductDetails && role === "admin" && selectedProductDetails.product.formattedPrice && (
+                      <li className="seat-height">
+                        <span className="specs-title">
+                          Price
+                        </span>
+                        <span className="specs-text">{decryptField(selectedProductDetails.product.formattedPrice)}</span>
                       </li>
                     )}
                   </ul>

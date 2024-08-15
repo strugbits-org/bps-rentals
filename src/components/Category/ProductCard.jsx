@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { SaveProductButton } from "../Common/SaveProductButton";
 import { compareArray, hasMatchingColor } from "@/Utils/Utils";
 import { useCookies } from "react-cookie";
+import { decryptField } from "@/Utils/encrypt";
+import useUserData from "@/Hooks/useUserData";
 
 const ProductCard = ({
   productData,
@@ -22,6 +24,7 @@ const ProductCard = ({
   const [activeVariant, setActiveVariant] = useState(variantData[0]);
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [cookies, setCookie] = useCookies(["location"]);
+  const { role } = useUserData();
 
   const handleFilteredData = () => {
     const matchingVariants = variantData.filter(variant => {
@@ -108,6 +111,7 @@ const ProductCard = ({
                     );
                   }
                 })}
+                {product && role === "admin" && (<span>{decryptField(product.formattedPrice)}</span>)}
               </div>
             </div>
           )}
