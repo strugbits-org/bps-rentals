@@ -360,6 +360,7 @@ export const getAllCategoriesData = async () => {
 export const getSavedProductData = async () => {
   try {
     const authToken = await getAuthToken();
+    if (!authToken) return;
     const response = await fetch(`${baseUrl}/api/product/getSavedProducts`, {
       method: "POST",
       headers: {
