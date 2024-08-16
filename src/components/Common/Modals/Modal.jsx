@@ -14,6 +14,10 @@ const Modal = ({ buttonLabel, message, setModalStatus, redirectUrl }) => {
   }
 
   useEffect(() => {
+    updatedWatched();
+  }, [message]);
+
+  useEffect(() => {
     setTimeout(() => {
       document.body.setAttribute("data-form-cart-state", "success");
       updatedWatched();
