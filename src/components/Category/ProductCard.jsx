@@ -51,6 +51,8 @@ const ProductCard = ({
     if (filteredProducts.length !== 0) handleFilteredData();
   }, [filteredProducts]);
 
+  const copySku = () => navigator.clipboard.writeText(activeVariant.sku);
+
   useEffect(() => {
     handleFilteredData();
   }, []);
@@ -69,6 +71,7 @@ const ProductCard = ({
           </div>
         )}
         <SaveProductButton
+          key={product._id}
           productData={product}
           savedProductsData={savedProductsData}
           setSavedProductsData={setSavedProductsData}
@@ -76,20 +79,10 @@ const ProductCard = ({
       </div>
       {!isSavedProduct && (
         <div className="container-copy">
-          <button className="btn-copy copy-link">
+          <button onClick={copySku} className="btn-copy copy-link">
             <span>{activeVariant.sku}</span>
             <i className="icon-copy"></i>
           </button>
-          <input
-            type="text"
-            className="copy-link-url"
-            defaultValue={activeVariant.sku}
-            style={{
-              position: "absolute",
-              opacity: 0,
-              pointerEvents: "none",
-            }}
-          />
         </div>
       )}
       <AnimateLink to={`/product/${product.slug}`} className="link">

@@ -9599,11 +9599,9 @@ var require_app2 = __commonJS({
         element.classList.add("js-copy-link-running");
         element
           .querySelector(".copy-link")
-          .addEventListener("click", function (event) {
+          .addEventListener("click", function () {
             this.querySelector("span").innerText = "Copied!";
             this.classList.add("copied");
-            element.querySelector(".copy-link-url").select();
-            document.execCommand("copy");
           });
       });
     }
@@ -9858,8 +9856,8 @@ var require_app2 = __commonJS({
     });
 
     document
-    .querySelector(".initializeCanvas")
-    .addEventListener("customInit", initializeCanvas);
+      .querySelector(".initializeCanvas")
+      .addEventListener("customInit", initializeCanvas);
 
     document.querySelector(".addToCart").addEventListener("reloadModal", () => {
       productLinkColor();
