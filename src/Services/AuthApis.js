@@ -17,7 +17,6 @@ export const signUpUser = async (userData) => {
       return { error: true, message: data.message };
     }
     const data = await response.json();
-
     return data;
   } catch (error) {
     throw new Error(error);

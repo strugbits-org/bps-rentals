@@ -40,17 +40,19 @@ const Modal = ({ buttonLabel, message, setModalStatus, redirectUrl }) => {
                           {message}
                         </h2>
                       )}
-
-                      <div className="container-btn">
-                        <button
-                          onClick={closeModal}
-                          className="btn-border-blue btn-my-account btn-back-to-categories mt-md-30 mt-phone-20 disable-click-outside"
-                          data-close-feedback
-                          data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                        >
-                          <span>{buttonLabel || "Try Again!"}</span>
-                        </button>
-                      </div>
+                      {message !==
+                        "Please wait, we're Creating your Account" && (
+                        <div className="container-btn">
+                          <button
+                            onClick={closeModal}
+                            className="btn-border-blue btn-my-account btn-back-to-categories mt-md-30 mt-phone-20 disable-click-outside"
+                            data-close-feedback
+                            data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                          >
+                            <span>{buttonLabel || "Try Again!"}</span>
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

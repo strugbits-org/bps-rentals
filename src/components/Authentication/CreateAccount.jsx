@@ -5,6 +5,7 @@ import { signUpUser } from "@/Services/AuthApis";
 import Disclaimer from "./Disclaimer";
 import { useRouter } from "next/navigation";
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
+import { useCookies } from "react-cookie";
 
 const CreateAccount = ({
   createAccountModalContent,
@@ -17,6 +18,7 @@ const CreateAccount = ({
 
   const [submittingForm, setSubmittingForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [cookies, setCookie] = useCookies(["authToken", "userData"]);
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -35,10 +37,12 @@ const CreateAccount = ({
     e.preventDefault();
     if (submittingForm) return;
     setSubmittingForm(true);
-    setErrorMessageVisible(false);
+    setErrorMessageVisible(true);
     setSuccessMessageVisible(false);
     const submenuLogin = document.querySelector(".submenu-login");
     try {
+      setMessage("Please wait, we're Creating your Account");
+
       const userData = {
         email: formData.email,
         password: formData.password,
@@ -66,12 +70,31 @@ const CreateAccount = ({
           password: "",
         });
       }
+      const authToken = response.jwtToken;
+      const newUserData = JSON.stringify(response.member);
+      const userTokens = JSON.stringify(response.userTokens);
 
-      // if (!response.error) {
-      //   submenuLogin.classList.remove("active");
-      //   pageLoadStart();
-      //   router.push("/my-account");
-      // }
+      setCookie("authToken", authToken, {
+        path: "/",
+        expires: new Date("2099-01-01"),
+      });
+      setCookie("userData", newUserData, {
+        path: "/",
+        expires: new Date("2099-01-01"),
+      });
+      setCookie("userTokens", userTokens, {
+        path: "/",
+        expires: new Date("2099-01-01"),
+      });
+
+      console.log("Auth Token:", authToken);
+
+      if (authToken) {
+        pageLoadStart();
+        submenuLogin.classList.remove("active");
+        router.push("/my-account");
+      }
+
       return response;
     } catch (error) {
       console.error("Error:", error);
