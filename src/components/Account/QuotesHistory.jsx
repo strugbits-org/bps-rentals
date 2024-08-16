@@ -15,6 +15,7 @@ import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 
 const QuotesHistory = () => {
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [cookies, setCookie] = useCookies(["cartQuantity"]);
   const [quotesData, setQuotesData] = useState([]);
   const [itemData, setItemData] = useState();
@@ -24,6 +25,7 @@ const QuotesHistory = () => {
   const [pageLimit, setPageLimit] = useState(pageSize);
 
   const handleAddToCart = async (data) => {
+    setIsButtonDisabled(true);
     try {
       const products = [];
       data.forEach((item) => {
@@ -64,6 +66,8 @@ const QuotesHistory = () => {
       router.push("/cart");
     } catch (error) {
       console.error("Error while order again:", error);
+    } finally {
+      setIsButtonDisabled(false);
     }
   };
 
@@ -123,6 +127,7 @@ const QuotesHistory = () => {
                       <button
                         onClick={() => handleAddToCart(data.lineItems)}
                         className="btn-order-again"
+                        disabled={isButtonDisabled}
                       >
                         <span>Order again</span>
                         <i className="icon-arrow-diagonal"></i>
