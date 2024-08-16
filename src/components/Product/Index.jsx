@@ -50,6 +50,7 @@ const ProductPostPage = ({
   const { productSnapshotData } = selectedProductDetails;
   const [productFoundInCategories, setProductFoundInCategories] = useState([]);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [savedProductsData, setSavedProductsData] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState();
   const [isBestSeller, setIsBestSeller] = useState(false);
@@ -57,7 +58,6 @@ const ProductPostPage = ({
   const [unavailable, setUnavailable] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(1);
   const { role } = useUserData();
-
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
       (variant) => variant.colorVariation === selectedVariantData.variantId
@@ -151,6 +151,7 @@ const ProductPostPage = ({
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
+    setIsButtonDisabled(true);
     try {
       pageLoadStart();
 
@@ -185,6 +186,8 @@ const ProductPostPage = ({
     } catch (error) {
       pageLoadEnd();
       console.error("Error while adding item to cart:", error);
+    } finally {
+      setIsButtonDisabled(false);
     }
   };
   useEffect(() => {
@@ -299,10 +302,11 @@ const ProductPostPage = ({
                               return (
                                 <div
                                   key={index}
-                                  class={`swiper-slide  ${index === selectedVariantIndex
-                                    ? "active"
-                                    : ""
-                                    }`}
+                                  class={`swiper-slide  ${
+                                    index === selectedVariantIndex
+                                      ? "active"
+                                      : ""
+                                  }`}
                                 >
                                   <div class="wrapper-img">
                                     <div class="container-img">
@@ -384,27 +388,36 @@ const ProductPostPage = ({
                       </li>
                     )}
 
-                    {selectedProductDetails && selectedProductDetails.product?.additionalInfoSections && selectedProductDetails.product.additionalInfoSections.map((sec, index) => {
-                      return (
-                        <li class={sec.title} key={index}>
-                          <span class="specs-title">{sec.title}</span>
-                          <span class="specs-text"
-                            dangerouslySetInnerHTML={{
-                              __html: sec.description,
-                            }}
-                          ></span>
-                        </li>
-                      )
-                    })}
+                    {selectedProductDetails &&
+                      selectedProductDetails.product?.additionalInfoSections &&
+                      selectedProductDetails.product.additionalInfoSections.map(
+                        (sec, index) => {
+                          return (
+                            <li class={sec.title} key={index}>
+                              <span class="specs-title">{sec.title}</span>
+                              <span
+                                class="specs-text"
+                                dangerouslySetInnerHTML={{
+                                  __html: sec.description,
+                                }}
+                              ></span>
+                            </li>
+                          );
+                        }
+                      )}
 
-                    {selectedProductDetails && role === "admin" && selectedProductDetails.product.formattedPrice && (
-                      <li className="seat-height">
-                        <span className="specs-title">
-                          Price
-                        </span>
-                        <span className="specs-text">{decryptField(selectedProductDetails.product.formattedPrice)}</span>
-                      </li>
-                    )}
+                    {selectedProductDetails &&
+                      role === "admin" &&
+                      selectedProductDetails.product.formattedPrice && (
+                        <li className="seat-height">
+                          <span className="specs-title">Price</span>
+                          <span className="specs-text">
+                            {decryptField(
+                              selectedProductDetails.product.formattedPrice
+                            )}
+                          </span>
+                        </li>
+                      )}
                   </ul>
                   <ul
                     className="list-colors"
@@ -492,7 +505,11 @@ const ProductPostPage = ({
                         <i className="icon-arrow-right"></i>
                       </button>
                     ) : (
-                      <button className="btn-add-to-cart" type="submit">
+                      <button
+                        className="btn-add-to-cart"
+                        type="submit"
+                        disabled={isButtonDisabled}
+                      >
                         <span>Add to cart</span>
                         <i className="icon-arrow-right"></i>
                       </button>
@@ -546,8 +563,9 @@ const ProductPostPage = ({
               {selectedProductDetails &&
                 selectedProductDetails.product.description && (
                   <div
-                    className={`container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50 ${buttonLabel ? "active" : ""
-                      }`}
+                    className={`container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50 ${
+                      buttonLabel ? "active" : ""
+                    }`}
                     data-aos=""
                   >
                     <h3 className="title-info-text split-words" data-aos="">
@@ -580,11 +598,17 @@ const ProductPostPage = ({
                 )}
 
               {/* DOWNLOADS */}
-              {selectedProductDetails && role === "admin" &&
+              {selectedProductDetails &&
+                role === "admin" &&
                 selectedProductDetails.productDocs?.length > 0 && (
                   <div class="container-info-text" data-aos="">
-                    <h3 class="title-info-text split-words" data-aos="">Downloads</h3>
-                    <div class="container-btn container-btn-downloads" data-aos="fadeIn .8s ease-in-out">
+                    <h3 class="title-info-text split-words" data-aos="">
+                      Downloads
+                    </h3>
+                    <div
+                      class="container-btn container-btn-downloads"
+                      data-aos="fadeIn .8s ease-in-out"
+                    >
                       {selectedProductDetails.productDocs.map((data, index) => {
                         const { fileName, downloadUrl } = data;
                         return (
@@ -634,7 +658,12 @@ const ProductPostPage = ({
       )}
 
       {matchedProductsData.length > 0 && (
-        <MatchItWith matchedProductsData={matchedProductsData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} bestSeller={bestSeller} />
+        <MatchItWith
+          matchedProductsData={matchedProductsData}
+          savedProductsData={savedProductsData}
+          setSavedProductsData={setSavedProductsData}
+          bestSeller={bestSeller}
+        />
       )}
 
       <ArticleSection data={blogsData} />
