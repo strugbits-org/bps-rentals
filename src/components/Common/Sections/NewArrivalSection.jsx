@@ -19,7 +19,7 @@ const NewArrival = ({ content }) => {
           {content && content.title}
         </span>
         <AnimateLink
-          to={`/product/${content?.product?.slug}`}
+          to={content.buttonAction}
           className={"btn-blue mt-lg-60 mt-tablet-45 aos-animate fadeIn"}
           attributes={{
             "data-aos": "fadeIn .6s ease-in-out .3s, d:loop",
@@ -38,7 +38,7 @@ const NewArrival = ({ content }) => {
       >
         <img
           src={generateImageURL({
-            wix_url: content.bannerImage,
+            wix_url: content.backgroundImage,
             w: "1336",
             h: "568",
             fit: "fill",
