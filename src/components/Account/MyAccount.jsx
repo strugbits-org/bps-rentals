@@ -37,65 +37,72 @@ const MyAccount = ({ myAccountPageContent }) => {
     error: false,
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await updateProfile(formData);
-      if (response?.error) {
-        setMessage(response.message);
-        setModalState({ success: false, error: true });
-        return;
-      }
-      setModalState({ success: true, error: false });
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData({
+    ...formData,
+    [name]: value,
+  });
+};
 
-      const userData = JSON.stringify(response.updatedMember);
-
-      setCookie("userData", userData, {
-        path: "/",
-        expires: new Date("2099-01-01"),
-      });
-      setInitialData(formData);
-    } catch (error) {
-      setMessage("An error occurred. Please try again.");
-      console.error("Error updating profile", error);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await updateProfile(formData);
+    if (response?.error) {
+      setMessage(response.message);
       setModalState({ success: false, error: true });
+      return;
     }
+    setModalState({ success: true, error: false });
+
+    const userData = JSON.stringify(response.updatedMember);
+
+    setCookie("userData", userData, {
+      path: "/",
+      expires: new Date("2099-01-01"),
+    });
+    setInitialData(formData);
+  } catch (error) {
+    setMessage("An error occurred. Please try again.");
+    console.error("Error updating profile", error);
+    setModalState({ success: false, error: true });
+  }
+};
+
+const discardChanges = (e) => {
+  e.preventDefault();
+  pageLoadStart();
+  setTimeout(() => {
+    setFormData(initialData);
+    pageLoadEnd();
+  }, 900);
+};
+
+useEffect(() => {
+  const userData = {
+    firstName: firstName || "",
+    lastName: lastName || "",
+    phone: phone || "",
   };
+  setFormData(userData);
+  setInitialData(userData);
+}, [firstName, lastName, phone]);
 
-  const discardChanges = (e) => {
-    e.preventDefault();
-    pageLoadStart();
-    setTimeout(() => {
-      setFormData(initialData);
-      pageLoadEnd();
-    }, 900);
-  };
-
-  useEffect(() => {
-    const userData = {
-      firstName: firstName || "",
-      lastName: lastName || "",
-      phone: phone || "",
-    };
-    setFormData(userData);
-    setInitialData(userData);
-  }, [firstName, lastName, phone]);
-
-  useEffect(() => {
-    if (modalState.success) {
-      const timer = setTimeout(() => {
-        setModalState({ success: false, error: false });
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [modalState]);
+useEffect(() => {
+  if (modalState.success) {
+    const timer = setTimeout(() => {
+      setModalState({ success: false, error: false });
+    }, 3000);
+    return () => clearTimeout(timer);
+  }
+}, [modalState]);
+useEffect(() => {
+  setModalState({
+    success: false,
+    error: false,
+  });
+}, []);
   return (
     <>
       {modalState.error && (

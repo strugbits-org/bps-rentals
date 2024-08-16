@@ -37,7 +37,6 @@ const Login = ({
         setModalState({ success: false, error: true });
         return;
       }
-      setModalState({ success: true, error: false });
 
       if (response) {
         const authToken = response.jwtToken;

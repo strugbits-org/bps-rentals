@@ -468,3 +468,32 @@ export const unSaveProduct = async (id) => {
     throw new Error(error);
   }
 };
+
+export const getCatalogIdBySku = async (productSku) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "Stores/Variants",
+      returnTotalCount: null,
+      contains: null,
+      limit: null,
+      hasSome: null,
+      ne: null,
+      eq: [
+        {
+          key: "sku",
+          value: productSku,
+        },
+      ],
+      skip: null,
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data)[0];
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching product variants:", error);
+    return [];
+  }
+};
