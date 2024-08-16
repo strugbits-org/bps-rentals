@@ -3,15 +3,28 @@ import { useEffect } from "react";
 import { updatedWatched } from "@/Utils/AnimationFunctions";
 import { useRouter } from "next/navigation";
 
-const Modal = ({ buttonLabel, message, setModalStatus, redirectUrl }) => {
+const Modal = ({
+  buttonLabel,
+  message,
+  setModalStatus,
+  modalStatus,
+  redirectUrl,
+}) => {
   const router = useRouter();
   function closeModal() {
     document.body.setAttribute("data-form-cart-state", "");
-    setModalStatus(false);
+    setModalStatus({
+      success: false,
+      error: false,
+    });
+
     if (redirectUrl) {
       router.push(redirectUrl);
     }
   }
+  useEffect(() => {
+    updatedWatched();
+  }, [message]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -40,17 +53,24 @@ const Modal = ({ buttonLabel, message, setModalStatus, redirectUrl }) => {
                           {message}
                         </h2>
                       )}
-
-                      <div className="container-btn">
-                        <button
-                          onClick={closeModal}
-                          className="btn-border-blue btn-my-account btn-back-to-categories mt-md-30 mt-phone-20 disable-click-outside"
-                          data-close-feedback
-                          data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                        >
-                          <span>{buttonLabel || "Try Again!"}</span>
-                        </button>
-                      </div>
+                      {message !==
+                        "Please wait, we're Creating your Account" && (
+                        <div className="container-btn">
+                          <button
+                            onClick={closeModal}
+                            className="btn-border-blue btn-my-account btn-back-to-categories mt-md-30 mt-phone-20 disable-click-outside"
+                            data-close-feedback
+                            data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                          >
+                            {modalStatus.error && (
+                              <span>{buttonLabel || "Try Again!"}</span>
+                            )}
+                            {modalStatus.success && (
+                              <span>{buttonLabel || "Ok"}</span>
+                            )}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

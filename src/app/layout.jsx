@@ -103,7 +103,6 @@ export default async function RootLayout({ children }) {
             loginModalContent={loginModalContent}
             createAccountModalContent={createAccountModalContent}
             forgotPasswordModalContent={forgotPasswordModalContent}
-            productsData={[]}
             blogsData={blogsData}
             portfoliosData={portfoliosData}
             marketsData={marketsData}

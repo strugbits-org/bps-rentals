@@ -3,7 +3,7 @@ import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
-export const getAllProducts = async ({ category, searchTerm }) => {
+export const getAllProducts = async ({ categories = [], searchTerm }) => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
@@ -35,21 +35,55 @@ export const getAllProducts = async ({ category, searchTerm }) => {
       ...x.data.subCategoryData && { subCategoryData: x.data.subCategoryData }
     }));
 
-    if (!category && !searchTerm) {
+    if (categories.length === 0 && !searchTerm) {
       return products;
     }
 
-    if (!category && searchTerm) {
+    if (categories.length === 0 && searchTerm) {
       return products.filter(product =>
         searchTerm === "" || (product.search && product.search.toLowerCase().includes(searchTerm))
       );
     }
 
     return products.filter(product =>
-      product.subCategoryData.some(x => x._id === category)
+      product.subCategoryData.some(x => categories.includes(x._id))
     );
   } catch (error) {
     console.error("Error fetching products:", error);
+    return [];
+  }
+};
+export const searchProducts = async (term, location) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "locationFilteredVariant",
+      includeReferencedItems: ["product"],
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+      hasSome: [
+        {
+          key: "location",
+          values: location,
+        }
+      ],
+      contains: ["search", term],
+      limit: 3,
+    });
+
+    if (!response || !response._items) {
+      throw new Error("Response does not contain _items", response);
+    }
+    return response._items.map(x => x.data);
+  } catch (error) {
+    console.error("Error searching products:", error);
     return [];
   }
 };
@@ -432,5 +466,34 @@ export const unSaveProduct = async (id) => {
     return data;
   } catch (error) {
     throw new Error(error);
+  }
+};
+
+export const getCatalogIdBySku = async (productSku) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "Stores/Variants",
+      returnTotalCount: null,
+      contains: null,
+      limit: null,
+      hasSome: null,
+      ne: null,
+      eq: [
+        {
+          key: "sku",
+          value: productSku,
+        },
+      ],
+      skip: null,
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data)[0];
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching product variants:", error);
+    return [];
   }
 };

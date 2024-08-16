@@ -26,6 +26,7 @@ const SearchPage = ({
     const [pageLimit, setPageLimit] = useState(pageSize);
     const [cookies, setCookie] = useCookies(["location"]);
     const [filterColors, setFilterColors] = useState([]);
+    const [lastActiveColor, setLastActiveColor] = useState();
     const [filterLocations, setFilterLocations] = useState([]);
     const [enableFilterTrigger, setEnableFilterTrigger] = useState(false);
 
@@ -77,6 +78,8 @@ const SearchPage = ({
     };
 
     const handleColorChange = (data) => {
+        setLastActiveColor(data.label !== lastActiveColor ? data.label : null);
+
         const updatedColors = filterColors.map((item) =>
             item.label === data.label ? { ...item, checked: !item.checked } : item
         );
@@ -282,7 +285,7 @@ const SearchPage = ({
                                                         getSelectedProductSnapShots={
                                                             getSelectedProductSnapShots
                                                         }
-                                                        filterColors={filterColors}
+                                                        lastActiveColor={lastActiveColor}
                                                         savedProductsData={savedProductsData}
                                                         setSavedProductsData={setSavedProductsData}
                                                     />

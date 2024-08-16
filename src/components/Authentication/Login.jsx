@@ -9,16 +9,13 @@ import Disclaimer from "./Disclaimer";
 
 const Login = ({
   loginModalContent,
-  successMessageVisible,
-  setSuccessMessageVisible,
-  setErrorMessageVisible,
   setMessage,
   setToggleModal,
+  setModalState,
 }) => {
   const router = useRouter();
-
   const [cookies, setCookie] = useCookies(["authToken", "userData"]);
-  const [submittingForm, setSubmittingForm] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -27,12 +24,7 @@ const Login = ({
 
   const LoginUser = async (e) => {
     e.preventDefault();
-    console.log("Logging User");
-
-    if (submittingForm) return;
-
-    setSubmittingForm(true);
-    setErrorMessageVisible(false);
+    setIsButtonDisabled(true);
     const submenuLogin = document.querySelector(".submenu-login");
     const button = document.querySelector(".new-login-button");
     try {
@@ -40,10 +32,9 @@ const Login = ({
         email: formData.email,
         password: formData.password,
       });
-
       if (response && response.error) {
         setMessage(response.message);
-        setErrorMessageVisible(true);
+        setModalState({ success: false, error: true });
         return;
       }
 
@@ -51,28 +42,23 @@ const Login = ({
         const authToken = response.jwtToken;
         const userData = JSON.stringify(response.member);
         const userTokens = JSON.stringify(response.userTokens);
-
         setCookie("authToken", authToken, {
           path: "/",
           expires: new Date("2099-01-01"),
         });
-
         setCookie("userData", userData, {
           path: "/",
           expires: new Date("2099-01-01"),
         });
-
         setCookie("userTokens", userTokens, {
           path: "/",
           expires: new Date("2099-01-01"),
         });
-
         if (authToken) {
           pageLoadStart();
           submenuLogin.classList.remove("active");
           button.classList.remove("active");
           router.push("/my-account");
-
           setFormData({
             email: "",
             password: "",
@@ -80,14 +66,11 @@ const Login = ({
         }
       }
     } catch (error) {
-      console.error("Error during login:", error);
       setMessage("Error during login:", error);
-      setErrorMessageVisible(true);
+      setModalState({ success: false, error: true });
       submenuLogin.classList.add("active");
     } finally {
-      setTimeout(() => {
-        setSubmittingForm(false);
-      }, 1500);
+      setIsButtonDisabled(false);
     }
   };
 
@@ -99,10 +82,7 @@ const Login = ({
   return (
     <div className="container-sign-in">
       <div className="container-sign-in">
-        <div
-          className="wrapper-form-sign-in"
-          // data-form-sign-in-container
-        >
+        <div className="wrapper-form-sign-in">
           <form onSubmit={LoginUser} className="form-sign-in form-base">
             <div className="container-input col-12">
               <label htmlFor="login-email">
@@ -152,7 +132,11 @@ const Login = ({
               </span>
             </div>
             <div className="container-submit col-12 mt-mobile-10">
-              <button type="submit" className="bt-submit btn-blue w-100">
+              <button
+                type="submit"
+                className="bt-submit btn-blue w-100"
+                disabled={isButtonDisabled}
+              >
                 <span>
                   {loginModalContent && loginModalContent.signInButtonLabel}
                 </span>

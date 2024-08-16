@@ -5,18 +5,18 @@ import { signUpUser } from "@/Services/AuthApis";
 import Disclaimer from "./Disclaimer";
 import { useRouter } from "next/navigation";
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
+import { useCookies } from "react-cookie";
 
 const CreateAccount = ({
   createAccountModalContent,
-  successMessageVisible,
-  setSuccessMessageVisible,
-  setErrorMessageVisible,
   setMessage,
+  setModalState,
 }) => {
   const router = useRouter();
 
   const [submittingForm, setSubmittingForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [cookies, setCookie] = useCookies(["authToken", "userData"]);
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -35,10 +35,12 @@ const CreateAccount = ({
     e.preventDefault();
     if (submittingForm) return;
     setSubmittingForm(true);
-    setErrorMessageVisible(false);
-    setSuccessMessageVisible(false);
+    setModalState({ success: true, error: false });
+
     const submenuLogin = document.querySelector(".submenu-login");
     try {
+      setMessage("Please wait, we're Creating your Account");
+
       const userData = {
         email: formData.email,
         password: formData.password,
@@ -48,16 +50,15 @@ const CreateAccount = ({
       };
 
       const response = await signUpUser(userData);
-
       if (response.error) {
         setMessage(response.message);
-        setErrorMessageVisible(true);
+        setModalState({ success: false, error: true });
         return;
       }
 
       if (!response.error) {
-        setSuccessMessageVisible(true);
-        setErrorMessageVisible(false);
+        setModalState({ success: true, error: false });
+
         setFormData({
           first_name: "",
           last_name: "",
@@ -66,18 +67,33 @@ const CreateAccount = ({
           password: "",
         });
       }
+      const authToken = response.jwtToken;
+      const newUserData = JSON.stringify(response.member);
+      const userTokens = JSON.stringify(response.userTokens);
 
-      // if (!response.error) {
-      //   submenuLogin.classList.remove("active");
-      //   pageLoadStart();
-      //   router.push("/my-account");
-      // }
+      setCookie("authToken", authToken, {
+        path: "/",
+        expires: new Date("2099-01-01"),
+      });
+      setCookie("userData", newUserData, {
+        path: "/",
+        expires: new Date("2099-01-01"),
+      });
+      setCookie("userTokens", userTokens, {
+        path: "/",
+        expires: new Date("2099-01-01"),
+      });
+
+      if (authToken) {
+        pageLoadStart();
+        submenuLogin.classList.remove("active");
+        router.push("/my-account");
+      }
+
       return response;
     } catch (error) {
-      console.error("Error:", error);
       setMessage("Something Went Wrong");
-      setSuccessMessageVisible(false);
-      setErrorMessageVisible(true);
+      setModalState({ success: false, error: true });
     } finally {
       setTimeout(() => {
         setSubmittingForm(false);
@@ -85,19 +101,19 @@ const CreateAccount = ({
     }
   };
 
-  useEffect(() => {
-    if (successMessageVisible) {
-      const timer = setTimeout(() => {
-        setSuccessMessageVisible(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [successMessageVisible]);
+  // useEffect(() => {
+  //   if (successMessageVisible) {
+  //     const timer = setTimeout(() => {
+  //       setSuccessMessageVisible(false);
+  //     }, 3000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [successMessageVisible]);
   return (
     <div className="container-create-account d-none">
       <div
         className="container-account"
-        data-form-state={successMessageVisible ? "success" : ""}
+        // data-form-state={successMessageVisible ? "success" : ""}
       >
         <form
           className="form-account form-create-account "

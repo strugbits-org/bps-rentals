@@ -13,59 +13,73 @@ import { getAllQuotes } from "@/Services/QuoteApis";
 import { AddProductToCart } from "@/Services/CartApis";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
+import { getCatalogIdBySku } from "@/Services/ProductsApis";
+import Modal from "../Common/Modals/Modal";
 
 const QuotesHistory = () => {
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [cookies, setCookie] = useCookies(["cartQuantity"]);
+  const router = useRouter();
+  const pageSize = 4;
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [pageLimit, setPageLimit] = useState(pageSize);
   const [quotesData, setQuotesData] = useState([]);
   const [itemData, setItemData] = useState();
-  const router = useRouter();
-
-  const pageSize = 4;
-  const [pageLimit, setPageLimit] = useState(pageSize);
+  const [message, setMessage] = useState(null);
+  const [modalState, setModalState] = useState({
+    success: false,
+    error: false,
+  });
 
   const handleAddToCart = async (data) => {
     setIsButtonDisabled(true);
+
     try {
       const products = [];
-      data.forEach((item) => {
-        const {
-          catalogReference: {
-            appId,
-            catalogItemId,
-            options: {
-              variantId,
-              customTextFields: { location: product_location },
-            },
-          },
-          quantity,
-        } = item.fullItem;
+      for (const item of data) {
+        const { name, quantity, location } = item;
+        const productSku = name;
 
-        const product = {
-          catalogReference: {
-            appId,
-            catalogItemId,
-            options: {
-              variantId,
-              customTextFields: { location: product_location },
-            },
-          },
-          quantity,
-        };
+        try {
+          const res = await getCatalogIdBySku(productSku);
+          const productId = res.productId;
+          const variantId = res.variantId;
+          const appId = "215238eb-22a5-4c36-9e7b-e7c08025e04e";
 
-        products.push(product);
-      });
+          const product = {
+            catalogReference: {
+              appId,
+              catalogItemId: productId,
+              options: {
+                variantId,
+                customTextFields: { location: location },
+              },
+            },
+            quantity: quantity,
+          };
+
+          products.push(product);
+        } catch (error) {
+          console.error(`Error processing SKU ${productSku}:`, error);
+        }
+      }
+
       const productData = {
         lineItems: products,
       };
+
       const response = await AddProductToCart(productData);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
+
       document.body.setAttribute("data-form-cart-state", "success");
       setCookie("cartQuantity", total);
       pageLoadStart();
       router.push("/cart");
     } catch (error) {
-      console.error("Error while order again:", error);
+      console.error("Error while adding products to cart:", error);
+      setMessage("Error while adding products to cart");
+      setModalState({ success: false, error: true });
+      document.body.setAttribute("data-form-cart-state", "error");
     } finally {
       setIsButtonDisabled(false);
     }
@@ -82,6 +96,13 @@ const QuotesHistory = () => {
 
   return (
     <>
+      {modalState.error && (
+        <Modal
+          message={message}
+          setModalStatus={setModalState}
+          modalStatus={modalState}
+        />
+      )}
       <QuoteViewModal data={itemData} handleAddToCart={handleAddToCart} />
 
       <div className="wrapper-account">

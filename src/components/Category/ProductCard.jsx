@@ -2,8 +2,7 @@ import { productImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
 import React, { useEffect, useState } from "react";
 import { SaveProductButton } from "../Common/SaveProductButton";
-import { compareArray, hasMatchingColor } from "@/Utils/Utils";
-import { useCookies } from "react-cookie";
+import { compareArray } from "@/Utils/Utils";
 import { decryptField } from "@/Utils/encrypt";
 import useUserData from "@/Hooks/useUserData";
 
@@ -13,8 +12,8 @@ const ProductCard = ({
   getSelectedProductSnapShots,
   savedProductsData,
   setSavedProductsData,
+  lastActiveColor,
   filteredProducts = [],
-  filterColors = [],
   bestSeller = []
 }) => {
   const { product, variantData } = productData;
@@ -23,27 +22,16 @@ const ProductCard = ({
   const [filteredVariants, setFilteredVariants] = useState(variantData);
   const [activeVariant, setActiveVariant] = useState(variantData[0]);
   const [isBestSeller, setIsBestSeller] = useState(false);
-  const [cookies, setCookie] = useCookies(["location"]);
   const { role } = useUserData();
 
   const handleFilteredData = () => {
-    const matchingVariants = variantData.filter(variant => {
-      const hasColor = hasMatchingColor(
-        filterColors.filter((x) => x.checked),
-        variant.color
-      );
-
-      const hasLocation = cookies.location
-        ? variant.location.includes(cookies.location)
-        : true;
-
-      return hasColor && hasLocation;
-    });
-    const checkedColors = filterColors.filter((x) => x.checked);
-    const newVariants = checkedColors.length !== 0 ? matchingVariants : variantData;
-    setFilteredVariants(newVariants);
-    setActiveVariant(newVariants[0]);
-
+    setFilteredVariants(variantData);
+    const newVariant = variantData.find(variant => variant.color.some(x => x === lastActiveColor));
+    if (newVariant) {
+      setActiveVariant(newVariant)
+    } else {
+      setActiveVariant(variantData[0])
+    };
     const isBestSellerProduct = compareArray(bestSeller, categories.map(x => x._id));
     setIsBestSeller(isBestSellerProduct);
   }

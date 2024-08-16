@@ -7,9 +7,9 @@ import { createPriceQuote } from "@/Services/QuoteApis";
 import { getProductsCart } from "@/Services/CartApis";
 
 import Modal from "../Common/Modals/Modal";
+import QuoteConfirmedModal from "../Common/Modals/QuoteConfirmedModal";
 
 const QuoteRequest = ({ quoteRequestPageContent }) => {
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [cartItems, setCartItems] = useState();
   const [message, setMessage] = useState("");
   const [modalState, setModalState] = useState({
@@ -64,6 +64,12 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
     });
 
     try {
+      if (lineItems.length === 0) {
+        setMessage("Please add items to cart!");
+        setModalState({ success: false, error: true });
+        return;
+      }
+
       const response = await createPriceQuote({
         lineItems,
         customerDetails: formData,
@@ -73,7 +79,28 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
         setMessage(response.message);
         return;
       }
-      setSuccessMessageVisible(true);
+      setModalState({ success: true, error: false });
+
+      setFormData({
+        orderType: "",
+        eventDate: "",
+        deliveryDate: "",
+        pickupDate: "",
+        eventLocation: "",
+        eventDescription: "",
+        billTo: "",
+        address: "",
+        address2: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        instructions: "",
+        onSiteContact: "",
+        telephone: "",
+        preferredSalesPerson: "",
+        customerName: "",
+        customerEmail: "",
+      });
     } catch (error) {
       setMessage("Error while creating quote");
       setModalState({ success: false, error: true });
@@ -91,42 +118,16 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
     getCart();
   }, []);
 
-  useEffect(() => {
-    if (successMessageVisible) {
-      const timer = setTimeout(() => {
-        setSuccessMessageVisible(false);
-        setFormData({
-          orderType: "",
-          eventDate: "",
-          deliveryDate: "",
-          pickupDate: "",
-          eventLocation: "",
-          eventDescription: "",
-          billTo: "",
-          address: "",
-          address2: "",
-          city: "",
-          state: "",
-          zipCode: "",
-          instructions: "",
-          onSiteContact: "",
-          telephone: "",
-          preferredSalesPerson: "",
-          customerName: "",
-          customerEmail: "",
-        });
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [successMessageVisible]);
   return (
     <>
       {modalState.error && (
         <Modal
           message={message}
-          setModalStatus={() => setModalState({ ...modalState, error: false })}
+          setModalStatus={setModalState}
+          modalStatus={modalState}
         />
       )}
+      {modalState.success && <QuoteConfirmedModal />}
       <section className="quote-request-content pt-lg-25 pb-lg-150 pb-mobile-100">
         <div className="container-fluid">
           <div className="row">
@@ -152,10 +153,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
                 </div>
               </div>
               <div className="form-quote-request">
-                <div
-                  className="container-form-quote"
-                  data-form-state={successMessageVisible ? "success" : ""}
-                >
+                <div className="container-form-quote">
                   <form
                     className="form-quote"
                     data-aos="fadeIn .6s ease-in-out .3s, d:loop"

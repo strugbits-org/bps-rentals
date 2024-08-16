@@ -28,6 +28,7 @@ const CategoryPage = ({
   const [cookies, setCookie] = useCookies(["location"]);
   const [filterCategories, setFilterCategories] = useState([]);
   const [filterColors, setFilterColors] = useState([]);
+  const [lastActiveColor, setLastActiveColor] = useState();
   const [filterLocations, setFilterLocations] = useState([]);
   const [enableFilterTrigger, setEnableFilterTrigger] = useState(false);
 
@@ -95,6 +96,7 @@ const CategoryPage = ({
   };
 
   const handleColorChange = (data) => {
+    setLastActiveColor(data.label !== lastActiveColor ? data.label : null);
     const updatedColors = filterColors.map((item) =>
       item.label === data.label ? { ...item, checked: !item.checked } : item
     );
@@ -171,7 +173,7 @@ const CategoryPage = ({
     setShuffledBanners(shuffleArray([...bannersData]));
   }, [bannersData]);
 
-  useEffect(() => {    
+  useEffect(() => {
     setInitialValues();
   }, []);
 
@@ -382,7 +384,7 @@ const CategoryPage = ({
                             getSelectedProductSnapShots={
                               getSelectedProductSnapShots
                             }
-                            filterColors={filterColors}
+                            lastActiveColor={lastActiveColor}
                             savedProductsData={savedProductsData}
                             setSavedProductsData={setSavedProductsData}
                           />

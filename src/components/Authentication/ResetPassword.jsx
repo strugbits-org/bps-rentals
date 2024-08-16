@@ -83,19 +83,10 @@ const ResetPassword = () => {
       {modalState.error && (
         <Modal
           message={message}
-          setModalStatus={() =>
-            setModalState({ ...modalState, error: false })
-          }
+          setModalStatus={setModalState}
+          modalStatus={modalState}
         />
       )}
-      {/* Uncomment if you have a SuccessModal component */}
-      {/* {modalState.success && (
-        <SuccessModal
-          message={message}
-          setSuccessMessageVisible={() => setModalState({ ...modalState, success: false })}
-          onClose={handleClose}
-        />
-      )} */}
 
       <div className="reset-password-form-container">
         <div className="reset-password-form-logos">

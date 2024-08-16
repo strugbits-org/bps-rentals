@@ -1,7 +1,6 @@
 import AnimateLink from "./AnimateLink";
 
 export const CustomButton = ({ data, customClasses = "", attributes, showArrow = true }) => {
-    let actionType;
     function isValidUrl(string) {
         try {
             new URL(string);
@@ -10,21 +9,23 @@ export const CustomButton = ({ data, customClasses = "", attributes, showArrow =
             return false;
         }
     }
-    if (data && data.action) {
-        const urlString = data.action;
-        if (isValidUrl(urlString)) {
-            actionType = "external_link";
-        } else if (urlString.startsWith("/")) {
-            actionType = "internal_link";
-        } else {
-            actionType = "modal";
-        };
-    };
-
+    const actionType = data?.action
+        ? isValidUrl(data.action)
+            ? "external_link"
+            : data.action.startsWith("/")
+                ? "internal_link"
+                : "modal"
+        : null;
+    const openMarketModal = () => {
+        if (data.action === "modal-market") {
+            document.querySelector("[data-set-submenu='market']")?.click();
+        }
+    }
     return actionType === "modal" ? (
         <btn-modal-open
+            onClick={openMarketModal}
             group={data.action}
-            class={customClasses ? customClasses : 'btn-blue'}
+            class={`${customClasses || 'btn-blue'} ${data.action === "modal-market" ? "disable-click-outside" : ''}`}
             {...attributes}
         >
             <span>{data.label}</span>
@@ -32,7 +33,7 @@ export const CustomButton = ({ data, customClasses = "", attributes, showArrow =
         </btn-modal-open>
     ) : (
         <AnimateLink to={data.action} target={actionType === "external_link" ? "_blank" : undefined}>
-            <button className={customClasses ? customClasses : 'btn-blue'} data-cursor-style="off" {...attributes}>
+            <button className={customClasses || 'btn-blue'} data-cursor-style="off" {...attributes}>
                 <span>{data.label}</span>
                 {showArrow && <i className="icon-arrow-right"></i>}
             </button>
