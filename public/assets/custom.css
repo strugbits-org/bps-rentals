@@ -193,6 +193,7 @@
 
 .unavailable-warning-wrapper {
     display: flex;
+    font-size: 14px;
 }
 
 .unavailable-warning {

@@ -278,6 +278,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                         </h2>
                         <AnimateLink
                           to={`${CORPORATE_URL}/portfolio`}
+                          target={"_blank"}
                           data-menu-close
                           className="btn-border-blue"
                         >
@@ -300,6 +301,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                 >
                                   <AnimateLink
                                     to={`${CORPORATE_URL}/project/${portfolio.slug}`}
+                                    target={"_blank"}
                                     className="link-portfolio "
                                     data-menu-close
                                   >
@@ -379,6 +381,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                       </h2>
                       <AnimateLink
                         to={`${CORPORATE_URL}/blog`}
+                        target={"_blank"}
                         data-menu-close
                         className="btn-border-blue"
                       >
@@ -401,6 +404,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                               >
                                 <AnimateLink
                                   to={`${CORPORATE_URL}/article/${blog.slug}`}
+                                  target={"_blank"}
                                   className="link-blog "
                                   data-menu-close
                                 >

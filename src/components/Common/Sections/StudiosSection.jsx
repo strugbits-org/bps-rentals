@@ -57,8 +57,8 @@ const Studios = ({ content, studiosData }) => {
                         <div className="container-accordion-text">
                           <p className="accordion-text">{cardDescription}</p>
                           <AnimateLink
-                            target={"_blank"}
                             to={`${url}/services/${slug}`}
+                            target={"_blank"}
                           >
                             <span>See more</span>
                             <i className="icon-arrow-right"></i>

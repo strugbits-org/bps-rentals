@@ -1,18 +1,12 @@
 import React from 'react'
 import AnimateLink from '../Common/AnimateLink';
 import { generateImageUrl2 } from '@/Utils/GenerateImageURL';
-import { useRouter } from 'next/navigation';
-import { pageLoadStart } from '@/Utils/AnimationFunctions';
 
 export const MarketSlider = ({ content, marketSliderData }) => {
-    const router = useRouter();
     if (marketSliderData.length === 0) return;
 
     const handleNavigate = (path) => {
-        pageLoadStart();
-        setTimeout(() => {
-            router.push(process.env.CORPORATE_URL + path)
-        }, 900);
+        window.open(process.env.CORPORATE_URL + path, "_blank");
     }
 
     return (
