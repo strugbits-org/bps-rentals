@@ -3,7 +3,7 @@ import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
-export const getAllProducts = async ({ category, searchTerm }) => {
+export const getAllProducts = async ({ categories = [], searchTerm }) => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
@@ -35,18 +35,18 @@ export const getAllProducts = async ({ category, searchTerm }) => {
       ...x.data.subCategoryData && { subCategoryData: x.data.subCategoryData }
     }));
 
-    if (!category && !searchTerm) {
+    if (categories.length === 0 && !searchTerm) {
       return products;
     }
 
-    if (!category && searchTerm) {
+    if (categories.length === 0 && searchTerm) {
       return products.filter(product =>
         searchTerm === "" || (product.search && product.search.toLowerCase().includes(searchTerm))
       );
     }
 
     return products.filter(product =>
-      product.subCategoryData.some(x => x._id === category)
+      product.subCategoryData.some(x => categories.includes(x._id))
     );
   } catch (error) {
     console.error("Error fetching products:", error);
