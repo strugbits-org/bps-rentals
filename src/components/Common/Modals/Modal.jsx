@@ -22,8 +22,6 @@ const Modal = ({
       router.push(redirectUrl);
     }
   }
-  console.log(modalStatus, "modalStatus from modal");
-
   useEffect(() => {
     updatedWatched();
   }, [message]);
