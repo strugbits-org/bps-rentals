@@ -105,6 +105,7 @@ export const firstLoadAnimation = async () => {
 export const pageLoadStart = () => {
   if (typeof window !== "undefined") {
     closeModals();
+    document.body.setAttribute("data-form-cart-state", "");
     document.body.classList.add("page-leave-active");
   }
 };
