@@ -26,7 +26,6 @@ const Navbar = ({
   studiosData,
   categoriesData,
   searchSectionDetails,
-  productsData,
   blogsData,
   portfoliosData,
   searchPagesData,
@@ -330,7 +329,6 @@ const Navbar = ({
               <AllCategories categoriesData={categoriesData} />
               {/* Search */}
               <SearchModal
-                products={productsData}
                 blogs={blogsData}
                 portfolios={portfoliosData}
                 searchSectionDetails={searchSectionDetails}

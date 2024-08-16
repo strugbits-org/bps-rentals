@@ -5,12 +5,17 @@ import AnimateLink from "../AnimateLink";
 import React, { useEffect, useState } from "react";
 import { filterSearchData, formatDate } from "@/Utils/Utils";
 import { useCookies } from "react-cookie";
+import { searchProducts } from "@/Services/ProductsApis";
+import debounce from 'lodash/debounce';
+import { updatedWatched } from "@/Utils/AnimationFunctions";
 
-const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, products, searchPagesData }) => {
+const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, products = [], searchPagesData }) => {
 
   const CORPORATE_URL = process.env.CORPORATE_URL;
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchActive, setSearchActive] = useState(false);
+
   const [selectedStudios, setSelectedStudios] = useState([]);
   const [selectedMarkets, setSelectedMarkets] = useState([]);
 
@@ -28,13 +33,6 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
 
   const handleSearchFilter = (value) => {
     const term = value !== undefined ? value : searchTerm;
-    const filteredProductsData = products.filter(product => {
-      const matchedLocation = product.location.some((x) => x === cookies.location);
-      const matchedTerm = term === "" || (product.search && product.search.toLowerCase().includes(term));      
-      return matchedTerm && matchedLocation;
-    });
-    setFilteredProducts(filteredProductsData.slice(0, 3));
-
     const filteredPagesData = searchPagesData.filter(page => {
       const matchedTerm = term === "" || (page.content && page.content.toLowerCase().includes(term));
       return matchedTerm;
@@ -96,10 +94,28 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
     setFilteredBlogs(BlogsResult.slice(0, 5));
   }, [BlogsResult, portfoliosResult]);
 
+  const handleProductsFilter = async (term = "") => {
+    const filteredProductsData = await searchProducts(term, cookies.location);
+    setFilteredProducts(filteredProductsData);
+    updatedWatched();
+  }
+
   useEffect(() => {
-    console.log("products", products);
-  }, [])
-  
+    if (searchActive) {
+      const delayedSearch = debounce(() => { handleProductsFilter(searchTerm) }, 500);
+      delayedSearch();
+      return () => delayedSearch.cancel();
+    }
+  }, [searchActive, searchTerm]);
+
+  const handleSubmit = async (e) => {
+    if (searchActive) {
+      handleProductsFilter(searchTerm);
+    } else {
+      setSearchActive(true);
+    }
+    e.preventDefault();
+  };
 
   return (
     <section className="menu-search" data-get-submenu="search">
@@ -111,6 +127,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                 <form
                   className="form-search header-search"
                   data-search-form
+                  onSubmit={handleSubmit}
                 >
                   <div className="container-input input-header">
                     <label
