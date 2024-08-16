@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 
 import handleAuthentication from "@/Utils/HandleAuthentication";
 import { createWixClient } from "@/Utils/CreateWixClient";
+import { isValidPassword } from "@/Utils/AuthApisUtils";
 
 export const POST = async (req) => {
   try {
@@ -28,7 +29,16 @@ export const POST = async (req) => {
         { status: 401 }
       );
     }
-
+    const invalidPassword = isValidPassword(newPassword);
+    if (!invalidPassword) {
+      return NextResponse.json(
+        {
+          message:
+            "Password must have 1 uppercase, 1 lowercase, 1 number, 1 symbol, minimum 6 characters",
+        },
+        { status: 404 }
+      );
+    }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 

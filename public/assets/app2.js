@@ -8766,7 +8766,7 @@ var require_app2 = __commonJS({
     }
     const pageName$3 = "my-account-quotes-history";
     function main$3() {
-      manualModalCloseControls();
+      // manualModalCloseControls();
     }
     const pgMyAccountQuotesHistory = new Page({
       pageName: pageName$3,
@@ -9599,11 +9599,9 @@ var require_app2 = __commonJS({
         element.classList.add("js-copy-link-running");
         element
           .querySelector(".copy-link")
-          .addEventListener("click", function (event) {
+          .addEventListener("click", function () {
             this.querySelector("span").innerText = "Copied!";
             this.classList.add("copied");
-            element.querySelector(".copy-link-url").select();
-            document.execCommand("copy");
           });
       });
     }
@@ -9858,8 +9856,8 @@ var require_app2 = __commonJS({
     });
 
     document
-    .querySelector(".initializeCanvas")
-    .addEventListener("customInit", initializeCanvas);
+      .querySelector(".initializeCanvas")
+      .addEventListener("customInit", initializeCanvas);
 
     document.querySelector(".addToCart").addEventListener("reloadModal", () => {
       productLinkColor();

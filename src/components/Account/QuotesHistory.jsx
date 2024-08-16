@@ -1,25 +1,89 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { markPageLoaded } from "@/Utils/AnimationFunctions";
+
+import {
+  markPageLoaded,
+  pageLoadStart,
+  updatedWatched,
+} from "@/Utils/AnimationFunctions";
 import QuoteViewModal from "../Common/Modals/QuoteViewModal";
-import { formatCustomDate } from "@/Utils/Utils";
-import { getQuotes } from "@/Services/QuoteApis";
+import { calculateTotalCartQuantity, quoteDateFormatter } from "@/Utils/Utils";
+import { getAllQuotes } from "@/Services/QuoteApis";
+import { AddProductToCart } from "@/Services/CartApis";
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/navigation";
 
 const QuotesHistory = () => {
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [cookies, setCookie] = useCookies(["cartQuantity"]);
   const [quotesData, setQuotesData] = useState([]);
   const [itemData, setItemData] = useState();
+  const router = useRouter();
+
+  const pageSize = 4;
+  const [pageLimit, setPageLimit] = useState(pageSize);
+
+  const handleAddToCart = async (data) => {
+    setIsButtonDisabled(true);
+    try {
+      const products = [];
+      data.forEach((item) => {
+        const {
+          catalogReference: {
+            appId,
+            catalogItemId,
+            options: {
+              variantId,
+              customTextFields: { location: product_location },
+            },
+          },
+          quantity,
+        } = item.fullItem;
+
+        const product = {
+          catalogReference: {
+            appId,
+            catalogItemId,
+            options: {
+              variantId,
+              customTextFields: { location: product_location },
+            },
+          },
+          quantity,
+        };
+
+        products.push(product);
+      });
+      const productData = {
+        lineItems: products,
+      };
+      const response = await AddProductToCart(productData);
+      const total = calculateTotalCartQuantity(response.cart.lineItems);
+      document.body.setAttribute("data-form-cart-state", "success");
+      setCookie("cartQuantity", total);
+      pageLoadStart();
+      router.push("/cart");
+    } catch (error) {
+      console.error("Error while order again:", error);
+    } finally {
+      setIsButtonDisabled(false);
+    }
+  };
 
   const fetchQuotes = async () => {
-    const data = await getQuotes();
+    const data = await getAllQuotes();
     setQuotesData(data);
     setTimeout(markPageLoaded, 200);
-  }
+  };
   useEffect(() => {
     fetchQuotes();
   }, []);
+
   return (
     <>
+      <QuoteViewModal data={itemData} handleAddToCart={handleAddToCart} />
+
       <div className="wrapper-account">
         <h1 className="fs--60 blue-1 split-words" data-aos="d:loop">
           Quotes history
@@ -40,9 +104,9 @@ const QuotesHistory = () => {
               </h6>
             </div>
           ) : (
-            quotesData.map((quote, index) => {
+            quotesData.slice(0, pageLimit).map((quote, index) => {
               const { data } = quote;
-              const issueDate = formatCustomDate(data.dates.issueDate);
+              const issueDate = quoteDateFormatter(data.dates.issueDate);
               return (
                 <li key={index} className="list-item">
                   <div className="content">
@@ -60,10 +124,14 @@ const QuotesHistory = () => {
                         <span>View</span>
                         <i className="icon-arrow-diagonal"></i>
                       </btn-modal-open>
-                      <a href="cart.html" className="btn-order-again">
+                      <button
+                        onClick={() => handleAddToCart(data.lineItems)}
+                        className="btn-order-again"
+                        disabled={isButtonDisabled}
+                      >
                         <span>Order again</span>
                         <i className="icon-arrow-diagonal"></i>
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </li>
@@ -71,12 +139,19 @@ const QuotesHistory = () => {
             })
           )}
         </ul>
-        <button className="btn-2-blue mt-lg-65 mt-mobile-45">
-          <span>Load more</span>
-          <i className="icon-arrow-right-2"></i>
-        </button>
+        {quotesData && quotesData.length > pageLimit && (
+          <button
+            onClick={() => {
+              setPageLimit((prev) => prev + pageSize);
+              updatedWatched();
+            }}
+            className="btn-2-blue mt-lg-65 mt-mobile-45"
+          >
+            <span>Load more</span>
+            <i className="icon-arrow-right-2"></i>
+          </button>
+        )}
       </div>
-      <QuoteViewModal data={itemData} />
     </>
   );
 };

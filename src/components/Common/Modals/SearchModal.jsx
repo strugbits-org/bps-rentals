@@ -4,6 +4,7 @@ import { generateImageURL, generateImageUrl2, productImageURL } from "@/Utils/Ge
 import AnimateLink from "../AnimateLink";
 import React, { useEffect, useState } from "react";
 import { filterSearchData, formatDate } from "@/Utils/Utils";
+import { useCookies } from "react-cookie";
 
 const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, products, searchPagesData }) => {
 
@@ -23,12 +24,14 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [filteredPortfolios, setFilteredPortfolios] = useState([]);
   const [filteredPages, setFilteredPages] = useState([]);
+  const [cookies, setCookie] = useCookies(["location"]);
 
   const handleSearchFilter = (value) => {
     const term = value !== undefined ? value : searchTerm;
     const filteredProductsData = products.filter(product => {
-      const matchedTerm = term === "" || (product.search && product.search.toLowerCase().includes(term));
-      return matchedTerm;
+      const matchedLocation = product.location.some((x) => x === cookies.location);
+      const matchedTerm = term === "" || (product.search && product.search.toLowerCase().includes(term));      
+      return matchedTerm && matchedLocation;
     });
     setFilteredProducts(filteredProductsData.slice(0, 3));
 
@@ -93,6 +96,10 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
     setFilteredBlogs(BlogsResult.slice(0, 5));
   }, [BlogsResult, portfoliosResult]);
 
+  useEffect(() => {
+    console.log("products", products);
+  }, [])
+  
 
   return (
     <section className="menu-search" data-get-submenu="search">
@@ -271,6 +278,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                         </h2>
                         <AnimateLink
                           to={`${CORPORATE_URL}/portfolio`}
+                          target={"_blank"}
                           data-menu-close
                           className="btn-border-blue"
                         >
@@ -293,6 +301,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                 >
                                   <AnimateLink
                                     to={`${CORPORATE_URL}/project/${portfolio.slug}`}
+                                    target={"_blank"}
                                     className="link-portfolio "
                                     data-menu-close
                                   >
@@ -372,6 +381,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                       </h2>
                       <AnimateLink
                         to={`${CORPORATE_URL}/blog`}
+                        target={"_blank"}
                         data-menu-close
                         className="btn-border-blue"
                       >
@@ -394,6 +404,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                               >
                                 <AnimateLink
                                   to={`${CORPORATE_URL}/article/${blog.slug}`}
+                                  target={"_blank"}
                                   className="link-blog "
                                   data-menu-close
                                 >

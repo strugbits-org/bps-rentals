@@ -1,15 +1,9 @@
-import {
-  extractSlugFromUrl,
-  findColor,
-  findLocation,
-  formatCustomDate,
-  locations,
-} from "@/Utils/Utils";
+import { quoteDateFormatter } from "@/Utils/Utils";
+import QuoteItems from "@/components/Quote/QuoteItems";
 import AnimateLink from "../AnimateLink";
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 
-const QuoteViewModal = ({ data }) => {
-  const issueDate = formatCustomDate(data?.dates.issueDate);
+const QuoteViewModal = ({ data, handleAddToCart }) => {
+  const issueDate = quoteDateFormatter(data?.dates.issueDate);
 
   return (
     <div id="scripts">
@@ -36,157 +30,19 @@ const QuoteViewModal = ({ data }) => {
                             </p>
                           </div>
                         </div>
-                        <form action="" class="form-cart mt-lg-50 mt-mobile-40">
+                        <form class="form-cart mt-lg-50 mt-mobile-40">
                           <ul
                             class="list-cart list-cart-product"
                             data-aos="d:loop"
                           >
-                            {data &&
-                              data.lineItems.length > 0 &&
-                              data.lineItems.map((data, index) => {
-                                const {
-                                  productName,
-                                  physicalProperties,
-                                  quantity,
-                                  image,
-                                  descriptionLines,
-                                  url,
-                                  catalogReference,
-                                } = data.fullItem;
-                                const colors =
-                                  findColor(descriptionLines).join("-");
-                                const customTextFields =
-                                  catalogReference.options.customTextFields;
-                                const location = findLocation(descriptionLines);
-                                return (
-                                  <li key={index} class="list-item">
-                                    <input
-                                      type="hidden"
-                                      name="sku[]"
-                                      defaultValue="MODCH09"
-                                    />
-                                    <div class="cart-product">
-                                      <div class="container-img">
-                                        <img
-                                          src={generateImageURL({
-                                            wix_url: image,
-                                            h: "74",
-                                            w: "74",
-                                          })}
-                                          class=" "
-                                        />
-                                      </div>
-                                      <div class="wrapper-product-info">
-                                        <div class="container-top">
-                                          <div class="container-product-name">
-                                            <h2 class="product-name">
-                                              {productName.original}
-                                            </h2>
-                                            <AnimateLink
-                                              to={
-                                                "/product" +
-                                                extractSlugFromUrl(url)
-                                              }
-                                              className="btn-view"
-                                            >
-                                              <span>View</span>
-                                              <i class="icon-arrow-right"></i>
-                                            </AnimateLink>
-                                          </div>
-                                          <button
-                                            type="button"
-                                            class="btn-cancel"
-                                          >
-                                            <i class="icon-close"></i>
-                                          </button>
-                                        </div>
-                                        <div class="container-specs">
-                                          <ul class="list-specs">
-                                            <li class="sku">
-                                              <span class="specs-title">
-                                                SKU
-                                              </span>
-                                              <span class="specs-text">
-                                                {physicalProperties.sku}
-                                              </span>
-                                            </li>
-                                            <li class="size">
-                                              <span class="specs-title">
-                                                Size
-                                              </span>
-                                              <span class="specs-text">
-                                                19”L X 15.5”W X 27.5”H
-                                              </span>
-                                            </li>
-                                            <li class="color">
-                                              <span class="specs-title">
-                                                Color
-                                              </span>
-                                              <span class="specs-text">
-                                                {colors}
-                                              </span>
-                                            </li>
-                                            <li class="location">
-                                              <span class="specs-title">
-                                                Location
-                                              </span>
-                                              <span class="specs-text">
-                                                {locations[location]}{" "}
-                                                <i class="icon-pin"></i>
-                                              </span>
-                                            </li>
-                                            <li class="customize-text">
-                                              <span class="specs-title">
-                                                Customize text
-                                              </span>
-                                              <input
-                                                type="text"
-                                                placeholder="Lorem Ipsum"
-                                              />
-                                            </li>
-                                          </ul>
-                                          <div class="quantity">
-                                            <span class="fs--20 no-mobile">
-                                              Quantity
-                                            </span>
-                                            <div class="container-input container-input-quantity">
-                                              <button
-                                                type="button"
-                                                class="minus"
-                                                disabled
-                                              >
-                                                <i class="icon-minus"></i>
-                                              </button>
-                                              <input
-                                                type="number"
-                                                min="1"
-                                                class="input-number"
-                                                readOnly
-                                                defaultValue={quantity}
-                                                placeholder={quantity}
-                                              />
-                                              <button
-                                                type="button"
-                                                class="plus"
-                                                disabled
-                                              >
-                                                <i class="icon-plus"></i>
-                                              </button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </li>
-                                );
-                              })}
+                            <QuoteItems quoteData={data?.lineItems} />
                           </ul>
                           <div class="flex-center mt-lg-105 mt-tablet-55 mt-phone-35">
                             <button
-                              type="submit"
-                              class="btn-1 btn-large btn-blue btn-request w-100 manual-modal-close"
+                              onClick={() => handleAddToCart(data?.lineItems)}
+                              className="btn-1 btn-large btn-blue btn-request w-100 manual-modal-close"
                             >
-                              <span>Request For Quote</span>
+                              <span>Order Again</span>
                               <i class="icon-arrow-right-2"></i>
                             </button>
                           </div>

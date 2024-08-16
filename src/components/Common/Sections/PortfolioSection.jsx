@@ -26,8 +26,9 @@ const PortfolioSection = ({ data }) => {
                     const { title, coverImage } = portfolioRef;
                     return (
                       <div key={index} className="swiper-slide grid-item">
-                        <a
-                          href={`${CORPORATE_URL}/project/${slug}`}
+                        <AnimateLink
+                          to={`${CORPORATE_URL}/project/${slug}`}
+                          target={"_blank"}
                           className="link-portfolio link-portfolio-animation"
                           data-aos="d:loop"
                         >
@@ -84,7 +85,7 @@ const PortfolioSection = ({ data }) => {
                             </ul>
                             <h2 className="title-portfolio">{title}</h2>
                           </div>
-                        </a>
+                        </AnimateLink>
                       </div>
                     );
                   })}

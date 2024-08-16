@@ -140,3 +140,12 @@ export const filterSearchData = (collection, selectedStudios, selectedMarkets) =
       return formattedDate.replace(/\d{2}/, dayWithSuffix);
     }
   };
+
+  export const quoteDateFormatter = (date) => {
+    if (typeof date === "string") {
+      return new Date(date).toISOString().split("T")[0];
+    } else if (date && date.$date) {
+      return new Date(date.$date).toISOString().split("T")[0];
+    }
+    return "";
+  };

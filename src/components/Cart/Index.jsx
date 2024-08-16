@@ -9,6 +9,7 @@ import {
   extractSlugFromUrl,
   findColor,
   findLocation,
+  formatPrice,
   locations,
 } from "@/Utils/Utils";
 
@@ -18,6 +19,7 @@ import {
 } from "@/Services/CartApis";
 
 import AnimateLink from "../Common/AnimateLink";
+import useUserData from "@/Hooks/useUserData";
 
 const CartPage = ({ cartData }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -27,6 +29,7 @@ const CartPage = ({ cartData }) => {
     "cartQuantity",
     "userTokens",
   ]);
+  const { role } = useUserData();
 
   const handleQuantityChange = async (id, quantity, disabled) => {
     if (quantity < 10000 && quantity > 0) {
@@ -111,7 +114,7 @@ const CartPage = ({ cartData }) => {
                         image,
                         physicalProperties,
                         descriptionLines,
-                        catalogReference,
+                        price,
                       } = cart;
 
                       const colors = findColor(descriptionLines).join("-");
@@ -171,6 +174,14 @@ const CartPage = ({ cartData }) => {
                                       19”L X 15.5”W X 27.5”H
                                     </span>
                                   </li>
+                                  {role === "admin" && (
+                                    <li className="price">
+                                      <span className="specs-title">Price</span>
+                                      <span className="specs-text">
+                                        {formatPrice(price, quantity)}
+                                      </span>
+                                    </li>
+                                  )}
                                   <li className="color">
                                     <span className="specs-title">Color</span>
                                     <span className="specs-text">{colors}</span>
@@ -253,16 +264,18 @@ const CartPage = ({ cartData }) => {
                   )}
                 </ul>
                 <div className="container-btn mt-md-40 mt-phone-40">
+                  {cartItems.length > 0 && (
+                    <AnimateLink
+                      to="/quote-request"
+                      className="btn-1 btn-large btn-blue w-100 bt-submit"
+                      data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                    >
+                      <span>Request for quote</span>
+                      <i className="icon-arrow-right"></i>
+                    </AnimateLink>
+                  )}
                   <AnimateLink
-                    to="/quote-request"
-                    className="btn-1 btn-large btn-blue w-100 bt-submit"
-                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                  >
-                    <span>Request for quote</span>
-                    <i className="icon-arrow-right"></i>
-                  </AnimateLink>
-                  <AnimateLink
-                    to={`/category/${"123"}`}
+                    to={`/category/${"new"}`}
                     className="btn-1 btn-border btn-border-blue btn-shopping btn-icon-left mt-lg-35 mt-mobile-20"
                     data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                   >

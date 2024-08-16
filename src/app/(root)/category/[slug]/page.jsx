@@ -9,6 +9,7 @@ import {
 } from "@/Services/ProductsApis";
 import { getHomeSectionDetails, getMarketsData } from "@/Services/SectionsApis";
 import { findCategoryData, getAllCategoriesPaths } from "@/Utils/Utils";
+import { redirect } from "next/navigation";
 
 export const generateStaticParams = async () => {
   try {
@@ -26,10 +27,11 @@ export default async function Page({ params }) {
   const _slug = decodeURIComponent(params.slug);
 
   const slug = "/category/" + _slug;
-  
+
   const categoriesData = await fetchAllCategoriesData();
   const selectedCategoryData = findCategoryData(categoriesData, slug);
-  
+  if (!selectedCategoryData) redirect("/error");
+
   const categoryId =
     selectedCategoryData?.parentCollection?._id ||
     selectedCategoryData?._id ||
@@ -42,16 +44,16 @@ export default async function Page({ params }) {
     marketsData,
     colorsData,
     bestSeller,
-    productsData,
-    ,] = await Promise.all([
-      getHomeSectionDetails(),
-      getRentalsBanners(),
-      getFilterLocations(),
-      getMarketsData(),
-      getAllColorsData(),
-      fetchBestSellers(),
-      getAllProducts({ category: categoryId }),
-    ]);
+    productsData
+  ] = await Promise.all([
+    getHomeSectionDetails(),
+    getRentalsBanners(),
+    getFilterLocations(),
+    getMarketsData(),
+    getAllColorsData(),
+    fetchBestSellers(),
+    getAllProducts({ category: categoryId }),
+  ]);
 
   return (
     <CategoryPage

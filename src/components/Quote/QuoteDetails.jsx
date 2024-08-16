@@ -1,71 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
-import { createPriceQuote } from "@/Services/QuoteApis";
-import { getProductsCart } from "@/Services/CartApis";
+import QuoteItems from "./QuoteItems";
+import { quoteDateFormatter } from "@/Utils/Utils";
 
-const QuoteRequestPage = ({ quoteRequestPageContent }) => {
-  const [cartItems, setCartItems] = useState();
-  const [formData, setFormData] = useState({
-    orderType: "Delivered",
-    eventDate: "",
-    deliveryDate: "",
-    pickupDate: "",
-    eventLocation: "",
-    eventDescription: "",
-    billTo: "",
-    address: "",
-    address2: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    instructions: "",
-    onSiteContact: "",
-    telephone: "",
-    preferredSalesPerson: "",
-    customerName: "",
-    customerEmail: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "radio" ? (checked ? value : formData[name]) : value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log(formData);
-    const lineItems = cartItems.map((product) => {
-      return {
-        id: product._id,
-        name: product.physicalProperties.sku,
-        description: product.productName.original,
-        quantity: product.quantity,
-        fullItem: product,
-      };
-    });
-    try {
-      const response = await createPriceQuote({
-        lineItems,
-        customerDetails: formData,
-      });
-      console.log(response, "response");
-    } catch (error) {
-      console.log("Error while creating quote:", error);
-    }
-  };
-
-  const getCart = async () => {
-    const cartData = await getProductsCart();
-    setCartItems(cartData);
-    setTimeout(markPageLoaded, 200);
-  }
-
+const QuoteDetails = ({ quoteRequestPageContent, quoteData }) => {
   useEffect(() => {
-    getCart();
+    setTimeout(() => {
+      markPageLoaded();
+    }, 1000);
   }, []);
 
   return (
@@ -95,11 +39,7 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
             </div>
             <div className="form-quote-request">
               <div className="container-form-quote" data-form-container>
-                <form
-                  className="form-quote"
-                  // data-aos="fadeIn .6s ease-in-out .3s, d:loop"
-                  onSubmit={handleSubmit}
-                >
+                <form className="form-quote">
                   <div className="col-12 column-container-input-top">
                     <div className="container-input-radio-top">
                       <span className="font-2 fs--16 fw-500 d-block text-uppercase">
@@ -111,9 +51,9 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                           name="orderType"
                           type="radio"
                           value="Order Delivered"
-                          onChange={handleChange}
-                          checked={formData.orderType === "Delivered"}
+                          checked={quoteData.orderis === "Delivered"}
                           required
+                          disabled
                         />
                         <label htmlFor="quote-delivered">Delivered</label>
                       </div>
@@ -122,10 +62,10 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                           id="quote-will-call"
                           name="orderType"
                           type="radio"
-                          value="Will Call"
-                          onChange={handleChange}
-                          checked={formData.orderType === "Will Call"}
+                          value="Will call"
+                          checked={quoteData.orderis === "Will call"}
                           required
+                          disabled
                         />
                         <label htmlFor="quote-will-call">Will Call</label>
                       </div>
@@ -139,9 +79,9 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="quote-event-date"
                       name="eventDate"
                       type="date"
-                      value={formData.eventDate}
-                      onChange={handleChange}
+                      value={quoteDateFormatter(quoteData?.eventDate)}
                       required
+                      disabled
                     />
                   </div>
                   <div className="container-input input-date col-lg-4">
@@ -152,9 +92,9 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="quote-delivery-date"
                       name="deliveryDate"
                       type="date"
-                      value={formData.deliveryDate}
-                      onChange={handleChange}
+                      value={quoteDateFormatter(quoteData?.dilvDate)}
                       required
+                      disabled
                     />
                   </div>
                   <div className="container-input input-date col-lg-4">
@@ -165,9 +105,9 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="quote-pickup-date"
                       name="pickupDate"
                       type="date"
-                      value={formData.pickupDate}
-                      onChange={handleChange}
+                      value={quoteDateFormatter(quoteData?.pickupDate)}
                       required
+                      disabled
                     />
                   </div>
                   <div className="container-input col-lg-4">
@@ -178,8 +118,7 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="quote-event-location"
                       name="eventLocation"
                       type="text"
-                      value={formData.eventLocation}
-                      onChange={handleChange}
+                      value={quoteData.eventLocation}
                     />
                   </div>
                   <div className="container-input col-lg-8">
@@ -190,9 +129,9 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="quote-event-description"
                       name="eventDescription"
                       type="text"
-                      value={formData.eventDescription}
-                      onChange={handleChange}
+                      value={quoteData.eventDescript}
                       required
+                      disabled
                     />
                   </div>
                   <div className="divisor"></div>
@@ -208,9 +147,9 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       name="billTo"
                       type="text"
                       placeholder="Customer account name"
-                      value={formData.billTo}
-                      onChange={handleChange}
+                      value={quoteData?.billingDetails?.customerAccNameToBill}
                       required
+                      disabled
                     />
                   </div>
                   <div className="container-input col-lg-4">
@@ -221,9 +160,9 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="quote-address"
                       name="address"
                       type="text"
-                      value={formData.address}
-                      onChange={handleChange}
+                      value={quoteData?.billingDetails?.streetAddress}
                       required
+                      disabled
                     />
                   </div>
                   <div className="container-input col-lg-4">
@@ -234,8 +173,7 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="quote-address2"
                       name="address2"
                       type="text"
-                      value={formData.address2}
-                      onChange={handleChange}
+                      value={quoteData?.billingDetails?.addressline2}
                     />
                   </div>
                   <div className="container-input col-lg-4">
@@ -246,9 +184,9 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="quote-city"
                       name="city"
                       type="text"
-                      value={formData.city}
-                      onChange={handleChange}
+                      value={quoteData?.billingDetails?.city}
                       required
+                      disabled
                     />
                   </div>
                   <div className="container-input col-lg-4">
@@ -259,9 +197,9 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="quote-state"
                       name="state"
                       type="text"
-                      value={formData.state}
-                      onChange={handleChange}
+                      value={quoteData?.billingDetails?.state}
                       required
+                      disabled
                     />
                   </div>
                   <div className="container-input col-lg-4">
@@ -272,8 +210,7 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="quote-zip-code"
                       name="zipCode"
                       type="text"
-                      value={formData.zipCode}
-                      onChange={handleChange}
+                      value={quoteData?.billingDetails?.zipCode}
                     />
                   </div>
                   <div className="divisor"></div>
@@ -285,8 +222,7 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="quote-instructions"
                       name="instructions"
                       type="text"
-                      value={formData.instructions}
-                      onChange={handleChange}
+                      value={quoteData.billingDetails.specialInstructionsText}
                     />
                   </div>
                   <div className="container-input col-lg-4">
@@ -298,8 +234,7 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="on-site-contact-field"
                       name="onSiteContact"
                       type="text"
-                      value={formData.onSiteContact}
-                      onChange={handleChange}
+                      value={quoteData.billingDetails.onSiteContact}
                     />
                   </div>
                   <div className="container-input col-lg-4">
@@ -311,8 +246,7 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="telephone"
                       name="telephone"
                       type="text"
-                      value={formData.telephone}
-                      onChange={handleChange}
+                      value={quoteData.billingDetails.telephone}
                     />
                   </div>
                   <div className="container-input col-lg-4">
@@ -324,8 +258,7 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       id="preferred-sales-person"
                       name="preferredSalesPerson"
                       type="text"
-                      value={formData.preferredSalesPerson}
-                      onChange={handleChange}
+                      value={quoteData.billingDetails.prefferedSalesPerson}
                     />
                   </div>
                   <div className="divisor"></div>
@@ -340,9 +273,9 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       name="customerName"
                       type="text"
                       placeholder="Full name"
-                      value={formData.customerName}
-                      onChange={handleChange}
+                      value={quoteData.billingDetails.nameeOrderedBy}
                       required
+                      disabled
                     />
                   </div>
                   <div className="container-input col-lg-6">
@@ -355,31 +288,25 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
                       name="customerEmail"
                       type="email"
                       placeholder="Enter email"
-                      value={formData.customerEmail}
-                      onChange={handleChange}
+                      value={quoteData.billingDetails.emaillOrderedBy}
                       required
+                      disabled
                     />
                   </div>
-                  <div className="container-submit col-12">
-                    <button
-                      type="submit"
-                      className="bt-submit btn-blue btn-large w-100"
-                    >
-                      <span className="submit-text">
-                        {quoteRequestPageContent &&
-                          quoteRequestPageContent.submitButtonLabel}
-                      </span>
-                      <i className="icon-arrow-right"></i>
-                    </button>
-                  </div>
                 </form>
-                <h3 data-aos="fadeIn" data-form-error>
-                  Error, Try again!
-                </h3>
-                <h3 data-aos="fadeIn" data-form-success>
-                  Success!
-                </h3>
               </div>
+            </div>
+
+            {/* Quote Items */}
+            <div className="mt-lg-55 mt-tablet-40 mt-phone-30">
+              <span className="divisor-title fs--40 fw-600 d-block text-left w-100 pb-40">
+                Your Quote Details
+              </span>
+              <form className="form-cart">
+                <ul className="list-cart list-cart-product" data-aos="d:loop">
+                  <QuoteItems quoteData={quoteData.lineItems} />
+                </ul>
+              </form>
             </div>
           </div>
         </div>
@@ -388,4 +315,4 @@ const QuoteRequestPage = ({ quoteRequestPageContent }) => {
   );
 };
 
-export default QuoteRequestPage;
+export default QuoteDetails;

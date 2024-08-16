@@ -9,6 +9,8 @@ import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
 import { AddProductToCart } from "@/Services/CartApis";
 import { useCookies } from "react-cookie";
 import Modal from "./Modal";
+import useUserData from "@/Hooks/useUserData";
+import { decryptField } from "@/Utils/encrypt";
 
 const CartModal = ({
   productData,
@@ -33,6 +35,8 @@ const CartModal = ({
   const [cookies, setCookie] = useCookies(["location"]);
   const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const { role } = useUserData();
 
   const handleClose = () => {
     setTimeout(() => {
@@ -50,17 +54,13 @@ const CartModal = ({
   }, [selectedVariantData]);
   useEffect(() => {
     if (productData) {
-      const isBestSellerProduct = compareArray(bestSeller, productData.subCategoryData.map(x => x._id));
+      const isBestSellerProduct = compareArray(
+        bestSeller,
+        productData.subCategoryData.map((x) => x._id)
+      );
       setIsBestSeller(bestSellerProducts || isBestSellerProduct);
     }
-  }, [productData])
-
-
-  const seatHeightData =
-    productData &&
-    productData.product.additionalInfoSections.find(
-      (data) => data.title.toLowerCase() === "seat height".toLowerCase()
-    );
+  }, [productData]);
 
   const handleQuantityChange = async (value) => {
     if (value < 10000 && value > 0) {
@@ -71,7 +71,7 @@ const CartModal = ({
   const handleAddToCart = async () => {
     setSuccessMessageVisible(false);
     setErrorMessageVisible(false);
-
+    setIsButtonDisabled(true);
     try {
       const product_id = productData.product._id;
       const variant_id = selectedVariantData.variantId
@@ -103,6 +103,8 @@ const CartModal = ({
     } catch (error) {
       console.error("Error:", error);
       setErrorMessageVisible(true);
+    } finally {
+      setIsButtonDisabled(false);
     }
   };
   return (
@@ -242,7 +244,11 @@ const CartModal = ({
                         </ul>
                         <div class="container-product-description">
                           <div class="form-cart">
-                            <input type="hidden" name="sku[]" defaultValue="MODCH09" />
+                            <input
+                              type="hidden"
+                              name="sku[]"
+                              defaultValue="MODCH09"
+                            />
                             <div class="wrapper-product-name">
                               <div class="container-product-name">
                                 <h1
@@ -267,15 +273,6 @@ const CartModal = ({
                                 </li>
                               )}
 
-                              {selectedVariantData?.size && (
-                                <li class="size">
-                                  <span class="specs-title">Size</span>
-                                  <span class="specs-text">
-                                    {selectedVariantData &&
-                                      selectedVariantData.size}
-                                  </span>
-                                </li>
-                              )}
                               {selectedVariantData?.color && (
                                 <li class="color">
                                   <span class="specs-title">Color</span>
@@ -285,23 +282,35 @@ const CartModal = ({
                                   </span>
                                 </li>
                               )}
-                              <li class="weight">
-                                <span class="specs-title">Weight</span>
-                                <span class="specs-text">11.5lbs</span>
-                              </li>
-                              {seatHeightData && (
-                                <li className="seat-height">
-                                  <span className="specs-title">
-                                    Seat Height
-                                  </span>
-                                  <span
-                                    className="specs-text"
-                                    dangerouslySetInnerHTML={{
-                                      __html: seatHeightData.description,
-                                    }}
-                                  ></span>
-                                </li>
-                              )}
+                              {productData &&
+                                productData.product?.additionalInfoSections &&
+                                productData.product.additionalInfoSections.map(
+                                  (sec, index) => {
+                                    return (
+                                      <li class={sec.title} key={index}>
+                                        <span class="specs-title">
+                                          {sec.title}
+                                        </span>
+                                        <span
+                                          class="specs-text"
+                                          dangerouslySetInnerHTML={{
+                                            __html: sec.description,
+                                          }}
+                                        ></span>
+                                      </li>
+                                    );
+                                  }
+                                )}
+                              {selectedVariantData &&
+                                role === "admin" &&
+                                selectedVariantData.price && (
+                                  <li className="seat-height">
+                                    <span className="specs-title">Price</span>
+                                    <span className="specs-text">
+                                      {decryptField(selectedVariantData.price)}
+                                    </span>
+                                  </li>
+                                )}
                             </ul>
                             <ul
                               class="list-colors"
@@ -400,6 +409,7 @@ const CartModal = ({
                                   onClick={handleAddToCart}
                                   className="btn-add-to-cart"
                                   type="submit"
+                                  disabled={isButtonDisabled}
                                 >
                                   <span>Add to cart</span>
                                   <i className="icon-arrow-right"></i>
@@ -409,20 +419,26 @@ const CartModal = ({
 
                             {unavailable && (
                               <div className="unavailable-warning-wrapper font-2 mt-3-cs">
-                                <p className="unavailable-warning">Color Variant Not Available in Your Preferred Location. Please &nbsp;</p>
-                                <btn-modal-open
-                                  group="modal-contact"
-                                >
+                                <p className="unavailable-warning">
+                                  Color Variant Not Available in Your Preferred
+                                  Location. Please &nbsp;
+                                </p>
+                                <btn-modal-open group="modal-contact">
                                   Contact Us
                                 </btn-modal-open>
                               </div>
                             )}
                             {productData && (
-                              <AvailabilityCard selectedVariantData={productData.variantData[selectedVariantIndex]} setUnavailable={setUnavailable} />
+                              <AvailabilityCard
+                                selectedVariantData={
+                                  productData.variantData[selectedVariantIndex]
+                                }
+                                setUnavailable={setUnavailable}
+                              />
                             )}
                             {productData &&
                               productData.product.customTextFields.length >
-                              0 && (
+                                0 && (
                                 <div
                                   style={{ paddingTop: "20px" }}
                                   className="container-product-notes container-info-text "
@@ -478,15 +494,15 @@ const CartModal = ({
 
       {successMessageVisible && (
         <Modal
-          buttonLabel={'Continue Shopping'}
-          message={'Product Successfully Added to Cart!'}
+          buttonLabel={"Continue Shopping"}
+          message={"Product Successfully Added to Cart!"}
           setModalStatus={setSuccessMessageVisible}
         />
       )}
       {errorMessageVisible && (
         <Modal
-          buttonLabel={'Try Again!'}
-          message={'Failed to Add Product to Cart'}
+          buttonLabel={"Try Again!"}
+          message={"Failed to Add Product to Cart"}
           setModalStatus={setErrorMessageVisible}
         />
       )}

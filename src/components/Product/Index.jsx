@@ -26,6 +26,8 @@ import AnimateLink from "../Common/AnimateLink";
 import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
+import useUserData from "@/Hooks/useUserData";
+import { decryptField } from "@/Utils/encrypt";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -48,13 +50,14 @@ const ProductPostPage = ({
   const { productSnapshotData } = selectedProductDetails;
   const [productFoundInCategories, setProductFoundInCategories] = useState([]);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [savedProductsData, setSavedProductsData] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState();
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [buttonLabel, setButtonLabel] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(1);
-
+  const { role } = useUserData();
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
       (variant) => variant.colorVariation === selectedVariantData.variantId
@@ -140,11 +143,6 @@ const ProductPostPage = ({
     }
   }, [selectedProductDetails]);
 
-  const seatHeightData =
-    selectedProductDetails.product.additionalInfoSections.find(
-      (data) => data.title.toLowerCase() === "seat height".toLowerCase()
-    );
-
   const handleQuantityChange = async (value) => {
     if (value < 10000 && value > 0) {
       setCartQuantity(value);
@@ -153,6 +151,7 @@ const ProductPostPage = ({
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
+    setIsButtonDisabled(true);
     try {
       pageLoadStart();
 
@@ -187,6 +186,8 @@ const ProductPostPage = ({
     } catch (error) {
       pageLoadEnd();
       console.error("Error while adding item to cart:", error);
+    } finally {
+      setIsButtonDisabled(false);
     }
   };
   useEffect(() => {
@@ -378,18 +379,6 @@ const ProductPostPage = ({
                       </li>
                     )}
 
-                    {selectedVariant && selectedVariant.size && (
-                      <li class="size">
-                        <span class="specs-title">Size</span>
-                        <span
-                          class="specs-text"
-                          dangerouslySetInnerHTML={{
-                            __html: selectedVariant.size,
-                          }}
-                        ></span>
-                      </li>
-                    )}
-
                     {selectedVariant && selectedVariant.color && (
                       <li class="color">
                         <span class="specs-title">Color</span>
@@ -399,22 +388,36 @@ const ProductPostPage = ({
                       </li>
                     )}
 
-                    <li className="weight">
-                      <span className="specs-title">Weight</span>
-                      <span className="specs-text">11.5lbs</span>
-                    </li>
+                    {selectedProductDetails &&
+                      selectedProductDetails.product?.additionalInfoSections &&
+                      selectedProductDetails.product.additionalInfoSections.map(
+                        (sec, index) => {
+                          return (
+                            <li class={sec.title} key={index}>
+                              <span class="specs-title">{sec.title}</span>
+                              <span
+                                class="specs-text"
+                                dangerouslySetInnerHTML={{
+                                  __html: sec.description,
+                                }}
+                              ></span>
+                            </li>
+                          );
+                        }
+                      )}
 
-                    {seatHeightData && (
-                      <li class="seat-height">
-                        <span class="specs-title">Seat Height</span>
-                        <span
-                          class="specs-text"
-                          dangerouslySetInnerHTML={{
-                            __html: seatHeightData.description,
-                          }}
-                        ></span>
-                      </li>
-                    )}
+                    {selectedProductDetails &&
+                      role === "admin" &&
+                      selectedProductDetails.product.formattedPrice && (
+                        <li className="seat-height">
+                          <span className="specs-title">Price</span>
+                          <span className="specs-text">
+                            {decryptField(
+                              selectedProductDetails.product.formattedPrice
+                            )}
+                          </span>
+                        </li>
+                      )}
                   </ul>
                   <ul
                     className="list-colors"
@@ -502,7 +505,11 @@ const ProductPostPage = ({
                         <i className="icon-arrow-right"></i>
                       </button>
                     ) : (
-                      <button className="btn-add-to-cart" type="submit">
+                      <button
+                        className="btn-add-to-cart"
+                        type="submit"
+                        disabled={isButtonDisabled}
+                      >
                         <span>Add to cart</span>
                         <i className="icon-arrow-right"></i>
                       </button>
@@ -592,23 +599,23 @@ const ProductPostPage = ({
 
               {/* DOWNLOADS */}
               {selectedProductDetails &&
+                role === "admin" &&
                 selectedProductDetails.productDocs?.length > 0 && (
-                  <div className="container-info-text" data-aos="">
-                    <h3 className="title-info-text split-words" data-aos="">
+                  <div class="container-info-text" data-aos="">
+                    <h3 class="title-info-text split-words" data-aos="">
                       Downloads
                     </h3>
                     <div
-                      className="container-btn container-btn-downloads"
+                      class="container-btn container-btn-downloads"
                       data-aos="fadeIn .8s ease-in-out"
                     >
                       {selectedProductDetails.productDocs.map((data, index) => {
                         const { fileName, downloadUrl } = data;
                         return (
                           <a key={index} href={downloadUrl} download={fileName}>
-                            <button class="btn-small-tag btn-gray btn-hover-red">
-                              <div class="split-chars">
-                                <span>{fileName}</span>
-                              </div>
+                            <button class="btn-small-tag">
+                              <span>{fileName}</span>
+                              <i class="icon-arrow-down"></i>
                             </button>
                           </a>
                         );
@@ -651,7 +658,12 @@ const ProductPostPage = ({
       )}
 
       {matchedProductsData.length > 0 && (
-        <MatchItWith matchedProductsData={matchedProductsData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} bestSeller={bestSeller} />
+        <MatchItWith
+          matchedProductsData={matchedProductsData}
+          savedProductsData={savedProductsData}
+          setSavedProductsData={setSavedProductsData}
+          bestSeller={bestSeller}
+        />
       )}
 
       <ArticleSection data={blogsData} />

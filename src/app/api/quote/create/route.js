@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 
 import handleAuthentication from "@/Utils/HandleAuthentication";
+import { cartWixClient } from "@/Utils/CreateWixClient";
+
 async function fetchData(url, options) {
   const response = await fetch(url, options);
   if (!response.ok) {
@@ -8,6 +10,7 @@ async function fetchData(url, options) {
   }
   return await response.json();
 }
+
 export const POST = async (req) => {
   try {
     const authenticatedUserData = await handleAuthentication(req);
@@ -15,7 +18,8 @@ export const POST = async (req) => {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     const body = await req.json();
-    const { lineItems, customerDetails } = body;
+    const { memberTokens, lineItems, customerDetails } = body;
+    const lineItemsIdArr = lineItems.map((item) => item.lineItId);
 
     const {
       orderType,
@@ -37,17 +41,16 @@ export const POST = async (req) => {
       customerName,
       customerEmail,
     } = customerDetails;
-    // const lineItemsIdArr = lineItems.map((item) => item.id);
 
-    let formatedEventDate = new Date(eventDate);
-    let formatedDeliveryDate = new Date(deliveryDate);
-    let formatedPickupDate = new Date(pickupDate);
+    let formattedDeliveryDate = new Date(deliveryDate);
+    let formattedPickupDate = new Date(pickupDate);
+    let formattedEventDate = new Date(eventDate);
 
     let customerObj = {
       orderis: orderType,
-      eventDate: formatedEventDate.toISOString(),
-      dilvDate: formatedDeliveryDate.toISOString(),
-      pickupDate: formatedPickupDate.toISOString(),
+      eventDate: formattedEventDate.toISOString(),
+      dilvDate: formattedDeliveryDate.toISOString(),
+      pickupDate: formattedPickupDate.toISOString(),
       eventLocation: eventLocation,
       eventDescript: eventDescription,
       billingDetails: {
@@ -65,6 +68,7 @@ export const POST = async (req) => {
         prefferedSalesPerson: preferredSalesPerson ? preferredSalesPerson : "",
       },
     };
+
     let customer = {
       email: authenticatedUserData.userEmail,
       contactId: authenticatedUserData.memberId,
@@ -95,9 +99,10 @@ export const POST = async (req) => {
     };
 
     const payload = {
-      title: `Rentals Test Quote`,
+      title: eventDescription,
       customer: customer,
       customerDetails: customerObj,
+      customerData: authenticatedUserData,
       lineItems,
       paymentTerms: {
         termData: "",
@@ -111,16 +116,14 @@ export const POST = async (req) => {
       },
     };
 
-    const response = await fetchData(
-      `${process.env.RENTALS_URL}/rentalsPriceQuote`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      }
-    );
+    await fetchData(`${process.env.RENTALS_URL}/rentalsPriceQuote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const cartClient = await cartWixClient(memberTokens);
 
-    console.log(response, "quote response");
+    await cartClient.currentCart.removeLineItemsFromCurrentCart(lineItemsIdArr);
 
     return NextResponse.json(
       {
@@ -129,7 +132,6 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { SaveProductButton } from "../Common/SaveProductButton";
 import { compareArray, hasMatchingColor } from "@/Utils/Utils";
 import { useCookies } from "react-cookie";
+import { decryptField } from "@/Utils/encrypt";
+import useUserData from "@/Hooks/useUserData";
 
 const ProductCard = ({
   productData,
@@ -17,14 +19,14 @@ const ProductCard = ({
 }) => {
   const { product, variantData } = productData;
   const categories = productData?.subCategoryData || [];
-  
+
   const [filteredVariants, setFilteredVariants] = useState(variantData);
   const [activeVariant, setActiveVariant] = useState(variantData[0]);
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [cookies, setCookie] = useCookies(["location"]);
+  const { role } = useUserData();
 
-  useEffect(() => {
-
+  const handleFilteredData = () => {
     const matchingVariants = variantData.filter(variant => {
       const hasColor = hasMatchingColor(
         filterColors.filter((x) => x.checked),
@@ -44,9 +46,16 @@ const ProductCard = ({
 
     const isBestSellerProduct = compareArray(bestSeller, categories.map(x => x._id));
     setIsBestSeller(isBestSellerProduct);
-
+  }
+  useEffect(() => {
+    if (filteredProducts.length !== 0) handleFilteredData();
   }, [filteredProducts]);
 
+  const copySku = () => navigator.clipboard.writeText(activeVariant.sku);
+
+  useEffect(() => {
+    handleFilteredData();
+  }, []);
   return (
     <div
       className={`${isSavedProduct ? isSavedProduct : "product-link large active"
@@ -62,6 +71,7 @@ const ProductCard = ({
           </div>
         )}
         <SaveProductButton
+          key={product._id}
           productData={product}
           savedProductsData={savedProductsData}
           setSavedProductsData={setSavedProductsData}
@@ -69,20 +79,10 @@ const ProductCard = ({
       </div>
       {!isSavedProduct && (
         <div className="container-copy">
-          <button className="btn-copy copy-link">
+          <button onClick={copySku} className="btn-copy copy-link">
             <span>{activeVariant.sku}</span>
             <i className="icon-copy"></i>
           </button>
-          <input
-            type="text"
-            className="copy-link-url"
-            defaultValue={activeVariant.sku}
-            style={{
-              position: "absolute",
-              opacity: 0,
-              pointerEvents: "none",
-            }}
-          />
         </div>
       )}
       <AnimateLink to={`/product/${product.slug}`} className="link">
@@ -104,6 +104,7 @@ const ProductCard = ({
                     );
                   }
                 })}
+                {product && role === "admin" && (<span>{decryptField(product.formattedPrice)}</span>)}
               </div>
             </div>
           )}
@@ -113,13 +114,12 @@ const ProductCard = ({
             return (
               <React.Fragment key={index}>
                 <div
-                  className="container-img product-img"
-                  data-get-product-link-color={selectedData.color[0]}
-                  data-default-product-link-active={index === 1}
+                  key={index}
+                  className={`container-img product-img ${selectedData.sku === activeVariant.sku ? "active" : ""}`}
                 >
                   <img
                     src={productImageURL({
-                      wix_url: activeVariant.variant.imageSrc,
+                      wix_url: selectedData.variant.imageSrc,
                       w: "346",
                       h: "346",
                       fit: "fill",
@@ -140,10 +140,9 @@ const ProductCard = ({
               <React.Fragment key={idx}>
                 {idx < 4 && (
                   <li
-                    className="list-item"
-                    data-set-product-link-color={variant.color[0]}
+                    key={idx}
                     onMouseEnter={() => setActiveVariant(variant)}
-                    data-default-product-link-active={idx === 0}
+                    className={`list-item ${variant.sku === activeVariant.sku ? "active" : ""}`}
                   >
                     <div className="container-img">
                       <img

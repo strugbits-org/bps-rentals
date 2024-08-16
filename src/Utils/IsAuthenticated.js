@@ -81,6 +81,9 @@ export const isAuthenticated = async (token) => {
     const loggedInUserData = {
       ...memberData._items[0].data,
       memberId: privateMemberData._items[0].data._id,
+      firstName: privateMemberData._items[0].data.firstName,
+      lastName: privateMemberData._items[0].data.lastName,
+      phone: privateMemberData._items[0].data.mainPhone,
     };
 
     if (memberData._items.length === 0) {
