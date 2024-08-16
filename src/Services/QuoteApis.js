@@ -17,7 +17,6 @@ export const createPriceQuote = async ({ lineItems, customerDetails }) => {
       },
       body: JSON.stringify(payload),
     });
-    console.log(response, "response>>>>>>");
 
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`);

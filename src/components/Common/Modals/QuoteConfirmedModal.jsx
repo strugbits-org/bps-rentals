@@ -1,6 +1,24 @@
+"use client";
+import { useEffect, useRef } from "react";
+
+import { updatedWatched } from "@/Utils/AnimationFunctions";
 import AnimateLink from "../AnimateLink";
 
 const QuoteConfirmedModal = () => {
+  function closeModal() {
+    document.body.setAttribute("data-form-cart-state", "");
+    // setModalStatus(false);
+    // if (redirectUrl) {
+    //   router.push(redirectUrl);
+    // }
+  }
+  useEffect(() => {
+    setTimeout(() => {
+      document.body.setAttribute("data-form-cart-state", "success");
+      updatedWatched();
+    }, 500);
+  }, []);
+
   return (
     <div id="scripts">
       <div class="feedback-quote-request-confirmed" data-modal-area>
@@ -31,13 +49,22 @@ const QuoteConfirmedModal = () => {
                           <span>My Account</span>
                         </AnimateLink>
                         <AnimateLink
-                          to={`/category/${"123"}`}
+                          to={`/category/${"new"}`}
                           className="btn-border-blue btn-my-account btn-back-to-categories mt-md-30 mt-phone-20"
                           data-close-feedback
                           data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                         >
                           <span>Back to categories</span>
                         </AnimateLink>
+
+                        {/* <button
+                          onClick={closeModal}
+                          className="btn-border-blue btn-my-account btn-back-to-categories mt-md-30 mt-phone-20"
+                          data-close-feedback
+                          data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                        >
+                          <span>Close</span>
+                        </button> */}
                       </div>
                     </div>
                   </div>
