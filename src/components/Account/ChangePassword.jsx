@@ -7,9 +7,7 @@ import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import { changePassword } from "@/Services/AuthApis";
 
 const ChangePassword = ({ changePasswordPageContent }) => {
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState({
     oldPassword: false,
     newPassword: false,
@@ -20,6 +18,10 @@ const ChangePassword = ({ changePasswordPageContent }) => {
     newPassword: "",
     confirmNewPassword: "",
   });
+  const [modalState, setModalState] = useState({
+    success: false,
+    error: false,
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,12 +30,12 @@ const ChangePassword = ({ changePasswordPageContent }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage("");
+    setMessage("");
 
     try {
       if (formData.newPassword !== formData.confirmNewPassword) {
-        setErrorMessage("PASSWORDS SHOULD BE MATCHED.");
-        setErrorMessageVisible(true);
+        setMessage("PASSWORDS SHOULD BE MATCHED.");
+        setModalState({ success: false, error: true });
         return;
       }
       const response = await changePassword({
@@ -42,16 +44,15 @@ const ChangePassword = ({ changePasswordPageContent }) => {
       });
 
       if (response?.error) {
-        setErrorMessage(response.message);
-        setErrorMessageVisible(true);
+        setMessage(response.message);
+        setModalState({ success: false, error: true });
+
         return;
       }
-      setSuccessMessageVisible(true);
+      setModalState({ success: true, error: false });
     } catch (err) {
-      setErrorMessage("An error occurred. Please try again.");
-      setErrorMessageVisible(true);
-
-      console.log("Error", err);
+      setMessage("An error occurred. Please try again.");
+      setModalState({ success: false, error: true });
     }
   };
 
@@ -64,9 +65,9 @@ const ChangePassword = ({ changePasswordPageContent }) => {
   }, []);
 
   useEffect(() => {
-    if (successMessageVisible) {
+    if (modalState.success) {
       const timer = setTimeout(() => {
-        setSuccessMessageVisible(false);
+        setModalState({ success: false, error: false });
         setFormData({
           oldPassword: "",
           newPassword: "",
@@ -75,14 +76,14 @@ const ChangePassword = ({ changePasswordPageContent }) => {
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [successMessageVisible]);
+  }, [modalState]);
   return (
     <>
-      {" "}
-      {errorMessageVisible && (
+      {modalState.error && (
         <Modal
-          message={errorMessage}
-          setModalStatus={setErrorMessageVisible}
+          message={message}
+          setModalStatus={setModalState}
+          modalStatus={modalState}
         />
       )}
       <div class="wrapper-account">
@@ -97,7 +98,7 @@ const ChangePassword = ({ changePasswordPageContent }) => {
         >
           <div
             class="container-password"
-            data-form-state={successMessageVisible ? "success" : ""}
+            data-form-state={modalState.success ? "success" : ""}
           >
             <form class="form-password form-password" onSubmit={handleSubmit}>
               {[

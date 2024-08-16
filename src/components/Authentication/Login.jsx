@@ -9,12 +9,11 @@ import Disclaimer from "./Disclaimer";
 
 const Login = ({
   loginModalContent,
-  setErrorMessageVisible,
   setMessage,
   setToggleModal,
+  setModalState,
 }) => {
   const router = useRouter();
-
   const [cookies, setCookie] = useCookies(["authToken", "userData"]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -26,7 +25,6 @@ const Login = ({
   const LoginUser = async (e) => {
     e.preventDefault();
     setIsButtonDisabled(true);
-    setErrorMessageVisible(false);
     const submenuLogin = document.querySelector(".submenu-login");
     const button = document.querySelector(".new-login-button");
     try {
@@ -36,9 +34,11 @@ const Login = ({
       });
       if (response && response.error) {
         setMessage(response.message);
-        setErrorMessageVisible(true);
+        setModalState({ success: false, error: true });
         return;
       }
+      setModalState({ success: true, error: false });
+
       if (response) {
         const authToken = response.jwtToken;
         const userData = JSON.stringify(response.member);
@@ -67,9 +67,8 @@ const Login = ({
         }
       }
     } catch (error) {
-      console.error("Error during login:", error);
       setMessage("Error during login:", error);
-      setErrorMessageVisible(true);
+      setModalState({ success: false, error: true });
       submenuLogin.classList.add("active");
     } finally {
       setIsButtonDisabled(false);

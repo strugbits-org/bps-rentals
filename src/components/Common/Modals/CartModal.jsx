@@ -29,14 +29,18 @@ const CartModal = ({
   setSavedProductsData,
 }) => {
 
-  const [unavailable, setUnavailable] = useState(false);
-  const [isBestSeller, setIsBestSeller] = useState(false);
-  const [cartQuantity, setCartQuantity] = useState(1);
-  const [cookies, setCookie] = useCookies(["location"]);
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const { role } = useUserData();
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isBestSeller, setIsBestSeller] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
+  const [cookies, setCookie] = useCookies(["location"]);
+  const [cartQuantity, setCartQuantity] = useState(1);
+  const [message, setMessage] = useState("");
+  const [modalState, setModalState] = useState({
+    success: false,
+    error: false,
+  });
 
   const handleClose = () => {
     setTimeout(() => {
@@ -52,6 +56,7 @@ const CartModal = ({
     reloadCartModal();
     resetSlideIndex();
   }, [selectedVariantData]);
+
   useEffect(() => {
     if (productData) {
       const isBestSellerProduct = compareArray(
@@ -69,8 +74,6 @@ const CartModal = ({
   };
 
   const handleAddToCart = async () => {
-    setSuccessMessageVisible(false);
-    setErrorMessageVisible(false);
     setIsButtonDisabled(true);
     try {
       const product_id = productData.product._id;
@@ -99,16 +102,25 @@ const CartModal = ({
       const total = calculateTotalCartQuantity(response.cart.lineItems);
       setCookie("cartQuantity", total);
       handleClose();
-      setSuccessMessageVisible(true);
+      setModalState({ success: true, error: false });
+      setMessage("Product Successfully Added to Cart!");
     } catch (error) {
       console.error("Error:", error);
-      setErrorMessageVisible(true);
+      setMessage("Failed to Add Product to Cart");
+      setModalState({ success: false, error: true });
     } finally {
       setIsButtonDisabled(false);
     }
   };
   return (
     <div id="scripts">
+      {(modalState.error || modalState.success) && (
+        <Modal
+          message={message}
+          setModalStatus={setModalState}
+          modalStatus={modalState}
+        />
+      )}
       <modal-group name="modal-product-2" class="modal-product">
         <modal-container>
           <modal-item>
@@ -491,21 +503,6 @@ const CartModal = ({
           </modal-item>
         </modal-container>
       </modal-group>
-
-      {successMessageVisible && (
-        <Modal
-          buttonLabel={"Continue Shopping"}
-          message={"Product Successfully Added to Cart!"}
-          setModalStatus={setSuccessMessageVisible}
-        />
-      )}
-      {errorMessageVisible && (
-        <Modal
-          buttonLabel={"Try Again!"}
-          message={"Failed to Add Product to Cart"}
-          setModalStatus={setErrorMessageVisible}
-        />
-      )}
     </div>
   );
 };
