@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
-// getProductVariants,
-// getProductVariantsImages,
 import {
   getSavedProductData,
 } from "@/Services/ProductsApis";
@@ -27,11 +25,6 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
   const getSelectedProductSnapShots = async (productData) => {
     setSelectedProductData(productData);
     try {
-      // const product_id = productData.product._id;
-      // const [productSnapshotData, productVariantsData] = await Promise.all([
-      //   getProductVariantsImages(product_id),
-      //   getProductVariants(product_id),
-      // ]);
       const { productSnapshotData, productVariantsData } = productData;
 
       let dataMap = new Map(
@@ -135,14 +128,14 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
             savedProductsData.slice(0, pageLimit).map((data, index) => {
               return (
                 <li key={index} className="grid-item">
-                    <ProductCard
-                      key={index}
-                      isSavedProduct="product-link small saved-products active"
-                      productData={data}
-                      getSelectedProductSnapShots={getSelectedProductSnapShots}
-                      savedProductsData={savedProductsData}
-                      setSavedProductsData={setSavedProductsData}
-                    />
+                  <ProductCard
+                    key={data._id}
+                    isSavedProduct="product-link small saved-products active"
+                    productData={data}
+                    getSelectedProductSnapShots={getSelectedProductSnapShots}
+                    savedProductsData={savedProductsData}
+                    setSavedProductsData={setSavedProductsData}
+                  />
                 </li>
               );
             })

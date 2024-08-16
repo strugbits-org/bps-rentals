@@ -11,14 +11,14 @@ import {
 } from '@/Services/ProductsApis';
 import { getBlogsData, getPortfolioData } from "@/Services/SectionsApis";
 
-export const generateStaticParams = async () => {
-  try {
-    const paths = await fetchAllProductsPaths() || [];
-    return paths;
-  } catch (error) {
-    console.log("Error:", error);
-  }
-}
+// export const generateStaticParams = async () => {
+//   try {
+//     const paths = await fetchAllProductsPaths() || [];
+//     return paths;
+//   } catch (error) {
+//     console.log("Error:", error);
+//   }
+// }
 
 export default async function Page({ params }) {
   const slug = decodeURIComponent(params.slug);
