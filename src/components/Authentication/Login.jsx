@@ -27,6 +27,8 @@ const Login = ({
 
   const LoginUser = async (e) => {
     e.preventDefault();
+    console.log("Logging User");
+
     if (submittingForm) return;
 
     setSubmittingForm(true);
@@ -100,9 +102,8 @@ const Login = ({
         <div
           className="wrapper-form-sign-in"
           // data-form-sign-in-container
-          onSubmit={LoginUser}
         >
-          <form action="/my-account" className="form-sign-in form-base">
+          <form onSubmit={LoginUser} className="form-sign-in form-base">
             <div className="container-input col-12">
               <label htmlFor="login-email">
                 {loginModalContent && loginModalContent.emailFieldLabel}
@@ -139,7 +140,7 @@ const Login = ({
                 <i className="icon-password"></i>
                 <i className="icon-password-hide"></i>
               </div>
-              <button
+              <span
                 onClick={() => setToggleModal("forgot-password")}
                 className="btn-forgot-password password-link"
               >
@@ -148,7 +149,7 @@ const Login = ({
                   {loginModalContent &&
                     loginModalContent.forgotYourPasswordLinkText}
                 </span>
-              </button>
+              </span>
             </div>
             <div className="container-submit col-12 mt-mobile-10">
               <button type="submit" className="bt-submit btn-blue w-100">

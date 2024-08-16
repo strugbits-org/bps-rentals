@@ -264,14 +264,16 @@ const CartPage = ({ cartData }) => {
                   )}
                 </ul>
                 <div className="container-btn mt-md-40 mt-phone-40">
-                  <AnimateLink
-                    to="/quote-request"
-                    className="btn-1 btn-large btn-blue w-100 bt-submit"
-                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                  >
-                    <span>Request for quote</span>
-                    <i className="icon-arrow-right"></i>
-                  </AnimateLink>
+                  {cartItems.length > 0 && (
+                    <AnimateLink
+                      to="/quote-request"
+                      className="btn-1 btn-large btn-blue w-100 bt-submit"
+                      data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                    >
+                      <span>Request for quote</span>
+                      <i className="icon-arrow-right"></i>
+                    </AnimateLink>
+                  )}
                   <AnimateLink
                     to={`/category/${"new"}`}
                     className="btn-1 btn-border btn-border-blue btn-shopping btn-icon-left mt-lg-35 mt-mobile-20"
