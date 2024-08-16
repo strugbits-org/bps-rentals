@@ -8766,7 +8766,7 @@ var require_app2 = __commonJS({
     }
     const pageName$3 = "my-account-quotes-history";
     function main$3() {
-      manualModalCloseControls();
+      // manualModalCloseControls();
     }
     const pgMyAccountQuotesHistory = new Page({
       pageName: pageName$3,

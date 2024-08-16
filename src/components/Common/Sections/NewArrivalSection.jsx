@@ -18,13 +18,15 @@ const NewArrival = ({ content }) => {
         >
           {content && content.title}
         </span>
-        <AnimateLink to={`/product/${content.product.slug}`} className={"btn-blue mt-lg-60 mt-tablet-45 aos-animate fadeIn"}
+        <AnimateLink
+          to={`/product/${content?.product?.slug}`}
+          className={"btn-blue mt-lg-60 mt-tablet-45 aos-animate fadeIn"}
           attributes={{
-            "data-aos":
-              "fadeIn .6s ease-in-out .3s, d:loop",
+            "data-aos": "fadeIn .6s ease-in-out .3s, d:loop",
             "data-cursor-style": "off",
-          }}>
-          <span>{content && content.buttonLabel}    </span>
+          }}
+        >
+          <span>{content && content.buttonLabel} </span>
           <i class="icon-arrow-right"></i>
         </AnimateLink>
       </div>

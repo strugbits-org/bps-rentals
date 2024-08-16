@@ -2,7 +2,7 @@ import { quoteDateFormatter } from "@/Utils/Utils";
 import QuoteItems from "@/components/Quote/QuoteItems";
 import AnimateLink from "../AnimateLink";
 
-const QuoteViewModal = ({ data }) => {
+const QuoteViewModal = ({ data, handleAddToCart }) => {
   const issueDate = quoteDateFormatter(data?.dates.issueDate);
 
   return (
@@ -36,152 +36,15 @@ const QuoteViewModal = ({ data }) => {
                             data-aos="d:loop"
                           >
                             <QuoteItems quoteData={data?.lineItems} />
-
-                            {/* {data &&
-                              data.lineItems.length > 0 &&
-                              data.lineItems.map((cart, index) => {
-                                const {
-                                  quantity,
-                                  name,
-                                  productUrl,
-                                  src,
-                                  description,
-                                  location,
-                                } = cart;
-
-                                return (
-                                  <li key={index} class="list-item">
-                                    <input
-                                      type="hidden"
-                                      name="sku[]"
-                                      defaultValue="MODCH09"
-                                    />
-                                    <div class="cart-product">
-                                      <div class="container-img">
-                                        <img
-                                          src={generateImageUrl2({
-                                            wix_url: src,
-                                            h: "74",
-                                            w: "74",
-                                          })}
-                                          class=" "
-                                        />
-                                      </div>
-                                      <div class="wrapper-product-info">
-                                        <div class="container-top">
-                                          <div class="container-product-name">
-                                            <h2 class="product-name">
-                                              {description}
-                                            </h2>
-                                            <AnimateLink
-                                              to={
-                                                "/product" +
-                                                extractSlugFromUrl(productUrl)
-                                              }
-                                              className="btn-view"
-                                            >
-                                              <span>View</span>
-                                              <i class="icon-arrow-right"></i>
-                                            </AnimateLink>
-                                          </div>
-                                          <button
-                                            type="button"
-                                            class="btn-cancel hidden"
-                                          >
-                                            <i class="icon-close"></i>
-                                          </button>
-                                        </div>
-                                        <div class="container-specs">
-                                          <ul class="list-specs">
-                                            <li class="sku">
-                                              <span class="specs-title">
-                                                SKU
-                                              </span>
-                                              <span class="specs-text">
-                                                {name}
-                                              </span>
-                                            </li>
-                                            <li class="size hidden">
-                                              <span class="specs-title">
-                                                Size
-                                              </span>
-                                              <span class="specs-text">
-                                                19”L X 15.5”W X 27.5”H
-                                              </span>
-                                            </li>
-                                            <li class="color hidden">
-                                              <span class="specs-title">
-                                                Color
-                                              </span>
-                                              <span class="specs-text">
-                                                color
-                                              </span>
-                                            </li>
-                                            <li class="location">
-                                              <span class="specs-title">
-                                                Location
-                                              </span>
-                                              <span class="specs-text">
-                                                {locations[location]}{" "}
-                                                <i class="icon-pin"></i>
-                                              </span>
-                                            </li>
-                                            <li class="customize-text hidden">
-                                              <span class="specs-title">
-                                                Customize text
-                                              </span>
-                                              <input
-                                                type="text"
-                                                placeholder="Lorem Ipsum"
-                                              />
-                                            </li>
-                                          </ul>
-                                          <div class="quantity">
-                                            <span class="fs--20 no-mobile">
-                                              Quantity
-                                            </span>
-                                            <div class="container-input container-input-quantity">
-                                              <button
-                                                type="button"
-                                                class="minus"
-                                                disabled
-                                                hidden
-                                              >
-                                                <i class="icon-minus"></i>
-                                              </button>
-                                              <input
-                                                type="number"
-                                                min="1"
-                                                class="input-number"
-                                                readOnly
-                                                defaultValue={quantity}
-                                                placeholder="Item quantity"
-                                              />
-                                              <button
-                                                type="button"
-                                                class="plus"
-                                                disabled
-                                                hidden
-                                              >
-                                                <i class="icon-plus"></i>
-                                              </button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </li>
-                                );
-                              })} */}
                           </ul>
                           <div class="flex-center mt-lg-105 mt-tablet-55 mt-phone-35">
-                            <AnimateLink
-                              to="/quote-request"
+                            <button
+                              onClick={() => handleAddToCart(data?.lineItems)}
                               className="btn-1 btn-large btn-blue btn-request w-100 manual-modal-close"
                             >
-                              <span>Request For Quote</span>
+                              <span>Order Again</span>
                               <i class="icon-arrow-right-2"></i>
-                            </AnimateLink>
+                            </button>
                           </div>
                         </form>
                         <div class="container-btn-modal-close">

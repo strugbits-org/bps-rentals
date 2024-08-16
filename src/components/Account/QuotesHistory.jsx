@@ -58,6 +58,7 @@ const QuotesHistory = () => {
       };
       const response = await AddProductToCart(productData);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
+      document.body.setAttribute("data-form-cart-state", "success");
       setCookie("cartQuantity", total);
       pageLoadStart();
       router.push("/cart");
@@ -77,7 +78,7 @@ const QuotesHistory = () => {
 
   return (
     <>
-      <QuoteViewModal data={itemData} />
+      <QuoteViewModal data={itemData} handleAddToCart={handleAddToCart} />
 
       <div className="wrapper-account">
         <h1 className="fs--60 blue-1 split-words" data-aos="d:loop">
@@ -133,16 +134,18 @@ const QuotesHistory = () => {
             })
           )}
         </ul>
-        <button
-          onClick={() => {
-            setPageLimit((prev) => prev + pageSize);
-            updatedWatched();
-          }}
-          className="btn-2-blue mt-lg-65 mt-mobile-45"
-        >
-          <span>Load more</span>
-          <i className="icon-arrow-right-2"></i>
-        </button>
+        {quotesData && quotesData.length > pageLimit && (
+          <button
+            onClick={() => {
+              setPageLimit((prev) => prev + pageSize);
+              updatedWatched();
+            }}
+            className="btn-2-blue mt-lg-65 mt-mobile-45"
+          >
+            <span>Load more</span>
+            <i className="icon-arrow-right-2"></i>
+          </button>
+        )}
       </div>
     </>
   );

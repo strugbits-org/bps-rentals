@@ -38,7 +38,7 @@ const Account = ({ children, footerData, banner }) => {
   const { firstName } = useUserData();
   const pathname = usePathname();
   const router = useRouter();
-  const [cookies, removeCookie] = useCookies([
+  const [cookies, setCookie, removeCookie] = useCookies([
     "authToken",
     "userData",
     "userTokens",
