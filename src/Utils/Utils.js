@@ -150,10 +150,14 @@ export const quoteDateFormatter = (date) => {
   return "";
 };
 export const extractCategoryIds = (selectedCategoryData) => {
-  const parentCollectionId = selectedCategoryData.parentCollection._id;
-  const level2CollectionIds = selectedCategoryData.level2Collections
-    .filter(collection => typeof collection === 'object')
-    .map(collection => collection._id);
+  if (selectedCategoryData.level2Collections) {
+    const parentCollectionId = selectedCategoryData.parentCollection._id;
+    const level2CollectionIds = selectedCategoryData.level2Collections
+      .filter(collection => typeof collection === 'object')
+      .map(collection => collection._id);
 
-  return [parentCollectionId, ...level2CollectionIds];
+    return [parentCollectionId, ...level2CollectionIds];
+  } else {
+    return [selectedCategoryData._id];
+  }
 }
