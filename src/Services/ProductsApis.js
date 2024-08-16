@@ -53,6 +53,40 @@ export const getAllProducts = async ({ category, searchTerm }) => {
     return [];
   }
 };
+export const searchProducts = async (term, location) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "locationFilteredVariant",
+      includeReferencedItems: ["product"],
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+      hasSome: [
+        {
+          key: "location",
+          values: location,
+        }
+      ],
+      contains: ["search", term],
+      limit: 3,
+    });
+
+    if (!response || !response._items) {
+      throw new Error("Response does not contain _items", response);
+    }
+    return response._items.map(x => x.data);
+  } catch (error) {
+    console.error("Error searching products:", error);
+    return [];
+  }
+};
 export const getAllColorsData = async () => {
   try {
     const response = await getDataFetchFunction({
@@ -360,6 +394,7 @@ export const getAllCategoriesData = async () => {
 export const getSavedProductData = async () => {
   try {
     const authToken = await getAuthToken();
+    if (!authToken) return;
     const response = await fetch(`${baseUrl}/api/product/getSavedProducts`, {
       method: "POST",
       headers: {

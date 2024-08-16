@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { saveProduct, unSaveProduct } from "@/Services/ProductsApis";
 import useUserData from "@/Hooks/useUserData";
+import { useCookies } from "react-cookie";
 
 export const SaveProductButton = ({
   productData,
@@ -12,9 +13,10 @@ export const SaveProductButton = ({
   const [error, setError] = useState("");
   const { memberId } = useUserData();
   const productId = productData?._id;
+  const [cookies, setCookie] = useCookies(["authToken"]);
 
   useEffect(() => {
-    if (savedProductsData?.length) {      
+    if (savedProductsData?.length) {
       setProductSaved(
         savedProductsData.some((i) => i?.product?._id === productId)
       );
@@ -64,11 +66,18 @@ export const SaveProductButton = ({
   };
 
   const handleClick = () => {
-    handleProductSaveToggle(productId, !productSaved);
+    const loggedIn = cookies.authToken;
+    if (loggedIn && loggedIn !== "undefined") {
+      handleProductSaveToggle(productId, !productSaved);
+    } else {
+      const submenuLogin = document.querySelector(".submenu-login");
+      submenuLogin.classList.add("active");
+    }
+
   };
 
   const buttonProps = {
-    className: `btn-bookmark aos-animate 
+    className: `btn-bookmark disable-click-outside aos-animate 
     ${error === "" && productSaved ? " productSavedColor" : ""}
     ${error === "saving" && productSaved ? " productSavedColor" : ""}
     ${error === "unsaving" && productSaved ? " productSavedColor" : ""}`,
