@@ -3,15 +3,26 @@ import { useEffect } from "react";
 import { updatedWatched } from "@/Utils/AnimationFunctions";
 import { useRouter } from "next/navigation";
 
-const Modal = ({ buttonLabel, message, setModalStatus, redirectUrl }) => {
+const Modal = ({
+  buttonLabel,
+  message,
+  setModalStatus,
+  modalStatus,
+  redirectUrl,
+}) => {
   const router = useRouter();
   function closeModal() {
     document.body.setAttribute("data-form-cart-state", "");
-    setModalStatus(false);
+    setModalStatus({
+      success: false,
+      error: false,
+    });
+
     if (redirectUrl) {
       router.push(redirectUrl);
     }
   }
+  console.log(modalStatus, "modalStatus from modal");
 
   useEffect(() => {
     updatedWatched();
@@ -53,7 +64,12 @@ const Modal = ({ buttonLabel, message, setModalStatus, redirectUrl }) => {
                             data-close-feedback
                             data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                           >
-                            <span>{buttonLabel || "Try Again!"}</span>
+                            {modalStatus.error && (
+                              <span>{buttonLabel || "Try Again!"}</span>
+                            )}
+                            {modalStatus.success && (
+                              <span>{buttonLabel || "Ok"}</span>
+                            )}
                           </button>
                         </div>
                       )}

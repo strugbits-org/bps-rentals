@@ -3,10 +3,8 @@ import { useState } from "react";
 
 const ForgotPassword = ({
   forgotPasswordModalContent,
-  successMessageVisible,
-  setSuccessMessageVisible,
-  setErrorMessageVisible,
   setMessage,
+  setModalState,
 }) => {
   const [isDisabled, setDisabled] = useState(false);
   const [formData, setFormData] = useState({
@@ -14,27 +12,27 @@ const ForgotPassword = ({
   });
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     setDisabled(true);
     try {
-      e.preventDefault();
       setMessage("");
       const response = await confirmEmail({ email: formData?.email });
+
       if (response?.error) {
         setMessage(response.message);
-        setErrorMessageVisible(true);
+        setModalState({ success: false, error: true });
         return;
       }
 
       setMessage("Reset password link has been sent to your email");
-      setSuccessMessageVisible(true);
-      // setRedirection("/");
+      setModalState({ success: true, error: false });
+
       setFormData({
         email: "",
-        password: "",
       });
     } catch (error) {
-      console.log("Error during confirm email:", error);
-      setErrorMessageVisible(true);
+      console.error("Error during confirm email:", error);
+      setModalState({ success: false, error: true });
       setMessage(error?.message);
     } finally {
       setDisabled(false);

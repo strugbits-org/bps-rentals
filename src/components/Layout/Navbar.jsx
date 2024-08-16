@@ -31,14 +31,16 @@ const Navbar = ({
   searchPagesData,
 }) => {
   const [cookies, setCookie] = useCookies(["authToken", "cartQuantity"]);
+  const router = useRouter();
+  const path = usePathname();
 
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [toggleModal, setToggleModal] = useState("");
   const [cartQuantity, setCartQuantity] = useState();
   const [message, setMessage] = useState("Message");
-  const router = useRouter();
-  const path = usePathname();
+  const [modalState, setModalState] = useState({
+    success: false,
+    error: false,
+  });
 
   const checkUser = () => {
     if (path === "/my-account") return;
@@ -79,10 +81,11 @@ const Navbar = ({
 
   return (
     <>
-      {errorMessageVisible && (
+      {(modalState.error || modalState.success) && (
         <Modal
           message={message}
-          setModalStatus={setErrorMessageVisible}
+          setModalStatus={setModalState}
+          modalStatus={modalState}
         />
       )}
       <div className="cursor-wrapper" id="wrapper-cursor">
@@ -374,25 +377,19 @@ const Navbar = ({
                     <div className="wrapper-form mt-lg-65 mt-mobile-35">
                       <Login
                         loginModalContent={loginModalContent}
-                        successMessageVisible={successMessageVisible}
-                        setSuccessMessageVisible={setSuccessMessageVisible}
-                        setErrorMessageVisible={setErrorMessageVisible}
                         setMessage={setMessage}
                         setToggleModal={setToggleModal}
+                        setModalState={setModalState}
                       />
                       <CreateAccount
                         createAccountModalContent={createAccountModalContent}
-                        successMessageVisible={successMessageVisible}
-                        setSuccessMessageVisible={setSuccessMessageVisible}
-                        setErrorMessageVisible={setErrorMessageVisible}
                         setMessage={setMessage}
+                        setModalState={setModalState}
                       />
                       <ForgotPassword
                         forgotPasswordModalContent={forgotPasswordModalContent}
-                        successMessageVisible={successMessageVisible}
-                        setSuccessMessageVisible={setSuccessMessageVisible}
-                        setErrorMessageVisible={setErrorMessageVisible}
                         setMessage={setMessage}
+                        setModalState={setModalState}
                       />
                     </div>
                   </div>

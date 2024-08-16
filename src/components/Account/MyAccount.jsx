@@ -21,9 +21,7 @@ const MyAccount = ({ myAccountPageContent }) => {
   const [cookies, setCookie] = useCookies(["authToken", "userData"]);
 
   const { firstName, lastName, email, phone } = useUserData();
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false);
+  const [message, setMessage] = useState(null);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -33,6 +31,10 @@ const MyAccount = ({ myAccountPageContent }) => {
     firstName: "",
     lastName: "",
     phone: "",
+  });
+  const [modalState, setModalState] = useState({
+    success: false,
+    error: false,
   });
 
   const handleChange = (e) => {
@@ -47,11 +49,11 @@ const MyAccount = ({ myAccountPageContent }) => {
     try {
       const response = await updateProfile(formData);
       if (response?.error) {
-        setErrorMessage(response.message);
-        setErrorMessageVisible(true);
+        setMessage(response.message);
+        setModalState({ success: false, error: true });
         return;
       }
-      setSuccessMessageVisible(true);
+      setModalState({ success: true, error: false });
 
       const userData = JSON.stringify(response.updatedMember);
 
@@ -61,8 +63,9 @@ const MyAccount = ({ myAccountPageContent }) => {
       });
       setInitialData(formData);
     } catch (error) {
-      setErrorMessage("An error occurred. Please try again.");
+      setMessage("An error occurred. Please try again.");
       console.error("Error updating profile", error);
+      setModalState({ success: false, error: true });
     }
   };
 
@@ -86,19 +89,20 @@ const MyAccount = ({ myAccountPageContent }) => {
   }, [firstName, lastName, phone]);
 
   useEffect(() => {
-    if (successMessageVisible) {
+    if (modalState.success) {
       const timer = setTimeout(() => {
-        setSuccessMessageVisible(false);
+        setModalState({ success: false, error: false });
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [successMessageVisible]);
+  }, [modalState]);
   return (
     <>
-      {errorMessageVisible && (
+      {modalState.error && (
         <Modal
-          message={errorMessage}
-          setModalStatus={setErrorMessageVisible}
+          message={message}
+          setModalStatus={setModalState}
+          modalStatus={modalState}
         />
       )}
 
@@ -144,7 +148,7 @@ const MyAccount = ({ myAccountPageContent }) => {
           <div
             className="container-account"
             // data-form-container
-            data-form-state={successMessageVisible ? "success" : ""}
+            data-form-state={modalState.success ? "success" : ""}
           >
             <form
               className="form-account form-my-account"

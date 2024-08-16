@@ -9,10 +9,8 @@ import { useCookies } from "react-cookie";
 
 const CreateAccount = ({
   createAccountModalContent,
-  successMessageVisible,
-  setSuccessMessageVisible,
-  setErrorMessageVisible,
   setMessage,
+  setModalState,
 }) => {
   const router = useRouter();
 
@@ -37,8 +35,8 @@ const CreateAccount = ({
     e.preventDefault();
     if (submittingForm) return;
     setSubmittingForm(true);
-    setErrorMessageVisible(true);
-    setSuccessMessageVisible(false);
+    setModalState({ success: true, error: false });
+
     const submenuLogin = document.querySelector(".submenu-login");
     try {
       setMessage("Please wait, we're Creating your Account");
@@ -52,16 +50,15 @@ const CreateAccount = ({
       };
 
       const response = await signUpUser(userData);
-
       if (response.error) {
         setMessage(response.message);
-        setErrorMessageVisible(true);
+        setModalState({ success: false, error: true });
         return;
       }
 
       if (!response.error) {
-        setSuccessMessageVisible(true);
-        setErrorMessageVisible(false);
+        setModalState({ success: true, error: false });
+
         setFormData({
           first_name: "",
           last_name: "",
@@ -87,8 +84,6 @@ const CreateAccount = ({
         expires: new Date("2099-01-01"),
       });
 
-      console.log("Auth Token:", authToken);
-
       if (authToken) {
         pageLoadStart();
         submenuLogin.classList.remove("active");
@@ -97,10 +92,8 @@ const CreateAccount = ({
 
       return response;
     } catch (error) {
-      console.error("Error:", error);
       setMessage("Something Went Wrong");
-      setSuccessMessageVisible(false);
-      setErrorMessageVisible(true);
+      setModalState({ success: false, error: true });
     } finally {
       setTimeout(() => {
         setSubmittingForm(false);
@@ -108,19 +101,19 @@ const CreateAccount = ({
     }
   };
 
-  useEffect(() => {
-    if (successMessageVisible) {
-      const timer = setTimeout(() => {
-        setSuccessMessageVisible(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [successMessageVisible]);
+  // useEffect(() => {
+  //   if (successMessageVisible) {
+  //     const timer = setTimeout(() => {
+  //       setSuccessMessageVisible(false);
+  //     }, 3000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [successMessageVisible]);
   return (
     <div className="container-create-account d-none">
       <div
         className="container-account"
-        data-form-state={successMessageVisible ? "success" : ""}
+        // data-form-state={successMessageVisible ? "success" : ""}
       >
         <form
           className="form-account form-create-account "
