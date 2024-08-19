@@ -3,8 +3,7 @@ import AnimateLink from "../Common/AnimateLink";
 import React, { useEffect, useState } from "react";
 import { SaveProductButton } from "../Common/SaveProductButton";
 import { compareArray } from "@/Utils/Utils";
-import { decryptField } from "@/Utils/encrypt";
-import useUserData from "@/Hooks/useUserData";
+import { decryptField } from "@/Utils/Encrypt";
 
 const ProductCard = ({
   productData,
@@ -14,15 +13,15 @@ const ProductCard = ({
   setSavedProductsData,
   lastActiveColor,
   filteredProducts = [],
-  bestSeller = []
-}) => {
+  bestSeller = [],
+  role
+}) => {  
   const { product, variantData } = productData;
   const categories = productData?.subCategoryData || [];
 
   const [filteredVariants, setFilteredVariants] = useState(variantData);
   const [activeVariant, setActiveVariant] = useState(variantData[0]);
   const [isBestSeller, setIsBestSeller] = useState(false);
-  const { role } = useUserData();
 
   const handleFilteredData = () => {
     setFilteredVariants(variantData);

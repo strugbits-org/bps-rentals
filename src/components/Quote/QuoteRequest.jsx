@@ -390,7 +390,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
                       />
                     </div>
                     <div className="divisor"></div>
-
+                    <span class="divisor-title fs--40 fw-600 d-block text-center w-100 pb-lg-40 pb-mobile-30">Ordered by</span>
                     <div className="container-input col-lg-6">
                       <label htmlFor="quote-name">
                         {" "}

@@ -27,7 +27,7 @@ import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
 import useUserData from "@/Hooks/useUserData";
-import { decryptField } from "@/Utils/encrypt";
+import { decryptField } from "@/Utils/Encrypt";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -57,7 +57,7 @@ const ProductPostPage = ({
   const [buttonLabel, setButtonLabel] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(1);
-  const { role } = useUserData();
+  const { role, memberId } = useUserData();
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
       (variant) => variant.colorVariation === selectedVariantData.variantId

@@ -14,7 +14,7 @@ export const encryptField = (value) => {
     return value;
 };
 
-export const decryptField = (value) => {    
+export const decryptField = (value) => {
     if (typeof value === 'string') {
         const [ivString, encryptedData] = value.split(':');
         const iv = Buffer.from(ivString, 'hex');

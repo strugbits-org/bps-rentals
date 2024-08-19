@@ -10,7 +10,7 @@ import { AddProductToCart } from "@/Services/CartApis";
 import { useCookies } from "react-cookie";
 import Modal from "./Modal";
 import useUserData from "@/Hooks/useUserData";
-import { decryptField } from "@/Utils/encrypt";
+import { decryptField } from "@/Utils/Encrypt";
 
 const CartModal = ({
   productData,

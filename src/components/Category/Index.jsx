@@ -11,6 +11,8 @@ import { useCookies } from "react-cookie";
 import CartModal from "../Common/Modals/CartModal";
 import { Banner } from "./Banner";
 import { compareArray, shuffleArray } from "@/Utils/Utils";
+import { getRole } from "@/Utils/ServerActions";
+import useUserData from "@/Hooks/useUserData";
 
 const CategoryPage = ({
   pageContent,
@@ -41,6 +43,8 @@ const CategoryPage = ({
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [productFilteredVariantData, setProductFilteredVariantData] =
     useState();
+  const { memberId } = useUserData();
+  const [role, setRole] = useState();
 
   const handleFilterChange = async ({ categories = [], colors = [] }) => {
     try {
@@ -115,48 +119,52 @@ const CategoryPage = ({
   };
 
   const setInitialValues = async () => {
-    const categoryId =
-      selectedCategoryData?.parentCollection?._id ||
-      selectedCategoryData?._id ||
-      "00000000-000000-000000-000000000001";
+    try {
+      const categoryId =
+        selectedCategoryData?.parentCollection?._id ||
+        selectedCategoryData?._id ||
+        "00000000-000000-000000-000000000001";
 
-    // set category filters
-    if (
-      selectedCategoryData &&
-      selectedCategoryData.level2Collections !== undefined
-    ) {
-      const categories = selectedCategoryData.level2Collections
-        .filter((x) => x._id)
-        .map((x) => ({
-          ...x,
-          checked: false,
-          label: x.name,
-        }));
-      setFilterCategories(categories);
-    }
-
-    // set filter colors
-    if (colorsData) {
-      const filteredColor = colorsData.find((x) => x.category === categoryId);
-      if (filteredColor) {
-        const colors = filteredColor.colors.map((x) => {
-          return { label: x, checked: false };
-        });
-        setFilterColors(colors);
+      // set category filters
+      if (
+        selectedCategoryData &&
+        selectedCategoryData.level2Collections !== undefined
+      ) {
+        const categories = selectedCategoryData.level2Collections
+          .filter((x) => x._id)
+          .map((x) => ({
+            ...x,
+            checked: false,
+            label: x.name,
+          }));
+        setFilterCategories(categories);
       }
+
+      // set filter colors
+      if (colorsData) {
+        const filteredColor = colorsData.find((x) => x.category === categoryId);
+        if (filteredColor) {
+          const colors = filteredColor.colors.map((x) => {
+            return { label: x, checked: false };
+          });
+          setFilterColors(colors);
+        }
+      }
+
+      const products = productsData.filter((product) =>
+        product.location.some((x) => x === cookies.location)
+      );
+      setFilteredProducts(products);
+
+      setTimeout(markPageLoaded, 500);
+      setTimeout(setEnableFilterTrigger(true), 500);
+
+      const savedProducts = await getSavedProductData();
+      setSavedProductsData(savedProducts);
+
+    } catch (error) {
+      console.log("something went wrong", error);
     }
-
-    const products = productsData.filter((product) =>
-      product.location.some((x) => x === cookies.location)
-    );
-    setFilteredProducts(products);
-
-    setTimeout(markPageLoaded, 500);
-    setTimeout(setEnableFilterTrigger(true), 500);
-
-    const savedProducts = await getSavedProductData();
-    setSavedProductsData(savedProducts);
-
   };
   useEffect(() => {
     setFilterLocations(
@@ -172,6 +180,15 @@ const CategoryPage = ({
   useEffect(() => {
     setShuffledBanners(shuffleArray([...bannersData]));
   }, [bannersData]);
+
+  useEffect(() => {
+    if (memberId) {
+      getRole(memberId).then(role => {
+        setRole(role);
+      });
+    }
+  }, [memberId]);
+  
 
   useEffect(() => {
     setInitialValues();
@@ -261,6 +278,7 @@ const CategoryPage = ({
         bestSeller={bestSeller}
         savedProductsData={savedProductsData}
         setSavedProductsData={setSavedProductsData}
+        role={role}
       />
       <section className="section-category-content section-category-fixed-pin">
         <div className="container-fluid">
@@ -387,6 +405,7 @@ const CategoryPage = ({
                             lastActiveColor={lastActiveColor}
                             savedProductsData={savedProductsData}
                             setSavedProductsData={setSavedProductsData}
+                            role={role}
                           />
                         </li>
                         {(index + 1) % 6 === 0 && (
