@@ -13,7 +13,7 @@ export const POST = async (req) => {
 
     const body = await req.json();
     const { firstName, lastName, phone } = body;
-    const { memberId } = authenticatedUserData;
+    const { memberId, role } = authenticatedUserData;
 
     const wixClient = await authWixClient();
 
@@ -35,6 +35,8 @@ export const POST = async (req) => {
       firstName: response.contact.firstName,
       lastName: response.contact.lastName,
       mainPhone: response.contact.phones[0],
+      memberId,
+      role
     };
 
     return NextResponse.json(

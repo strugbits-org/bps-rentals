@@ -122,7 +122,7 @@ const Login = ({
               </div>
               <span
                 onClick={() => setToggleModal("forgot-password")}
-                className="btn-forgot-password password-link"
+                className="cursor-pointer btn-forgot-password password-link"
               >
                 <span>
                   {" "}
