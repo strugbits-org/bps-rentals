@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
 import { generateImageURL } from "@/Utils/GenerateImageURL";
 import {
   calculateTotalCartQuantity,
@@ -64,6 +64,10 @@ const CartPage = ({ cartData }) => {
 
   const removeProduct = async (id) => {
     try {
+      setCartItems((prevCartItems) =>
+        prevCartItems.filter((item) => item._id !== id)
+      );
+      updatedWatched();
       const response = await removeProductFromCart([id]);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
 
@@ -78,7 +82,7 @@ const CartPage = ({ cartData }) => {
     if (cartData) {
       setCartItems(cartData);
       const total = calculateTotalCartQuantity(cartData);
-      setCookie("cartQuantity", total > 0 ? String(total) : "99+");
+      setCookie("cartQuantity", total > 0 ? String(total) : "0");
     }
     setTimeout(() => {
       markPageLoaded();

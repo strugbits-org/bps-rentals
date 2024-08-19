@@ -84,8 +84,12 @@ export const MarketBestSeller = ({ products, bestSeller }) => {
     };
 
     const fetchSavedProducts = async () => {
-        const savedProducts = await getSavedProductData();
-        setSavedProductsData(savedProducts);
+        try {
+          const savedProducts = await getSavedProductData();
+          setSavedProductsData(savedProducts);
+        } catch (error) {
+          console.log("Error while fetching Saved Product", error);
+        }
     }
 
     useEffect(() => {

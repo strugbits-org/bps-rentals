@@ -21,6 +21,7 @@ const MyAccount = ({ myAccountPageContent }) => {
   const [cookies, setCookie] = useCookies(["authToken", "userData"]);
 
   const { firstName, lastName, email, phone } = useUserData();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [message, setMessage] = useState(null);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -36,73 +37,77 @@ const MyAccount = ({ myAccountPageContent }) => {
     success: false,
     error: false,
   });
-
-const handleChange = (e) => {
-  const { name, value } = e.target;
-  setFormData({
-    ...formData,
-    [name]: value,
-  });
-};
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await updateProfile(formData);
-    if (response?.error) {
-      setMessage(response.message);
-      setModalState({ success: false, error: true });
-      return;
-    }
-    setModalState({ success: true, error: false });
-
-    const userData = JSON.stringify(response.updatedMember);
-
-    setCookie("userData", userData, {
-      path: "/",
-      expires: new Date("2099-01-01"),
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
     });
-    setInitialData(formData);
-  } catch (error) {
-    setMessage("An error occurred. Please try again.");
-    console.error("Error updating profile", error);
-    setModalState({ success: false, error: true });
-  }
-};
-
-const discardChanges = (e) => {
-  e.preventDefault();
-  pageLoadStart();
-  setTimeout(() => {
-    setFormData(initialData);
-    pageLoadEnd();
-  }, 900);
-};
-
-useEffect(() => {
-  const userData = {
-    firstName: firstName || "",
-    lastName: lastName || "",
-    phone: phone || "",
   };
-  setFormData(userData);
-  setInitialData(userData);
-}, [firstName, lastName, phone]);
 
-useEffect(() => {
-  if (modalState.success) {
-    const timer = setTimeout(() => {
-      setModalState({ success: false, error: false });
-    }, 3000);
-    return () => clearTimeout(timer);
-  }
-}, [modalState]);
-useEffect(() => {
-  setModalState({
-    success: false,
-    error: false,
-  });
-}, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (isButtonDisabled) return;
+    setIsButtonDisabled(true);
+    try {
+      const response = await updateProfile(formData);
+      if (response?.error) {
+        setMessage(response.message);
+        setModalState({ success: false, error: true });
+        return;
+      }
+      setModalState({ success: true, error: false });
+
+      const userData = JSON.stringify(response.updatedMember);
+
+      setCookie("userData", userData, {
+        path: "/",
+        expires: new Date("2099-01-01"),
+      });
+      setInitialData(formData);
+    } catch (error) {
+      setMessage("An error occurred. Please try again.");
+      console.error("Error updating profile", error);
+      setModalState({ success: false, error: true });
+    } finally {
+      setIsButtonDisabled(false);
+    }
+  };
+
+  const discardChanges = (e) => {
+    e.preventDefault();
+    pageLoadStart();
+    setTimeout(() => {
+      setFormData(initialData);
+      pageLoadEnd();
+    }, 900);
+  };
+
+  useEffect(() => {
+    const userData = {
+      firstName: firstName || "",
+      lastName: lastName || "",
+      phone: phone || "",
+    };
+    setFormData(userData);
+    setInitialData(userData);
+  }, [firstName, lastName, phone]);
+
+  useEffect(() => {
+    if (modalState.success) {
+      const timer = setTimeout(() => {
+        setModalState({ success: false, error: false });
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [modalState]);
+  useEffect(() => {
+    setModalState({
+      success: false,
+      error: false,
+    });
+  }, []);
   return (
     <>
       {modalState.error && (
@@ -237,7 +242,11 @@ useEffect(() => {
                 </button>
               </div>
               <div className="container-submit flex-mobile-center order-mobile-1">
-                <button type="submit" className="bt-submit btn-2-blue w-lg-100">
+                <button
+                  type="submit"
+                  className="bt-submit btn-2-blue w-lg-100"
+                  disabled={isButtonDisabled}
+                >
                   <span>
                     {myAccountPageContent &&
                       myAccountPageContent.updateButtonLabel}
