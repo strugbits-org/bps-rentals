@@ -14,7 +14,7 @@ const Login = ({
   setModalState,
 }) => {
   const router = useRouter();
-  const [cookies, setCookie] = useCookies(["authToken", "userData"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["authToken", "userData"]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,6 +24,7 @@ const Login = ({
 
   const LoginUser = async (e) => {
     e.preventDefault();
+    if (isButtonDisabled) return;
     setIsButtonDisabled(true);
     const submenuLogin = document.querySelector(".submenu-login");
     const button = document.querySelector(".new-login-button");
@@ -54,6 +55,7 @@ const Login = ({
           path: "/",
           expires: new Date("2099-01-01"),
         });
+        removeCookie("cartId", { path: "/" });
         if (authToken) {
           pageLoadStart();
           submenuLogin.classList.remove("active");
@@ -122,7 +124,7 @@ const Login = ({
               </div>
               <span
                 onClick={() => setToggleModal("forgot-password")}
-                className="btn-forgot-password password-link"
+                className="cursor-pointer btn-forgot-password password-link"
               >
                 <span>
                   {" "}
@@ -138,7 +140,9 @@ const Login = ({
                 disabled={isButtonDisabled}
               >
                 <span>
-                  {loginModalContent && loginModalContent.signInButtonLabel}
+                  {loginModalContent && !isButtonDisabled
+                    ? loginModalContent.signInButtonLabel
+                    : "Please Wait!"}
                 </span>
               </button>
             </div>
@@ -151,17 +155,6 @@ const Login = ({
           textClass="btn-underlined-blue-1"
           data={loginModalContent.disclaimer}
         />
-
-        {/* <p className="text-agree font-2 fs--16 blue-1 lh-140 mt-lg-25 mt-mobile-30">
-          By continuing, you are agreeing with
-          <AnimateLink to="/terms-of-use" className="btn-underlined-blue-1">
-            <span>Blueprint Studios Terms & Conditions</span>
-          </AnimateLink>
-          and
-          <AnimateLink to="/privacy-policy" className="btn-underlined-blue-1">
-            <span>Privacy Policy.</span>
-          </AnimateLink>
-        </p> */}
       </div>
       <div className="container-btn-create-account mt-auto d-flex-center pt-40">
         <span className="d-block fs-lg-35 fs-mobile-30 fw-600 text-center">

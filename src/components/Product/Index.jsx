@@ -27,7 +27,7 @@ import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
 import useUserData from "@/Hooks/useUserData";
-import { decryptField } from "@/Utils/encrypt";
+import { decryptField } from "@/Utils/Encrypt";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -207,8 +207,12 @@ const ProductPostPage = ({
   );
 
   const fetchSavedProducts = async () => {
-    const savedProducts = await getSavedProductData();
-    setSavedProductsData(savedProducts);
+    try {
+      const savedProducts = await getSavedProductData();
+      setSavedProductsData(savedProducts);
+    } catch (error) {
+      console.log("Error while fetching Saved Product", error);
+    }
   };
 
   useEffect(() => {

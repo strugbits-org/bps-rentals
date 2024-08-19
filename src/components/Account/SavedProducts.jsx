@@ -91,16 +91,24 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
   };
 
   const fetchSavedProducts = async () => {
-    const savedProducts = await getSavedProductData();
-    const items = savedProducts.map((product) => {
-      if (!product._id) return;
-      const productId = product.product._id;
-      product.productSnapshotData = productsVariantImagesData.filter(x => x.productId === productId);
-      product.productVariantsData = productsVariantsData.filter(x => x.productId === productId);
-      return product;
-    });
-    setSavedProductsData(items);
-    setTimeout(markPageLoaded, 200);
+    try {
+      const savedProducts = await getSavedProductData();
+      const items = savedProducts.map((product) => {
+        if (!product._id) return;
+        const productId = product.product._id;
+        product.productSnapshotData = productsVariantImagesData.filter(
+          (x) => x.productId === productId
+        );
+        product.productVariantsData = productsVariantsData.filter(
+          (x) => x.productId === productId
+        );
+        return product;
+      });
+      setSavedProductsData(items);
+      setTimeout(markPageLoaded, 200);
+    } catch (error) {
+      console.log("Error while fetching Saved Product", error);
+    }
   }
   useEffect(() => {
     fetchSavedProducts();

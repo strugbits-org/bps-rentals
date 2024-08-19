@@ -3,7 +3,7 @@ import AnimateLink from "../Common/AnimateLink";
 import React, { useEffect, useState } from "react";
 import { SaveProductButton } from "../Common/SaveProductButton";
 import { compareArray } from "@/Utils/Utils";
-import { decryptField } from "@/Utils/encrypt";
+import { decryptField } from "@/Utils/Encrypt";
 import useUserData from "@/Hooks/useUserData";
 
 const ProductCard = ({

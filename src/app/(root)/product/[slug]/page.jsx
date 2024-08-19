@@ -16,7 +16,7 @@ export const generateStaticParams = async () => {
     const paths = await fetchAllProductsPaths() || [];
     return paths;
   } catch (error) {
-    console.log("Error:", error);
+    console.error("Error:", error);
   }
 }
 

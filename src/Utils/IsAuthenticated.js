@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 
 import { authWixClient, createWixClient } from "./CreateWixClient";
+import { encryptField } from "./Encrypt";
 
 const unAuthCollections = [
   "RentalsHomeNewArrivals",
@@ -79,12 +80,19 @@ export const isAuthenticated = async (token) => {
       .eq("userEmail", decoded.email)
       .find();
 
+    const id = privateMemberData._items[0].data._id;
+    const memberBadges = await wixClient.badges.listBadgesPerMember([id]);
+    const ADMIN_BADGE_ID = process.env.ADMIN_BADGE_ID;
+    const isAdmin = memberBadges?.memberBadgeIds[0]?.badgeIds?.includes(ADMIN_BADGE_ID);
+    const role = isAdmin ? "admin" : "user";
+
     const loggedInUserData = {
       ...memberData._items[0].data,
-      memberId: privateMemberData._items[0].data._id,
+      memberId: id,
       firstName: privateMemberData._items[0].data.firstName,
       lastName: privateMemberData._items[0].data.lastName,
       phone: privateMemberData._items[0].data.mainPhone,
+      role: encryptField(role),
     };
 
     if (memberData._items.length === 0) {

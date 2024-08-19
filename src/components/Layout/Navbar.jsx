@@ -69,12 +69,13 @@ const Navbar = ({
 
   useEffect(() => {
     getCartTotalQuantity();
-  }, []);
+  }, [cookies]);
+
   useEffect(() => {
     const quantity =
-      cookies?.cartQuantity !== undefined && cookies.authToken !== undefined
+      cookies?.cartQuantity !== undefined
         ? String(cookies.cartQuantity)
-        : "99+";
+        : "0";
 
     setCartQuantity(quantity);
   }, [cookies]);

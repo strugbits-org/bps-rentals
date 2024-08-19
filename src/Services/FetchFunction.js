@@ -1,7 +1,7 @@
 import { createWixClient } from "@/Utils/CreateWixClient";
 import { apiAuth } from "@/Utils/IsAuthenticated";
 import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
-import { encryptPriceFields } from "@/Utils/encrypt";
+import { encryptPriceFields } from "@/Utils/Encrypt";
 
 // Query data items from Wix data collections
 const getDataFetchFunction = async (payload) => {

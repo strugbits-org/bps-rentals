@@ -193,7 +193,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                     <div className={`result-rental ${filteredProducts.length === 0 ? "hidden" : ""}`}>
                       <div className="container-title-results">
                         <h2 className="title-results split-chars" data-aos>
-                          {searchSectionDetails?.rentalTitle} <span>{`"${searchTerm}"`}</span>
+                          {searchSectionDetails?.rentalTitle} <span>{` "${searchTerm}"`}</span>
                         </h2>
                         <AnimateLink
                           to={`/search/${searchTerm}`}
@@ -291,7 +291,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                     <div className={`result-portfolio mt-lg-60 mt-mobile-40 ${filteredPortfolios.length === 0 ? "hidden" : ""}`}>
                       <div className="container-title-results">
                         <h2 className="title-results split-chars" data-aos>
-                          {searchSectionDetails?.portfolioTitle} <span>{`"${searchTerm}"`}</span>
+                          {searchSectionDetails?.portfolioTitle} <span>{` "${searchTerm}"`}</span>
                         </h2>
                         <AnimateLink
                           to={`${CORPORATE_URL}/portfolio`}
@@ -394,7 +394,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                   <div className={`result-blog ${filteredBlogs.length === 0 ? "hidden" : ""}`}>
                     <div className="container-title-results">
                       <h2 className="title-results split-chars" data-aos>
-                        {searchSectionDetails?.blogTitle} <span>{`"${searchTerm}"`}</span>
+                        {searchSectionDetails?.blogTitle} <span>{` "${searchTerm}"`}</span>
                       </h2>
                       <AnimateLink
                         to={`${CORPORATE_URL}/blog`}
@@ -468,7 +468,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                   <div className={`result-order-pages ${filteredPages.length === 0 ? "hidden" : ""}`}>
                     <div className="container-title-results">
                       <h2 className="title-results split-chars" data-aos>
-                        {searchSectionDetails?.otherPagesTitle} <span>{`"${searchTerm}"`}</span>
+                        {searchSectionDetails?.otherPagesTitle} <span>{` "${searchTerm}"`}</span>
                       </h2>
                     </div>
                     <ul
@@ -476,18 +476,18 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                       data-aos
                     >
                       {filteredPages.map((page, index) => {
+                        const { path, title, description } = page;
+
                         return (
                           <li key={index} className="grid-item">
                             <AnimateLink
                               key={index}
-                              to="/"
+                              to={`${process.env.CORPORATE_URL}${path}`}
                               data-menu-close
                               className="link-order-pages"
                             >
-                              <h3 className="title-order-pages">{page.title}</h3>
-                              <p className="text-order-pages">
-                                {page.description}
-                              </p>
+                              <h3 className="title-order-pages">{title}</h3>
+                              <p className="text-order-pages">{description}</p>
                             </AnimateLink>
                           </li>
                         );

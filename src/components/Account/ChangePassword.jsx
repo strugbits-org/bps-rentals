@@ -7,6 +7,7 @@ import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import { changePassword } from "@/Services/AuthApis";
 
 const ChangePassword = ({ changePasswordPageContent }) => {
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState({
     oldPassword: false,
@@ -30,8 +31,9 @@ const ChangePassword = ({ changePasswordPageContent }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isButtonDisabled) return;
     setMessage("");
-
+    setIsButtonDisabled(true);
     try {
       if (formData.newPassword !== formData.confirmNewPassword) {
         setMessage("PASSWORDS SHOULD BE MATCHED.");
@@ -53,6 +55,8 @@ const ChangePassword = ({ changePasswordPageContent }) => {
     } catch (err) {
       setMessage("An error occurred. Please try again.");
       setModalState({ success: false, error: true });
+    } finally {
+      setIsButtonDisabled(false);
     }
   };
 
@@ -150,66 +154,17 @@ const ChangePassword = ({ changePasswordPageContent }) => {
                   </div>
                 </div>
               ))}
-              {/* <div class="container-input container-input-password col-lg-12">
-              <label htmlFor="login-password-old">
-                {" "}
-                {changePasswordPageContent &&
-                  changePasswordPageContent.enterYourPasswordFieldLabel}
-              </label>
-              <input
-                id="login-password-old"
-                class="password"
-                name="password"
-                type="password"
-                placeholder="* * * * * *"
-                required
-              />
-              <div class="toggle-password">
-                <i class="icon-password"></i>
-                <i class="icon-password-hide"></i>
-              </div>
-            </div>
-            <div class="container-input container-input-password col-lg-12">
-              <label htmlFor="login-password-new-1">
-                {changePasswordPageContent &&
-                  changePasswordPageContent.enterYourNewPasswordFieldLabel}
-              </label>
-              <input
-                id="login-password-new-1"
-                class="password"
-                name="password"
-                type="password"
-                placeholder="* * * * * *"
-                required
-              />
-              <div class="toggle-password">
-                <i class="icon-password"></i>
-                <i class="icon-password-hide"></i>
-              </div>
-            </div>
-            <div class="container-input container-input-password col-lg-12">
-              <label htmlFor="login-password-new-2">
-                {changePasswordPageContent &&
-                  changePasswordPageContent.confirmYourNewPasswordFieldLabel}
-              </label>
-              <input
-                id="login-password-new-2"
-                class="password"
-                name="password"
-                type="password"
-                placeholder="* * * * * *"
-                required
-              />
-              <div class="toggle-password">
-                <i class="icon-password"></i>
-                <i class="icon-password-hide"></i>
-              </div>
-            </div> */}
+
               <div class="container-submit flex-mobile-center col-lg-12 mt-lg-50">
-                <button type="submit" class="btn-2-blue">
+                <button
+                  type="submit"
+                  class="btn-2-blue"
+                  disabled={isButtonDisabled}
+                >
                   <span class="submit-text">
-                    {changePasswordPageContent &&
-                      changePasswordPageContent.resetPasswordButtonLabel}
+                    {changePasswordPageContent && !isButtonDisabled
+                      ? changePasswordPageContent.resetPasswordButtonLabel
+                      : "Resetting Password..."}
                   </span>
                   <i class="icon-arrow-right-2"></i>
                 </button>

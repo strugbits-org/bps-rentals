@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import { authWixClient, createWixClient } from "@/Utils/CreateWixClient";
+import { authWixClient, cartWixClient, createWixClient } from "@/Utils/CreateWixClient";
+import { encryptField } from "@/Utils/Encrypt";
 
 export const POST = async (req) => {
   try {
@@ -56,11 +57,26 @@ export const POST = async (req) => {
     const memberBadges = await wixClient.badges.listBadgesPerMember([selectedMemberData._id]);
     const ADMIN_BADGE_ID = process.env.ADMIN_BADGE_ID;
     const isAdmin = memberBadges?.memberBadgeIds[0]?.badgeIds?.includes(ADMIN_BADGE_ID);
+    const role = isAdmin ? "admin" : "user";
 
     const memberTokens = await wixClient.auth.getMemberTokensForExternalLogin(
       selectedMemberData._id,
       process.env.CLIENT_API_KEY_WIX
     );
+
+    if (body?.cartId) {
+      const wixClient = await createWixClient();
+      const visitorCart = await wixClient.cart.getCart(body.cartId);
+
+      const cartClient = await cartWixClient(memberTokens);
+      const lineItems = visitorCart.lineItems.map(x => ({
+        catalogReference: x.catalogReference,
+        quantity: x.quantity
+      }));
+      if (lineItems.length !== 0) {
+        await cartClient.currentCart.addToCurrentCart({ lineItems });
+      }
+    }
 
     const finalData = {
       memberId: selectedMemberData._id,
@@ -68,7 +84,7 @@ export const POST = async (req) => {
       firstName: selectedMemberData.firstName,
       lastName: selectedMemberData.lastName,
       mainPhone: selectedMemberData.mainPhone,
-      role: isAdmin ? "admin" : "user",
+      role: encryptField(role),
     };
 
     return NextResponse.json(

@@ -16,7 +16,7 @@ const CreateAccount = ({
 
   const [submittingForm, setSubmittingForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [cookies, setCookie] = useCookies(["authToken", "userData"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["authToken", "userData"]);
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -33,6 +33,8 @@ const CreateAccount = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Called");
+
     if (submittingForm) return;
     setSubmittingForm(true);
     setModalState({ success: true, error: false });
@@ -83,6 +85,7 @@ const CreateAccount = ({
         path: "/",
         expires: new Date("2099-01-01"),
       });
+      removeCookie("cartId", { path: "/" });
 
       if (authToken) {
         pageLoadStart();
@@ -101,20 +104,9 @@ const CreateAccount = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (successMessageVisible) {
-  //     const timer = setTimeout(() => {
-  //       setSuccessMessageVisible(false);
-  //     }, 3000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [successMessageVisible]);
   return (
     <div className="container-create-account d-none">
-      <div
-        className="container-account"
-        // data-form-state={successMessageVisible ? "success" : ""}
-      >
+      <div className="container-account">
         <form
           className="form-account form-create-account "
           onSubmit={handleSubmit}
@@ -205,8 +197,9 @@ const CreateAccount = ({
               className="bt-submit btn-blue w-100 mt-tablet-10 w-mobile-100"
             >
               <span>
-                {createAccountModalContent &&
-                  createAccountModalContent.createAccountButtonLabel}
+                {createAccountModalContent && !submittingForm
+                  ? createAccountModalContent.createAccountButtonLabel
+                  : "Please Wait!"}
               </span>
             </button>
           </div>
@@ -222,16 +215,6 @@ const CreateAccount = ({
         textClass="btn-underlined-white"
         data={createAccountModalContent.disclaimer}
       />
-      {/* <p className="text-agree font-2 fs--16 blue-1 lh-140 mt-lg-25 mt-mobile-20">
-        By continuing, you are agreeing with{" "}
-        <AnimateLink to="/terms-of-use" className="btn-underlined-white">
-          <span>Blueprint Studios Terms & Conditions</span>
-        </AnimateLink>
-        and
-        <AnimateLink to="/privacy-policy" className="btn-underlined-white">
-          <span>Privacy Policy.</span>
-        </AnimateLink>
-      </p> */}
     </div>
   );
 };

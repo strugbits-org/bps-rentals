@@ -1,5 +1,6 @@
 "use server";
-import { getAuthToken, getMemberTokens } from "./GetAuthToken";
+import { AddProductToCartVisitor, getProductsCartVisitor, removeProductFromCartVisitor, updateProductsQuantityCartVisitor } from "./CartApisVisitor";
+import { getAuthToken, getCartId, getMemberTokens } from "./GetAuthToken";
 
 const baseUrl = process.env.BASE_URL;
 
@@ -7,7 +8,13 @@ export const getProductsCart = async () => {
   try {
     const authToken = await getAuthToken();
     const memberTokens = await getMemberTokens();
-    if (!authToken && !memberTokens) return;
+
+    if (!authToken) {
+      const cartId = await getCartId();
+      const response = getProductsCartVisitor(cartId);
+      return response;
+    }
+
     const response = await fetch(`${baseUrl}/api/cart/get`, {
       method: "POST",
       headers: {
@@ -39,6 +46,12 @@ export const AddProductToCart = async (productData) => {
       productData,
     };
 
+    if (!authToken) {
+      const cartId = await getCartId();
+      const response = AddProductToCartVisitor(cartId, productData);
+      return response;
+    }
+
     const response = await fetch(`${baseUrl}/api/cart/add`, {
       method: "POST",
       headers: {
@@ -67,6 +80,12 @@ export const updateProductsQuantityCart = async (lineItems) => {
       lineItems,
     };
 
+    if (!authToken) {
+      const cartId = await getCartId();
+      const response = updateProductsQuantityCartVisitor(cartId, lineItems);
+      return response;
+    }
+
     const response = await fetch(`${baseUrl}/api/cart/updateQuantity`, {
       method: "POST",
       headers: {
@@ -90,6 +109,13 @@ export const removeProductFromCart = async (lineItemIds) => {
   try {
     const authToken = await getAuthToken();
     const memberTokens = await getMemberTokens();
+
+    if (!authToken) {
+      const cartId = await getCartId();
+      const response = removeProductFromCartVisitor(cartId, lineItemIds);
+      return response;
+    }
+
     const payload = {
       memberTokens,
       lineItemIds,
