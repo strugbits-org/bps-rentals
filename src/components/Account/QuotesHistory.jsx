@@ -15,6 +15,7 @@ import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
 import { getCatalogIdBySku } from "@/Services/ProductsApis";
 import Modal from "../Common/Modals/Modal";
+import useUserData from "@/Hooks/useUserData";
 
 const QuotesHistory = () => {
   const [cookies, setCookie] = useCookies(["cartQuantity"]);
@@ -30,7 +31,7 @@ const QuotesHistory = () => {
     success: false,
     error: false,
   });
-
+  const { role } = useUserData();
   const handleAddToCart = async (data) => {
     if (isButtonDisabled) return;
     setIsButtonDisabled(true);
@@ -133,6 +134,10 @@ const QuotesHistory = () => {
           ) : (
             quotesData.slice(0, pageLimit).map((quote, index) => {
               const { data } = quote;
+              const totalPrice = data.lineItems.reduce((total, item) => {
+                return (total + Number(item.price) * item.quantity);
+              }, 0);
+              
               const issueDate = quoteDateFormatter(data.dates.issueDate);
               return (
                 <li key={index} className="list-item">
@@ -141,7 +146,7 @@ const QuotesHistory = () => {
                       <h2 className="name">{data.title}</h2>
                       <div className="date">{issueDate}</div>
                     </div>
-                    <div className="value">$ 45.000</div>
+                    {role && totalPrice && (<div className="value">$ {totalPrice.toLocaleString()}</div>)}
                     <div className="container-btn">
                       <btn-modal-open
                         group="modal-quotes-history"
