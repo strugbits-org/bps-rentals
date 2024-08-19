@@ -262,7 +262,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
                     </div>
                     <div className="divisor"></div>
                     <span className="divisor-title fs--40 fw-600 d-block text-center w-100 pb-40">
-                      Billing details
+                      {quoteRequestPageContent?.billingHeading}
                     </span>
                     <div className="container-input col-lg-4">
                       <label htmlFor="quote-bill-to">
@@ -396,6 +396,9 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
                       />
                     </div>
                     <div className="divisor"></div>
+                    <span className="divisor-title fs--40 fw-600 d-block text-center w-100 pb-40">
+                      {quoteRequestPageContent?.orderedByHeading}
+                    </span>
 
                     <div className="container-input col-lg-6">
                       <label htmlFor="quote-name">

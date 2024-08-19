@@ -101,20 +101,9 @@ const CreateAccount = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (successMessageVisible) {
-  //     const timer = setTimeout(() => {
-  //       setSuccessMessageVisible(false);
-  //     }, 3000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [successMessageVisible]);
   return (
     <div className="container-create-account d-none">
-      <div
-        className="container-account"
-        // data-form-state={successMessageVisible ? "success" : ""}
-      >
+      <div className="container-account">
         <form
           className="form-account form-create-account "
           onSubmit={handleSubmit}
@@ -222,16 +211,6 @@ const CreateAccount = ({
         textClass="btn-underlined-white"
         data={createAccountModalContent.disclaimer}
       />
-      {/* <p className="text-agree font-2 fs--16 blue-1 lh-140 mt-lg-25 mt-mobile-20">
-        By continuing, you are agreeing with{" "}
-        <AnimateLink to="/terms-of-use" className="btn-underlined-white">
-          <span>Blueprint Studios Terms & Conditions</span>
-        </AnimateLink>
-        and
-        <AnimateLink to="/privacy-policy" className="btn-underlined-white">
-          <span>Privacy Policy.</span>
-        </AnimateLink>
-      </p> */}
     </div>
   );
 };

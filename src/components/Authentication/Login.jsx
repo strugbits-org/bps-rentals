@@ -24,6 +24,7 @@ const Login = ({
 
   const LoginUser = async (e) => {
     e.preventDefault();
+    if (isButtonDisabled) return;
     setIsButtonDisabled(true);
     const submenuLogin = document.querySelector(".submenu-login");
     const button = document.querySelector(".new-login-button");
@@ -151,17 +152,6 @@ const Login = ({
           textClass="btn-underlined-blue-1"
           data={loginModalContent.disclaimer}
         />
-
-        {/* <p className="text-agree font-2 fs--16 blue-1 lh-140 mt-lg-25 mt-mobile-30">
-          By continuing, you are agreeing with
-          <AnimateLink to="/terms-of-use" className="btn-underlined-blue-1">
-            <span>Blueprint Studios Terms & Conditions</span>
-          </AnimateLink>
-          and
-          <AnimateLink to="/privacy-policy" className="btn-underlined-blue-1">
-            <span>Privacy Policy.</span>
-          </AnimateLink>
-        </p> */}
       </div>
       <div className="container-btn-create-account mt-auto d-flex-center pt-40">
         <span className="d-block fs-lg-35 fs-mobile-30 fw-600 text-center">

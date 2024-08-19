@@ -2,8 +2,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { resetPassword } from "@/Services/AuthApis";
 import { markPageLoaded, pageLoadStart } from "@/Utils/AnimationFunctions";
+import { resetPassword } from "@/Services/AuthApis";
 import Modal from "../Common/Modals/Modal";
 
 const ResetPassword = () => {
@@ -11,8 +11,8 @@ const ResetPassword = () => {
   const router = useRouter();
   const userId = searchParams.get("reset-id");
 
-  const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [isDisabled, setDisabled] = useState(false);
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -31,6 +31,7 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isDisabled) return;
     setDisabled(true);
 
     const { password, confirmPassword } = formData;
