@@ -14,9 +14,9 @@ import { getBlogsData, getPortfolioData } from "@/Services/SectionsApis";
 export const generateStaticParams = async () => {
   try {
     const paths = await fetchAllProductsPaths() || [];
-    return paths;
+    return paths.slice(0,4);
   } catch (error) {
-    console.log("Error:", error);
+    console.error("Error:", error);
   }
 }
 

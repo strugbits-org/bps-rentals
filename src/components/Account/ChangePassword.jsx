@@ -162,8 +162,9 @@ const ChangePassword = ({ changePasswordPageContent }) => {
                   disabled={isButtonDisabled}
                 >
                   <span class="submit-text">
-                    {changePasswordPageContent &&
-                      changePasswordPageContent.resetPasswordButtonLabel}
+                    {changePasswordPageContent && !isButtonDisabled
+                      ? changePasswordPageContent.resetPasswordButtonLabel
+                      : "Resetting Password..."}
                   </span>
                   <i class="icon-arrow-right-2"></i>
                 </button>

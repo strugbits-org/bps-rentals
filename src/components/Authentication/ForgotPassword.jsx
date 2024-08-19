@@ -76,8 +76,9 @@ const ForgotPassword = ({
                 className="bt-submit btn-blue w-100"
               >
                 <span>
-                  {forgotPasswordModalContent &&
-                    forgotPasswordModalContent.sendButtonLabel}
+                  {forgotPasswordModalContent && !isDisabled
+                    ? forgotPasswordModalContent.sendButtonLabel
+                    : "Sending Email..."}
                 </span>
               </button>
             </div>

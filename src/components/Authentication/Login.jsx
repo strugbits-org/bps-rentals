@@ -140,7 +140,9 @@ const Login = ({
                 disabled={isButtonDisabled}
               >
                 <span>
-                  {loginModalContent && loginModalContent.signInButtonLabel}
+                  {loginModalContent && !isButtonDisabled
+                    ? loginModalContent.signInButtonLabel
+                    : "Please Wait!"}
                 </span>
               </button>
             </div>
