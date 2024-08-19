@@ -39,11 +39,11 @@ export const getAllQuotes = async () => {
       },
       cache: "no-store",
     });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch quotes");
-    }
     const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
 
     return data.data._items;
   } catch (error) {

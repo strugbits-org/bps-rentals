@@ -6,10 +6,11 @@ import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import { createPriceQuote } from "@/Services/QuoteApis";
 import { getProductsCart } from "@/Services/CartApis";
 
-import Modal from "../Common/Modals/Modal";
 import QuoteConfirmedModal from "../Common/Modals/QuoteConfirmedModal";
+import Modal from "../Common/Modals/Modal";
 
 const QuoteRequest = ({ quoteRequestPageContent }) => {
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [cartItems, setCartItems] = useState();
   const [message, setMessage] = useState("");
   const [modalState, setModalState] = useState({
@@ -47,6 +48,9 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isButtonDisabled) return;
+    setIsButtonDisabled(true);
+
     const lineItems = cartItems.map((product, index) => {
       const newUrl = productImageURLForQuote(product.image);
       return {
@@ -105,6 +109,8 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
       setMessage("Error while creating quote");
       setModalState({ success: false, error: true });
       console.error("Error while creating quote:", error);
+    } finally {
+      setIsButtonDisabled(false);
     }
   };
 
@@ -425,10 +431,12 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
                       <button
                         type="submit"
                         className="bt-submit btn-blue btn-large w-100"
+                        disabled={isButtonDisabled}
                       >
                         <span className="submit-text">
-                          {quoteRequestPageContent &&
-                            quoteRequestPageContent.submitButtonLabel}
+                          {quoteRequestPageContent && !isButtonDisabled
+                            ? quoteRequestPageContent.submitButtonLabel
+                            : "Submitting..."}
                         </span>
                         <i className="icon-arrow-right"></i>
                       </button>

@@ -19,7 +19,7 @@ export const GET = async (req) => {
       .find();
 
     if (data._items.length === 0) {
-      return NextResponse.json({ message: "Quote not found" }, { status: 404 });
+      return NextResponse.json({ error: "Quote not found" }, { status: 404 });
     }
 
     return NextResponse.json(

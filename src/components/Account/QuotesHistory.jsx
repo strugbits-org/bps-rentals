@@ -32,6 +32,7 @@ const QuotesHistory = () => {
   });
 
   const handleAddToCart = async (data) => {
+    if (isButtonDisabled) return;
     setIsButtonDisabled(true);
 
     try {
@@ -71,7 +72,7 @@ const QuotesHistory = () => {
       const response = await AddProductToCart(productData);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
 
-      document.body.setAttribute("data-form-cart-state", "success");
+      // document.body.setAttribute("data-form-cart-state", "success");
       setCookie("cartQuantity", total);
       pageLoadStart();
       router.push("/cart");
@@ -79,16 +80,21 @@ const QuotesHistory = () => {
       console.error("Error while adding products to cart:", error);
       setMessage("Error while adding products to cart");
       setModalState({ success: false, error: true });
-      document.body.setAttribute("data-form-cart-state", "error");
+      // document.body.setAttribute("data-form-cart-state", "error");
     } finally {
       setIsButtonDisabled(false);
     }
   };
 
   const fetchQuotes = async () => {
-    const data = await getAllQuotes();
-    setQuotesData(data);
-    setTimeout(markPageLoaded, 200);
+    try {
+      const data = await getAllQuotes();
+      setQuotesData(data);
+      setTimeout(markPageLoaded, 200);
+    } catch (error) {
+      markPageLoaded();
+      console.error("Error While fetching quote data:", error);
+    }
   };
   useEffect(() => {
     fetchQuotes();
