@@ -5,7 +5,6 @@ import bcrypt from "bcryptjs";
 
 import { cartWixClient, createWixClient } from "@/Utils/CreateWixClient";
 import { isValidEmail, isValidPassword } from "@/Utils/AuthApisUtils";
-import { createWixClient } from "@/Utils/CreateWixClient";
 import { encryptField } from "@/Utils/Encrypt";
 
 export const POST = async (req) => {
