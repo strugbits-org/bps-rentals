@@ -14,9 +14,9 @@ const CreateAccount = ({
 }) => {
   const router = useRouter();
 
+  const [cookies, setCookie] = useCookies(["authToken", "userData"]);
   const [submittingForm, setSubmittingForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [cookies, setCookie] = useCookies(["authToken", "userData"]);
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -33,6 +33,8 @@ const CreateAccount = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Called");
+
     if (submittingForm) return;
     setSubmittingForm(true);
     setModalState({ success: true, error: false });
