@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-import { authWixClient, createWixClient } from "@/Utils/CreateWixClient";
+import { authWixClient, cartWixClient, createWixClient } from "@/Utils/CreateWixClient";
 import { isValidEmail, isValidPassword } from "@/Utils/AuthApisUtils";
 import { encryptField } from "@/Utils/Encrypt";
 
@@ -105,6 +105,21 @@ export const POST = async (req) => {
       memberId,
       process.env.CLIENT_API_KEY_WIX
     );
+
+    if (body?.cartId) {
+      const wixClient = await createWixClient();
+      const visitorCart = await wixClient.cart.getCart(body.cartId);
+
+      const cartClient = await cartWixClient(memberTokens);
+      const lineItems = visitorCart.lineItems.map(x => ({
+        catalogReference: x.catalogReference,
+        quantity: x.quantity
+      }));
+
+      if (lineItems.length !== 0) {
+        await cartClient.currentCart.addToCurrentCart({ lineItems });
+      }
+    }
 
     const finalData = {
       memberId: userUpdatedResponse._id,

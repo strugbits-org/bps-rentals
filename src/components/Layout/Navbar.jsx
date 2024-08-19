@@ -73,7 +73,7 @@ const Navbar = ({
 
   useEffect(() => {
     const quantity =
-      cookies?.cartQuantity !== undefined && cookies.authToken !== undefined
+      cookies?.cartQuantity !== undefined
         ? String(cookies.cartQuantity)
         : "0";
 

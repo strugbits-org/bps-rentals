@@ -199,7 +199,7 @@ const CartPage = ({ cartData }) => {
                                       <i className="icon-pin"></i>
                                     </span>
                                   </li>
-                                  <li className="customize-text">
+                                  {/* <li className="customize-text">
                                     <span className="specs-title">
                                       Customize text
                                     </span>
@@ -207,7 +207,7 @@ const CartPage = ({ cartData }) => {
                                       type="text"
                                       placeholder="Lorem Ipsum"
                                     />
-                                  </li>
+                                  </li> */}
                                 </ul>
                                 <div className="quantity">
                                   <span className="fs--20 no-mobile">

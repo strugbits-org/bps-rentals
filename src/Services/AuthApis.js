@@ -1,9 +1,11 @@
 "use server";
-import { getAuthToken } from "./GetAuthToken";
+import { getAuthToken, getCartId } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
 export const signUpUser = async (userData) => {
   try {
+    const cartId = await getCartId(false);
+    if (cartId) userData.cartId = cartId;
     const response = await fetch(`${baseUrl}/api/auth/signup`, {
       method: "POST",
       headers: {
@@ -25,6 +27,10 @@ export const signUpUser = async (userData) => {
 
 export const signInUser = async (userData) => {
   try {
+    
+    const cartId = await getCartId(false);
+    if (cartId) userData.cartId = cartId;
+
     const response = await fetch(`${baseUrl}/api/auth/login`, {
       method: "POST",
       headers: {

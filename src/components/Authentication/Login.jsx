@@ -14,7 +14,7 @@ const Login = ({
   setModalState,
 }) => {
   const router = useRouter();
-  const [cookies, setCookie] = useCookies(["authToken", "userData"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["authToken", "userData"]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -55,6 +55,7 @@ const Login = ({
           path: "/",
           expires: new Date("2099-01-01"),
         });
+        removeCookie("cartId", { path: "/" });
         if (authToken) {
           pageLoadStart();
           submenuLogin.classList.remove("active");

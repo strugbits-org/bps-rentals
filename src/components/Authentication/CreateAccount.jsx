@@ -16,7 +16,7 @@ const CreateAccount = ({
 
   const [submittingForm, setSubmittingForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [cookies, setCookie] = useCookies(["authToken", "userData"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["authToken", "userData"]);
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -83,6 +83,7 @@ const CreateAccount = ({
         path: "/",
         expires: new Date("2099-01-01"),
       });
+      removeCookie("cartId", { path: "/" });
 
       if (authToken) {
         pageLoadStart();
