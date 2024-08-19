@@ -476,18 +476,18 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                       data-aos
                     >
                       {filteredPages.map((page, index) => {
+                        const { path, title, description } = page;
+
                         return (
                           <li key={index} className="grid-item">
                             <AnimateLink
                               key={index}
-                              to="/"
+                              to={`${process.env.CORPORATE_URL}${path}`}
                               data-menu-close
                               className="link-order-pages"
                             >
-                              <h3 className="title-order-pages">{page.title}</h3>
-                              <p className="text-order-pages">
-                                {page.description}
-                              </p>
+                              <h3 className="title-order-pages">{title}</h3>
+                              <p className="text-order-pages">{description}</p>
                             </AnimateLink>
                           </li>
                         );

@@ -248,8 +248,9 @@ const MyAccount = ({ myAccountPageContent }) => {
                   disabled={isButtonDisabled}
                 >
                   <span>
-                    {myAccountPageContent &&
-                      myAccountPageContent.updateButtonLabel}
+                    {myAccountPageContent && !isButtonDisabled
+                      ? myAccountPageContent.updateButtonLabel
+                      : "Updating Info..."}
                   </span>
                   <i className="icon-arrow-right-2"></i>
                 </button>

@@ -1,9 +1,21 @@
+import { useState } from "react";
 import { quoteDateFormatter } from "@/Utils/Utils";
 import QuoteItems from "@/components/Quote/QuoteItems";
-import AnimateLink from "../AnimateLink";
 
 const QuoteViewModal = ({ data, handleAddToCart }) => {
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const issueDate = quoteDateFormatter(data?.dates.issueDate);
+
+  const handleButtonClick = async () => {
+    if (isButtonDisabled) return;
+    setIsButtonDisabled(true);
+
+    try {
+      await handleAddToCart(data?.lineItems);
+    } finally {
+      setIsButtonDisabled(false);
+    }
+  };
 
   return (
     <div id="scripts">
@@ -39,10 +51,15 @@ const QuoteViewModal = ({ data, handleAddToCart }) => {
                           </ul>
                           <div class="flex-center mt-lg-105 mt-tablet-55 mt-phone-35">
                             <button
-                              onClick={() => handleAddToCart(data?.lineItems)}
-                              className="btn-1 btn-large btn-blue btn-request w-100 manual-modal-close"
+                              onClick={handleButtonClick}
+                              class="btn-1 btn-large btn-blue btn-request w-100 manual-modal-close"
+                              disabled={isButtonDisabled}
                             >
-                              <span>Order Again</span>
+                              <span>
+                                {isButtonDisabled
+                                  ? "Please Wait!"
+                                  : "Order Again"}
+                              </span>
                               <i class="icon-arrow-right-2"></i>
                             </button>
                           </div>

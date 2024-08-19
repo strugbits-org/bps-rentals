@@ -196,8 +196,9 @@ const CreateAccount = ({
               className="bt-submit btn-blue w-100 mt-tablet-10 w-mobile-100"
             >
               <span>
-                {createAccountModalContent &&
-                  createAccountModalContent.createAccountButtonLabel}
+                {createAccountModalContent && !submittingForm
+                  ? createAccountModalContent.createAccountButtonLabel
+                  : "Please Wait!"}
               </span>
             </button>
           </div>

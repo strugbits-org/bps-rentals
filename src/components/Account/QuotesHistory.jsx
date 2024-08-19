@@ -1,28 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/navigation";
+import QuoteViewModal from "../Common/Modals/QuoteViewModal";
+import Modal from "../Common/Modals/Modal";
+import useUserData from "@/Hooks/useUserData";
 import {
   markPageLoaded,
   pageLoadStart,
   updatedWatched,
 } from "@/Utils/AnimationFunctions";
-import QuoteViewModal from "../Common/Modals/QuoteViewModal";
 import { calculateTotalCartQuantity, quoteDateFormatter } from "@/Utils/Utils";
 import { getAllQuotes } from "@/Services/QuoteApis";
 import { AddProductToCart } from "@/Services/CartApis";
-import { useCookies } from "react-cookie";
-import { useRouter } from "next/navigation";
 import { getCatalogIdBySku } from "@/Services/ProductsApis";
-import Modal from "../Common/Modals/Modal";
-import useUserData from "@/Hooks/useUserData";
 
 const QuotesHistory = () => {
   const [cookies, setCookie] = useCookies(["cartQuantity"]);
   const router = useRouter();
   const pageSize = 4;
 
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [disabledButtons, setDisabledButtons] = useState({});
   const [pageLimit, setPageLimit] = useState(pageSize);
   const [quotesData, setQuotesData] = useState([]);
   const [itemData, setItemData] = useState();
@@ -32,9 +31,14 @@ const QuotesHistory = () => {
     error: false,
   });
   const { role } = useUserData();
-  const handleAddToCart = async (data) => {
-    if (isButtonDisabled) return;
-    setIsButtonDisabled(true);
+
+  const handleAddToCart = async (data, index) => {
+    if (disabledButtons[index]) return;
+
+    setDisabledButtons((prevState) => ({
+      ...prevState,
+      [index]: true,
+    }));
 
     try {
       const products = [];
@@ -73,7 +77,6 @@ const QuotesHistory = () => {
       const response = await AddProductToCart(productData);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
 
-      // document.body.setAttribute("data-form-cart-state", "success");
       setCookie("cartQuantity", total);
       pageLoadStart();
       router.push("/cart");
@@ -81,9 +84,11 @@ const QuotesHistory = () => {
       console.error("Error while adding products to cart:", error);
       setMessage("Error while adding products to cart");
       setModalState({ success: false, error: true });
-      // document.body.setAttribute("data-form-cart-state", "error");
     } finally {
-      setIsButtonDisabled(false);
+      setDisabledButtons((prevState) => ({
+        ...prevState,
+        [index]: false,
+      }));
     }
   };
 
@@ -94,9 +99,10 @@ const QuotesHistory = () => {
       setTimeout(markPageLoaded, 200);
     } catch (error) {
       markPageLoaded();
-      console.error("Error While fetching quote data:", error);
+      console.error("Error while fetching quote data:", error);
     }
   };
+
   useEffect(() => {
     fetchQuotes();
   }, []);
@@ -135,9 +141,9 @@ const QuotesHistory = () => {
             quotesData.slice(0, pageLimit).map((quote, index) => {
               const { data } = quote;
               const totalPrice = data.lineItems.reduce((total, item) => {
-                return (total + Number(item.price) * item.quantity);
+                return total + Number(item.price) * item.quantity;
               }, 0);
-              
+
               const issueDate = quoteDateFormatter(data.dates.issueDate);
               return (
                 <li key={index} className="list-item">
@@ -146,7 +152,11 @@ const QuotesHistory = () => {
                       <h2 className="name">{data.title}</h2>
                       <div className="date">{issueDate}</div>
                     </div>
-                    {role && totalPrice && (<div className="value">$ {totalPrice.toLocaleString()}</div>)}
+                    {role && totalPrice && (
+                      <div className="value">
+                        $ {totalPrice.toLocaleString()}
+                      </div>
+                    )}
                     <div className="container-btn">
                       <btn-modal-open
                         group="modal-quotes-history"
@@ -157,11 +167,15 @@ const QuotesHistory = () => {
                         <i className="icon-arrow-diagonal"></i>
                       </btn-modal-open>
                       <button
-                        onClick={() => handleAddToCart(data.lineItems)}
+                        onClick={() => handleAddToCart(data.lineItems, index)}
                         className="btn-order-again"
-                        disabled={isButtonDisabled}
+                        disabled={!!disabledButtons[index]}
                       >
-                        <span>Order again</span>
+                        <span>
+                          {!disabledButtons[index]
+                            ? "Order again"
+                            : "Please Wait!"}
+                        </span>
                         <i className="icon-arrow-diagonal"></i>
                       </button>
                     </div>

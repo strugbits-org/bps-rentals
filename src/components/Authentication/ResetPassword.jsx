@@ -149,7 +149,9 @@ const ResetPassword = () => {
               type="submit"
               className="bt-submit btn-blue w-100"
             >
-              <span>Reset Password</span>
+              <span>
+                {isDisabled ? "Resetting Password..." : "Reset Password"}
+              </span>
             </button>
           </div>
         </form>
