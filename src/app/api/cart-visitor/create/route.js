@@ -1,7 +1,7 @@
 import { createWixClient } from "@/Utils/CreateWixClient";
 import { NextResponse } from "next/server";
 
-export const GET = async () => {
+export const POST = async () => {
   try {
     const wixClient = await createWixClient();
     const cartResponse = await wixClient.cart.createCart({

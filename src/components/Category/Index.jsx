@@ -10,7 +10,7 @@ import {
 import { useCookies } from "react-cookie";
 import CartModal from "../Common/Modals/CartModal";
 import { Banner } from "./Banner";
-import { compareArray, shuffleArray } from "@/Utils/Utils";
+import { compareArray, extractCategoryIds, shuffleArray } from "@/Utils/Utils";
 
 const CategoryPage = ({
   pageContent,
@@ -47,13 +47,13 @@ const CategoryPage = ({
       const checkedCategories = categories
         ? categories.filter((x) => x.checked).map((x) => x._id)
         : filterCategories.filter((x) => x.checked).map((x) => x._id);
+
+      const categoryIds = extractCategoryIds(selectedCategoryData);
+
       const selectedCategories =
         checkedCategories?.length !== 0
           ? checkedCategories
-          : [
-            selectedCategoryData?.parentCollection?._id ||
-            selectedCategoryData?._id,
-          ];
+          : categoryIds;
       const selectedColors =
         colors?.length !== 0
           ? colors.filter((x) => x.checked).map((x) => x.label)

@@ -217,3 +217,7 @@ body[data-modal-state="active"][data-modal="modal-product-2"] #header,
 body[data-form-cart-state="success"] #header{
     z-index: 0;
 }
+
+body[data-form-cart-state="success"]:has(.submenu-login.active) #main-transition{
+    z-index: -1;
+}

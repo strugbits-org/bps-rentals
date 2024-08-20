@@ -8,17 +8,13 @@ export function middleware(req) {
   const privateRoutes = [
     "/my-account",
     "/my-account-change-password",
-    "my-account-quotes-history",
-    "my-account-saved-products",
+    "/my-account-quotes-history",
+    "/my-account-saved-products",
   ];
-  if (privateRoutes.includes(pathname)) {
-    if (!authToken) {
+  if (privateRoutes.includes(pathname) && !authToken) {
       return NextResponse.redirect(new URL("/", req.url));
-    }
   }
-  const headers = new Headers(req.headers);
-  headers.set("x-current-path", req.nextUrl.pathname);
-  return NextResponse.next({ headers });
+  return NextResponse.next();
 }
 export const config = {
   matcher: [

@@ -56,7 +56,9 @@ const Account = ({ children, footerData, banner }) => {
         removeCookie("userData", { path: "/" });
         removeCookie("userTokens", { path: "/" });
         removeCookie("cartQuantity", { path: "/" });
-        router.push("/");
+        setTimeout(() => {
+          router.push("/"); 
+        }, 200);
       }
     } catch (error) {
       console.error("Error:", error);

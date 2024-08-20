@@ -110,11 +110,11 @@ const HomePage = ({
   }
 
   useEffect(() => {
-    markPageLoaded();
+    setTimeout(markPageLoaded, 200);
     fetchSavedProducts();
   }, [])
-  
-  
+
+
   return (
     <>
       <BannerHome content={heroSectionContent} />
