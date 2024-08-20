@@ -4,7 +4,7 @@ const baseUrl = process.env.BASE_URL;
 export const createCart = async () => {
   try {
     const response = await fetch(`${baseUrl}/api/cart-visitor/create`, {
-      method: "GET",
+      method: "POST",
       cache: "no-store",
     });
 
