@@ -16,9 +16,9 @@ const AllCategories = ({ categoriesData }) => {
           </button>
         </div>
         <ul className="list-submenu-categories list-submenu font-submenu">
-          {categoriesData.slice(6).map((data, index) => {
+          {categoriesData.map((data, index) => {
             const { name, mainMedia } = data.categoryName;
-            const slug = data.categoryName['link-copy-of-category-name-2'];
+            const slug = data.categoryName["link-copy-of-category-name-2"];
             return (
               <li key={index} className="list-item">
                 <AnimateLink

@@ -161,3 +161,12 @@ export const extractCategoryIds = (selectedCategoryData) => {
     return [selectedCategoryData._id];
   }
 }
+
+export const formatDescriptionLines = (items) => {
+  return items.map(item => {
+    const title = item.name?.translated || item.name?.original || null;
+    const value = item.colorInfo?.translated || item.colorInfo?.original || item.plainText?.translated || item.plainText?.original || item.colorInfo?.code || null;
+
+    return { title, value };
+  });
+}

@@ -7,10 +7,8 @@ import { generateImageURL } from "@/Utils/GenerateImageURL";
 import {
   calculateTotalCartQuantity,
   extractSlugFromUrl,
-  findColor,
-  findLocation,
+  formatDescriptionLines,
   formatPrice,
-  locations,
 } from "@/Utils/Utils";
 
 import {
@@ -121,9 +119,7 @@ const CartPage = ({ cartData }) => {
                         price,
                       } = cart;
 
-                      const colors = findColor(descriptionLines).join("-");
-                      const location = findLocation(descriptionLines);
-
+                      const formattedDescription = formatDescriptionLines(descriptionLines);
                       return (
                         <li key={index} className="list-item">
                           <input
@@ -172,12 +168,20 @@ const CartPage = ({ cartData }) => {
                                       {physicalProperties.sku}
                                     </span>
                                   </li>
-                                  <li className="size">
-                                    <span className="specs-title">Size</span>
-                                    <span className="specs-text">
-                                      19”L X 15.5”W X 27.5”H
-                                    </span>
-                                  </li>
+                                  {formattedDescription.map((item) => {
+                                    const { title, value } = item;
+                                    return (
+                                      <li className="location">
+                                        <span className="specs-title">
+                                          {title}
+                                        </span>
+                                        <span className="specs-text">
+                                          {value}
+                                          {title === "location" && (<>{" "}<i className="icon-pin"></i></>)}
+                                        </span>
+                                      </li>
+                                    )
+                                  })}
                                   {role === "admin" && (
                                     <li className="price">
                                       <span className="specs-title">Price</span>
@@ -186,19 +190,6 @@ const CartPage = ({ cartData }) => {
                                       </span>
                                     </li>
                                   )}
-                                  <li className="color">
-                                    <span className="specs-title">Color</span>
-                                    <span className="specs-text">{colors}</span>
-                                  </li>
-                                  <li className="location">
-                                    <span className="specs-title">
-                                      Location
-                                    </span>
-                                    <span className="specs-text">
-                                      {locations[location]}{" "}
-                                      <i className="icon-pin"></i>
-                                    </span>
-                                  </li>
                                   {/* <li className="customize-text">
                                     <span className="specs-title">
                                       Customize text
