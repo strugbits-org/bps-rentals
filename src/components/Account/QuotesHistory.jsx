@@ -43,24 +43,29 @@ const QuotesHistory = () => {
     try {
       const products = [];
       for (const item of data) {
-        const { name, quantity, location } = item;
+        const { name, quantity, fullItem, location } = item;
         const productSku = name;
 
         try {
-          const res = await getCatalogIdBySku(productSku);
-          const productId = res.productId;
-          const variantId = res.variantId;
-          const appId = "215238eb-22a5-4c36-9e7b-e7c08025e04e";
+          let catalogReference = fullItem?.catalogReference;
+          if (!catalogReference) {
+            const res = await getCatalogIdBySku(productSku);
+            const productId = res.productId;
+            const variantId = res.variantId;
 
-          const product = {
-            catalogReference: {
+            const appId = "215238eb-22a5-4c36-9e7b-e7c08025e04e";
+            catalogReference = {
               appId,
               catalogItemId: productId,
               options: {
                 variantId,
                 customTextFields: { location: location },
               },
-            },
+            };
+          }
+
+          const product = {
+            catalogReference: catalogReference,
             quantity: quantity,
           };
 
@@ -74,11 +79,11 @@ const QuotesHistory = () => {
         lineItems: products,
       };
 
+      pageLoadStart();
       const response = await AddProductToCart(productData);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
 
       setCookie("cartQuantity", total);
-      pageLoadStart();
       router.push("/cart");
     } catch (error) {
       console.error("Error while adding products to cart:", error);

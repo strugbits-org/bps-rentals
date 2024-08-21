@@ -57,6 +57,8 @@ const ProductPostPage = ({
   const [buttonLabel, setButtonLabel] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(1);
+  const [customTextFields, setCustomTextFields] = useState({});
+
   const { role } = useUserData();
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
@@ -149,6 +151,14 @@ const ProductPostPage = ({
     }
   };
 
+
+  const handleInputChange = (name, value) => {
+    setCustomTextFields((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   const handleAddToCart = async (e) => {
     e.preventDefault();
     setIsButtonDisabled(true);
@@ -161,6 +171,13 @@ const ProductPostPage = ({
         .replace(product_id, "")
         .substring(1);
 
+      const customFields = Object.keys(customTextFields).reduce((acc, key) => {
+        acc[key] = customTextFields[key] + "\n";
+        return acc;
+      }, {});
+
+      const customFieldsSorted = { location: product_location, Size: selectedVariant.size, ...customFields }
+
       const productData = {
         lineItems: [
           {
@@ -168,7 +185,7 @@ const ProductPostPage = ({
               appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
               catalogItemId: product_id,
               options: {
-                customTextFields: { location: product_location },
+                customTextFields: customFieldsSorted,
                 variantId: variant_id,
               },
             },
@@ -177,7 +194,6 @@ const ProductPostPage = ({
         ],
       };
       const response = await AddProductToCart(productData);
-
       const total = calculateTotalCartQuantity(response.cart.lineItems);
       setCookie("cartQuantity", total);
       if (response) {
@@ -306,11 +322,10 @@ const ProductPostPage = ({
                               return (
                                 <div
                                   key={index}
-                                  class={`swiper-slide  ${
-                                    index === selectedVariantIndex
-                                      ? "active"
-                                      : ""
-                                  }`}
+                                  class={`swiper-slide  ${index === selectedVariantIndex
+                                    ? "active"
+                                    : ""
+                                    }`}
                                 >
                                   <div class="wrapper-img">
                                     <div class="container-img">
@@ -514,7 +529,7 @@ const ProductPostPage = ({
                         type="submit"
                         disabled={isButtonDisabled}
                       >
-                        <span>Add to cart</span>
+                        <span>{isButtonDisabled ? "Please wait..." : "Add to cart"}</span>
                         <i className="icon-arrow-right"></i>
                       </button>
                     )}
@@ -548,12 +563,13 @@ const ProductPostPage = ({
                             data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                           >
                             <div className="container-input product-notes">
-                              <label>Customize product text</label>
+                              {index === 0 && (<label>Customize product text</label>)}
                               <input
-                                name="product_notes"
+                                name={`product_notes_${index}`}
                                 type="text"
                                 placeholder={title}
                                 required={mandatory}
+                                onChange={(e) => handleInputChange(title, e.target.value)}
                               />
                             </div>
                           </div>
@@ -567,9 +583,8 @@ const ProductPostPage = ({
               {selectedProductDetails &&
                 selectedProductDetails.product.description && (
                   <div
-                    className={`container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50 ${
-                      buttonLabel ? "active" : ""
-                    }`}
+                    className={`container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50 ${buttonLabel ? "active" : ""
+                      }`}
                     data-aos=""
                   >
                     <h3 className="title-info-text split-words" data-aos="">

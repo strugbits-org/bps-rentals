@@ -36,6 +36,7 @@ const CartModal = ({
   const [unavailable, setUnavailable] = useState(false);
   const [cookies, setCookie] = useCookies(["location"]);
   const [cartQuantity, setCartQuantity] = useState(1);
+  const [customTextFields, setCustomTextFields] = useState({});
   const [message, setMessage] = useState("");
   const [modalState, setModalState] = useState({
     success: false,
@@ -73,6 +74,13 @@ const CartModal = ({
     }
   };
 
+  const handleInputChange = (name, value) => {
+    setCustomTextFields((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   const handleAddToCart = async () => {
     setIsButtonDisabled(true);
     try {
@@ -82,6 +90,13 @@ const CartModal = ({
         .substring(1);
       const product_location = cookies?.location;
 
+      const customFields = Object.keys(customTextFields).reduce((acc, key) => {
+        acc[key] = customTextFields[key] + "\n";
+        return acc;
+      }, {});
+
+      const customFieldsSorted = { location: product_location, Size: selectedVariantData.size, ...customFields }
+
       const cartData = {
         lineItems: [
           {
@@ -89,7 +104,7 @@ const CartModal = ({
               appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
               catalogItemId: product_id,
               options: {
-                customTextFields: { location: product_location },
+                customTextFields: customFieldsSorted,
                 variantId: variant_id,
               },
             },
@@ -423,7 +438,7 @@ const CartModal = ({
                                   type="submit"
                                   disabled={isButtonDisabled}
                                 >
-                                  <span>Add to cart</span>
+                                  <span>{isButtonDisabled ? "Please wait..." : "Add to cart"}</span>
                                   <i className="icon-arrow-right"></i>
                                 </button>
                               )}
@@ -450,7 +465,7 @@ const CartModal = ({
                             )}
                             {productData &&
                               productData.product.customTextFields.length >
-                                0 && (
+                              0 && (
                                 <div
                                   style={{ paddingTop: "20px" }}
                                   className="container-product-notes container-info-text "
@@ -473,10 +488,11 @@ const CartModal = ({
                                       >
                                         <div className="container-input product-notes">
                                           <input
-                                            name="product_notes"
+                                            name={`product_notes_${index}`}
                                             type="text"
                                             placeholder={title}
                                             required={mandatory}
+                                            onChange={(e) => handleInputChange(title, e.target.value)}
                                           />
                                         </div>
                                         <div className="container-submit">
