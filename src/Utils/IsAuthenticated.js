@@ -5,7 +5,7 @@ import { encryptField } from "./Encrypt";
 
 const unAuthCollections = [
   "RentalsHomeNewArrivals",
-  "TextCollectionPages",
+  "SearchPages",
   "Stores/Collections",
   "RentalsHomeHero",
   "RentalsNewArrivals",

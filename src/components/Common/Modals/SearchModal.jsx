@@ -477,6 +477,8 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                     >
                       {filteredPages.map((page, index) => {
                         const { path, title, description } = page;
+                        console.log("page", page);
+
 
                         return (
                           <li key={index} className="grid-item">
@@ -486,7 +488,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                               data-menu-close
                               className="link-order-pages"
                             >
-                              <h3 className="title-order-pages">{title}</h3>
+                              <h3 className="title-order-pages">{page.redirectToRentals ? title : title + " (Corporate)" }</h3>
                               <p className="text-order-pages">{description}</p>
                             </AnimateLink>
                           </li>
