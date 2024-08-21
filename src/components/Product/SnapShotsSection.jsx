@@ -48,7 +48,6 @@ const SnapShots = ({ data }) => {
                   <div className="container-img bg-blue">
                     <div className="wrapper-img">
                       <img
-                        style={{ maxHeight: "80rem" }}
                         src={generateImageURL({
                           wix_url: data[0].src,
                           w: "1747",
