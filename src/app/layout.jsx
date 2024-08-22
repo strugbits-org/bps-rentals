@@ -40,10 +40,8 @@ import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
 
 export const metadata = {
   title: "Rent Event Furnishings - Blueprint Studios",
-  description: "",
-  robots: "noindex,nofollow"
+  robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" ? "noindex,nofollow" : null,
 };
-// description: "Explore and rent premium event furnishings from Blueprint Studios, perfect for any occasion. Discover our wide range of stylish furniture, decor, and more.",
 
 export default async function RootLayout({ children }) {
   const [

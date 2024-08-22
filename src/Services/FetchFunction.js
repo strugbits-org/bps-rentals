@@ -26,6 +26,7 @@ const getDataFetchFunction = async (payload) => {
 
     // List of collections requiring authentication
     const authCollections = [
+      "PageSeoConfigurationRentals",
       "RentalsHomeNewArrivals",
       "SearchPages",
       "Stores/Collections",

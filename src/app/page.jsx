@@ -11,11 +11,26 @@ import {
   getHotTrendsSection,
   getMarketsData,
   getNewArrivalSectionContent,
+  getPageMetaData,
   getStudiosData,
 } from "@/Services/SectionsApis";
 
+export async function generateMetadata() {
+  try {
+    const metaData = await getPageMetaData("home");
+    const { title, noFollowTag } = metaData;
+
+    return {
+      title,
+      robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" && noFollowTag ? "noindex,nofollow" : null,
+    }
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
+
 export default async function Page() {
-  const bestSeller = await fetchBestSellers("all");  
+  const bestSeller = await fetchBestSellers("all");
 
   const [
     homeHeroSectionContent,

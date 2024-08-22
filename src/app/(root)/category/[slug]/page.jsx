@@ -7,9 +7,32 @@ import {
   getAllColorsData,
   getAllProducts,
 } from "@/Services/ProductsApis";
-import { getHomeSectionDetails, getMarketsData } from "@/Services/SectionsApis";
+import { getHomeSectionDetails, getMarketsData, getPageMetaData } from "@/Services/SectionsApis";
 import { extractCategoryIds, findCategoryData, getAllCategoriesPaths } from "@/Utils/Utils";
 import { redirect } from "next/navigation";
+
+export async function generateMetadata({ params }) {
+  try {
+    const _slug = decodeURIComponent(params.slug);
+    const slug = "/category/" + _slug;
+    const [
+      metaData,
+      categoriesData,
+    ] = await Promise.all([
+      getPageMetaData("category"),
+      fetchAllCategoriesData(),
+    ]);
+    const { title, noFollowTag } = metaData;
+    const selectedCategoryData = findCategoryData(categoriesData, slug);
+
+    return {
+      title: (selectedCategoryData.parentCollection?.name || selectedCategoryData?.name) + title,
+      robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" && noFollowTag ? "noindex,nofollow" : null,
+    }
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
 
 export const generateStaticParams = async () => {
   try {
