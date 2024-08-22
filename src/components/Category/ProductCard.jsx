@@ -130,6 +130,7 @@ const ProductCard = ({
                   <li
                     key={idx}
                     onMouseEnter={() => setActiveVariant(variant)}
+                    onTouchStart={() => setActiveVariant(variant)}
                     className={`list-item ${variant.sku === activeVariant.sku ? "active" : ""}`}
                   >
                     <div className="container-img">

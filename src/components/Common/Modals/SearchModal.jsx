@@ -477,18 +477,16 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                     >
                       {filteredPages.map((page, index) => {
                         const { path, title, description } = page;
-                        console.log("page", page);
-
-
                         return (
                           <li key={index} className="grid-item">
                             <AnimateLink
                               key={index}
-                              to={`${process.env.CORPORATE_URL}${path}`}
+                              to={page.redirectToRentals ? path : process.env.CORPORATE_URL + path}
+                              target={page.redirectToRentals ? "" : "_blank"}
                               data-menu-close
                               className="link-order-pages"
                             >
-                              <h3 className="title-order-pages">{page.redirectToRentals ? title : title + " (Corporate)" }</h3>
+                              <h3 className="title-order-pages">{page.redirectToRentals ? title : "Corporate | " + title}</h3>
                               <p className="text-order-pages">{description}</p>
                             </AnimateLink>
                           </li>

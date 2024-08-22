@@ -73,7 +73,7 @@ export const fetchSearchPages = async () => {
       ],
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data).sort((a, b) => a.orderNumber - b.orderNumber);
+      return response._items.map((x) => x.data).sort((a, b) => a.orderNumberRentals - b.orderNumberRentals);
     } else {
       throw new Error("Response does not contain _items", response);
     }
