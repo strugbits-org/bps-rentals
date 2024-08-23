@@ -22,10 +22,10 @@ export async function generateMetadata({ params }) {
       getPageMetaData("product"),
       fetchAllProducts(slug),
     ]);
-    
+
     const { title, noFollowTag } = metaData;
     const { product } = productData.data;
-    
+
     return {
       title: product.name + title,
       description: product.description,
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }) {
 export const generateStaticParams = async () => {
   try {
     const paths = await fetchAllProductsPaths() || [];
-    return paths;
+    return paths.slice(0, 1);
   } catch (error) {
     console.error("Error:", error);
   }
