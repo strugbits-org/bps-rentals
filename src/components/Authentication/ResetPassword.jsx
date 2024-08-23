@@ -79,6 +79,7 @@ const ResetPassword = () => {
     }
   }, [userId]);
 
+  if (!userId) return;
   return (
     <div className="reset-password-main">
       {modalState.error && (
