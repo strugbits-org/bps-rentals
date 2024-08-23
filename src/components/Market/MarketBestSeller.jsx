@@ -15,7 +15,7 @@ export const MarketBestSeller = ({ products, bestSeller }) => {
     const [productFilteredVariantData, setProductFilteredVariantData] =
         useState();
 
-    const getSelectedProductSnapShots = async (productData) => {
+    const getSelectedProductSnapShots = async (productData, activeVariant) => {
         setSelectedProductData(productData);
         try {
             const { productSnapshotData, productVariantsData } = productData;
@@ -37,12 +37,15 @@ export const MarketBestSeller = ({ products, bestSeller }) => {
             }
             setProductSnapshots(productSnapshotData);
             setProductFilteredVariantData(filteredVariantData);
-            if (filteredVariantData && filteredVariantData.length > 0) {
+            const currentActiveIndex = productData.variantData.findIndex(x => x.variant._id === activeVariant.variant._id);
+            const currentActive = productData.variantData[currentActiveIndex];
+
+            if (filteredVariantData && currentActive && filteredVariantData.length > 0) {
                 handleImageChange({
-                    index: 0,
-                    selectedVariantData: filteredVariantData[0].variant,
+                    index: currentActiveIndex,
+                    selectedVariantData: currentActive.variant,
                     productSnapshots: productSnapshotData,
-                    modalUrl: filteredVariantData[0].zipUrl,
+                    modalUrl: currentActive.zipUrl,
                 });
             }
         } catch (error) {
@@ -85,10 +88,10 @@ export const MarketBestSeller = ({ products, bestSeller }) => {
 
     const fetchSavedProducts = async () => {
         try {
-          const savedProducts = await getSavedProductData();
-          setSavedProductsData(savedProducts);
+            const savedProducts = await getSavedProductData();
+            setSavedProductsData(savedProducts);
         } catch (error) {
-          console.log("Error while fetching Saved Product", error);
+            console.log("Error while fetching Saved Product", error);
         }
     }
 
