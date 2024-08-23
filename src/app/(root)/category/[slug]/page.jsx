@@ -39,7 +39,7 @@ export const generateStaticParams = async () => {
     const categoriesData = await fetchAllCategoriesData();
     const slugs = getAllCategoriesPaths(categoriesData);
     const paths = slugs.map((slug) => ({ slug }));
-    return paths.slice(0, 1);
+    return paths;
   } catch (error) {
     console.log("Error:", error);
     return [];

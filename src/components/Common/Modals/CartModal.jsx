@@ -356,6 +356,7 @@ const CartModal = ({
                                 productFilteredVariantData.map(
                                   (variantData, index) => {
                                     const { variant } = variantData;
+
                                     return (
                                       <li key={index} class="list-colors-item">
                                         <div
@@ -379,9 +380,7 @@ const CartModal = ({
                                               type="radio"
                                               name="colors"
                                               value={variantData.variant.color}
-                                              checked={
-                                                variant._id === selectedVariantData._id
-                                              }
+                                              checked={variant.sku === selectedVariantData.sku}
                                             />
                                             <div class="container-img">
                                               <img
