@@ -8,9 +8,35 @@ import {
   getMarketSection,
   getMarketSliderData,
   getNewArrivalSectionContent,
+  getPageMetaData,
   getPeopleReviewSliderData,
   getStudiosData,
 } from "@/Services/SectionsApis";
+
+export async function generateMetadata({ params }) {
+  try {
+    const slug = decodeURIComponent(params.slug);
+
+    const [
+      metaData,
+      marketsData,
+    ] = await Promise.all([
+      getPageMetaData("market"),
+      getMarketsData(),
+    ]);
+    const { title, noFollowTag } = metaData;
+    const selectedMarketData = marketsData.find(x => x.slug === slug);
+    
+    return {
+      title: selectedMarketData.cardname + title,
+      description: selectedMarketData.description,
+      robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" && noFollowTag ? "noindex,nofollow" : null,
+    }
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
+
 
 export const generateStaticParams = async () => {
   try {
@@ -27,7 +53,7 @@ export default async function Page({ params }) {
 
   const marketSection = await getMarketSection(slug);
   const bestSeller = await fetchBestSellers(slug);
-  
+
   const collectionIds = {
     "tradeshows": "HighlightsTradeshow",
     "social": "HighlightsSocial",

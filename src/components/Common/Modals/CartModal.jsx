@@ -309,6 +309,15 @@ const CartModal = ({
                                   </span>
                                 </li>
                               )}
+
+                              {selectedVariantData?.weight && (
+                                <li class="color">
+                                  <span class="specs-title">Weight</span>
+                                  <span class="specs-text">
+                                    {selectedVariantData && selectedVariantData.weight}
+                                  </span>
+                                </li>
+                              )}
                               {productData &&
                                 productData.product?.additionalInfoSections &&
                                 productData.product.additionalInfoSections.map(
@@ -346,6 +355,7 @@ const CartModal = ({
                               {productFilteredVariantData &&
                                 productFilteredVariantData.map(
                                   (variantData, index) => {
+                                    const { variant } = variantData;
                                     return (
                                       <li key={index} class="list-colors-item">
                                         <div
@@ -370,7 +380,7 @@ const CartModal = ({
                                               name="colors"
                                               value={variantData.variant.color}
                                               checked={
-                                                index === selectedVariantIndex
+                                                variant._id === selectedVariantData._id
                                               }
                                             />
                                             <div class="container-img">

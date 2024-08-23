@@ -22,7 +22,7 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
   const [productFilteredVariantData, setProductFilteredVariantData] =
     useState();
 
-  const getSelectedProductSnapShots = async (productData) => {
+  const getSelectedProductSnapShots = async (productData, activeVariant) => {
     setSelectedProductData(productData);
     try {
       const { productSnapshotData, productVariantsData } = productData;
@@ -44,12 +44,15 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
       }
       setProductSnapshots(productSnapshotData);
       setProductFilteredVariantData(filteredVariantData);
-      if (filteredVariantData && filteredVariantData.length > 0) {
+      const currentActiveIndex = productData.variantData.findIndex(x => x.variant._id === activeVariant.variant._id);
+      const currentActive = productData.variantData[currentActiveIndex];
+
+      if (filteredVariantData && currentActive && filteredVariantData.length > 0) {
         handleImageChange({
-          index: 0,
-          selectedVariantData: filteredVariantData[0].variant,
+          index: currentActiveIndex,
+          selectedVariantData: currentActive.variant,
           productSnapshots: productSnapshotData,
-          modalUrl: filteredVariantData[0].zipUrl,
+          modalUrl: currentActive.zipUrl,
         });
       }
     } catch (error) {

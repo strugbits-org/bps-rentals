@@ -407,6 +407,15 @@ const ProductPostPage = ({
                       </li>
                     )}
 
+                    {selectedVariant?.weight && (
+                      <li class="color">
+                        <span class="specs-title">Weight</span>
+                        <span class="specs-text">
+                          {selectedVariant && selectedVariant.weight}
+                        </span>
+                      </li>
+                    )}
+
                     {selectedProductDetails &&
                       selectedProductDetails.product?.additionalInfoSections &&
                       selectedProductDetails.product.additionalInfoSections.map(

@@ -16,6 +16,7 @@ const ProductCard = ({
   filteredProducts = [],
   bestSeller = []
 }) => {
+
   const { product, variantData } = productData;
   const categories = productData?.subCategoryData || [];
 
@@ -92,8 +93,9 @@ const ProductCard = ({
                     );
                   }
                 })}
-                {product && role === "admin" && (<span>{decryptField(product.formattedPrice)}</span>)}
               </div>
+              <div className="dimensions"><span>{activeVariant.location.toString()} <i className="icon-pin"></i></span></div>
+              <div className="dimensions">{product && role === "admin" && (<span>{decryptField(product.formattedPrice)}</span>)}</div>
             </div>
           )}
         </div>
@@ -130,6 +132,7 @@ const ProductCard = ({
                   <li
                     key={idx}
                     onMouseEnter={() => setActiveVariant(variant)}
+                    onTouchStart={() => setActiveVariant(variant)}
                     className={`list-item ${variant.sku === activeVariant.sku ? "active" : ""}`}
                   >
                     <div className="container-img">
@@ -159,7 +162,7 @@ const ProductCard = ({
         )}
       </div>
       <btn-modal-open
-        onClick={() => getSelectedProductSnapShots(productData)}
+        onClick={() => getSelectedProductSnapShots(productData, activeVariant)}
         group="modal-product-2"
         class="modal-add-to-cart"
       >

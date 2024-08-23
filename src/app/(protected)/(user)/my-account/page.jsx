@@ -2,7 +2,21 @@ import Account from "@/components/Account/Index";
 import MyAccount from "@/components/Account/MyAccount";
 import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
 import { getMyAccountPageContent } from "@/Services/MyAccountApis";
-import { getRentalsTeamsBanner } from "@/Services/SectionsApis";
+import { getPageMetaData, getRentalsTeamsBanner } from "@/Services/SectionsApis";
+
+export async function generateMetadata() {
+  try {
+    const metaData = await getPageMetaData("my-account");
+    const { title, noFollowTag } = metaData;
+    
+    return {
+      title: title,
+      robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" && noFollowTag ? "noindex,nofollow" : null,
+    }
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
 
 export default async function Page() {
   const [

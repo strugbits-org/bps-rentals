@@ -8,8 +8,33 @@ import {
   fetchAllProductsPaths,
   getAllProducts,
   fetchBestSellers,
+  fetchAllProducts,
 } from '@/Services/ProductsApis';
-import { getBlogsData, getPortfolioData } from "@/Services/SectionsApis";
+import { getBlogsData, getPageMetaData, getPortfolioData } from "@/Services/SectionsApis";
+
+export async function generateMetadata({ params }) {
+  try {
+    const slug = decodeURIComponent(params.slug);
+    const [
+      metaData,
+      productData,
+    ] = await Promise.all([
+      getPageMetaData("product"),
+      fetchAllProducts(slug),
+    ]);
+    
+    const { title, noFollowTag } = metaData;
+    const { product } = productData.data;
+    
+    return {
+      title: product.name + title,
+      description: product.description,
+      robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" && noFollowTag ? "noindex,nofollow" : null,
+    }
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
 
 export const generateStaticParams = async () => {
   try {

@@ -2,7 +2,21 @@ import Account from "@/components/Account/Index";
 import SavedProducts from "@/components/Account/SavedProducts";
 import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
 import { getAllProductVariants, getAllProductVariantsImages } from "@/Services/ProductsApis";
-import { getRentalsTeamsBanner } from "@/Services/SectionsApis";
+import { getPageMetaData, getRentalsTeamsBanner } from "@/Services/SectionsApis";
+
+export async function generateMetadata() {
+  try {
+    const metaData = await getPageMetaData("my-account-saved-products");
+    const { title, noFollowTag } = metaData;
+    
+    return {
+      title: title,
+      robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" && noFollowTag ? "noindex,nofollow" : null,
+    }
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
 
 export default async function Page() {
   const [

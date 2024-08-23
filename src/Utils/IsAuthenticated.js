@@ -4,8 +4,9 @@ import { authWixClient, createWixClient } from "./CreateWixClient";
 import { encryptField } from "./Encrypt";
 
 const unAuthCollections = [
+  "PageSeoConfigurationRentals",
   "RentalsHomeNewArrivals",
-  "TextCollectionPages",
+  "SearchPages",
   "Stores/Collections",
   "RentalsHomeHero",
   "RentalsNewArrivals",

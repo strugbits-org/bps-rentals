@@ -2,6 +2,28 @@ import { instafeed, refreshToken } from "instafeed-node-js";
 import getDataFetchFunction from "./FetchFunction";
 import { fetchProductsByIds } from "./ProductsApis";
 
+export const getPageMetaData = async (path) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "PageSeoConfigurationRentals",
+      eq: [
+        {
+          key: "slug",
+          value: path
+        }
+      ]
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data)[0];
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching PageMetaData:", error);
+    return [];
+  }
+};
+
 export const getNewArrivalSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({ dataCollectionId: "RentalsHomeNewArrivals" });
@@ -64,7 +86,7 @@ export const getHotTrendsSection = async () => {
 export const fetchSearchPages = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "TextCollectionPages",
+      dataCollectionId: "SearchPages",
       eq: [
         {
           key: "showInSearch",
@@ -73,7 +95,7 @@ export const fetchSearchPages = async () => {
       ],
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data);
+      return response._items.map((x) => x.data).sort((a, b) => a.orderNumberRentals - b.orderNumberRentals);
     } else {
       throw new Error("Response does not contain _items", response);
     }

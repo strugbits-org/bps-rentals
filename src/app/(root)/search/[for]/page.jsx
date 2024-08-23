@@ -6,10 +6,24 @@ import {
   getAllColorsData,
   getAllProducts,
 } from "@/Services/ProductsApis";
-import { getHomeSectionDetails, getMarketsData } from "@/Services/SectionsApis";
+import { getHomeSectionDetails, getMarketsData, getPageMetaData } from "@/Services/SectionsApis";
+
+export async function generateMetadata() {
+  try {
+    const metaData = await getPageMetaData("search");
+    const { title, noFollowTag } = metaData;
+
+    return {
+      title: title,
+      robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" && noFollowTag ? "noindex,nofollow" : null,
+    }
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
 
 export default async function Page({ params }) {
-  
+
   const searchTerm = decodeURIComponent(params.for);
 
   const [

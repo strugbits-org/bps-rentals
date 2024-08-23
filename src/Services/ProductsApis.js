@@ -264,6 +264,35 @@ export const fetchAllCategoriesData = async () => {
   }
 };
 
+export const fetchAllProducts = async (slug) => {
+  try {
+    const payload = {
+      dataCollectionId: "locationFilteredVariant",
+      includeReferencedItems: ["product"],
+      limit: "infinite",
+      increasedLimit: 700,
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+    };
+    const response = await getDataFetchFunction(payload);
+    if (response && response._items) {
+      return response._items.find((x) => (x.data.product.slug === slug));
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching all products:", error);
+  }
+};
+
 export const fetchAllProductsPaths = async () => {
   try {
     const payload = {
