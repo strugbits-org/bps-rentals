@@ -17,7 +17,7 @@ const AnimateLink = ({ to, children, className, target, attributes }) => {
       return;
     }
 
-    if (target === undefined) {
+    if (target === undefined || !target || target === "") {
       pageLoadStart();
       setTimeout(() => {
         router.push(to);

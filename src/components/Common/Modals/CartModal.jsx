@@ -310,14 +310,15 @@ const CartModal = ({
                                 </li>
                               )}
 
-                              {selectedVariantData?.weight && (
-                                <li class="color">
+                              {selectedVariantData?.weight ? (
+                                <li class="color cs-weight">
                                   <span class="specs-title">Weight</span>
                                   <span class="specs-text">
-                                    {selectedVariantData && selectedVariantData.weight}
+                                    {selectedVariantData && selectedVariantData.weight}LBS
                                   </span>
                                 </li>
-                              )}
+                              ) : null}
+
                               {productData &&
                                 productData.product?.additionalInfoSections &&
                                 productData.product.additionalInfoSections.map(

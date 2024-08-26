@@ -407,14 +407,14 @@ const ProductPostPage = ({
                       </li>
                     )}
 
-                    {selectedVariant?.weight && (
-                      <li class="color">
+                    {selectedVariant?.weight ? (
+                      <li class="color cs-weight">
                         <span class="specs-title">Weight</span>
                         <span class="specs-text">
-                          {selectedVariant && selectedVariant.weight}
+                          {selectedVariant && selectedVariant.weight}LBS
                         </span>
                       </li>
-                    )}
+                    ) : null}
 
                     {selectedProductDetails &&
                       selectedProductDetails.product?.additionalInfoSections &&
