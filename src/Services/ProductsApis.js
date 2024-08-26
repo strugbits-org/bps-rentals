@@ -75,6 +75,27 @@ export const getProductId = async (slug) => {
     console.error("Error fetching selected ProductId:", slug, error);
   }
 };
+export const getProductData = async (slug) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "Stores/Products",
+      eq: [
+        {
+          key: "slug",
+          value: slug,
+        },
+      ],
+    });
+    if (response && response._items) {
+      const product = response._items.map((x) => x.data)[0];
+      return product;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching selected Product:", slug, error);
+  }
+};
 export const fetchProductById = async (slug) => {
   try {
     const id = await getProductId(slug);

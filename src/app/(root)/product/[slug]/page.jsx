@@ -6,10 +6,10 @@ import {
   getAllCategoriesData,
   getPairWithData,
   fetchAllProductsPaths,
-  getAllProducts,
   fetchBestSellers,
   fetchProductById,
   fetchProductsByIds,
+  getProductData,
 } from '@/Services/ProductsApis';
 import { getBlogsData, getPageMetaData, getPortfolioData } from "@/Services/SectionsApis";
 
@@ -18,14 +18,13 @@ export async function generateMetadata({ params }) {
     const slug = decodeURIComponent(params.slug);
     const [
       metaData,
-      productData,
+      product,
     ] = await Promise.all([
       getPageMetaData("product"),
-      fetchProductById(slug),
+      getProductData(slug),
     ]);
 
     const { title, noFollowTag } = metaData;
-    const { product } = productData;
 
     return {
       title: product.name + title,
