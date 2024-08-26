@@ -99,6 +99,7 @@ export const getProductData = async (slug) => {
 export const fetchProductById = async (slug) => {
   try {
     const id = await getProductId(slug);
+    if (!id) return;
     const response = await getDataFetchFunction({
       dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: [
