@@ -26,7 +26,7 @@ export async function generateMetadata({ params }) {
     const selectedCategoryData = findCategoryData(categoriesData, slug);
 
     return {
-      title: (selectedCategoryData.parentCollection?.name || selectedCategoryData?.name) + title,
+      title: (selectedCategoryData?.parentCollection?.name || selectedCategoryData?.name) + title,
       robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" && noFollowTag ? "noindex,nofollow" : null,
     }
   } catch (error) {
