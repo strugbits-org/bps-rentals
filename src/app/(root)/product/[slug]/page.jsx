@@ -8,7 +8,8 @@ import {
   fetchAllProductsPaths,
   getAllProducts,
   fetchBestSellers,
-  fetchAllProducts,
+  fetchProductById,
+  fetchProductsByIds,
 } from '@/Services/ProductsApis';
 import { getBlogsData, getPageMetaData, getPortfolioData } from "@/Services/SectionsApis";
 
@@ -20,11 +21,11 @@ export async function generateMetadata({ params }) {
       productData,
     ] = await Promise.all([
       getPageMetaData("product"),
-      fetchAllProducts(slug),
+      fetchProductById(slug),
     ]);
 
     const { title, noFollowTag } = metaData;
-    const { product } = productData.data;
+    const { product } = productData;
 
     return {
       title: product.name + title,
@@ -50,20 +51,20 @@ export default async function Page({ params }) {
 
   const [
     pairWithData,
-    products,
     categoriesData,
     blogsData,
     portfolioData,
     bestSeller
   ] = await Promise.all([
     getPairWithData(),
-    getAllProducts({}),
     getAllCategoriesData(),
     getBlogsData(),
     getPortfolioData(),
     fetchBestSellers()
   ]);
-  const selectedProduct = products.find((x) => decodeURIComponent(x.product.slug) === slug);
+
+  const selectedProduct = await fetchProductById(slug);
+  
   if (!selectedProduct) redirect("/error");
 
   const dataMap = new Map(selectedProduct.productVariantsData.map(({ sku, _id }) => [sku, _id]));
@@ -79,8 +80,8 @@ export default async function Page({ params }) {
   if (selectedProduct.variantData.length === 0) redirect("/error");
 
   const selectedProductId = selectedProduct.product._id;
-  const pairedProductsIds = pairWithData.filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);
-  const matchedProducts = products.filter(product => pairedProductsIds.includes(product.product._id));
+  const pairedProductsIds = pairWithData.filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);  
+  const matchedProducts = await fetchProductsByIds(pairedProductsIds);
 
   return (
     <ProductPostPage

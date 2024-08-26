@@ -53,6 +53,161 @@ export const getAllProducts = async ({ categories = [], searchTerm }) => {
     return [];
   }
 };
+
+export const getProductId = async (slug) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "Stores/Products",
+      eq: [
+        {
+          key: "slug",
+          value: slug,
+        },
+      ],
+    });
+    if (response && response._items) {
+      const product = response._items.map((x) => x.data)[0];
+      return product._id;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching selected ProductId:", slug, error);
+  }
+};
+export const fetchProductById = async (slug) => {
+  try {
+    const id = await getProductId(slug);
+    const response = await getDataFetchFunction({
+      dataCollectionId: "locationFilteredVariant",
+      includeReferencedItems: [
+        "product"
+      ],
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+      hasSome: [
+        {
+          key: "product",
+          values: [id],
+        },
+      ],
+      includeSubCategory: true,
+      includeVariants: true,
+      limit: "infinite",
+      increasedLimit: 700,
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data.subCategoryData ? x.data : { subCategoryData: [], ...x.data })[0];
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching products by ids:", error);
+    return [];
+  }
+};
+export const fetchProductsByIds = async (products) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "locationFilteredVariant",
+      includeReferencedItems: [
+        "product"
+      ],
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+      hasSome: [
+        {
+          key: "product",
+          values: products,
+        },
+      ],
+      includeSubCategory: true,
+      includeVariants: true,
+      limit: "infinite",
+      increasedLimit: 700,
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data.subCategoryData ? x.data : { subCategoryData: [], ...x.data });
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching products by ids:", error);
+    return [];
+  }
+};
+export const fetchAllProducts = async (slug) => {
+  try {
+    const payload = {
+      dataCollectionId: "locationFilteredVariant",
+      includeReferencedItems: ["product"],
+      limit: "infinite",
+      increasedLimit: 700,
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+    };
+    const response = await getDataFetchFunction(payload);
+    if (response && response._items) {
+      return response._items.find((x) => (x.data.product.slug === slug));
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching all products:", error);
+  }
+};
+export const fetchAllProductsPaths = async () => {
+  try {
+    const payload = {
+      dataCollectionId: "locationFilteredVariant",
+      includeReferencedItems: ["product"],
+      limit: "infinite",
+      increasedLimit: 700,
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+    };
+    const response = await getDataFetchFunction(payload);
+    if (response && response._items) {
+      return response._items.map((x) => ({ slug: x.data.product.slug }));
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching all products:", error);
+  }
+};
 export const searchProducts = async (term, location) => {
   try {
     const response = await getDataFetchFunction({
@@ -200,44 +355,7 @@ export const fetchBestSellers = async (slug) => {
     return [];
   }
 };
-export const fetchProductsByIds = async (products) => {
-  try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: [
-        "product"
-      ],
-      ne: [
-        {
-          key: "hidden",
-          value: true,
-        },
-        {
-          key: "isF1Exclusive",
-          value: true,
-        },
-      ],
-      hasSome: [
-        {
-          key: "product",
-          values: products,
-        },
-      ],
-      includeSubCategory: true,
-      includeVariants: true,
-      limit: "infinite",
-      increasedLimit: 700,
-    });
-    if (response && response._items) {
-      return response._items.map((x) => x.data.subCategoryData ? x.data : { subCategoryData: [], ...x.data });
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    console.error("Error fetching products by ids:", error);
-    return [];
-  }
-};
+
 export const fetchAllCategoriesData = async () => {
   try {
     const response = await getDataFetchFunction({
@@ -264,63 +382,6 @@ export const fetchAllCategoriesData = async () => {
   }
 };
 
-export const fetchAllProducts = async (slug) => {
-  try {
-    const payload = {
-      dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: ["product"],
-      limit: "infinite",
-      increasedLimit: 700,
-      ne: [
-        {
-          key: "hidden",
-          value: true,
-        },
-        {
-          key: "isF1Exclusive",
-          value: true,
-        },
-      ],
-    };
-    const response = await getDataFetchFunction(payload);
-    if (response && response._items) {
-      return response._items.find((x) => (x.data.product.slug === slug));
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    console.error("Error fetching all products:", error);
-  }
-};
-
-export const fetchAllProductsPaths = async () => {
-  try {
-    const payload = {
-      dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: ["product"],
-      limit: "infinite",
-      increasedLimit: 700,
-      ne: [
-        {
-          key: "hidden",
-          value: true,
-        },
-        {
-          key: "isF1Exclusive",
-          value: true,
-        },
-      ],
-    };
-    const response = await getDataFetchFunction(payload);
-    if (response && response._items) {
-      return response._items.map((x) => ({ slug: x.data.product.slug }));
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    console.error("Error fetching all products:", error);
-  }
-};
 export const getPairWithData = async () => {
   try {
     const response = await getDataFetchFunction({
