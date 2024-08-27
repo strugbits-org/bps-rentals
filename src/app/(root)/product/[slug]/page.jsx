@@ -8,7 +8,7 @@ import {
   fetchAllProductsPaths,
   getAllProducts,
   fetchBestSellers,
-  getProductData
+  fetchAllProducts
 } from '@/Services/ProductsApis';
 import { getBlogsData, getPageMetaData, getPortfolioData } from "@/Services/SectionsApis";
 
@@ -17,13 +17,14 @@ export async function generateMetadata({ params }) {
     const slug = decodeURIComponent(params.slug);
     const [
       metaData,
-      product,
+      productData,
     ] = await Promise.all([
       getPageMetaData("product"),
-      getProductData(slug),
+      fetchAllProducts(slug),
     ]);
 
     const { title, noFollowTag } = metaData;
+    const { product } = productData.data;
 
     return {
       title: product.name + title,
@@ -38,7 +39,7 @@ export async function generateMetadata({ params }) {
 export const generateStaticParams = async () => {
   try {
     const paths = await fetchAllProductsPaths() || [];
-    return paths.slice(0, 3);
+    return paths;
   } catch (error) {
     console.error("Error:", error);
   }
