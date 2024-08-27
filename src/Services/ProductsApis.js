@@ -54,7 +54,7 @@ export const getAllProducts = async ({ categories = [], searchTerm }) => {
   }
 };
 
-export const getProductId = async (slug) => {
+export const getStoreProduct = async (slug) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "Stores/Products",
@@ -66,8 +66,7 @@ export const getProductId = async (slug) => {
       ],
     });
     if (response && response._items) {
-      const product = response._items.map((x) => x.data)[0];
-      return product._id;
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -87,7 +86,7 @@ export const getProductData = async (slug) => {
       ],
     });
     if (response && response._items) {
-      const product = response._items.map((x) => x.data)[0];
+      const product = response._items[0].data;
       return product;
     } else {
       throw new Error("Response does not contain _items");
@@ -98,13 +97,10 @@ export const getProductData = async (slug) => {
 };
 export const fetchProductById = async (slug) => {
   try {
-    const id = await getProductId(slug);
-    if (!id) return;
+    const product = await getStoreProduct(slug);
+    if (!product._id) return;
     const response = await getDataFetchFunction({
       dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: [
-        "product"
-      ],
       ne: [
         {
           key: "hidden",
@@ -118,16 +114,15 @@ export const fetchProductById = async (slug) => {
       hasSome: [
         {
           key: "product",
-          values: [id],
+          values: [product._id],
         },
       ],
-      includeSubCategory: true,
-      includeVariants: true,
-      limit: "infinite",
-      increasedLimit: 700,
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data.subCategoryData ? x.data : { subCategoryData: [], ...x.data })[0];
+      const productData = response._items[0].data;
+      productData.subCategoryData = productData.subCategoryData || [];
+      productData.product = product;
+      return productData;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -159,7 +154,6 @@ export const fetchProductsByIds = async (products) => {
           values: products,
         },
       ],
-      includeSubCategory: true,
       includeVariants: true,
       limit: "infinite",
       increasedLimit: 700,
@@ -600,7 +594,7 @@ export const getCatalogIdBySku = async (productSku) => {
     });
 
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }

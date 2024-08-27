@@ -5,10 +5,11 @@ import ProductPostPage from '@/components/Product/Index';
 import {
   getAllCategoriesData,
   getPairWithData,
-  fetchAllProductsPaths,
-  getAllProducts,
+  // fetchAllProductsPaths,
   fetchBestSellers,
-  getProductData
+  fetchProductById,
+  fetchProductsByIds,
+  getProductData,
 } from '@/Services/ProductsApis';
 import { getBlogsData, getPageMetaData, getPortfolioData } from "@/Services/SectionsApis";
 
@@ -36,12 +37,13 @@ export async function generateMetadata({ params }) {
 }
 
 export const generateStaticParams = async () => {
-  try {
-    const paths = await fetchAllProductsPaths() || [];
-    return paths.slice(0, 3);
-  } catch (error) {
-    console.error("Error:", error);
-  }
+  return [];
+  // try {
+  //   const paths = await fetchAllProductsPaths() || [];
+  //   return paths;
+  // } catch (error) {
+  //   console.error("Error:", error);
+  // }
 }
 
 export default async function Page({ params }) {
@@ -49,20 +51,23 @@ export default async function Page({ params }) {
 
   const [
     pairWithData,
-    products,
     categoriesData,
     blogsData,
     portfolioData,
     bestSeller
   ] = await Promise.all([
     getPairWithData(),
-    getAllProducts({}),
     getAllCategoriesData(),
-    getBlogsData(),
-    getPortfolioData(),
+    getBlogsData(8),
+    getPortfolioData(8),
     fetchBestSellers()
   ]);
-  const selectedProduct = products.find((x) => decodeURIComponent(x.product.slug) === slug);
+
+  const selectedProduct = await fetchProductById(slug);
+
+  console.log("selectedProduct", selectedProduct);
+  
+
   if (!selectedProduct) redirect("/error");
 
   const dataMap = new Map(selectedProduct.productVariantsData.map(({ sku, _id }) => [sku, _id]));
@@ -79,7 +84,7 @@ export default async function Page({ params }) {
 
   const selectedProductId = selectedProduct.product._id;
   const pairedProductsIds = pairWithData.filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);
-  const matchedProducts = products.filter(product => pairedProductsIds.includes(product.product._id));
+  const matchedProducts = await fetchProductsByIds(pairedProductsIds);
 
   return (
     <ProductPostPage

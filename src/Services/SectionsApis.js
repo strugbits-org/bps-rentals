@@ -14,7 +14,7 @@ export const getPageMetaData = async (path) => {
       ]
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -28,7 +28,7 @@ export const getNewArrivalSectionContent = async () => {
   try {
     const response = await getDataFetchFunction({ dataCollectionId: "RentalsHomeNewArrivals" });
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -73,7 +73,7 @@ export const getHotTrendsSection = async () => {
       ],
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -111,7 +111,7 @@ export const getHomeSectionDetails = async () => {
       dataCollectionId: "HomeSectionDetails",
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -126,7 +126,7 @@ export const getDreamBigSectionContent = async () => {
       dataCollectionId: "DreamBigSection",
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -177,7 +177,7 @@ export const getRentalsTeamsBanner = async () => {
       dataCollectionId: "RentalTeamsBanner",
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -216,7 +216,7 @@ export const getMarketSection = async (slug) => {
     });
 
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -274,7 +274,7 @@ export const getSocialSectionDetails = async () => {
     });
 
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -294,7 +294,7 @@ export const fetchInstaFeed = async () => {
   };
 }
 
-export const getPortfolioData = async () => {
+export const getPortfolioData = async (limit) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "PortfolioCollection",
@@ -303,6 +303,9 @@ export const getPortfolioData = async () => {
       ne: [{ key: "isHidden", value: true }],
     });
     if (response && response._items) {
+      if (limit) {
+        return response._items.map((x) => x.data).slice(0, limit);
+      }
       return response._items.map((x) => x.data);
     } else {
       throw new Error("Response does not contain _items");
@@ -313,7 +316,7 @@ export const getPortfolioData = async () => {
   }
 };
 
-export const getBlogsData = async () => {
+export const getBlogsData = async (limit) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "BlogProductData",
@@ -323,6 +326,9 @@ export const getBlogsData = async () => {
     });
 
     if (response && response._items) {
+      if (limit) {
+        return response._items.map((x) => x.data).slice(0, limit);
+      }
       return response._items.map((x) => x.data);
     } else {
       throw new Error("Response does not contain _items");
