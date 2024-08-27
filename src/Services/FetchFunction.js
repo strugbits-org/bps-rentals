@@ -17,6 +17,7 @@ const getDataFetchFunction = async (payload) => {
       hasSome,
       skip,
       includeVariants,
+      includeVariantsProductsOnly,
       increasedLimit,
       log
     } = payload;

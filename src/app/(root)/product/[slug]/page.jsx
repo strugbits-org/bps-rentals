@@ -5,11 +5,11 @@ import ProductPostPage from '@/components/Product/Index';
 import {
   getAllCategoriesData,
   getPairWithData,
-  // fetchAllProductsPaths,
   fetchBestSellers,
   fetchProductById,
   fetchProductsByIds,
   getProductData,
+  getProductVariantsImages,
 } from '@/Services/ProductsApis';
 import { getBlogsData, getPageMetaData, getPortfolioData } from "@/Services/SectionsApis";
 
@@ -38,48 +38,36 @@ export async function generateMetadata({ params }) {
 
 export const generateStaticParams = async () => {
   return [];
-  // try {
-  //   const paths = await fetchAllProductsPaths() || [];
-  //   return paths;
-  // } catch (error) {
-  //   console.error("Error:", error);
-  // }
 }
 
 export default async function Page({ params }) {
   const slug = decodeURIComponent(params.slug);
-
+  const selectedProduct = await fetchProductById(slug);
+  if (!selectedProduct) redirect("/error");
+  const productId = selectedProduct.product._id;
   const [
     pairWithData,
+    productSnapshotData,
     categoriesData,
     blogsData,
     portfolioData,
     bestSeller
   ] = await Promise.all([
     getPairWithData(),
+    getProductVariantsImages(productId),
     getAllCategoriesData(),
     getBlogsData(8),
     getPortfolioData(8),
     fetchBestSellers()
   ]);
-
-  const selectedProduct = await fetchProductById(slug);
-
-  console.log("selectedProduct", selectedProduct);
   
-
-  if (!selectedProduct) redirect("/error");
-
-  const dataMap = new Map(selectedProduct.productVariantsData.map(({ sku, _id }) => [sku, _id]));
-
-  selectedProduct.variantData = selectedProduct.variantData.reduce((acc, variant) => {
-    const variantId = dataMap.get(variant.sku);
-    if (variantId) {
-      variant.variant.variantId = variantId;
-      acc.push(variant);
-    }
-    return acc;
-  }, []);
+  selectedProduct.productSnapshotData = productSnapshotData;
+  
+  selectedProduct.variantData = selectedProduct.variantData.map((variant) => {
+    variant.variant.variantId = variant.variant._id;
+    return variant;
+  });
+  
   if (selectedProduct.variantData.length === 0) redirect("/error");
 
   const selectedProductId = selectedProduct.product._id;
@@ -88,7 +76,6 @@ export default async function Page({ params }) {
 
   return (
     <ProductPostPage
-      selectedProduct={selectedProduct}
       selectedProductDetails={selectedProduct}
       matchedProductsData={matchedProducts}
       categoriesData={categoriesData}

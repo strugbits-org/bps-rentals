@@ -1,4 +1,5 @@
 "use server";
+import { encryptPriceFields } from "@/Utils/Encrypt";
 import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
@@ -66,7 +67,9 @@ export const getStoreProduct = async (slug) => {
       ],
     });
     if (response && response._items) {
-      return response._items[0].data;
+      const product = response._items[0].data;
+      encryptPriceFields(product);
+      return product;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -448,18 +451,12 @@ export const getProductVariantsImages = async (id) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "BPSProductImages",
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      hasSome: null,
-      ne: null,
       eq: [
         {
           key: "productId",
           value: id,
         },
       ],
-      skip: null,
     });
 
     if (response && response._items) {

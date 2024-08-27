@@ -61,8 +61,9 @@ const ProductPostPage = ({
 
   const { role } = useUserData();
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
+    const colorVariationId = selectedProductDetails.product._id + "-" + selectedVariantData.variantId;
     const selectedVariantFilteredData = productSnapshotData.find(
-      (variant) => variant.colorVariation === selectedVariantData.variantId
+      (variant) => variant.colorVariation === colorVariationId
     );
     if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
       const combinedVariantData = {
@@ -89,8 +90,9 @@ const ProductPostPage = ({
   useEffect(() => {
     if (selectedProductDetails && productSnapshotData) {
       const selectedVariantData = selectedProductDetails.variantData[0].variant;
+      const colorVariationId = selectedProductDetails.product._id + "-" + selectedVariantData.variantId;
       const selectedVariantFilteredData = productSnapshotData.find(
-        (variant) => variant.colorVariation === selectedVariantData.variantId
+        (variant) => variant.colorVariation === colorVariationId
       );
 
       if (selectedVariantFilteredData && selectedVariantFilteredData.images) {
@@ -167,9 +169,7 @@ const ProductPostPage = ({
 
       const product_id = selectedProductDetails.product._id;
       const product_location = cookies?.location;
-      const variant_id = selectedVariant.variantId
-        .replace(product_id, "")
-        .substring(1);
+      const variant_id = selectedVariant.variantId;
 
       const customFields = Object.keys(customTextFields).reduce((acc, key) => {
         acc[key] = customTextFields[key] + "\n";
