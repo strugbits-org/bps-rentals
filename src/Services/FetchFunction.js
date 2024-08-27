@@ -17,7 +17,7 @@ const getDataFetchFunction = async (payload) => {
       hasSome,
       skip,
       includeVariants,
-      includeVariantsProductsOnly,
+      includeVariantsExact,
       increasedLimit,
       log
     } = payload;
@@ -128,6 +128,27 @@ const getDataFetchFunction = async (payload) => {
         items = [...items, ...data._items];
       }
       data._items = items;
+    }
+
+    if (includeVariantsExact) {
+      const productIds = data._items
+        .map(x => x.data.product._id)
+        .filter(id => id);
+
+      console.log("productIds", productIds);
+
+      const [productsVariantImagesData, productsVariantsData] = await Promise.all([
+        getAllProductVariantsImages(),
+        getAllProductVariants()
+      ]);
+
+      data._items = data._items.map((product) => {
+        if (!product.data._id) return;
+        const productId = product.data.product._id;
+        product.data.productSnapshotData = productsVariantImagesData.filter(x => x.productId === productId);
+        product.data.productVariantsData = productsVariantsData.filter(x => x.productId === productId);
+        return product;
+      });
     }
 
     if (includeVariants) {

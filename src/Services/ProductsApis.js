@@ -157,7 +157,7 @@ export const fetchProductsByIds = async (products) => {
           values: products,
         },
       ],
-      includeVariants: true,
+      includeVariantsExact: true,
       limit: "infinite",
       increasedLimit: 700,
     });
@@ -418,6 +418,27 @@ export const getPairWithData = async () => {
     console.error("Error fetching products(getPairWithData):", error);
   }
 };
+export const getPairedProducts = async (slug) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "BPSPairItWith",
+      eq: [
+        {
+          key: "productId",
+          value: slug,
+        },
+      ]
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data);
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching products(getPairItWithProductsId):", error);
+  }
+};
 
 export const getProductVariants = async (id) => {
   try {
@@ -447,14 +468,14 @@ export const getProductVariants = async (id) => {
     return [];
   }
 };
-export const getProductVariantsImages = async (id) => {
+export const getProductVariantsImages = async (ids) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "BPSProductImages",
-      eq: [
+      hasSome: [
         {
           key: "productId",
-          value: id,
+          values: ids,
         },
       ],
     });

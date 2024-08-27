@@ -10,6 +10,7 @@ import {
   fetchProductsByIds,
   getProductData,
   getProductVariantsImages,
+  getPairedProducts,
 } from '@/Services/ProductsApis';
 import { getBlogsData, getPageMetaData, getPortfolioData } from "@/Services/SectionsApis";
 
@@ -46,15 +47,15 @@ export default async function Page({ params }) {
   if (!selectedProduct) redirect("/error");
   const productId = selectedProduct.product._id;
   const [
-    pairWithData,
+    pairedProducts,
     productSnapshotData,
     categoriesData,
     blogsData,
     portfolioData,
     bestSeller
   ] = await Promise.all([
-    getPairWithData(),
-    getProductVariantsImages(productId),
+    getPairedProducts(productId),
+    getProductVariantsImages([productId]),
     getAllCategoriesData(),
     getBlogsData(8),
     getPortfolioData(8),
@@ -70,8 +71,7 @@ export default async function Page({ params }) {
   
   if (selectedProduct.variantData.length === 0) redirect("/error");
 
-  const selectedProductId = selectedProduct.product._id;
-  const pairedProductsIds = pairWithData.filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);
+  const pairedProductsIds = pairedProducts.map((item) => item.pairedProductId);
   const matchedProducts = await fetchProductsByIds(pairedProductsIds);
 
   return (
