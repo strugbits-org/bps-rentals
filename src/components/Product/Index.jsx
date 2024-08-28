@@ -163,7 +163,6 @@ const ProductPostPage = ({
     e.preventDefault();
     setIsButtonDisabled(true);
     try {
-      pageLoadStart();
 
       const product_id = selectedProductDetails.product._id;
       const product_location = cookies?.location;
@@ -196,6 +195,8 @@ const ProductPostPage = ({
       const response = await AddProductToCart(productData);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
       setCookie("cartQuantity", total);
+      pageLoadStart();
+
       if (response) {
         router.push("/cart");
       }
