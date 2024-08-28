@@ -79,9 +79,9 @@ const QuotesHistory = () => {
         lineItems: products,
       };
 
-      pageLoadStart();
       const response = await AddProductToCart(productData);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
+      pageLoadStart();
 
       setCookie("cartQuantity", total);
       router.push("/cart");

@@ -69,7 +69,7 @@ const CartPage = ({ cartData }) => {
       const response = await removeProductFromCart([id]);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
 
-      setCartItems(response.cart.lineItems);
+      // setCartItems(response.cart.lineItems);
       setCookie("cartQuantity", total);
     } catch (error) {
       console.error("Error while removing product", error);
