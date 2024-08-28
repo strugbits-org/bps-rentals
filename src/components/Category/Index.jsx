@@ -44,7 +44,7 @@ const CategoryPage = ({
 
   const handleFilterChange = async ({ categories = [], colors = [] }) => {
     try {
-      const checkedCategories = categories
+      const checkedCategories = categories.length !== 0
         ? categories.filter((x) => x.checked).map((x) => x._id)
         : filterCategories.filter((x) => x.checked).map((x) => x._id);
 
@@ -61,6 +61,7 @@ const CategoryPage = ({
 
       const selectedLocation = cookies.location;
 
+      
       const filteredProductsList = productsData.filter((product) => {
         const hasCategory =
           selectedCategories.length > 0

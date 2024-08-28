@@ -26,12 +26,16 @@ export async function generateMetadata({ params }) {
     ]);
     const { title, noFollowTag } = metaData;
     const selectedMarketData = marketsData.find(x => x.slug === slug);
-    
-    return {
+    const metadata = {
       title: selectedMarketData.cardname + title,
       description: selectedMarketData.description,
-      robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" && noFollowTag ? "noindex,nofollow" : null,
+    };
+
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
+      metadata.robots = "noindex,nofollow";
     }
+    
+    return metadata;
   } catch (error) {
     console.log("Error:", error);
   }
