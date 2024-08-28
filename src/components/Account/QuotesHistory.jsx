@@ -157,10 +157,12 @@ const QuotesHistory = () => {
                       <h2 className="name">{data.title}</h2>
                       <div className="date">{issueDate}</div>
                     </div>
-                    {role && totalPrice && (
+                    {role === "admin" && totalPrice ? (
                       <div className="value">
                         $ {totalPrice.toLocaleString()}
                       </div>
+                    ) : (
+                      <div className="value"></div>
                     )}
                     <div className="container-btn">
                       <btn-modal-open

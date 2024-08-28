@@ -82,6 +82,7 @@ const CartModal = ({
   };
 
   const handleAddToCart = async () => {
+    if (unavailable) return;
     setIsButtonDisabled(true);
     try {
       const product_id = productData.product._id;

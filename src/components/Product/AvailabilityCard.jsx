@@ -4,10 +4,15 @@ import { useCookies } from 'react-cookie';
 export const AvailabilityCard = ({ selectedVariantData, setUnavailable }) => {
     const [message, setMessage] = useState();
     const [cookies, setCookie] = useCookies(["location"]);
-    
+
     const { location } = selectedVariantData;
     useEffect(() => {
-        setUnavailable(false);
+
+        if (location.includes(cookies.location)) {
+            setUnavailable(false);
+        } else {
+            setUnavailable(true);
+        }
         if (location.length === 3) {
             setMessage('Available in San Francisco, Las Vegas, and for National delivery (Conditions apply)');
         } else if (location.length === 2) {
@@ -36,7 +41,6 @@ export const AvailabilityCard = ({ selectedVariantData, setUnavailable }) => {
                 "NT": 'National'
             };
             setMessage(`Not Available in ${options[cookies.location]}`);
-            setUnavailable(true);
         }
     }, [location, cookies])
 

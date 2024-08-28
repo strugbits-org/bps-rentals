@@ -192,7 +192,6 @@
 }
 
 .unavailable-warning-wrapper {
-    display: flex;
     font-size: 14px;
 }
 
@@ -220,4 +219,14 @@ body[data-form-cart-state="success"] #header{
 
 body[data-form-cart-state="success"]:has(.submenu-login.active) #main-transition{
     z-index: -1;
+}
+
+.w-full {
+    width: 100%!important;
+}
+
+@media only screen and (min-width: 1025.1px) {
+    .cart-product .wrapper-product-info .container-specs .list-specs {
+        max-width: 106rem;
+    }
 }
