@@ -160,6 +160,7 @@ const ProductPostPage = ({
   };
 
   const handleAddToCart = async (e) => {
+    if (unavailable) return;
     e.preventDefault();
     setIsButtonDisabled(true);
     try {

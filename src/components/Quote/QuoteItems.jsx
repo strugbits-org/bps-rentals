@@ -1,14 +1,17 @@
 import { generateImageURL, generateImageUrl2 } from "@/Utils/GenerateImageURL";
 import {
   extractSlugFromUrl,
-  findColor,
-  findLocation,
+  formatDescriptionLines,
+  formatPrice,
   locations,
 } from "@/Utils/Utils";
 import AnimateLink from "../Common/AnimateLink";
 import React from "react";
+import useUserData from "@/Hooks/useUserData";
 
 const QuoteItems = ({ quoteData }) => {
+  const { role } = useUserData();
+
   if (!quoteData || quoteData.length === 0) return null;
 
   const renderFullItem = (cart, index) => {
@@ -19,10 +22,9 @@ const QuoteItems = ({ quoteData }) => {
       image,
       physicalProperties,
       descriptionLines,
+      price
     } = cart.fullItem;
-
-    const colors = findColor(descriptionLines).join("-");
-    const location = findLocation(descriptionLines);
+    const formattedDescription = formatDescriptionLines(descriptionLines);
 
     return (
       <li key={index} className="list-item" style={{ margin: "8px 0" }}>
@@ -58,22 +60,32 @@ const QuoteItems = ({ quoteData }) => {
               <ul className="list-specs">
                 <li className="sku">
                   <span className="specs-title">SKU</span>
-                  <span className="specs-text">{physicalProperties.sku}</span>
-                </li>
-                {/* <li className="size hidden">
-                  <span className="specs-title">Size</span>
-                  <span className="specs-text">19”L X 15.5”W X 27.5”H</span>
-                </li> */}
-                <li className="color">
-                  <span className="specs-title">Color</span>
-                  <span className="specs-text">{colors}</span>
-                </li>
-                <li className="location">
-                  <span className="specs-title">Location</span>
                   <span className="specs-text">
-                    {locations[location]} <i className="icon-pin"></i>
+                    {physicalProperties.sku}
                   </span>
                 </li>
+                {formattedDescription.map((item) => {
+                  const { title, value } = item;
+                  return (
+                    <li className="location w-full">
+                      <span className="specs-title capitalize">
+                        {title}
+                      </span>
+                      <span className="specs-text">
+                        {value}
+                        {title === "location" && (<>{" "}<i className="icon-pin"></i></>)}
+                      </span>
+                    </li>
+                  )
+                })}
+                {role === "admin" && (
+                  <li className="price">
+                    <span className="specs-title">Price</span>
+                    <span className="specs-text">
+                      {formatPrice(price, quantity)}
+                    </span>
+                  </li>
+                )}
               </ul>
               <div className="quantity">
                 <span className="fs--20 no-mobile">Quantity</span>
@@ -101,7 +113,8 @@ const QuoteItems = ({ quoteData }) => {
   };
 
   const renderSimpleItem = (cart, index) => {
-    const { quantity, name, url, src, description, location } = cart;
+    const { quantity, name, price, src, description, location } = cart;
+    const formattedPrice = `$ ${(price * quantity).toLocaleString()}`
 
     return (
       <li key={index} className="list-item" style={{ margin: "8px 0" }}>
@@ -142,6 +155,14 @@ const QuoteItems = ({ quoteData }) => {
                     {locations[location]} <i className="icon-pin"></i>
                   </span>
                 </li>
+                {role === "admin" && (
+                  <li className="price">
+                    <span className="specs-title">Price</span>
+                    <span className="specs-text">
+                      {formattedPrice}
+                    </span>
+                  </li>
+                )}
               </ul>
               <div className="quantity">
                 <span className="fs--20 no-mobile">Quantity</span>

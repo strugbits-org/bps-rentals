@@ -171,8 +171,8 @@ const CartPage = ({ cartData }) => {
                                   {formattedDescription.map((item) => {
                                     const { title, value } = item;
                                     return (
-                                      <li className="location">
-                                        <span className="specs-title">
+                                      <li className="location w-full">
+                                        <span className="specs-title capitalize">
                                           {title}
                                         </span>
                                         <span className="specs-text">
