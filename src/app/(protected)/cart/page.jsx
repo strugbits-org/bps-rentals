@@ -6,14 +6,14 @@ export async function generateMetadata() {
   try {
     const metaData = await getPageMetaData("cart");
     const { title, noFollowTag } = metaData;
-const metadata = {
+    const metadata = {
       title,
     };
 
     if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
       metadata.robots = "noindex,nofollow";
     }
-    
+
     return metadata;
   } catch (error) {
     console.log("Error:", error);
