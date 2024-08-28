@@ -8,11 +8,16 @@ export async function generateMetadata() {
   try {
     const metaData = await getPageMetaData("my-account");
     const { title, noFollowTag } = metaData;
-    
-    return {
-      title: title,
-      robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" && noFollowTag ? "noindex,nofollow" : null,
+
+    const metadata = {
+      title,
+    };
+
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
+      metadata.robots = "noindex,nofollow";
     }
+
+    return metadata;
   } catch (error) {
     console.log("Error:", error);
   }

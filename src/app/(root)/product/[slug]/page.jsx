@@ -26,11 +26,16 @@ export async function generateMetadata({ params }) {
     const { title, noFollowTag } = metaData;
     const { product } = productData.data;
 
-    return {
+    const metadata = {
       title: product.name + title,
       description: product.description,
-      robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" && noFollowTag ? "noindex,nofollow" : null,
+    };
+
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
+      metadata.robots = "noindex,nofollow";
     }
+
+    return metadata;
   } catch (error) {
     console.log("Error:", error);
   }

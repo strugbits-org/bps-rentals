@@ -25,10 +25,15 @@ export async function generateMetadata({ params }) {
     const { title, noFollowTag } = metaData;
     const selectedCategoryData = findCategoryData(categoriesData, slug);
 
-    return {
+    const metadata = {
       title: (selectedCategoryData?.parentCollection?.name || selectedCategoryData?.name) + title,
-      robots: process.env.NEXT_PUBLIC_ENVIRONMENT !== "PRODUCTION" && noFollowTag ? "noindex,nofollow" : null,
+    };
+
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
+      metadata.robots = "noindex,nofollow";
     }
+    
+    return metadata;
   } catch (error) {
     console.log("Error:", error);
   }
