@@ -35,6 +35,7 @@ const Navbar = ({
   const path = usePathname();
 
   const [toggleModal, setToggleModal] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
   const [cartQuantity, setCartQuantity] = useState();
   const [message, setMessage] = useState("Message");
   const [modalState, setModalState] = useState({
@@ -43,9 +44,6 @@ const Navbar = ({
   });
 
   const checkUser = () => {
-
-    const loggedIn = cookies.authToken;
-
     const submenuLogin = document.querySelector(".submenu-login");
     if (loggedIn && loggedIn !== "undefined") {
       pageLoadStart();
@@ -74,6 +72,7 @@ const Navbar = ({
   };
 
   useEffect(() => {
+    setLoggedIn(cookies.authToken && cookies.authToken !== "undefined");
     getCartTotalQuantity();
   }, [cookies]);
 
@@ -244,7 +243,7 @@ const Navbar = ({
                         <i className="icon-arrow-down"></i>
                       </button>
                     </li>
-                    {!cookies.authToken && (
+                    {!loggedIn && (
                       <li className="no-desktop">
                         <button className="header-link disable-click-outside"
                           onClick={checkUser}
