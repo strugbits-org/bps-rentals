@@ -132,8 +132,8 @@ const CartPage = ({ cartData }) => {
                               <img
                                 src={generateImageURL({
                                   wix_url: image,
-                                  h: "63",
-                                  w: "63",
+                                  h: "110",
+                                  w: "110",
                                 })}
                                 className=" "
                               />
@@ -170,18 +170,29 @@ const CartPage = ({ cartData }) => {
                                   </li>
                                   {formattedDescription.map((item) => {
                                     const { title, value } = item;
+                                    const titleWordCount = title.split(" ").length;
+                                    const valueWordCount = value.split(" ").length;
+
                                     return (
-                                      <li className="location w-full">
+                                      <li
+                                        className={`location ${titleWordCount >= 2 || valueWordCount > 4 ? "long-desc" : ""}`}
+                                      >
                                         <span className="specs-title capitalize">
                                           {title}
                                         </span>
                                         <span className="specs-text">
                                           {value}
-                                          {title === "location" && (<>{" "}<i className="icon-pin"></i></>)}
+                                          {title === "location" && (
+                                            <>
+                                              {" "}
+                                              <i className="icon-pin"></i>
+                                            </>
+                                          )}
                                         </span>
                                       </li>
-                                    )
+                                    );
                                   })}
+
                                   {role === "admin" && (
                                     <li className="price">
                                       <span className="specs-title">Price</span>
@@ -190,15 +201,6 @@ const CartPage = ({ cartData }) => {
                                       </span>
                                     </li>
                                   )}
-                                  {/* <li className="customize-text">
-                                    <span className="specs-title">
-                                      Customize text
-                                    </span>
-                                    <input
-                                      type="text"
-                                      placeholder="Lorem Ipsum"
-                                    />
-                                  </li> */}
                                 </ul>
                                 <div className="quantity">
                                   <span className="fs--20 no-mobile">

@@ -66,8 +66,10 @@ const QuoteItems = ({ quoteData }) => {
                 </li>
                 {formattedDescription.map((item) => {
                   const { title, value } = item;
+                  const titleWordCount = title.split(" ").length;
+                  const valueWordCount = value.split(" ").length;
                   return (
-                    <li className="location w-full">
+                    <li className={`location ${titleWordCount >= 2 || valueWordCount > 4 ? "long-desc" : ""}`}>
                       <span className="specs-title capitalize">
                         {title}
                       </span>

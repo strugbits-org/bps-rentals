@@ -422,13 +422,15 @@ const ProductPostPage = ({
                       selectedProductDetails.product?.additionalInfoSections &&
                       selectedProductDetails.product.additionalInfoSections.map(
                         (sec, index) => {
+                          const { title, description } = sec;
+                          
                           return (
-                            <li class={sec.title} key={index}>
-                              <span class="specs-title">{sec.title}</span>
+                            <li className={`${title} ${title === "IMPORTANT" ? "long-desc" : ""}`} key={index}>
+                              <span class="specs-title">{title}</span>
                               <span
                                 class="specs-text"
                                 dangerouslySetInnerHTML={{
-                                  __html: sec.description,
+                                  __html: description,
                                 }}
                               ></span>
                             </li>
@@ -666,10 +668,11 @@ const ProductPostPage = ({
                       data-aos="fadeIn .8s ease-in-out"
                     >
                       {productFoundInCategories.map((data, index) => {
-                        const { name, slug } = data;
+                        const { name } = data;
+                        const slug = data["link-copy-of-category-name-2"];
 
                         return (
-                          <AnimateLink key={index} to={`/category/${slug}`}>
+                          <AnimateLink key={index} to={slug}>
                             <button className="btn-small-tag">
                               <span>{name}</span>
                             </button>

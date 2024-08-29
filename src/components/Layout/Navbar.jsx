@@ -6,7 +6,7 @@ import ForgotPassword from "../Authentication/ForgotPassword";
 import CreateAccount from "../Authentication/CreateAccount";
 import Login from "../Authentication/Login";
 
-import { pageLoadStart } from "@/Utils/AnimationFunctions";
+import { pageLoadEnd, pageLoadStart } from "@/Utils/AnimationFunctions";
 import { usePathname, useRouter } from "next/navigation";
 import LocationsFilter from "../Common/LocationsFilter";
 import SearchModal from "../Common/Modals/SearchModal";
@@ -43,17 +43,23 @@ const Navbar = ({
   });
 
   const checkUser = () => {
-    if (path === "/my-account") return;
 
     const loggedIn = cookies.authToken;
 
     const submenuLogin = document.querySelector(".submenu-login");
     if (loggedIn && loggedIn !== "undefined") {
       pageLoadStart();
+      if (path === "/my-account") {
+        setTimeout(() => {
+          pageLoadEnd();
+        }, 900);
+        return;
+      };
       setTimeout(() => {
         router.push("/my-account");
       }, 500);
     } else {
+      if (path === "/my-account") return;
       submenuLogin.classList.toggle(
         "active",
         !submenuLogin.classList.contains("active")
@@ -124,19 +130,9 @@ const Navbar = ({
                     </button>
                   </li>
                   <li className="login-item">
-                    {/* {"login" === "login" ? (
-                      <button
-                        data-set-submenu="login"
-                        className="new-login-button"
-                      >
-                        <i className="icon-user"></i>
-                        <span className="hide">Login</span>
-                      </button>
-                    ) : (
-                      )} */}
                     <button
-                      data-set-submenu="login"
-                      className="new-login-button"
+                      onClick={checkUser}
+                      className="new-login-button disable-click-outside"
                     >
                       <i className="icon-user"></i>
                       <span className="hide">Login</span>
@@ -164,9 +160,8 @@ const Navbar = ({
                     x="0px"
                     y="0px"
                     viewBox="0 0 55 38.5"
-                    style={{ enableBackground: "new 0 0 55 38.5" }}
                   >
-                    <g id="bt-menu-bars">
+                    <g id="bt-menu-bars" fill="#0F41FA">
                       <rect
                         id="bottombar"
                         y="32.5"
@@ -249,11 +244,15 @@ const Navbar = ({
                         <i className="icon-arrow-down"></i>
                       </button>
                     </li>
-                    <li className="no-desktop">
-                      <button className="header-link" data-set-submenu="login">
-                        <span data-letter="Login">Login</span>
-                      </button>
-                    </li>
+                    {!cookies.authToken && (
+                      <li className="no-desktop">
+                        <button className="header-link disable-click-outside"
+                          onClick={checkUser}
+                        >
+                          <span data-letter="Login">Login</span>
+                        </button>
+                      </li>
+                    )}
                     <li className="no-desktop cart-item">
                       <div className="cart-number">
                         <span>{cartQuantity}</span>
@@ -267,10 +266,10 @@ const Navbar = ({
                       </AnimateLink>
                     </li>
                     <li className="no-desktop item-bps-link">
-                      <a href="" target="_blank" className="bps-link">
+                      <AnimateLink to={"/"} className="bps-link">
                         <span data-letter="Back to">Back to</span>
                         <i className="icon-bps-logo"></i>
-                      </a>
+                      </AnimateLink>
                     </li>
                   </ul>
                   <ul className="header-info-list no-mobile">
@@ -286,23 +285,6 @@ const Navbar = ({
                       </button>
                     </li>
                     <li className="login-item">
-                      {/* {"login" !== "login" ? (
-                        <AnimateLink
-                          to="/my-account"
-                          className="new-login-button"
-                        >
-                          <i className="icon-user"></i>
-                          <span className="hide">Login</span>
-                        </AnimateLink>
-                      ) : (
-                        <button
-                          data-set-submenu="login"
-                          className="new-login-button"
-                        >
-                          <i className="icon-user"></i>
-                          <span className="hide">Login</span>
-                        </button>
-                      )} */}
                       <button
                         onClick={checkUser}
                         className="new-login-button disable-click-outside"
