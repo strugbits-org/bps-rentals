@@ -324,15 +324,17 @@ const CartModal = ({
                                 productData.product?.additionalInfoSections &&
                                 productData.product.additionalInfoSections.map(
                                   (sec, index) => {
+                                    const { title, description } = sec;
+
                                     return (
-                                      <li class={sec.title} key={index}>
+                                      <li className={`${title} ${title === "IMPORTANT" ? "long-desc" : ""}`} key={index}>
                                         <span class="specs-title">
-                                          {sec.title}
+                                          {title}
                                         </span>
                                         <span
                                           class="specs-text"
                                           dangerouslySetInnerHTML={{
-                                            __html: sec.description,
+                                            __html: description,
                                           }}
                                         ></span>
                                       </li>

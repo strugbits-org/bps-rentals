@@ -42,6 +42,9 @@ const CategoryPage = ({
   const [productFilteredVariantData, setProductFilteredVariantData] =
     useState();
 
+  const [categoriesDropdown, setCategoriesDropdown] = useState(false);
+
+
   const handleFilterChange = async ({ categories = [], colors = [] }) => {
     try {
       const checkedCategories = categories.length !== 0
@@ -61,7 +64,7 @@ const CategoryPage = ({
 
       const selectedLocation = cookies.location;
 
-      
+
       const filteredProductsList = productsData.filter((product) => {
         const hasCategory =
           selectedCategories.length > 0
@@ -287,17 +290,16 @@ const CategoryPage = ({
                       <div className="container-category-filter pb-lg-60 pb-mobile-40">
                         <div
                           className="blog-tags dropdown-tags"
-                          data-parent-tag
                           data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                         >
                           <button
                             className="btn-tag-mobile no-desktop"
-                            data-set-tag="blog"
+                            onClick={() => { setCategoriesDropdown(prev => !prev) }}
                           >
                             <span>All Categories</span>
                             <i className="icon-arrow-down"></i>
                           </button>
-                          <div className="list-dropdown" data-get-tag="blog">
+                          <div className={`list-dropdown ${categoriesDropdown ? "active" : ""}`}>
                             <div className="container-wrapper-list">
                               <div className="wrapper-list">
                                 <ul className="list-blog-tags list-dropdown-tags">

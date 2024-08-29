@@ -208,25 +208,72 @@
 
 body[data-modal-state="active"][data-modal="modal-quotes-history"] .wrapper[data-scroll-container],
 body[data-modal-state="active"][data-modal="modal-product-2"] .wrapper[data-scroll-container],
-body[data-form-cart-state="success"] .wrapper[data-scroll-container]{
-    transform: none!important;
+body[data-form-cart-state="success"] .wrapper[data-scroll-container] {
+    transform: none !important;
 }
+
 body[data-modal-state="active"][data-modal="modal-quotes-history"] #header,
 body[data-modal-state="active"][data-modal="modal-product-2"] #header,
-body[data-form-cart-state="success"] #header{
+body[data-form-cart-state="success"] #header {
     z-index: 0;
 }
 
-body[data-form-cart-state="success"]:has(.submenu-login.active) #main-transition{
+body[data-form-cart-state="success"]:has(.submenu-login.active) #main-transition {
     z-index: -1;
 }
 
 .w-full {
-    width: 100%!important;
+    width: 100% !important;
 }
 
-@media only screen and (min-width: 1025.1px) {
+.long-desc {
+    display: flex !important;
+    flex-flow: column !important;
+    align-items: baseline !important;
+}
+
+li.IMPORTANT.long-desc {
+    max-width: none !important;
+    flex-flow: row!important;
+}
+
+@media only screen and (min-width: 768px) {
     .cart-product .wrapper-product-info .container-specs .list-specs {
-        max-width: 106rem;
+        column-count: unset;
+        page-break-inside: unset;
+        break-inside: unset;
+        column-gap: unset;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .cart-product .wrapper-product-info .container-specs .list-specs li {
+        width: 50% !important;
+    }
+}
+
+.form-quote .container-input.input-date input {
+    color-scheme: none;
+}
+
+.cart-product .container-img {
+    min-width: 11rem;
+}
+
+/* Mobile */
+@media only screen and (max-width: 1025px) {
+    .feedback-quote-request-confirmed .content {
+        gap: 4rem;
+    }
+
+    .list-blog-lets-get-social li .link-blog {
+        gap: 1rem;
+    }
+
+    .modal-content {
+        padding: 7rem 1rem 5rem !important;
+    }
+    .footer .container-footer-menu .list-footer-menu .list-item .link-footer-menu {
+        white-space: nowrap;
     }
 }
