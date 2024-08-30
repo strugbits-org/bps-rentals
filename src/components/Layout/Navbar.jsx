@@ -58,6 +58,8 @@ const Navbar = ({
       }, 500);
     } else {
       if (path === "/my-account") return;
+      const element = document.querySelector(".header-info-list li.local-item.active");
+      if (element) element.querySelector(".custom-close").click();
       submenuLogin.classList.toggle(
         "active",
         !submenuLogin.classList.contains("active")

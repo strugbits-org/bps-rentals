@@ -229,12 +229,12 @@ body[data-form-cart-state="success"]:has(.submenu-login.active) #main-transition
 .long-desc {
     display: flex !important;
     flex-flow: column !important;
-    align-items: baseline !important;
+    align-items: flex-start !important;
 }
 
 li.IMPORTANT.long-desc {
     max-width: none !important;
-    flex-flow: row!important;
+    flex-flow: row !important;
 }
 
 @media only screen and (min-width: 768px) {
@@ -273,7 +273,17 @@ li.IMPORTANT.long-desc {
     .modal-content {
         padding: 7rem 1rem 5rem !important;
     }
+
     .footer .container-footer-menu .list-footer-menu .list-item .link-footer-menu {
         white-space: nowrap;
+    }
+
+    .footer .container-newsletter .container-text {
+        flex-flow: column;
+        align-items: flex-start;
+    }
+
+    .container-product-description .container-add-to-cart .btn-add-to-cart:hover {
+        --btn-bg-color: var(--white-1);
     }
 }

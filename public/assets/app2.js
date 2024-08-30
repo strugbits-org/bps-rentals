@@ -168,6 +168,8 @@ var require_app2 = __commonJS({
       };
       const btnMenu = document.getElementById("bt-menu");
       btnMenu.addEventListener("click", () => {
+        const element = document.querySelector(".header-info-list li.local-item.active");      
+        if (element) element.querySelector(".custom-close").click();
         menu.isOpen ? menu.close() : menu.open();
       });
       const btnMenuClose = document.querySelectorAll("[data-menu-close]");

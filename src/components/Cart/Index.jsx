@@ -170,6 +170,8 @@ const CartPage = ({ cartData }) => {
                                   </li>
                                   {formattedDescription.map((item) => {
                                     const { title, value } = item;
+                                    if (!value) return null;
+
                                     const titleWordCount = title.split(" ").length;
                                     const valueWordCount = value.split(" ").length;
 
