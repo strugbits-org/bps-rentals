@@ -1,40 +1,37 @@
 import QuoteDetails from "@/components/Quote/QuoteDetails";
 
-import { getQuoteRequestPageContent } from "@/Services/Index";
-import { getQuotesById } from "@/Services/QuoteApis";
+import { getQuoteDetailPageContent, getQuoteRequestPageContent } from "@/Services/Index";
 import { getPageMetaData } from "@/Services/SectionsApis";
+import { Suspense } from "react";
 
 export async function generateMetadata() {
   try {
     const metaData = await getPageMetaData("quote-detail");
     const { title, noFollowTag } = metaData;
-    
-const metadata = {
+
+    const metadata = {
       title,
     };
 
     if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
       metadata.robots = "noindex,nofollow";
     }
-    
+
     return metadata;
   } catch (error) {
     console.log("Error:", error);
   }
 }
 
-export default async function Page({ searchParams }) {
-  const id = searchParams.id;
-
-  const [quoteRequestPageContent, quoteData] = await Promise.all([
+export default async function Page() {
+  const [quoteRequestPageContent, quoteDetailPageContent] = await Promise.all([
     getQuoteRequestPageContent(),
-    getQuotesById(id),
+    getQuoteDetailPageContent(),
   ]);
 
   return (
-    <QuoteDetails
-      quoteRequestPageContent={quoteRequestPageContent}
-      quoteData={quoteData.data || []}
-    />
+    <Suspense>
+      <QuoteDetails quoteRequestPageContent={quoteRequestPageContent} quoteDetailPageContent={quoteDetailPageContent} />
+    </Suspense>
   );
 }

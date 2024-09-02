@@ -32,7 +32,7 @@ export async function generateMetadata({ params }) {
     if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
       metadata.robots = "noindex,nofollow";
     }
-    
+
     return metadata;
   } catch (error) {
     console.log("Error:", error);

@@ -7,7 +7,7 @@ const Wrapper = ({ children }) => {
 
   const path = pathname.trim() === "/" ? "home" : pathname.substring(1);
   let cleanPath = path.split("/")[0].trim();
-  if (cleanPath === "quote-details") cleanPath = "quote-request";
+  if (cleanPath === "quote-detail") cleanPath = "quote-request";
 
   useEffect(() => {
     if (typeof window !== "undefined") {

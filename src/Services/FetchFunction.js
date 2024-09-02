@@ -44,6 +44,7 @@ const getDataFetchFunction = async (payload) => {
 
     // Validate collection ID
     const authCollections = [
+      "RentalsQuotesDetailPage",
       "PageSeoConfigurationRentals",
       "RentalsHomeNewArrivals",
       "SearchPages",

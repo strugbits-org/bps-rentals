@@ -68,7 +68,7 @@ export const getQuotesById = async (id) => {
     }
     const data = await response.json();
 
-    return data;
+    return data.data;
   } catch (error) {
     throw new Error(error);
   }
