@@ -181,10 +181,7 @@ const getDataFetchFunction = async (payload) => {
     return data;
 
   } catch (error) {
-    const clientId = process.env.CLIENT_ID_WIX;
     console.error("Error in queryDataItems:", payload.dataCollectionId, error);
-    console.log("clientId:", clientId);
-    console.log("Payload:", payload);
     return { error: error.message, status: 500 };
   }
 };
