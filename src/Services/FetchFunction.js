@@ -155,7 +155,7 @@ const getDataFetchFunction = async (payload) => {
       ]);
 
       data._items = data._items.map((product) => {
-        if (!product.data._id) return product;
+        if (!product.data._id) return;
         const productId = product.data.product._id;
         product.data.productSnapshotData = productsVariantImagesData.filter(x => x.productId === productId);
         product.data.productVariantsData = productsVariantsData.filter(x => x.productId === productId);
