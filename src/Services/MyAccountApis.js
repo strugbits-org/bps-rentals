@@ -8,7 +8,7 @@ export const getMyAccountPageContent = async () => {
       dataCollectionId: "RentalsMyAccountPage",
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -24,7 +24,7 @@ export const getChangePasswordPageContent = async () => {
       dataCollectionId: "RentalsChangePasswordPage",
     });
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }

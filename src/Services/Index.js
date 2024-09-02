@@ -44,7 +44,24 @@ export const getQuoteRequestPageContent = async () => {
     });
 
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching privacy and policy page data:", error);
+    return [];
+  }
+};
+
+export const getQuoteDetailPageContent = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "RentalsQuotesDetailPage",
+    });
+
+    if (response && response._items) {
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }

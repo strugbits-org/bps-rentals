@@ -6,7 +6,6 @@ import Studios from "../Common/Sections/StudiosSection";
 import DreamBig from "../Common/Sections/DreamBigSection";
 import NewArrival from "../Common/Sections/NewArrivalSection";
 import Highlights from "../Common/Sections/HighlightsSection";
-import AnimateLink from "../Common/AnimateLink";
 import PeopleReviewSlider from "../Common/Sections/PeopleReviewSlider";
 import { MarketIntroSection } from "./MarketIntroSection";
 import { MarketBestSeller } from "./MarketBestSeller";
@@ -25,7 +24,7 @@ const MarketPage = ({
   bestSellerProducts
 }) => {
   useEffect(() => {
-    setTimeout(markPageLoaded, 500);
+    markPageLoaded();
   }, []);
   return (
     <>

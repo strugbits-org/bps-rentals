@@ -132,10 +132,10 @@ export const changeProgress = (percent) => {
 export const closeModals = () => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
+      const element = document.querySelector(".header-info-list li.local-item.active");      
+      if (element) element.querySelector(".custom-close").click();
       const isActive = document.querySelector("body").classList.contains("menu-active");
-      if (isActive) {
-        document.querySelector("#bt-menu")?.click();
-      }
+      if (isActive) document.querySelector("#bt-menu")?.click();
       document.querySelector(".closeModals").click();
     }, 200);
   }

@@ -12,6 +12,7 @@ import {
 } from "@/Utils/Utils";
 
 import {
+  getProductsCart,
   removeProductFromCart,
   updateProductsQuantityCart,
 } from "@/Services/CartApis";
@@ -19,7 +20,7 @@ import {
 import AnimateLink from "../Common/AnimateLink";
 import useUserData from "@/Hooks/useUserData";
 
-const CartPage = ({ cartData }) => {
+const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [cookies, setCookie] = useCookies([
     "authToken",
@@ -76,16 +77,22 @@ const CartPage = ({ cartData }) => {
     }
   };
 
-  useEffect(() => {
-    if (cartData) {
-      setCartItems(cartData);
-      const total = calculateTotalCartQuantity(cartData);
+  const fetchCart = async () => {
+    try {
+      const data = await getProductsCart();
+      setCartItems(data);
+      const total = calculateTotalCartQuantity(data);
       setCookie("cartQuantity", total > 0 ? String(total) : "0");
-    }
-    setTimeout(() => {
+      setTimeout(markPageLoaded, 200);
+    } catch (error) {
       markPageLoaded();
-    }, 1000);
-  }, [cartData]);
+      console.error("Error while fetching cart data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCart();
+  }, []);
 
   return (
     <section className="cart-intro pt-40 pb-lg-195 pb-tablet-70 pb-phone-135">
@@ -170,6 +177,8 @@ const CartPage = ({ cartData }) => {
                                   </li>
                                   {formattedDescription.map((item) => {
                                     const { title, value } = item;
+                                    if (!value) return null;
+
                                     const titleWordCount = title.split(" ").length;
                                     const valueWordCount = value.split(" ").length;
 

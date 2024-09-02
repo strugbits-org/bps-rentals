@@ -66,7 +66,7 @@ export const getProductId = async (slug) => {
       ],
     });
     if (response && response._items) {
-      const product = response._items.map((x) => x.data)[0];
+      const product = response._items[0].data;
       return product._id;
     } else {
       throw new Error("Response does not contain _items");
@@ -87,7 +87,7 @@ export const getProductData = async (slug) => {
       ],
     });
     if (response && response._items) {
-      const product = response._items.map((x) => x.data)[0];
+      const product = response._items[0].data;
       return product;
     } else {
       throw new Error("Response does not contain _items");
@@ -600,7 +600,7 @@ export const getCatalogIdBySku = async (productSku) => {
     });
 
     if (response && response._items) {
-      return response._items.map((x) => x.data)[0];
+      return response._items[0].data;
     } else {
       throw new Error("Response does not contain _items");
     }

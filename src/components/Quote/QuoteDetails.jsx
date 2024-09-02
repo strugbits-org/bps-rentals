@@ -1,16 +1,34 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import QuoteItems from "./QuoteItems";
 import { quoteDateFormatter } from "@/Utils/Utils";
+import { getQuotesById } from "@/Services/QuoteApis";
+import { useSearchParams } from "next/navigation";
 
-const QuoteDetails = ({ quoteRequestPageContent, quoteData }) => {
-  useEffect(() => {
-    setTimeout(() => {
+const QuoteDetails = ({ quoteRequestPageContent, quoteDetailPageContent }) => {
+  const searchParams = useSearchParams();
+  const quoteId = searchParams.get("id");
+
+  const [quoteData, setQuoteData] = useState();
+
+  const fetchQuote = async () => {
+    try {
+      const data = await getQuotesById(quoteId);
+      setQuoteData(data);
+      setTimeout(markPageLoaded, 200);
+    } catch (error) {
       markPageLoaded();
-    }, 1000);
+      console.error("Error while fetching quote data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchQuote();
   }, []);
+
+  if (!quoteData) return;
 
   return (
     <section className="quote-request-content pt-lg-25 pb-lg-150 pb-mobile-100">
@@ -22,19 +40,19 @@ const QuoteDetails = ({ quoteRequestPageContent, quoteData }) => {
                 className="fs-lg-60 fs-mobile-40 fw-600 split-words"
                 data-aos="d:loop"
               >
-                {quoteRequestPageContent?.mainTitle}
+                {quoteDetailPageContent?.mainTitle}
               </h1>
               <span
                 className="d-block fs--25 fs-phone-25 fw-600 pt-lg-20 pt-tablet-15 pt-phone-30"
                 data-aos="fadeInUp .8s ease-out-cubic .3s, d:loop"
               >
-                {quoteRequestPageContent?.subTitle}
+                {quoteDetailPageContent?.subTitle}
               </span>
               <div
                 className="text font-2 fs--16 lh-130 fw-500 pt-lg-20 pt-tablet-30 pt-phone-10"
                 data-aos="fadeInUp .8s ease-out-cubic .4s, d:loop"
               >
-                {quoteRequestPageContent?.paragraph}
+                {quoteDetailPageContent?.paragraph}
               </div>
             </div>
             <div className="form-quote-request">
@@ -136,7 +154,7 @@ const QuoteDetails = ({ quoteRequestPageContent, quoteData }) => {
                   </div>
                   <div className="divisor"></div>
                   <span className="divisor-title fs--40 fw-600 d-block text-center w-100 pb-40">
-                    Billing details
+                    {quoteDetailPageContent?.billingHeading}
                   </span>
                   <div className="container-input col-lg-4">
                     <label htmlFor="quote-bill-to">
@@ -263,6 +281,10 @@ const QuoteDetails = ({ quoteRequestPageContent, quoteData }) => {
                   </div>
                   <div className="divisor"></div>
 
+                  <span className="divisor-title fs--40 fw-600 d-block text-center w-100 pb-40">
+                    {quoteDetailPageContent?.orderedByHeading}
+                  </span>
+
                   <div className="container-input col-lg-6">
                     <label htmlFor="quote-name">
                       {" "}
@@ -299,8 +321,8 @@ const QuoteDetails = ({ quoteRequestPageContent, quoteData }) => {
 
             {/* Quote Items */}
             <div className="mt-lg-55 mt-tablet-40 mt-phone-30">
-              <span className="divisor-title fs--40 fw-600 d-block text-left w-100 pb-40">
-                Your Quote Details
+              <span className="divisor-title fs--40 fw-600 d-block text-center w-100 pb-40">
+                {quoteDetailPageContent.productsListingHeading}
               </span>
               <form className="form-cart">
                 <ul className="list-cart list-cart-product" data-aos="d:loop">

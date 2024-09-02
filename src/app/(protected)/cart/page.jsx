@@ -1,4 +1,3 @@
-import { getProductsCart } from "@/Services/CartApis";
 import { getPageMetaData } from "@/Services/SectionsApis";
 import CartPage from "@/components/Cart/Index";
 
@@ -21,8 +20,5 @@ export async function generateMetadata() {
 }
 
 export default async function Page() {
-  const cartData = await getProductsCart();
-  return <CartPage cartData={cartData || []} />;
+  return <CartPage />;
 }
-
-export const dynamic = 'force-dynamic';
