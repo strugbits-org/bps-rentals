@@ -27,7 +27,7 @@ const BestSellersHome = ({ products, content, savedProductsData, setSavedProduct
                 customClasses={'btn-blue mt-20 no-mobile'}
                 data={{
                   label: content.buttonLabel,
-                  action: `/category/best-seller`,
+                  action: content.buttonAction,
                 }}
                 attributes={{
                   'data-aos':

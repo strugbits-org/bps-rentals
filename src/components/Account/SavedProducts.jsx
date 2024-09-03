@@ -12,7 +12,7 @@ import AutoClickWrapper from "../Common/AutoClickWrapper";
 const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
 
 
-  const pageSize = 12;
+  const pageSize = 20;
   const [pageLimit, setPageLimit] = useState(pageSize);
 
   const [savedProductsData, setSavedProductsData] = useState([]);

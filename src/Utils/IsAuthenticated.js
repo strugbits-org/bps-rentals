@@ -25,7 +25,7 @@ const unAuthCollections = [
   "ContactUsContent",
   "FooterNavigationMenu",
   "StudiosSection",
-  "HomeSectionDetails",
+  "RentalsHomeSectionDetails",
   "PeopleReviewSlider",
   "MarketSection",
   "RentalsLoginModal",
