@@ -7,11 +7,12 @@ import {
 } from "@/Services/ProductsApis";
 import ProductCard from "../Category/ProductCard";
 import CartModal from "../Common/Modals/CartModal";
+import AutoClickWrapper from "../Common/AutoClickWrapper";
 
 const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
 
 
-  const pageSize = 20;
+  const pageSize = 12;
   const [pageLimit, setPageLimit] = useState(pageSize);
 
   const [savedProductsData, setSavedProductsData] = useState([]);
@@ -93,6 +94,11 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
     }
   };
 
+  const handleAutoSeeMore = () => {
+    setPageLimit((prev) => prev + pageSize);
+    updatedWatched(true);
+  }
+
   const fetchSavedProducts = async () => {
     try {
       const savedProducts = await getSavedProductData();
@@ -154,16 +160,15 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
         </ul>
         {pageLimit < savedProductsData.length && (
           <div class="flex-tablet-center mt-lg-60 mt-tablet-40 mt-phone-45">
-            <button
-              onClick={() => {
-                setPageLimit((prev) => prev + pageSize);
-                updatedWatched();
-              }}
-              class="btn-2-blue"
-            >
-              <span>Load more</span>
-              <i class="icon-arrow-right-2"></i>
-            </button>
+            <AutoClickWrapper onIntersect={handleAutoSeeMore}>
+              <button
+                onClick={handleAutoSeeMore}
+                class="btn-2-blue"
+              >
+                <span>Load more</span>
+                <i class="icon-arrow-right-2"></i>
+              </button>
+            </AutoClickWrapper>
           </div>
         )}
       </div>
