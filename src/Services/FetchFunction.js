@@ -70,7 +70,7 @@ const getDataFetchFunction = async (payload) => {
       "ContactUsContent",
       "colorFilterCache",
       "PeopleReviewSlider",
-      "HomeSectionDetails",
+      "RentalsHomeSectionDetails",
       "FooterNavigationMenu",
       "StudiosSection",
       "MarketSection",

@@ -108,7 +108,7 @@ export const fetchSearchPages = async () => {
 export const getHomeSectionDetails = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "HomeSectionDetails",
+      dataCollectionId: "RentalsHomeSectionDetails",
     });
     if (response && response._items) {
       return response._items[0].data;

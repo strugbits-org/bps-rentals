@@ -12,7 +12,7 @@ const Markets = ({ pageContent, marketsData }) => {
               className="fs--60 fs-phone-40 blue-1 text-center split-chars"
               data-aos="d:loop"
             >
-              {pageContent && pageContent.marketSectionTitle}
+              {pageContent && pageContent.marketTitle}
             </h2>
           </div>
           <div className="col-12 mt-lg-50 mt-tablet-40 mt-phone-35">

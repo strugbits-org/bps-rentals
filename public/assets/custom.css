@@ -286,4 +286,8 @@ li.IMPORTANT.long-desc {
     .container-product-description .container-add-to-cart .btn-add-to-cart:hover {
         --btn-bg-color: var(--white-1);
     }
+
+    .product-link.small {
+        --product-title-max-w: 14rem;
+    }
 }
