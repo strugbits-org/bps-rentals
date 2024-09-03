@@ -10,6 +10,7 @@ import CartModal from "../Common/Modals/CartModal";
 import { compareArray, shuffleArray } from "@/Utils/Utils";
 import ProductCard from "../Category/ProductCard";
 import { Banner } from "../Category/Banner";
+import AutoClickWrapper from "../Common/AutoClickWrapper";
 
 const SearchPage = ({
     searchFor,
@@ -204,6 +205,10 @@ const SearchPage = ({
         }
     };
 
+    const handleAutoSeeMore = () => {
+        setPageLimit((prev) => prev + pageSize);
+        updatedWatched(true);
+    }
     return (
         <>
             <CartModal
@@ -311,16 +316,15 @@ const SearchPage = ({
                                 )}
                                 {pageLimit < filteredProducts.length && (
                                     <div className="flex-center">
-                                        <button
-                                            className="btn-border-blue mt-90"
-                                            onClick={() => {
-                                                setPageLimit((prev) => prev + pageSize);
-                                                updatedWatched(true);
-                                            }}
-                                            data-aos="fadeIn .6s ease-in-out 0s, d:loop"
-                                        >
-                                            <span>See more</span>
-                                        </button>
+                                        <AutoClickWrapper onIntersect={handleAutoSeeMore}>
+                                            <button
+                                                onClick={handleAutoSeeMore}
+                                                className="btn-border-blue mt-90"
+                                                data-aos="fadeIn .6s ease-in-out 0s, d:loop"
+                                            >
+                                                <span>See more</span>
+                                            </button>
+                                        </AutoClickWrapper>
                                     </div>
                                 )}
                             </div>

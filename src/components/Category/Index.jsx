@@ -11,6 +11,7 @@ import { useCookies } from "react-cookie";
 import CartModal from "../Common/Modals/CartModal";
 import { Banner } from "./Banner";
 import { compareArray, extractCategoryIds, shuffleArray } from "@/Utils/Utils";
+import AutoClickWrapper from "../Common/AutoClickWrapper";
 
 const CategoryPage = ({
   pageContent,
@@ -39,8 +40,7 @@ const CategoryPage = ({
   const [productSnapshots, setProductSnapshots] = useState();
   const [selectedVariantData, setSelectedVariantData] = useState(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-  const [productFilteredVariantData, setProductFilteredVariantData] =
-    useState();
+  const [productFilteredVariantData, setProductFilteredVariantData] = useState();
 
   const [categoriesDropdown, setCategoriesDropdown] = useState(false);
 
@@ -252,6 +252,11 @@ const CategoryPage = ({
     }
   };
 
+  const handleAutoSeeMore = () => {
+    setPageLimit((prev) => prev + pageSize);
+    updatedWatched(true);
+  }
+
   return (
     <>
       <CartModal
@@ -284,7 +289,7 @@ const CategoryPage = ({
                       : selectedCategoryData.name}
                   </h1>
                 </div>
-                {selectedCategoryData.parentCollection && (
+                {selectedCategoryData.parentCollection && filterCategories.length ? (
                   <>
                     <div className="col-12 col-tablet-6 z-6">
                       <div className="container-category-filter pb-lg-60 pb-mobile-40">
@@ -323,7 +328,7 @@ const CategoryPage = ({
                       </div>
                     </div>
                   </>
-                )}
+                ) : null}
               </>
             )}
             <div className="col-lg-2 col-tablet-6 z-7">
@@ -413,16 +418,15 @@ const CategoryPage = ({
                 )}
                 {pageLimit < filteredProducts.length && (
                   <div className="flex-center">
-                    <button
-                      className="btn-border-blue mt-90"
-                      onClick={() => {
-                        setPageLimit((prev) => prev + pageSize);
-                        updatedWatched(true);
-                      }}
-                      data-aos="fadeIn .6s ease-in-out 0s, d:loop"
-                    >
-                      <span>See more</span>
-                    </button>
+                    <AutoClickWrapper onIntersect={handleAutoSeeMore}>
+                      <button
+                        onClick={handleAutoSeeMore}
+                        className="btn-border-blue mt-90"
+                        data-aos="fadeIn .6s ease-in-out 0s, d:loop"
+                      >
+                        <span>See more</span>
+                      </button>
+                    </AutoClickWrapper>
                   </div>
                 )}
               </div>
