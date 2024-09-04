@@ -7,7 +7,7 @@ const Wrapper = ({ children }) => {
 
   const path = pathname.trim() === "/" ? "home" : pathname.substring(1);
   let cleanPath = path.split("/")[0].trim();
-  if (cleanPath === "quote-detail") cleanPath = "quote-request";
+  if (cleanPath === "quote-detail" || cleanPath === "admin") cleanPath = "my-account-saved-products";
 
   useEffect(() => {
     if (typeof window !== "undefined") {

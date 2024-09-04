@@ -25,6 +25,12 @@ const links = [
     icon: "icon-change",
     href: "/my-account-change-password",
   },
+  {
+    name: "Manage Products",
+    icon: "icon-account",
+    href: "/admin/categories",
+    adminOnly: true,
+  },
 ];
 
 const accountSections = {
@@ -57,7 +63,7 @@ const Account = ({ children, footerData, banner }) => {
         removeCookie("userTokens", { path: "/" });
         removeCookie("cartQuantity", { path: "/" });
         setTimeout(() => {
-          router.push("/"); 
+          router.push("/");
         }, 200);
       }
     } catch (error) {
@@ -65,7 +71,7 @@ const Account = ({ children, footerData, banner }) => {
     }
   };
   return (
-    <section className={`my-account-intro ${activeSection}`}>
+    <section className={`my-account-intro ${activeSection || "section-saved-products"}`}>
       <div
         className="menu-my-account"
         data-sticky
