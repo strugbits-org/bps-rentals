@@ -1,13 +1,4 @@
 "use client";
-export const AnimationFunction = () => {
-  if (typeof window !== "undefined") {
-    document.body.classList.add("page-leave-active");
-    setTimeout(() => {
-      document.body.classList.remove("page-leave-active");
-      document.body.classList.add("page-enter-active");
-    }, 900);
-  }
-};
 
 export const initAnimations = () => {
   if (typeof window !== "undefined") {
@@ -138,24 +129,6 @@ export const closeModals = () => {
       if (isActive) document.querySelector("#bt-menu")?.click();
       document.querySelector(".closeModals").click();
     }, 200);
-  }
-};
-
-export const _closeModals = () => {
-  if (typeof window !== "undefined") {
-    const modal_group = document.querySelectorAll("modal-group");
-    if (modal_group)
-      modal_group.forEach((modal) => {
-        if (modal.classList.contains("active")) {
-          modal.close();
-        }
-      });
-
-    document.body.setAttribute("data-form-cart-state", "");
-    const filterModal = document.querySelector(".container-filter-products");
-    if (filterModal) {
-      filterModal?.classList.remove("active");
-    }
   }
 };
 export const getPageName = () => {
