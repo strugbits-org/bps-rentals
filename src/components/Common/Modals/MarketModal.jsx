@@ -15,7 +15,7 @@ const MarketModal = ({ marketsData }) => {
           </button>
         </div>
         <ul className="list-submenu-market list-submenu list-projects font-submenu">
-          {marketsData.map((data, index) => {
+          {marketsData.filter(x => x.menuItem).map((data, index) => {
             const { slug, cardname, marketTags, image } = data;
             return (
               <li key={index} className="list-item">

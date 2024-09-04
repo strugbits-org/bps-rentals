@@ -168,7 +168,7 @@ var require_app2 = __commonJS({
       };
       const btnMenu = document.getElementById("bt-menu");
       btnMenu.addEventListener("click", () => {
-        const element = document.querySelector(".header-info-list li.local-item.active");      
+        const element = document.querySelector(".header-info-list li.local-item.active");
         if (element) element.querySelector(".custom-close").click();
         menu.isOpen ? menu.close() : menu.open();
       });
@@ -2305,7 +2305,10 @@ var require_app2 = __commonJS({
           deactivateOnClickOutside: false,
           onClose: () => { },
           onComplete: () => { },
-          onActivate: (item) => { },
+          onActivate: (item) => { 
+            const element = document.querySelector(".header-info-list li.local-item.active");
+            if (element) element.querySelector(".custom-close").click();
+          },
           onDeactivate: (item) => { },
         });
       });
@@ -8792,7 +8795,10 @@ var require_app2 = __commonJS({
           leaveDelay: 800,
           onClose: () => { },
           onComplete: () => { },
-          onActivate: (item) => { },
+          onActivate: (item) => {
+            const element = document.querySelector(".header-info-list li.local-item.active");
+            if (element) element.querySelector(".custom-close").click();
+           },
           onDeactivate: (item) => { },
         });
         let slider = element.querySelectorAll(
@@ -9014,7 +9020,10 @@ var require_app2 = __commonJS({
           deactivateOnClickOutside: true,
           onClose: () => { },
           onComplete: () => { },
-          onActivate: (item) => { },
+          onActivate: (item) => {
+            const element = document.querySelector(".header-info-list li.local-item.active");
+            if (element) element.querySelector(".custom-close").click();
+           },
           onDeactivate: (item) => { },
         });
         jsRunning = true;
@@ -9706,7 +9715,10 @@ var require_app2 = __commonJS({
         closeSearch();
         document.body.classList.add("submenu-active");
       },
-      onActivate: (item) => { },
+      onActivate: (item) => {
+        const element = document.querySelector(".header-info-list li.local-item.active");
+        if (element) element.querySelector(".custom-close").click();
+      },
       onDeactivate: (item) => { },
     });
     // document.addEventListener("pjax:send", function () {
@@ -9803,6 +9815,7 @@ var require_app2 = __commonJS({
         updateWatched();
         productLinkColor();
         manualModalClose();
+        copyLink()
       });
     // document.querySelector(".initScript").addEventListener("click", () => {
     //   whenContainerReady();
