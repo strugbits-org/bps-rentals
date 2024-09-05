@@ -1,8 +1,8 @@
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import React from 'react'
 import Newsletter from "../Common/NewsLetter";
 import { CustomButton } from "../Common/CustomButton";
 import AnimateLink from "../Common/AnimateLink";
+import { ImageWrapper } from "../Common/ImageWrapper";
 
 export const FooterAccount = ({ footerData }) => {
     const { footerContent, contactData, socialLinks, navigationMenu } = footerData;
@@ -11,27 +11,9 @@ export const FooterAccount = ({ footerData }) => {
         <footer className="footer footer-account d-mobile-none" data-cursor-style="off">
             <div className="col-lg-4 offset-lg-1">
                 <div className="footer-logo-account">
-                    <div className="z-3">
-                        <img
-                            src={generateImageURL({ wix_url: footerContent && footerContent.logo1, original: true })}
-                            className="img-b
-                z-3 "
-                        />
-                    </div>
-                    <div className="z-2">
-                        <img
-                            src={generateImageURL({ wix_url: footerContent && footerContent.logo2, original: true })}
-                            className="img-p
-                z-2 "
-                        />
-                    </div>
-                    <div className="z-1">
-                        <img
-                            src={generateImageURL({ wix_url: footerContent && footerContent.logo3, original: true })}
-                            className="img-s
-                z-1 "
-                        />
-                    </div>
+                    <ImageWrapper url={footerContent.logo1} original={true} customClasses={"img-b z-3"} />
+                    <ImageWrapper url={footerContent.logo2} original={true} customClasses={"img-p z-2"} />
+                    <ImageWrapper url={footerContent.logo3} original={true} customClasses={"img-s z-1"} />
                 </div>
             </div>
             <div className="col-lg-6">

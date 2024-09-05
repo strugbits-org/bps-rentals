@@ -1,7 +1,6 @@
 import React from "react";
-
-import { generateImageUrl2 } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
+import { ImageWrapper } from "../ImageWrapper";
 
 const PortfolioSection = ({ data }) => {
   const CORPORATE_URL = process.env.CORPORATE_URL;
@@ -37,15 +36,7 @@ const PortfolioSection = ({ data }) => {
                             data-cursor-style="view"
                           >
                             <div className="wrapper-img">
-                              <img
-                                src={generateImageUrl2({
-                                  wix_url: coverImage.imageInfo,
-                                  w: "301",
-                                  h: "371",
-                                  q: "85",
-                                })}
-                                className=" "
-                              />
+                              <ImageWrapper url={coverImage.imageInfo} type="2" />
                             </div>
                           </div>
                           <div className="container-text">
@@ -66,9 +57,8 @@ const PortfolioSection = ({ data }) => {
                                   {index < 2 && (
                                     <li
                                       className={`tag-small 
-                                                          ? ${
-                                                            index === 0
-                                                          } "active"
+                                                          ? ${index === 0
+                                        } "active"
                                                           : ""
                                                           }`}
                                     >
@@ -105,6 +95,7 @@ const PortfolioSection = ({ data }) => {
           >
             <AnimateLink
               to={`${CORPORATE_URL}/portfolio`}
+              target={"_blank"}
               className="btn-border-blue"
               data-cursor-style="off"
             >

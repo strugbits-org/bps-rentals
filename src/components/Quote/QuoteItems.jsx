@@ -1,4 +1,3 @@
-import { generateImageURL, generateImageUrl2 } from "@/Utils/GenerateImageURL";
 import {
   extractSlugFromUrl,
   formatDescriptionLines,
@@ -8,6 +7,7 @@ import {
 import AnimateLink from "../Common/AnimateLink";
 import React from "react";
 import useUserData from "@/Hooks/useUserData";
+import { ImageWrapper } from "../Common/ImageWrapper";
 
 const QuoteItems = ({ quoteData }) => {
   const { role } = useUserData();
@@ -31,14 +31,7 @@ const QuoteItems = ({ quoteData }) => {
         <input type="hidden" name="sku[]" defaultValue="MODCH09" />
         <div className="cart-product">
           <div className="container-img">
-            <img
-              src={generateImageURL({
-                wix_url: image,
-                h: "100",
-                w: "100",
-              })}
-              alt={productName.original}
-            />
+            <ImageWrapper url={image} />
           </div>
           <div className="wrapper-product-info">
             <div className="container-top">
@@ -125,14 +118,7 @@ const QuoteItems = ({ quoteData }) => {
         <input type="hidden" name="sku[]" defaultValue="MODCH09" />
         <div className="cart-product">
           <div className="container-img">
-            <img
-              src={generateImageUrl2({
-                wix_url: src,
-                h: "100",
-                w: "100",
-              })}
-              alt={name}
-            />
+            <ImageWrapper url={src} type="2" />
           </div>
           <div className="wrapper-product-info">
             <div className="container-top">

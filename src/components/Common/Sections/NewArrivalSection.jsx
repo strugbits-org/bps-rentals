@@ -1,5 +1,5 @@
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
+import { ImageWrapper } from "../ImageWrapper";
 
 const NewArrival = ({ content }) => {
   if (!content) return;
@@ -36,16 +36,7 @@ const NewArrival = ({ content }) => {
         data-translate-y-from="-20vh"
         data-translate-y-to="20vh"
       >
-        <img
-          src={generateImageURL({
-            wix_url: content.backgroundImage,
-            w: "1336",
-            h: "568",
-            fit: "fill",
-            q: "95",
-          })}
-          className=" "
-        />
+        <ImageWrapper url={content.backgroundImage} q={"100"} />
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 import React from 'react'
 import AnimateLink from '../Common/AnimateLink';
-import { generateImageUrl2 } from '@/Utils/GenerateImageURL';
+import { ImageWrapper } from '../Common/ImageWrapper';
 
 export const MarketSlider = ({ content, marketSliderData }) => {
     if (marketSliderData.length === 0) return;
@@ -22,12 +22,7 @@ export const MarketSlider = ({ content, marketSliderData }) => {
                                             onClick={() => handleNavigate(`/project/${data?.portfolioRef?.slug}`)}
                                             className="container-img"
                                         >
-                                            <img
-                                                src={generateImageUrl2({ wix_url: data?.portfolioRef?.coverImage?.imageInfo, w: "1920", h: "1180", q: "95" })}
-                                                className="media"
-                                                data-parallax
-                                                data-scale-from="1.3"
-                                            />
+                                            <ImageWrapper url={data?.portfolioRef?.coverImage?.imageInfo} type="2" customClasses={"media"} attributes={{ "data-parallax": "", "data-scale-from": "1.3" }} />
                                         </div>
                                         <div className="container-project">
                                             <h4 className="project split-words">

@@ -1,5 +1,5 @@
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
+import { ImageWrapper } from "../ImageWrapper";
 
 const Studios = ({ content, studiosData }) => {
   const url = process.env.CORPORATE_URL;
@@ -43,16 +43,7 @@ const Studios = ({ content, studiosData }) => {
                       </div>
                       <div className="accordion-content">
                         <div className="container-img bg-blue">
-                          <img
-                            src={generateImageURL({
-                              wix_url: image,
-                              w: "1337",
-                              h: "497",
-                              fit: "fill",
-                              q: "95",
-                            })}
-                            className=" "
-                          />
+                          <ImageWrapper url={image} min_h={"620"} />
                         </div>
                         <div className="container-accordion-text">
                           <p className="accordion-text">{cardDescription}</p>

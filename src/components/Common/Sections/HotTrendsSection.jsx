@@ -1,5 +1,5 @@
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
+import { ImageWrapper } from "../ImageWrapper";
 
 export const HotTrendsCategory = ({ pageContent, data }) => {
 
@@ -23,19 +23,7 @@ export const HotTrendsCategory = ({ pageContent, data }) => {
           </div>
           <div className="col-12">
             <div className="container-img bg-img">
-              <img
-                src={generateImageURL({
-                  wix_url: data.mainMedia,
-                  w: "1374",
-                  h: "547",
-                  fit: "fill",
-                  q: "95",
-                })}
-                className=" "
-                data-parallax
-                data-translate-x-from="10vw"
-                data-translate-x-to="0"
-              />
+              <ImageWrapper url={data.mainMedia} q={"100"} attributes={{ "data-parallax": "", "data-translate-x-from": "10vw", "data-translate-x-to": "0" }} />
             </div>
           </div>
           <div
@@ -43,9 +31,7 @@ export const HotTrendsCategory = ({ pageContent, data }) => {
             data-aos="fadeIn .6s ease-in-out 0s, d:loop"
           >
             <AnimateLink to={`/category/${data.slug}`} className={"btn-blue mt-lg-50 mt-mobile-20"}
-              attributes={{
-                "data-cursor-style": "off",
-              }}>
+              attributes={{ "data-cursor-style": "off" }}>
               <span>
                 {pageContent && pageContent.rentalsHotTrendsButtonLabel}
               </span>

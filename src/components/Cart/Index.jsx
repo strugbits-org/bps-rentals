@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import {
   calculateTotalCartQuantity,
   extractSlugFromUrl,
@@ -19,6 +18,7 @@ import {
 
 import AnimateLink from "../Common/AnimateLink";
 import useUserData from "@/Hooks/useUserData";
+import { ImageWrapper } from "../Common/ImageWrapper";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -136,14 +136,7 @@ const CartPage = () => {
                           />
                           <div className="cart-product">
                             <div className="container-img">
-                              <img
-                                src={generateImageURL({
-                                  wix_url: image,
-                                  h: "110",
-                                  w: "110",
-                                })}
-                                className=" "
-                              />
+                            <ImageWrapper url={image} />
                             </div>
                             <div className="wrapper-product-info">
                               <div className="container-top">

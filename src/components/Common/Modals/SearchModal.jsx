@@ -1,6 +1,4 @@
 "use client";
-
-import { generateImageURL, generateImageUrl2, productImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 import React, { useEffect, useState } from "react";
 import { filterSearchData, formatDate } from "@/Utils/Utils";
@@ -8,6 +6,7 @@ import { useCookies } from "react-cookie";
 import { searchProducts } from "@/Services/ProductsApis";
 import debounce from 'lodash/debounce';
 import { updatedWatched } from "@/Utils/AnimationFunctions";
+import { ImageWrapper } from "../ImageWrapper";
 
 const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, products = [], searchPagesData }) => {
 
@@ -228,16 +227,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                       </h3>
                                       <div className="wrapper-img">
                                         <div className="container-img">
-                                          <img
-                                            src={generateImageURL({
-                                              wix_url: product.mainMedia,
-                                              w: "346",
-                                              h: "346",
-                                              fit: "fill",
-                                              q: "80",
-                                            })}
-                                            className=" "
-                                          />
+                                          <ImageWrapper url={product.mainMedia} />
                                         </div>
                                       </div>
                                       <div className="container-bottom">
@@ -255,16 +245,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                                 {idx < 4 && (
                                                   <li>
                                                     <div className="container-img">
-                                                      <img
-                                                        src={productImageURL({
-                                                          wix_url: variant.imageSrc,
-                                                          w: "40",
-                                                          h: "40",
-                                                          fit: "fill",
-                                                          q: "100",
-                                                        })}
-                                                        className=" "
-                                                      />
+                                                      <ImageWrapper url={variant.imageSrc} />
                                                     </div>
                                                   </li>
                                                 )}
@@ -327,10 +308,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                       data-cursor-style="view"
                                     >
                                       <div className="wrapper-img">
-                                        <img
-                                          src={generateImageUrl2({ wix_url: portfolioRef.coverImage.imageInfo, fit: "fit", w: "220", h: "320", q: "95" })}
-                                          className=" "
-                                        />
+                                        <ImageWrapper url={portfolioRef.coverImage.imageInfo} type="2" />
                                       </div>
                                     </div>
                                     <div className="container-text">
@@ -372,12 +350,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                 data-cursor-style="default"
                               >
                                 {resultMarkets.includes(item._id) && (
-                                  <img
-                                    src={generateImageURL({ wix_url: item?.image, fit: "fit", w: "500", h: "500", q: "95" })}
-                                    data-preload
-                                    className="media"
-                                    alt=""
-                                  />
+                                  <ImageWrapper url={item.image} customClasses={"media"} min_h={"500"} min_w={"500"} attributes={{ "data-preload": "" }} />
                                 )}
                               </div>
                               <div className="container-text">
@@ -430,10 +403,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                     data-cursor-style="view"
                                   >
                                     <div className="wrapper-img">
-                                      <img
-                                        src={generateImageURL({ wix_url: blogRef.coverImage, fit: "fit", w: "400", h: "180", q: "95" })}
-                                        className=" "
-                                      />
+                                      <ImageWrapper url={blogRef.coverImage} min_h={"180"} min_w={"400"} />
                                     </div>
                                   </div>
                                   <div className="container-text">

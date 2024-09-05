@@ -66,42 +66,14 @@ export const generateImageUrl2 = ({
     }
   }
 };
-export const getFullSvgURL = (wix_url) => {
-  if (!wix_url.startsWith("wix:vector://v1/")) {
-    return wix_url;
-  }
-  let wixImageURL = "";
-  wixImageURL = "https://static.wixstatic.com/shapes/";
-  let splitUrl = wix_url.split("/");
-  return wixImageURL + splitUrl[splitUrl.length - 2];
+
+export const productImageURLForQuote = (url) => {
+  const [beforeHash, afterHash] = url.split("#");
+  const [protocol, path] = beforeHash.split("v1/");
+  const parts = path.split("/");
+  const idPart = parts[0].split("~")[0];
+  const extension = path.split(".").pop();
+
+  const newUrl = `${protocol}v1/https:/${idPart}~mv2.${extension}#${afterHash}`;
+  return newUrl;
 };
-
-export const blogGalleryImageURL = ({
-  wix_url,
-  fit = "fill",
-  q = "90",
-  h = "1080",
-  w = "1920",
-}) =>
-  `https://static.wixstatic.com/media/${wix_url}/v1/${fit}/w_${w},h_${h},al_c,q_${q},usm_0.66_1.00_0.01,enc_auto/compress.webp`;
-
-
-  export const productImageURL = ({
-    wix_url,
-    fit = "fill",
-    q = "90",
-    h = "1080",
-    w = "1920",
-  }) =>
-    `${wix_url}/v1/${fit}/w_${w},h_${h},al_c,q_${q},usm_0.66_1.00_0.01,enc_auto/compress.webp`;
-
-    export const productImageURLForQuote = (url) => {
-      const [beforeHash, afterHash] = url.split("#");
-      const [protocol, path] = beforeHash.split("v1/");
-      const parts = path.split("/");
-      const idPart = parts[0].split("~")[0];
-      const extension = path.split(".").pop();
-
-      const newUrl = `${protocol}v1/https:/${idPart}~mv2.${extension}#${afterHash}`;
-      return newUrl;
-    };

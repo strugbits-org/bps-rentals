@@ -1,5 +1,5 @@
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
+import { ImageWrapper } from "../ImageWrapper";
 
 const Markets = ({ pageContent, marketsData }) => {
 
@@ -36,16 +36,7 @@ const Markets = ({ pageContent, marketsData }) => {
                           className="container-img bg-blue"
                           data-cursor-style="view"
                         >
-                          <img
-                            src={generateImageURL({
-                              wix_url: image,
-                              w: "328",
-                              h: "328",
-                              fit: "fill",
-                              q: "95",
-                            })}
-                            className=" "
-                          />
+                          <ImageWrapper url={image} />
                         </div>
                         <div className="container-text">
                           <h3 className="title-project split-words">

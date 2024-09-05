@@ -1,10 +1,10 @@
-import { productImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
 import React, { useEffect, useState } from "react";
 import { SaveProductButton } from "../Common/SaveProductButton";
 import { compareArray } from "@/Utils/Utils";
 import { decryptField } from "@/Utils/Encrypt";
 import useUserData from "@/Hooks/useUserData";
+import { ImageWrapper } from "../Common/ImageWrapper";
 
 const ProductCard = ({
   productData,
@@ -107,16 +107,7 @@ const ProductCard = ({
                   key={index}
                   className={`container-img product-img ${selectedData.sku === activeVariant.sku ? "active" : ""}`}
                 >
-                  <img
-                    src={productImageURL({
-                      wix_url: selectedData.variant.imageSrc,
-                      w: "346",
-                      h: "346",
-                      fit: "fill",
-                      q: "80",
-                    })}
-                    className=" "
-                  />
+                  <ImageWrapper url={selectedData.variant.imageSrc} />
                 </div>
               </React.Fragment>
             );
@@ -136,18 +127,7 @@ const ProductCard = ({
                     className={`list-item ${variant.sku === activeVariant.sku ? "active" : ""}`}
                   >
                     <div className="container-img">
-                      <img
-                        src={productImageURL({
-                          wix_url: variant.variant.imageSrc,
-                          w: "40",
-                          h: "40",
-                          fit: "fill",
-                          q: "100",
-                        })}
-                        data-preload
-                        className="media"
-                        alt="product"
-                      />
+                      <ImageWrapper url={variant.variant.imageSrc} />
                     </div>
                   </li>
                 )}
