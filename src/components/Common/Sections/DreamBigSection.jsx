@@ -1,5 +1,5 @@
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import { CustomButton } from "../CustomButton";
+import { ImageWrapper } from "../ImageWrapper";
 
 const DreamBig = ({ content }) => {
 
@@ -9,32 +9,10 @@ const DreamBig = ({ content }) => {
         <div className="row">
           <div className="col-lg-4 offset-lg-4 column-1">
             <div className="container-img no-phone">
-              <img
-                src={generateImageURL({
-                  wix_url: content.desktopBackgroundImage,
-                  w: "1356",
-                  h: "953",
-                  fit: "fill",
-                  q: "95",
-                })}
-                data-preload
-                className="media"
-                alt=""
-              />
+              <ImageWrapper url={content.desktopBackgroundImage} customClasses={"media"} attributes={{ "data-preload": "" }} />
             </div>
             <div className="container-img no-desktop no-tablet">
-              <img
-                src={generateImageURL({
-                  wix_url: content.mobileBackgroundImage,
-                  w: "434",
-                  h: "773",
-                  fit: "fill",
-                  q: "95",
-                })}
-                data-preload
-                className="media"
-                alt=""
-              />
+              <ImageWrapper url={content.mobileBackgroundImage} min_h={"773"} customClasses={"media"} attributes={{ "data-preload": "" }} />
             </div>
             <div
               data-parallax

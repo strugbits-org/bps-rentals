@@ -9,7 +9,6 @@ import {
   pageLoadStart,
   resetSlideIndex,
 } from "@/Utils/AnimationFunctions";
-import { generateImageURL, productImageURL } from "@/Utils/GenerateImageURL";
 import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
 import { checkParameters } from "@/Utils/CheckParams";
 
@@ -28,6 +27,7 @@ import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
 import useUserData from "@/Hooks/useUserData";
 import { decryptField } from "@/Utils/Encrypt";
+import { ImageWrapper } from "../Common/ImageWrapper";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -265,10 +265,6 @@ const ProductPostPage = ({
                         savedProductsData={savedProductsData}
                         setSavedProductsData={setSavedProductsData}
                       />
-                      {/* <button className="btn-bookmark">
-                        <i className="icon-bookmark"></i>
-                        <i className="icon-bookmark-full"></i>
-                      </button> */}
                     </div>
                     <div className="swiper-container">
                       <div className="swiper-wrapper">
@@ -278,15 +274,7 @@ const ProductPostPage = ({
                               <div key={index} className="swiper-slide">
                                 <div className="wrapper-img">
                                   <div className="container-img">
-                                    <img
-                                      src={generateImageURL({
-                                        wix_url: imageData.src,
-                                        w: "671",
-                                        h: "671",
-                                        fit: "fill",
-                                        q: "95",
-                                      })}
-                                    />
+                                    <ImageWrapper url={imageData.src} min_w={"671"} min_h={"671"} />
                                   </div>
                                 </div>
                               </div>
@@ -331,19 +319,7 @@ const ProductPostPage = ({
                                 >
                                   <div class="wrapper-img">
                                     <div class="container-img">
-                                      <img
-                                        src={generateImageURL({
-                                          wix_url: src,
-                                          w: "168",
-                                          h: "168",
-                                          fit: "fill",
-                                          q: "95",
-                                        })}
-                                        style={{ padding: "20px" }}
-                                        data-preload
-                                        class=""
-                                        alt={`product-thumb-${index}`}
-                                      />
+                                      <ImageWrapper url={src} min_w={"170"} min_h={"170"} />
                                     </div>
                                   </div>
                                 </div>
@@ -423,7 +399,7 @@ const ProductPostPage = ({
                       selectedProductDetails.product.additionalInfoSections.map(
                         (sec, index) => {
                           const { title, description } = sec;
-                          
+
                           return (
                             <li className={`${title} ${title === "IMPORTANT" ? "long-desc" : ""}`} key={index}>
                               <span class="specs-title">{title}</span>
@@ -479,18 +455,7 @@ const ProductPostPage = ({
                                   readOnly
                                 />
                                 <div class="container-img">
-                                  <img
-                                    src={productImageURL({
-                                      wix_url: variantData.variant.imageSrc,
-                                      w: "49",
-                                      h: "49",
-                                      fit: "fill",
-                                      q: "95",
-                                    })}
-                                    data-preload
-                                    class="media"
-                                    alt="pro-product"
-                                  />
+                                  <ImageWrapper url={variantData.variant.imageSrc} />
                                 </div>
                               </label>
                             </div>
@@ -594,7 +559,7 @@ const ProductPostPage = ({
 
               {/* DESCRIPTION */}
               {selectedProductDetails &&
-                selectedProductDetails.product.description && (
+                selectedProductDetails.product.description && selectedProductDetails.product.description !== "<p>&nbsp;</p>" && (
                   <div
                     className={`container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50 ${buttonLabel ? "active" : ""
                       }`}

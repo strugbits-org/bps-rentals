@@ -1,6 +1,6 @@
-import { generateImageURL } from '@/Utils/GenerateImageURL'
 import React from 'react'
 import { CustomButton } from '../Common/CustomButton'
+import { ImageWrapper } from '../Common/ImageWrapper'
 
 export const Banner = ({ data }) => {
     return (
@@ -25,19 +25,7 @@ export const Banner = ({ data }) => {
                             </div>
                             <div className="col-12">
                                 <div className="container-img bg-img">
-                                    <img
-                                        src={generateImageURL({
-                                            wix_url: data.backgroundImage,
-                                            w: "1374",
-                                            h: "547",
-                                            fit: "fill",
-                                            q: "95",
-                                        })}
-                                        className=" "
-                                        data-parallax
-                                        data-translate-x-from="10vw"
-                                        data-translate-x-to="0"
-                                    />
+                                    <ImageWrapper url={data.backgroundImage} attributes={{ "data-parallax": "", "data-translate-x-from": "10vw", "data-translate-x-to": "0" }} />
                                 </div>
                             </div>
                             <div
@@ -106,16 +94,7 @@ export const Banner = ({ data }) => {
                                         </CustomButton>
                                     </div>
                                     <div className="container-img bg-img bg-black-1">
-                                        <img
-                                            src={generateImageURL({
-                                                wix_url: data.backgroundImage,
-                                                w: "1374",
-                                                h: "547",
-                                                fit: "fill",
-                                                q: "95",
-                                            })}
-                                            data-aos="fadeIn 1.2s ease-out-cubic 0s, d:loop"
-                                        />
+                                        <ImageWrapper url={data.backgroundImage} attributes={{ "data-aos": "fadeIn 1.2s ease-out-cubic 0s, d:loop" }} />
                                     </div>
                                 </div>
                             </div>

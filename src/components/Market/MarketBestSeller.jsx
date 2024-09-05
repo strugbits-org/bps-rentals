@@ -3,6 +3,7 @@ import ProductCard from '../Category/ProductCard';
 import { markPageLoaded, updatedWatched } from '@/Utils/AnimationFunctions';
 import { getSavedProductData } from '@/Services/ProductsApis';
 import CartModal from '../Common/Modals/CartModal';
+import AutoClickWrapper from '../Common/AutoClickWrapper';
 
 export const MarketBestSeller = ({ products, bestSeller }) => {
     const pageSize = 6;
@@ -95,6 +96,11 @@ export const MarketBestSeller = ({ products, bestSeller }) => {
         }
     }
 
+    const handleAutoSeeMore = () => {
+        setPageLimit((prev) => prev + pageSize);
+        updatedWatched(true);
+    }
+
     useEffect(() => {
         markPageLoaded();
         fetchSavedProducts();
@@ -139,15 +145,14 @@ export const MarketBestSeller = ({ products, bestSeller }) => {
                             </ul>
                             {pageLimit < products.length && (
                                 <div className="flex-center">
-                                    <button
-                                        className="btn-border-blue mt-lg-90 mt-tablet-40 mt-phone-50"
-                                        onClick={() => {
-                                            setPageLimit((prev) => prev + pageSize);
-                                            updatedWatched(true);
-                                        }}
-                                    >
-                                        <span>See more</span>
-                                    </button>
+                                    <AutoClickWrapper onIntersect={handleAutoSeeMore}>
+                                        <button
+                                            onClick={handleAutoSeeMore}
+                                            className="btn-border-blue mt-lg-90 mt-tablet-40 mt-phone-50"
+                                        >
+                                            <span>See more</span>
+                                        </button>
+                                    </AutoClickWrapper>
                                 </div>
                             )}
                         </div>

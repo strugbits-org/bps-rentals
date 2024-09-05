@@ -1,5 +1,5 @@
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
+import { ImageWrapper } from "../Common/ImageWrapper";
 
 const AllCategories = ({ categoriesData }) => {
   return (
@@ -28,20 +28,7 @@ const AllCategories = ({ categoriesData }) => {
                   data-menu-close
                 >
                   <div className="container-img">
-                    <img
-                      src={generateImageURL({
-                        wix_url: mainMedia,
-                        w: "99",
-                        h: "99",
-                        fit: "fill",
-                        q: "95",
-                      })}
-                      className=" "
-                    />
-                    {/* <img
-                      src="/images/chairs/bristol-chair-color-4.webp"
-                      className=" "
-                    /> */}
+                    <ImageWrapper url={mainMedia} />
                   </div>
                   <div className="container-text pt-15">
                     <h3 className="fs--21 fw-600 blue-1 text-center title-project split-words">

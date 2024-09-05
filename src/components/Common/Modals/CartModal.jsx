@@ -1,5 +1,4 @@
 "use client";
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import React, { useEffect, useState } from "react";
 import ModalCanvas3d from "../ModalCanvas3d";
 import { reloadCartModal, resetSlideIndex } from "@/Utils/AnimationFunctions";
@@ -11,6 +10,7 @@ import { useCookies } from "react-cookie";
 import Modal from "./Modal";
 import useUserData from "@/Hooks/useUserData";
 import { decryptField } from "@/Utils/Encrypt";
+import { ImageWrapper } from "../ImageWrapper";
 
 const CartModal = ({
   productData,
@@ -183,16 +183,7 @@ const CartModal = ({
                                           <div key={index} class="swiper-slide">
                                             <div class="wrapper-img">
                                               <div class="container-img">
-                                                <img
-                                                  src={generateImageURL({
-                                                    wix_url: imageData.src,
-                                                    w: "671",
-                                                    h: "671",
-                                                    fit: "fill",
-                                                    q: "95",
-                                                  })}
-                                                  class=" "
-                                                />
+                                                <ImageWrapper url={imageData.src} />
                                               </div>
                                             </div>
                                           </div>
@@ -235,16 +226,7 @@ const CartModal = ({
                                             >
                                               <div class="wrapper-img">
                                                 <div class="container-img">
-                                                  <img
-                                                    src={generateImageURL({
-                                                      wix_url: src,
-                                                      w: "168",
-                                                      h: "168",
-                                                      fit: "fill",
-                                                      q: "95",
-                                                    })}
-                                                    class=" "
-                                                  />
+                                                  <ImageWrapper url={src} />
                                                 </div>
                                               </div>
                                             </div>

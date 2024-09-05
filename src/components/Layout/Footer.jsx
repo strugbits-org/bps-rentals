@@ -1,9 +1,9 @@
 "use client"
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../Common/AnimateLink";
 import Newsletter from "../Common/NewsLetter";
 import { CustomButton } from "../Common/CustomButton";
 import { usePathname } from "next/navigation";
+import { ImageWrapper } from "../Common/ImageWrapper";
 
 const Footer = ({ menu, footerData, contactData, socialLinks }) => {
   const pathname = usePathname();
@@ -17,10 +17,7 @@ const Footer = ({ menu, footerData, contactData, socialLinks }) => {
           <div className="col-lg-7 column-1">
             <div className="container-logo">
               <div data-parallax data-end="bottom bottom" className="z-3">
-                <img
-                  src={generateImageURL({ wix_url: footerData && footerData.logo1, original: true })}
-                  className="img-b z-3"
-                />
+                <ImageWrapper url={footerData.logo1} original={true} customClasses={"img-b z-3"} />
               </div>
               <div
                 data-parallax
@@ -30,10 +27,7 @@ const Footer = ({ menu, footerData, contactData, socialLinks }) => {
                 data-end="bottom center"
                 className="z-2"
               >
-                <img
-                  src={generateImageURL({ wix_url: footerData && footerData.logo2, original: true })}
-                  className="img-p z-2"
-                />
+                <ImageWrapper url={footerData.logo2} original={true} customClasses={"img-p z-2"} />
               </div>
               <div
                 data-parallax
@@ -43,10 +37,7 @@ const Footer = ({ menu, footerData, contactData, socialLinks }) => {
                 data-end="bottom center"
                 className="z-1"
               >
-                <img
-                  src={generateImageURL({ wix_url: footerData && footerData.logo3, original: true })}
-                  className="img-s z-1"
-                />
+                <ImageWrapper url={footerData.logo3} original={true} customClasses={"img-s z-1"} />
               </div>
             </div>
             <h2 className="fs--60 fs-mobile-50 title-footer white-1 mt-lg-170 mt-mobile-20">

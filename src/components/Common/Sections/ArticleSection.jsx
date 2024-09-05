@@ -1,8 +1,7 @@
 import React from "react";
-
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 import { formatDate } from "@/Utils/Utils";
+import { ImageWrapper } from "../ImageWrapper";
 
 const ArticleSection = ({ data }) => {
   const CORPORATE_URL = process.env.CORPORATE_URL;
@@ -43,16 +42,7 @@ const ArticleSection = ({ data }) => {
                             data-cursor-style="view"
                           >
                             <div className="wrapper-img">
-                              <img
-                                src={generateImageURL({
-                                  wix_url: coverImage,
-                                  fit: "fit",
-                                  w: "296",
-                                  h: "198",
-                                  q: "95",
-                                })}
-                                className=" "
-                              />
+                            <ImageWrapper url={coverImage} />
                             </div>
                           </div>
                           <div className="container-text">

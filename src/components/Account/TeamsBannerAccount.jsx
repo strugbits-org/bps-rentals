@@ -1,6 +1,6 @@
-import { generateImageURL } from '@/Utils/GenerateImageURL'
 import React from 'react'
 import { CustomButton } from '../Common/CustomButton'
+import { ImageWrapper } from '../Common/ImageWrapper'
 
 export const TeamsBannerAccount = ({ data }) => {
     return (
@@ -49,18 +49,7 @@ export const TeamsBannerAccount = ({ data }) => {
                                 </CustomButton>
                             </div>
                             <div className="container-img bg-img bg-black-1">
-                                <img
-                                    src={generateImageURL({
-                                        wix_url: data.backgroundImage,
-                                        w: "1374",
-                                        h: "547",
-                                        fit: "fill",
-                                        q: "95",
-                                    })}
-                                    className=" "
-                                    data-aos="fadeIn
-                        1.2s ease-out-cubic 0s, d:loop"
-                                />
+                                <ImageWrapper url={data.backgroundImage} attributes={{ "data-aos": "fadeIn 1.2s ease-out-cubic 0s, d:loop" }} />
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
 import ProductCard from "@/components/Category/ProductCard";
+import { ImageWrapper } from "../ImageWrapper";
 
 const Highlights = ({ pageContent, data, savedProductsData, setSavedProductsData, getSelectedProductSnapShots }) => {
   if (data.length === 0) return;
@@ -31,17 +31,7 @@ const Highlights = ({ pageContent, data, savedProductsData, setSavedProductsData
                           />
                           <AnimateLink to={`product/${item.product.slug}`} className="link-highlight">
                             <div className="container-img bg-blue-1">
-                              <img
-                                src={generateImageURL({
-                                  wix_url: item.featureImage,
-                                  w: "699",
-                                  h: "385",
-                                  fit: "fill",
-                                  q: "95",
-                                })}
-                                className=" "
-                                data-aos="scaleOut .8s ease-out-cubic 0s, d:loop"
-                              />
+                              <ImageWrapper url={item.featureImage} attributes={{ "data-aos": "scaleOut .8s ease-out-cubic 0s, d:loop" }} />
                             </div>
                           </AnimateLink>
                         </div>

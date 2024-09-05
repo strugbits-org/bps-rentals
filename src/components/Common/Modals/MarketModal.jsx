@@ -1,7 +1,6 @@
 "use client";
-
-import { generateImageURL } from "@/Utils/GenerateImageURL";
 import AnimateLink from "../AnimateLink";
+import { ImageWrapper } from "../ImageWrapper";
 
 const MarketModal = ({ marketsData }) => {
   return (
@@ -28,16 +27,7 @@ const MarketModal = ({ marketsData }) => {
                     className="container-img bg-blue"
                     data-cursor-style="view"
                   >
-                    <img
-                      src={generateImageURL({
-                        wix_url: image,
-                        w: "296",
-                        h: "855",
-                        fit: "fill",
-                        q: "95",
-                      })}
-                      className=" "
-                    />
+                    <ImageWrapper url={image} />
                   </div>
                   <div className="container-text">
                     <h3 className="title-project split-words">{cardname}</h3>

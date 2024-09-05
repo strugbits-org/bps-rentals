@@ -1,4 +1,4 @@
-import { generateImageURL } from "@/Utils/GenerateImageURL";
+import { ImageWrapper } from "../Common/ImageWrapper";
 
 const SnapShots = ({ data }) => {
   return (
@@ -25,18 +25,7 @@ const SnapShots = ({ data }) => {
                       >
                         <div className="container-img">
                           <div className="wrapper-img">
-                            <img
-                              src={generateImageURL({
-                                wix_url: src,
-                                w: "867",
-                                h: "578",
-                                fit: "fill",
-                                q: "95",
-                              })}
-                              data-preload
-                              className="media"
-                              alt="product-njk"
-                            />
+                            <ImageWrapper url={src} />
                           </div>
                         </div>
                       </div>
@@ -47,18 +36,7 @@ const SnapShots = ({ data }) => {
                 <div className="module-column" data-aos="d:loop">
                   <div className="container-img bg-blue">
                     <div className="wrapper-img">
-                      <img
-                        src={generateImageURL({
-                          wix_url: data[0].src,
-                          w: "1747",
-                          h: "889",
-                          fit: "fill",
-                          q: "95",
-                        })}
-                        data-preload
-                        className=""
-                        alt="pro-product"
-                      />
+                      <ImageWrapper url={data[0].src} />
                     </div>
                   </div>
                 </div>
