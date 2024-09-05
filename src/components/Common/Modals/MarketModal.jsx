@@ -15,7 +15,7 @@ const MarketModal = ({ marketsData }) => {
         </div>
         <ul className="list-submenu-market list-submenu list-projects font-submenu">
           {marketsData.filter(x => x.menuItem).map((data, index) => {
-            const { slug, cardname, marketTags, image } = data;
+            const { slug, cardname, marketTags, image } = data.rentalsMarket;
             return (
               <li key={index} className="list-item">
                 <AnimateLink

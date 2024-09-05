@@ -190,7 +190,8 @@ export const getRentalsTeamsBanner = async () => {
 export const getMarketsData = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsMarkets",
+      dataCollectionId: "MarketSection",
+      includeReferencedItems: ["rentalsMarket"],
     });
     if (response && response._items) {
       return response._items
@@ -207,8 +208,9 @@ export const getMarketsData = async () => {
 export const getMarketSection = async (slug) => {
   try {
     const response = await getDataFetchFunction({
-      "dataCollectionId": "RentalsMarkets",
-      "eq": [{
+      dataCollectionId: "MarketSection",
+      includeReferencedItems: ["rentalsMarket"],
+      eq: [{
         key: "slug",
         value: slug
       }],

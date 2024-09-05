@@ -145,14 +145,14 @@ export const MarketBestSeller = ({ products, bestSeller }) => {
                             </ul>
                             {pageLimit < products.length && (
                                 <div className="flex-center">
-                                    <AutoClickWrapper onIntersect={handleAutoSeeMore}>
+                                    {/* <AutoClickWrapper onIntersect={handleAutoSeeMore}> */}
                                         <button
                                             onClick={handleAutoSeeMore}
                                             className="btn-border-blue mt-lg-90 mt-tablet-40 mt-phone-50"
                                         >
                                             <span>See more</span>
                                         </button>
-                                    </AutoClickWrapper>
+                                    {/* </AutoClickWrapper> */}
                                 </div>
                             )}
                         </div>

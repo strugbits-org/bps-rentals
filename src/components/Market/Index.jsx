@@ -23,6 +23,7 @@ const MarketPage = ({
   highlightsSectionData,
   bestSellerProducts
 }) => {
+  
   useEffect(() => {
     markPageLoaded();
   }, []);

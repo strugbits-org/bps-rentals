@@ -12,6 +12,7 @@ import {
   getPeopleReviewSliderData,
   getStudiosData,
 } from "@/Services/SectionsApis";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   try {
@@ -56,6 +57,7 @@ export default async function Page({ params }) {
   const slug = decodeURIComponent(params.slug);
 
   const marketSection = await getMarketSection(slug);
+  if (!marketSection) redirect("/error");
   const bestSeller = await fetchBestSellers(slug);
 
   const collectionIds = {
@@ -90,7 +92,7 @@ export default async function Page({ params }) {
 
   return (
     <MarketPage
-      marketSection={marketSection}
+      marketSection={marketSection.rentalsMarket}
       newArrivalSectionContent={homeNewArrivalSectionContent}
       homeSectionDetails={homeSectionDetails}
       highlightsSectionData={highlightsSectionData}

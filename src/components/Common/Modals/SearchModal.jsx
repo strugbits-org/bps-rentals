@@ -8,7 +8,7 @@ import debounce from 'lodash/debounce';
 import { updatedWatched } from "@/Utils/AnimationFunctions";
 import { ImageWrapper } from "../ImageWrapper";
 
-const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, products = [], searchPagesData }) => {
+const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, searchPagesData }) => {
 
   const CORPORATE_URL = process.env.CORPORATE_URL;
 
@@ -337,11 +337,12 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                       data-aos
                     >
                       {marketsData.map((item, index) => {
+                        const {_id, rentalsMarket} = item;
                         return (
-                          <li key={index} className={`grid-item ${selectedMarkets.includes(item._id) ? "active" : ""}`}>
+                          <li key={index} className={`grid-item ${selectedMarkets.includes(_id) ? "active" : ""}`}>
                             <div
-                              onClick={() => { handleMarketFilter(item._id) }}
-                              className={`market-link project-link ${!resultMarkets.includes(item._id) ? "disabled" : ""}`}
+                              onClick={() => { handleMarketFilter(_id) }}
+                              className={`market-link project-link ${!resultMarkets.includes(_id) ? "disabled" : ""}`}
                               data-cursor-style="default"
                               data-menu-close
                             >
@@ -349,13 +350,13 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                 className="container-img bg-blue"
                                 data-cursor-style="default"
                               >
-                                {resultMarkets.includes(item._id) && (
-                                  <ImageWrapper url={item.image} customClasses={"media"} min_h={"500"} min_w={"500"} attributes={{ "data-preload": "" }} />
+                                {resultMarkets.includes(_id) && (
+                                  <ImageWrapper url={rentalsMarket.image} customClasses={"media"} min_h={"500"} min_w={"500"} attributes={{ "data-preload": "" }} />
                                 )}
                               </div>
                               <div className="container-text">
                                 <h3 className="title-project split-words">
-                                  {item.cardname}
+                                  {rentalsMarket.cardname}
                                 </h3>
                               </div>
                             </div>
