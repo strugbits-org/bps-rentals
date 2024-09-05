@@ -559,7 +559,7 @@ const ProductPostPage = ({
 
               {/* DESCRIPTION */}
               {selectedProductDetails &&
-                selectedProductDetails.product.description && (
+                selectedProductDetails.product.description && selectedProductDetails.product.description !== "<p>&nbsp;</p>" && (
                   <div
                     className={`container-info-text container-read-more description mt-lg-40 mt-tablet-20 mt-phone-50 ${buttonLabel ? "active" : ""
                       }`}

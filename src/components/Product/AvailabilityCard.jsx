@@ -46,7 +46,7 @@ export const AvailabilityCard = ({ selectedVariantData, setUnavailable }) => {
 
     return (
         <div
-            className="container-available font-2 blue-1 mt-md-40 mt-phone-30"
+            className="container-available font-2 blue-1 mt-md-40 mt-phone-30 mb-md-40 mb-phone-30"
         >
             {message && (
                 <div className="available-title">
