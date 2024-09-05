@@ -19,7 +19,7 @@ const Markets = ({ pageContent, marketsData }) => {
             <ul className="list-markets list-projects font-60 grid-lg-25 grid-tablet-50">
               {marketsData &&
                 marketsData.map((data, index) => {
-                  const { slug, cardname, marketTags, image } = data;
+                  const { slug, cardname, marketTags, image } = data.rentalsMarket;
                   return (
                     <li
                       key={index}
@@ -43,10 +43,10 @@ const Markets = ({ pageContent, marketsData }) => {
                             {cardname}
                           </h3>
                           <ul className="list-tags">
-                            {marketTags.map((data, index) => {
+                            {marketTags.map((tag, index) => {
                               return (
                                 <li key={index}>
-                                  <span>{data}</span>
+                                  <span>{tag}</span>
                                 </li>
                               );
                             })}
