@@ -455,7 +455,7 @@ const ProductPostPage = ({
                                   readOnly
                                 />
                                 <div class="container-img">
-                                  <ImageWrapper url={variantData.variant.imageSrc} />
+                                  <ImageWrapper url={variantData.variant.imageSrc} type="product" />
                                 </div>
                               </label>
                             </div>

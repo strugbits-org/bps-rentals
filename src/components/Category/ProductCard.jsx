@@ -107,7 +107,7 @@ const ProductCard = ({
                   key={index}
                   className={`container-img product-img ${selectedData.sku === activeVariant.sku ? "active" : ""}`}
                 >
-                  <ImageWrapper url={selectedData.variant.imageSrc} />
+                  <ImageWrapper url={selectedData.variant.imageSrc} type="product" />
                 </div>
               </React.Fragment>
             );
@@ -127,7 +127,7 @@ const ProductCard = ({
                     className={`list-item ${variant.sku === activeVariant.sku ? "active" : ""}`}
                   >
                     <div className="container-img">
-                      <ImageWrapper url={variant.variant.imageSrc} />
+                      <ImageWrapper url={variant.variant.imageSrc} type="product" />
                     </div>
                   </li>
                 )}
