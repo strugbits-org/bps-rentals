@@ -2,9 +2,9 @@ import React from "react";
 import AnimateLink from "../AnimateLink";
 import { ImageWrapper } from "../ImageWrapper";
 
-const PortfolioSection = ({ data }) => {
+const PortfolioSection = ({ data }) => {  
   const CORPORATE_URL = process.env.CORPORATE_URL;
-
+  if (!data.length) return;
   return (
     <section className="product-post-explore-projects pt-md-100 pt-phone-50 pb-lg-190 pb-mobile-130">
       <div className="container-fluid">
