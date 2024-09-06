@@ -49,7 +49,7 @@ export const TeamsBannerAccount = ({ data }) => {
                                 </CustomButton>
                             </div>
                             <div className="container-img bg-img bg-black-1">
-                                <ImageWrapper url={data.backgroundImage} attributes={{ "data-aos": "fadeIn 1.2s ease-out-cubic 0s, d:loop" }} />
+                                <ImageWrapper defaultDimensions={{ width: 1374, height: 547 }} url={data.backgroundImage} attributes={{ "data-aos": "fadeIn 1.2s ease-out-cubic 0s, d:loop" }} />
                             </div>
                         </div>
                     </div>

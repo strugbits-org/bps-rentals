@@ -9,10 +9,10 @@ const DreamBig = ({ content }) => {
         <div className="row">
           <div className="col-lg-4 offset-lg-4 column-1">
             <div className="container-img no-phone">
-              <ImageWrapper url={content.desktopBackgroundImage}  min_w={"1356"} min_h={"953"} customClasses={"media"} attributes={{ "data-preload": "" }} />
+              <ImageWrapper defaultDimensions={{ width: 1356, height: 953 }} url={content.desktopBackgroundImage} min_w={"1356"} min_h={"953"} customClasses={"media"} attributes={{ "data-preload": "" }} />
             </div>
             <div className="container-img no-desktop no-tablet">
-              <ImageWrapper url={content.mobileBackgroundImage}  min_w={"434"} min_h={"773"} customClasses={"media"} attributes={{ "data-preload": "" }} />
+              <ImageWrapper defaultDimensions={{ width: 434, height: 773 }} url={content.mobileBackgroundImage} min_w={"434"} min_h={"773"} customClasses={"media"} attributes={{ "data-preload": "" }} />
             </div>
             <div
               data-parallax

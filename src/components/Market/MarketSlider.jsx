@@ -22,7 +22,7 @@ export const MarketSlider = ({ content, marketSliderData }) => {
                                             onClick={() => handleNavigate(`/project/${data?.portfolioRef?.slug}`)}
                                             className="container-img"
                                         >
-                                            <ImageWrapper url={data?.portfolioRef?.coverImage?.imageInfo} type="2" customClasses={"media"} attributes={{ "data-parallax": "", "data-scale-from": "1.3" }} />
+                                            <ImageWrapper defaultDimensions={{ width: 1920, height: 1180 }} url={data?.portfolioRef?.coverImage?.imageInfo} type="2" customClasses={"media"} attributes={{ "data-parallax": "", "data-scale-from": "1.3" }} />
                                         </div>
                                         <div className="container-project">
                                             <h4 className="project split-words">

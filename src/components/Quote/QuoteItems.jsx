@@ -31,7 +31,7 @@ const QuoteItems = ({ quoteData }) => {
         <input type="hidden" name="sku[]" defaultValue="MODCH09" />
         <div className="cart-product">
           <div className="container-img">
-            <ImageWrapper url={image} />
+            <ImageWrapper defaultDimensions={{ width: 120, height: 120 }} url={image} />
           </div>
           <div className="wrapper-product-info">
             <div className="container-top">
@@ -118,7 +118,7 @@ const QuoteItems = ({ quoteData }) => {
         <input type="hidden" name="sku[]" defaultValue="MODCH09" />
         <div className="cart-product">
           <div className="container-img">
-            <ImageWrapper url={src} type="2" />
+            <ImageWrapper defaultDimensions={{ width: 120, height: 120 }} url={src} type="2" />
           </div>
           <div className="wrapper-product-info">
             <div className="container-top">

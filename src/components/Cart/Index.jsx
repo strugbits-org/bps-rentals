@@ -136,7 +136,7 @@ const CartPage = () => {
                           />
                           <div className="cart-product">
                             <div className="container-img">
-                            <ImageWrapper url={image} />
+                            <ImageWrapper defaultDimensions={{ width: 120, height: 120 }} url={image} />
                             </div>
                             <div className="wrapper-product-info">
                               <div className="container-top">

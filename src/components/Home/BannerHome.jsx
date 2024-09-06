@@ -23,7 +23,7 @@ const BannerHome = ({ content }) => {
                 data-parallax-no-mobile
                 data-translate-y="70vh"
               >
-                <ImageWrapper url={content.backgroundImage} q={"90"} debug={true} attributes={{ "data-aos": "fadeIn 1.2s ease-out-cubic 0s, d:loop" }} />
+                <ImageWrapper defaultDimensions={{ width: 1336, height: 581 }} url={content.backgroundImage} debug={true} attributes={{ "data-aos": "fadeIn 1.2s ease-out-cubic 0s, d:loop" }} />
               </div>
             </div>
           </div>
