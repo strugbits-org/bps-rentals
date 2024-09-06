@@ -25,14 +25,14 @@ const SnapShots = ({ data }) => {
                       >
                         <div className="container-img">
                           <div className="wrapper-img">
-                            <ImageWrapper defaultDimensions={{ width: 867, height: 578 }} url={src} />
+                            <ImageWrapper key={src} defaultDimensions={{ width: 867, height: 578 }} url={src} />
                           </div>
                         </div>
                       </div>
                     );
                   })}
               </div>
-              <div className="module-photo-gallery-img-100 module-gallery">
+              {/* <div className="module-photo-gallery-img-100 module-gallery">
                 <div className="module-column" data-aos="d:loop">
                   <div className="container-img bg-blue">
                     <div className="wrapper-img">
@@ -40,7 +40,7 @@ const SnapShots = ({ data }) => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

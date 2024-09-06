@@ -27,7 +27,7 @@ const MarketModal = ({ marketsData }) => {
                     className="container-img bg-blue"
                     data-cursor-style="view"
                   >
-                    <ImageWrapper defaultDimensions={{ width: 296, height: 855 }} url={image} />
+                    <ImageWrapper key={image} defaultDimensions={{ width: 296, height: 855 }} url={image} />
                   </div>
                   <div className="container-text">
                     <h3 className="title-project split-words">{cardname}</h3>

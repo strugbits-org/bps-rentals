@@ -74,7 +74,7 @@ export const SocialSection = ({ data, posts, insta_feed }) => {
                               className="container-img"
                               data-cursor-style="view"
                             >
-                              <ImageWrapper defaultDimensions={{ width: 150, height: 150 }} url={data.blogRef.coverImage} type="2" />
+                              <ImageWrapper key={data.blogRef.coverImage} defaultDimensions={{ width: 150, height: 150 }} url={data.blogRef.coverImage} type="2" />
                             </div>
                             <div className="container-text">
                               <h4 className="blog-title">

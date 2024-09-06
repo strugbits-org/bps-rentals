@@ -43,16 +43,14 @@ export const ImageWrapper = ({
         }
     };
 
-    const handleResize = debounce(() => {        
+    const handleResize = debounce(() => {
         const newSrc = generateSrc();
         setSrc(newSrc);
     }, 2000);
 
     useEffect(() => {
-        setTimeout(() => {
-            const newSrc = generateSrc();
-            setSrc(newSrc);
-        }, 200);
+        const newSrc = generateSrc();
+        setSrc(newSrc);
 
         window.addEventListener('resize', handleResize);
         return () => {
