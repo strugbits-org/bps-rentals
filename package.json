@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
-    "@uidotdev/usehooks": "^2.4.1",
     "@wix/data": "^1.0.121",
     "@wix/ecom": "^1.0.685",
     "@wix/forms": "^1.0.102",
@@ -19,6 +18,7 @@
     "bcryptjs": "^2.4.3",
     "instafeed-node-js": "^0.1.4",
     "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
     "next": "14.2.4",
     "react": "^18",
     "react-cookie": "^7.2.0",

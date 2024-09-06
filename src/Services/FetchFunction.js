@@ -1,4 +1,4 @@
-import { createWixClient } from "@/Utils/CreateWixClient";
+import { createWixClient, createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import { apiAuth } from "@/Utils/IsAuthenticated";
 import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
 import { encryptPriceFields } from "@/Utils/Encrypt";
@@ -12,7 +12,7 @@ async function retryAsyncOperation(operation, retries = 3, delayMs = 1000) {
   while (attempt < retries) {
     try {
       return await operation();
-    } catch (error) {      
+    } catch (error) {
       attempt++;
       if (attempt < retries) {
         console.log(`Attempt ${attempt} failed. Retrying in ${delayMs}ms...`);
@@ -111,7 +111,12 @@ const getDataFetchFunction = async (payload) => {
     }
 
     // Create Wix client
-    const client = await createWixClient();
+    let client;
+    if (dataCollectionId !== "PortfolioCollection") {
+      client = await createWixClientApiStrategy();
+    } else {
+      client = await createWixClient();
+    }
 
     // Set up query options
     let dataQuery = client.items.queryDataItems({
