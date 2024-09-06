@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useRef, useState } from 'react';
 import { useWindowSize } from "@uidotdev/usehooks";
 import { generateImageURL, generateImageUrl2 } from "@/Utils/GenerateImageURL";

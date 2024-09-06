@@ -14,9 +14,12 @@ export const createWixClient = async () => {
         items,
         cart,
         submissions,
-        currentCart,
       },
-      auth: OAuthStrategy({ clientId: process.env.CLIENT_ID_WIX }),
+      auth: ApiKeyStrategy({
+        siteId: process.env.CLIENT_SITE_ID_WIX,
+        apiKey: process.env.CLIENT_API_KEY_WIX,
+      }),
+      // auth: OAuthStrategy({ clientId: process.env.CLIENT_ID_WIX }),
     });
     return wixClient;
   } catch (error) {

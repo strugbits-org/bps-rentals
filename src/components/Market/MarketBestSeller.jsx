@@ -3,7 +3,7 @@ import ProductCard from '../Category/ProductCard';
 import { markPageLoaded, updatedWatched } from '@/Utils/AnimationFunctions';
 import { getSavedProductData } from '@/Services/ProductsApis';
 import CartModal from '../Common/Modals/CartModal';
-import AutoClickWrapper from '../Common/AutoClickWrapper';
+// import AutoClickWrapper from '../Common/AutoClickWrapper';
 
 export const MarketBestSeller = ({ products, bestSeller }) => {
     const pageSize = 6;
