@@ -23,7 +23,7 @@ export const HotTrendsCategory = ({ pageContent, data }) => {
           </div>
           <div className="col-12">
             <div className="container-img bg-img">
-              <ImageWrapper url={data.mainMedia} q={"100"} attributes={{ "data-parallax": "", "data-translate-x-from": "10vw", "data-translate-x-to": "0" }} />
+              <ImageWrapper defaultDimensions={{ width: 1374, height: 547 }} url={data.mainMedia} q={"100"} attributes={{ "data-parallax": "", "data-translate-x-from": "10vw", "data-translate-x-to": "0" }} />
             </div>
           </div>
           <div

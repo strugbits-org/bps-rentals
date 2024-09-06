@@ -274,7 +274,7 @@ const ProductPostPage = ({
                               <div key={index} className="swiper-slide">
                                 <div className="wrapper-img">
                                   <div className="container-img">
-                                    <ImageWrapper url={imageData.src} min_w={"671"} min_h={"671"} />
+                                    <ImageWrapper defaultDimensions={{ width: 671, height: 671 }} url={imageData.src} min_w={"671"} min_h={"671"} />
                                   </div>
                                 </div>
                               </div>
@@ -319,7 +319,7 @@ const ProductPostPage = ({
                                 >
                                   <div class="wrapper-img">
                                     <div class="container-img">
-                                      <ImageWrapper url={src} min_w={"170"} min_h={"170"} />
+                                      <ImageWrapper defaultDimensions={{ width: 170, height: 170 }} url={src} min_w={"170"} min_h={"170"} />
                                     </div>
                                   </div>
                                 </div>
@@ -455,7 +455,7 @@ const ProductPostPage = ({
                                   readOnly
                                 />
                                 <div class="container-img">
-                                  <ImageWrapper url={variantData.variant.imageSrc} type="product" />
+                                  <ImageWrapper defaultDimensions={{ width: 50, height: 50 }} url={variantData.variant.imageSrc} type="product" />
                                 </div>
                               </label>
                             </div>

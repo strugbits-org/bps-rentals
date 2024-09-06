@@ -36,7 +36,7 @@ const NewArrival = ({ content }) => {
         data-translate-y-from="-20vh"
         data-translate-y-to="20vh"
       >
-        <ImageWrapper url={content.backgroundImage} q={"100"} />
+        <ImageWrapper defaultDimensions={{ width: 1336, height: 568 }} url={content.backgroundImage} q={"100"} />
       </div>
     </section>
   );

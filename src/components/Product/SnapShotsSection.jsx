@@ -25,7 +25,7 @@ const SnapShots = ({ data }) => {
                       >
                         <div className="container-img">
                           <div className="wrapper-img">
-                            <ImageWrapper url={src} />
+                            <ImageWrapper defaultDimensions={{ width: 867, height: 578 }} url={src} />
                           </div>
                         </div>
                       </div>
@@ -36,7 +36,7 @@ const SnapShots = ({ data }) => {
                 <div className="module-column" data-aos="d:loop">
                   <div className="container-img bg-blue">
                     <div className="wrapper-img">
-                      <ImageWrapper url={data[0].src} />
+                      <ImageWrapper defaultDimensions={{ width: 1747, height: 889 }} url={data[0].src} />
                     </div>
                   </div>
                 </div>

@@ -24,7 +24,7 @@ const PeopleReviewSlider = ({ data, homeSectionDetails, actionButton = true }) =
                                             <div key={index} className="swiper-slide">
                                                 <div className="wrapper-content">
                                                     <div className="container-img">
-                                                        <ImageWrapper customClasses={"media"} url={data?.image} attributes={{"data-preload":""}} />
+                                                        <ImageWrapper defaultDimensions={{ width: 600, height: 600 }} customClasses={"media"} url={data?.image} attributes={{"data-preload":""}} />
                                                     </div>
                                                     <div className="container-text">
                                                         <p className="testimony">{data.description}</p>

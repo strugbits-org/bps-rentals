@@ -25,7 +25,7 @@ export const Banner = ({ data }) => {
                             </div>
                             <div className="col-12">
                                 <div className="container-img bg-img">
-                                    <ImageWrapper url={data.backgroundImage} attributes={{ "data-parallax": "", "data-translate-x-from": "10vw", "data-translate-x-to": "0" }} />
+                                    <ImageWrapper defaultDimensions={{ width: 1374, height: 547 }} url={data.backgroundImage} attributes={{ "data-parallax": "", "data-translate-x-from": "10vw", "data-translate-x-to": "0" }} />
                                 </div>
                             </div>
                             <div
@@ -94,7 +94,7 @@ export const Banner = ({ data }) => {
                                         </CustomButton>
                                     </div>
                                     <div className="container-img bg-img bg-black-1">
-                                        <ImageWrapper url={data.backgroundImage} attributes={{ "data-aos": "fadeIn 1.2s ease-out-cubic 0s, d:loop" }} />
+                                        <ImageWrapper defaultDimensions={{ width: 1374, height: 547 }} url={data.backgroundImage} attributes={{ "data-aos": "fadeIn 1.2s ease-out-cubic 0s, d:loop" }} />
                                     </div>
                                 </div>
                             </div>
