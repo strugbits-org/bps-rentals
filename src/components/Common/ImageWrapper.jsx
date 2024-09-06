@@ -12,12 +12,13 @@ export const ImageWrapper = ({
     min_w,
     min_h,
     customClasses = "",
-    attributes
+    attributes,
+    debug = false
 }) => {
     if (!url) return null;
 
-    const windowSize = useWindowSize();
-    const [dimensions, setDimensions] = useState({ width: 120, height: 120 });
+    // const windowSize = useWindowSize();
+    const [dimensions, setDimensions] = useState({ width: 1920, height: 1080 });
 
     const ref = useRef();
 
@@ -27,6 +28,8 @@ export const ImageWrapper = ({
             const newHeight = ref.current.clientHeight;
 
             if (newWidth !== dimensions.width || newHeight !== dimensions.height) {
+                if (debug) console.log("changed");
+
                 setDimensions({ width: newWidth, height: newHeight });
             }
         }
@@ -37,10 +40,10 @@ export const ImageWrapper = ({
             changeImageSize();
         }, 200);
 
-        const debounceTimeout = setTimeout(changeImageSize, 2000);
+        // const debounceTimeout = setTimeout(changeImageSize, 2000);
 
-        return () => clearTimeout(debounceTimeout);
-    }, [windowSize]);
+        // return () => clearTimeout(debounceTimeout);
+    }, []);
 
     const generateSrc = () => {
         const width = min_w && min_w > dimensions.width ? min_w : dimensions.width;
