@@ -36,7 +36,7 @@ const Markets = ({ pageContent, marketsData }) => {
                           className="container-img bg-blue"
                           data-cursor-style="view"
                         >
-                          <ImageWrapper defaultDimensions={{ width: 350, height: 350 }} url={image} />
+                          <ImageWrapper key={image} defaultDimensions={{ width: 350, height: 350 }} url={image} />
                         </div>
                         <div className="container-text">
                           <h3 className="title-project split-words">

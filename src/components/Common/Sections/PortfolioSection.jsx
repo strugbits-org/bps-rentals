@@ -36,7 +36,7 @@ const PortfolioSection = ({ data }) => {
                             data-cursor-style="view"
                           >
                             <div className="wrapper-img">
-                              <ImageWrapper defaultDimensions={{ width: 301, height: 371 }} url={coverImage.imageInfo} type="2" />
+                              <ImageWrapper key={coverImage.imageInfo} defaultDimensions={{ width: 301, height: 371 }} url={coverImage.imageInfo} type="2" />
                             </div>
                           </div>
                           <div className="container-text">

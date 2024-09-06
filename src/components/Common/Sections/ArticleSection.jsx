@@ -42,7 +42,7 @@ const ArticleSection = ({ data }) => {
                             data-cursor-style="view"
                           >
                             <div className="wrapper-img">
-                            <ImageWrapper defaultDimensions={{ width: 296, height: 198 }} url={coverImage} />
+                            <ImageWrapper key={coverImage} defaultDimensions={{ width: 296, height: 198 }} url={coverImage} />
                             </div>
                           </div>
                           <div className="container-text">

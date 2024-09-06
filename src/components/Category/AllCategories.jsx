@@ -28,7 +28,7 @@ const AllCategories = ({ categoriesData }) => {
                   data-menu-close
                 >
                   <div className="container-img">
-                    <ImageWrapper defaultDimensions={{ width: 120, height: 120 }} url={mainMedia} />
+                    <ImageWrapper key={slug} defaultDimensions={{ width: 120, height: 120 }} url={mainMedia} />
                   </div>
                   <div className="container-text pt-15">
                     <h3 className="fs--21 fw-600 blue-1 text-center title-project split-words">

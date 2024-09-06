@@ -183,7 +183,7 @@ const CartModal = ({
                                           <div key={index} class="swiper-slide">
                                             <div class="wrapper-img">
                                               <div class="container-img">
-                                                <ImageWrapper defaultDimensions={{ width: 671, height: 671 }} url={imageData.src} />
+                                                <ImageWrapper key={imageData.src} defaultDimensions={{ width: 671, height: 671 }} url={imageData.src} />
                                               </div>
                                             </div>
                                           </div>
@@ -226,7 +226,7 @@ const CartModal = ({
                                             >
                                               <div class="wrapper-img">
                                                 <div class="container-img">
-                                                  <ImageWrapper defaultDimensions={{ width: 170, height: 170 }} url={src} />
+                                                  <ImageWrapper key={src} defaultDimensions={{ width: 170, height: 170 }} url={src} />
                                                 </div>
                                               </div>
                                             </div>
