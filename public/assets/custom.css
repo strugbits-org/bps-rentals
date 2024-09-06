@@ -250,6 +250,10 @@ li.IMPORTANT.long-desc {
     .cart-product .wrapper-product-info .container-specs .list-specs li {
         width: 50% !important;
     }
+    
+    .container-product-description .list-specs li .specs-title {
+        min-width: 16rem;
+    }
 }
 
 .form-quote .container-input.input-date input {
@@ -289,8 +293,5 @@ li.IMPORTANT.long-desc {
 
     .product-link.small {
         --product-title-max-w: 14rem;
-    }
-    .container-product-description .list-specs li .specs-title {
-        min-width: 16rem;
     }
 }

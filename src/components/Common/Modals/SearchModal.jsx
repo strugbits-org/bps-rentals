@@ -245,7 +245,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                                 {idx < 4 && (
                                                   <li>
                                                     <div className="container-img">
-                                                      <ImageWrapper url={variant.imageSrc} />
+                                                      <ImageWrapper url={variant.imageSrc} type="product" />
                                                     </div>
                                                   </li>
                                                 )}

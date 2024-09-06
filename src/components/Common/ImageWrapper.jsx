@@ -1,64 +1,68 @@
-"use client"
-import { generateImageURL, generateImageUrl2 } from "@/Utils/GenerateImageURL";
+import React, { useEffect, useRef, useState } from 'react';
 import { useWindowSize } from "@uidotdev/usehooks";
-import React, { useEffect, useRef, useState } from 'react'
+import { generateImageURL, generateImageUrl2 } from "@/Utils/GenerateImageURL";
 
-export const ImageWrapper = ({ url, type = "1", original, fit = "fill", q = "95", min_w, min_h, customClasses = "", attributes }) => {
-    if (!url) return;
+export const ImageWrapper = ({
+    url,
+    type = "default",
+    original,
+    fit = "fill",
+    q = "95",
+    min_w,
+    min_h,
+    customClasses = "",
+    attributes
+}) => {
+    if (!url) return null;
 
-    const windowsSize = useWindowSize();
-    const [height, setHeight] = useState("1080");
-    const [width, setWidth] = useState("1920");
+    const windowSize = useWindowSize();
+    const [dimensions, setDimensions] = useState({ width: 120, height: 120 });
 
     const ref = useRef();
 
     const changeImageSize = () => {
-        setHeight(ref.current?.clientHeight);
-        setWidth(ref.current?.clientWidth);
-    }
+        if (ref.current) {
+            const newWidth = ref.current.clientWidth;
+            const newHeight = ref.current.clientHeight;
+
+            if (newWidth !== dimensions.width || newHeight !== dimensions.height) {
+                setDimensions({ width: newWidth, height: newHeight });
+            }
+        }
+    };
 
     useEffect(() => {
-        const debounceTimeout = setTimeout(() => {
+        setTimeout(() => {
             changeImageSize();
-        }, 2000);
+        }, 200);
 
-        return () => {
-            clearTimeout(debounceTimeout);
-        };
-    }, [windowsSize]);
+        const debounceTimeout = setTimeout(changeImageSize, 2000);
+
+        return () => clearTimeout(debounceTimeout);
+    }, [windowSize]);
 
     const generateSrc = () => {
-        let src;
-        if (type === "1") {
-            src = generateImageURL({
-                wix_url: url,
-                w: min_w && min_w > width ? min_w : width,
-                h: min_h && min_h > height ? min_h : height,
-                original,
-                fit,
-                q,
-            });
-        }else if (type === "2"){
-            src = generateImageUrl2({
-                wix_url: url,
-                w: min_w && min_w > width ? min_w : width,
-                h: min_h && min_h > height ? min_h : height,
-                original,
-                fit,
-                q,
-            });
-        }
-        return src;
+        const width = min_w && min_w > dimensions.width ? min_w : dimensions.width;
+        const height = min_h && min_h > dimensions.height ? min_h : dimensions.height;
 
-    }
+        switch (type) {
+            case "default":
+                return generateImageURL({ wix_url: url, w: width, h: height, original, fit, q });
+            case "2":
+                return generateImageUrl2({ wix_url: url, w: width, h: height, original, fit, q });
+            case "product":
+                return `${url}/v1/${fit}/w_${width},h_${height},al_c,q_${q},usm_0.66_1.00_0.01,enc_auto/compress.webp`;
+            default:
+                return "";
+        }
+    };
 
     return (
         <img
-            style={{ minHeight: min_h }}
             ref={ref}
             src={generateSrc()}
             className={customClasses}
             {...attributes}
         />
-    )
-}
+    );
+};

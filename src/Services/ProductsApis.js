@@ -341,10 +341,16 @@ export const getBestSellerProducts = async (bestSeller, limit) => {
       limit: "infinite",
     });
     if (response && response._items) {
+      const products = response._items.map((x) => ({
+        subCategoryData: [],
+        ...x.data,
+        ...x.data.subCategoryData && { subCategoryData: x.data.subCategoryData }
+      }));
+      
       if (limit) {
-        return response._items.map((x) => x.data).slice(0, limit);
+        return products.slice(0, limit);
       }
-      return response._items.map((x) => x.data);
+      return products;
     } else {
       throw new Error("Response does not contain _items");
     }
