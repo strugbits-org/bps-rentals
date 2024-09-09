@@ -183,25 +183,21 @@ const CartModal = ({
                                           <div key={index} class="swiper-slide">
                                             <div class="wrapper-img">
                                               <div class="container-img">
-                                                <ImageWrapper key={imageData.src} defaultDimensions={{ width: 671, height: 671 }} url={imageData.src} />
+                                                <ImageWrapper timeout={0} key={imageData.src} defaultDimensions={{ width: 671, height: 671 }} url={imageData.src} />
                                               </div>
                                             </div>
                                           </div>
                                         );
                                       }
                                     )}
-                                  {selectedVariantData?.modalUrl && (
-                                    <div class="swiper-slide slide-360">
-                                      <div class="wrapper-img">
-                                        <i class="icon-360"></i>
-                                        <div class="container-img">
-                                          <ModalCanvas3d
-                                            path={selectedVariantData?.modalUrl}
-                                          />
-                                        </div>
+                                  <div class="swiper-slide slide-360">
+                                    <div class="wrapper-img">
+                                      <i class="icon-360"></i>
+                                      <div class="container-img">
+                                        <ModalCanvas3d path={selectedVariantData?.modalUrl} />
                                       </div>
                                     </div>
-                                  )}
+                                  </div>
                                 </div>
                               </div>
                               <div class="swiper-button-prev">
@@ -226,7 +222,7 @@ const CartModal = ({
                                             >
                                               <div class="wrapper-img">
                                                 <div class="container-img">
-                                                  <ImageWrapper key={src} defaultDimensions={{ width: 170, height: 170 }} url={src} />
+                                                  <ImageWrapper timeout={0} key={src} defaultDimensions={{ width: 170, height: 170 }} url={src} />
                                                 </div>
                                               </div>
                                             </div>

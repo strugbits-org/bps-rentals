@@ -24,9 +24,17 @@ export const getPageMetaData = async (path) => {
   }
 };
 
-export const getNewArrivalSectionContent = async () => {
+export const getNewArrivalSectionContent = async (slug) => {
   try {
-    const response = await getDataFetchFunction({ dataCollectionId: "RentalsHomeNewArrivals" });
+    const response = await getDataFetchFunction({
+      dataCollectionId: "RentalsNewArrivals",
+      eq: [
+        {
+          key: "slug",
+          value: slug || "/",
+        }
+      ]
+    });
     if (response && response._items) {
       return response._items[0].data;
     } else {
@@ -310,6 +318,53 @@ export const getPortfolioData = async () => {
     }
   } catch (error) {
     console.error("Error fetching Portfolio data:", error);
+    return [];
+  }
+};
+
+export const getProductPortfolioData = async (productId) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "PortfolioCollection",
+      includeReferencedItems: ["portfolioRef", "studios", "markets", "storeProducts"],
+      limit: "infinite",
+      ne: [{ key: "isHidden", value: true }],
+    });
+    if (response && response._items) {
+      const portfolios = response._items.map((x) => x.data);      
+      const productPortfolios = portfolios.filter(({ storeProducts }) =>
+        storeProducts?.find(({ _id }) => _id === productId)
+      );
+      return productPortfolios;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching Portfolio data:", error);
+    return [];
+  }
+};
+
+export const getProductBlogsData = async (productId) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "BlogProductData",
+      includeReferencedItems: ["blogRef", "studios", "markets", "author", "storeProducts"],
+      limit: "infinite",
+      ne: [{ key: "isHidden", value: true }],
+    });
+
+    if (response && response._items) {
+      const blogs = response._items.map((x) => x.data);      
+      const productBlogs = blogs.filter(({ storeProducts }) =>
+        storeProducts?.find(({ _id }) => _id === productId)
+      );
+      return productBlogs;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching Blogs data:", error);
     return [];
   }
 };

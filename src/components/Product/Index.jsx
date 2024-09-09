@@ -266,32 +266,27 @@ const ProductPostPage = ({
                         setSavedProductsData={setSavedProductsData}
                       />
                     </div>
-                    <div className="swiper-container">
+                    <div className="swiper-container reset-slide-enabled">
                       <div className="swiper-wrapper">
-                        {selectedVariant &&
-                          selectedVariant.images?.map((imageData, index) => {
+                        {selectedVariant && selectedVariant.images?.map((imageData, index) => {
                             return (
                               <div key={index} className="swiper-slide">
                                 <div className="wrapper-img">
                                   <div className="container-img">
-                                    <ImageWrapper key={imageData.src} defaultDimensions={{ width: 671, height: 671 }} url={imageData.src} min_w={"671"} min_h={"671"} />
+                                    <ImageWrapper timeout={0} key={imageData.src} defaultDimensions={{ width: 671, height: 671 }} url={imageData.src} min_w={"671"} min_h={"671"} />
                                   </div>
                                 </div>
                               </div>
                             );
                           })}
-                        {selectedVariant?.modalUrl && (
-                          <div className="swiper-slide slide-360">
-                            <div className="wrapper-img">
-                              <i className="icon-360"></i>
-                              <div className="container-img">
-                                <ModalCanvas3d
-                                  path={selectedVariant?.modalUrl}
-                                />
-                              </div>
+                        <div className="swiper-slide slide-360">
+                          <div className="wrapper-img">
+                            <i className="icon-360"></i>
+                            <div className="container-img">
+                              <ModalCanvas3d path={selectedVariant?.modalUrl} />
                             </div>
                           </div>
-                        )}
+                        </div>
                       </div>
                     </div>
                     <div className="swiper-button-prev">
@@ -319,7 +314,7 @@ const ProductPostPage = ({
                                 >
                                   <div class="wrapper-img">
                                     <div class="container-img">
-                                      <ImageWrapper key={src} defaultDimensions={{ width: 170, height: 170 }} url={src} min_w={"170"} min_h={"170"} />
+                                      <ImageWrapper timeout={0} key={src} defaultDimensions={{ width: 170, height: 170 }} url={src} min_w={"170"} min_h={"170"} />
                                     </div>
                                   </div>
                                 </div>
@@ -455,7 +450,7 @@ const ProductPostPage = ({
                                   readOnly
                                 />
                                 <div class="container-img">
-                                  <ImageWrapper key={variantData.variant.imageSrc} defaultDimensions={{ width: 50, height: 50 }} url={variantData.variant.imageSrc} type="product" />
+                                  <ImageWrapper timeout={0} key={variantData.variant.imageSrc} defaultDimensions={{ width: 50, height: 50 }} url={variantData.variant.imageSrc} type="product" />
                                 </div>
                               </label>
                             </div>

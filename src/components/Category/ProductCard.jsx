@@ -107,7 +107,7 @@ const ProductCard = ({
                   key={index}
                   className={`container-img product-img ${selectedData.sku === activeVariant.sku ? "active" : ""}`}
                 >
-                  <ImageWrapper key={selectedData.variant.imageSrc} defaultDimensions={{ width: 350, height: 350 }} url={selectedData.variant.imageSrc} type="product" />
+                  <ImageWrapper timeout={0} key={selectedData.variant.imageSrc} defaultDimensions={{ width: 350, height: 350 }} url={selectedData.variant.imageSrc} type="product" />
                 </div>
               </React.Fragment>
             );
@@ -127,7 +127,7 @@ const ProductCard = ({
                     className={`list-item ${variant.sku === activeVariant.sku ? "active" : ""}`}
                   >
                     <div className="container-img">
-                      <ImageWrapper key={variant.variant.imageSrc} defaultDimensions={{ width: 40, height: 40 }} url={variant.variant.imageSrc} type="product" />
+                      <ImageWrapper timeout={0} key={variant.variant.imageSrc} defaultDimensions={{ width: 40, height: 40 }} url={variant.variant.imageSrc} type="product" />
                     </div>
                   </li>
                 )}

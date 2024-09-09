@@ -29,9 +29,9 @@ export const reloadCartModal = () => {
 
 export const resetSlideIndex = () => {
   if (typeof window !== "undefined") {
-    document
-      .querySelectorAll(".swiper-container.reset-slide-enabled")
-      .forEach((x) => x.swiper?.slideTo(0));
+    const swipers = document.querySelectorAll(".swiper-container.reset-slide-enabled");    
+    if (swipers.length !== 0) return;
+    swipers.forEach((x) => x.swiper?.slideTo(0));
   }
 };
 
