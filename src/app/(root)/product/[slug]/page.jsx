@@ -11,6 +11,7 @@ import {
   fetchAllProducts
 } from '@/Services/ProductsApis';
 import { getPageMetaData, getProductBlogsData, getProductPortfolioData } from "@/Services/SectionsApis";
+import { removeHTMLTags } from '@/Utils/Utils';
 
 export async function generateMetadata({ params }) {
   try {
@@ -26,9 +27,10 @@ export async function generateMetadata({ params }) {
     const { title, noFollowTag } = metaData;
     const { product } = productData.data;
 
+    const description = removeHTMLTags(product.description);
     const metadata = {
       title: product.name + title,
-      description: product.description,
+      description: description,
     };
 
     if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {

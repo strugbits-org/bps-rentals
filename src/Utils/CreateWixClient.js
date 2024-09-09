@@ -36,6 +36,7 @@ export const createWixClient = async () => {
         items,
         cart,
         submissions,
+        currentCart,
       },
       auth: OAuthStrategy({ clientId: process.env.CLIENT_ID_WIX }),
     });

@@ -3,9 +3,7 @@ import AnimateLink from "../AnimateLink";
 import { formatDate } from "@/Utils/Utils";
 import { ImageWrapper } from "../ImageWrapper";
 
-const ArticleSection = ({ data }) => {
-  console.log("data", data);
-  
+const ArticleSection = ({ data }) => {  
   if (data.length === 0) return;
   const CORPORATE_URL = process.env.CORPORATE_URL;
 

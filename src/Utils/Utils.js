@@ -171,10 +171,6 @@ export const formatDescriptionLines = (items) => {
   });
 }
 
-export const debounceCustom = (func) => {
-  var timer;
-  return function (event) {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(func, 100, event);
-  };
+export const removeHTMLTags = (html) => {
+  return html.replace(/<[^>]*>/g, '');
 }

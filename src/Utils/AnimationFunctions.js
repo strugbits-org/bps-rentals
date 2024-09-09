@@ -27,11 +27,23 @@ export const reloadCartModal = () => {
   }
 };
 
+export const resetSlideIndexModal = () => {
+  if (typeof window !== "undefined") {
+    const swipers = document.querySelectorAll(".swiper-container.reset-slide-enabled");
+    if (swipers.length !== 0) return;
+    swipers.forEach((x) => {
+      x.swiper.updateSlides();
+      x.swiper.slideTo(0);
+    });
+  }
+};
+
 export const resetSlideIndex = () => {
   if (typeof window !== "undefined") {
-    const swipers = document.querySelectorAll(".swiper-container.reset-slide-enabled");    
-    if (swipers.length !== 0) return;
-    swipers.forEach((x) => x.swiper?.slideTo(0));
+    const swiper = document.querySelector(".swiper-container.reset-slide-enabled");
+    if (!swiper) return;
+    swiper.swiper.updateSlides()
+    swiper.swiper.slideTo(0);
   }
 };
 
@@ -123,7 +135,7 @@ export const changeProgress = (percent) => {
 export const closeModals = () => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
-      const element = document.querySelector(".header-info-list li.local-item.active");      
+      const element = document.querySelector(".header-info-list li.local-item.active");
       if (element) element.querySelector(".custom-close").click();
       const isActive = document.querySelector("body").classList.contains("menu-active");
       if (isActive) document.querySelector("#bt-menu")?.click();

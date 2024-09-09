@@ -2,9 +2,12 @@
 
 import getDataFetchFunction from "./FetchFunction";
 
+const BASE_URL = process.env.BASE_URL;
+
+
 export const postForm = async (name, payload) => {
-  try {
-    const response = await fetch(`http://localhost:3000/api/post-form/${name}`, {
+  try {    
+    const response = await fetch(`${BASE_URL}/api/post-form/${name}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
