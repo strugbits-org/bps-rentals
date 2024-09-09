@@ -25,6 +25,9 @@ export async function generateMetadata({ params }) {
     ]);
 
     const { title, noFollowTag } = metaData;
+    if (!productData) console.log("product is empty:", slug, productData);
+    if (!productData?.data) return;
+    
     const { product } = productData.data;
 
     const description = removeHTMLTags(product.description);

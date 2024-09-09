@@ -78,6 +78,7 @@ export default async function Page({ params }) {
     peopleReviewSliderData,
     highlightsSectionData,
     bestSellerProducts,
+    bestSellers
   ] = await Promise.all([
     getNewArrivalSectionContent(slug),
     getHomeSectionDetails(),
@@ -88,6 +89,7 @@ export default async function Page({ params }) {
     getPeopleReviewSliderData(),
     getHighlightsSection(highlightsCollection),
     getBestSellerProducts(bestSeller),
+    fetchBestSellers()
   ]);
 
   return (
@@ -102,6 +104,7 @@ export default async function Page({ params }) {
       marketsData={marketsData}
       peopleReviewSliderData={peopleReviewSliderData}
       bestSellerProducts={bestSellerProducts}
+      bestSellers={bestSellers}
     />
   );
 }
