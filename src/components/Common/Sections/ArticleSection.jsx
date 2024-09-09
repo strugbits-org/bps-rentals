@@ -4,6 +4,9 @@ import { formatDate } from "@/Utils/Utils";
 import { ImageWrapper } from "../ImageWrapper";
 
 const ArticleSection = ({ data }) => {
+  console.log("data", data);
+  
+  if (data.length === 0) return;
   const CORPORATE_URL = process.env.CORPORATE_URL;
 
   return (
@@ -23,7 +26,7 @@ const ArticleSection = ({ data }) => {
                   className="swiper-wrapper list-blog list-slider-mobile"
                   data-aos="d:loop"
                 >
-                  {data.slice(0, 8).map((blogData, index) => {
+                  {data.map((blogData, index) => {
                     const { blogRef, studios, markets, author, slug } =
                       blogData;
 

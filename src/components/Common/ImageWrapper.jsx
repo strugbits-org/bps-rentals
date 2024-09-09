@@ -13,8 +13,10 @@ export const ImageWrapper = ({
     min_h,
     customClasses = "",
     attributes,
-    defaultDimensions
+    defaultDimensions,
+    timeout = 200
 }) => {
+    
     if (!url) return null;
 
     const ref = useRef();
@@ -49,8 +51,10 @@ export const ImageWrapper = ({
     }, 2000);
 
     useEffect(() => {
-        const newSrc = generateSrc();
-        setSrc(newSrc);
+        setTimeout(() => {
+            const newSrc = generateSrc();
+            setSrc(newSrc);            
+        }, timeout);
 
         window.addEventListener('resize', handleResize);
         return () => {

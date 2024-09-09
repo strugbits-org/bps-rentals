@@ -227,7 +227,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                       </h3>
                                       <div className="wrapper-img">
                                         <div className="container-img">
-                                          <ImageWrapper key={product.mainMedia} defaultDimensions={{ width: 350, height: 350 }} url={product.mainMedia} />
+                                          <ImageWrapper timeout={0} key={product.mainMedia} defaultDimensions={{ width: 350, height: 350 }} url={product.mainMedia} />
                                         </div>
                                       </div>
                                       <div className="container-bottom">
@@ -245,7 +245,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                                 {idx < 4 && (
                                                   <li>
                                                     <div className="container-img">
-                                                      <ImageWrapper key={variant.imageSrc} defaultDimensions={{ width: 40, height: 40 }} url={variant.imageSrc} type="product" />
+                                                      <ImageWrapper timeout={0} key={variant.imageSrc} defaultDimensions={{ width: 40, height: 40 }} url={variant.imageSrc} type="product" />
                                                     </div>
                                                   </li>
                                                 )}
@@ -308,7 +308,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                       data-cursor-style="view"
                                     >
                                       <div className="wrapper-img">
-                                        <ImageWrapper key={portfolioRef.coverImage.imageInfo} defaultDimensions={{ width: 220, height: 320 }} url={portfolioRef.coverImage.imageInfo} type="2" />
+                                        <ImageWrapper timeout={0} key={portfolioRef.coverImage.imageInfo} defaultDimensions={{ width: 220, height: 320 }} url={portfolioRef.coverImage.imageInfo} type="2" />
                                       </div>
                                     </div>
                                     <div className="container-text">
@@ -351,7 +351,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                 data-cursor-style="default"
                               >
                                 {resultMarkets.includes(_id) && (
-                                  <ImageWrapper key={rentalsMarket.image} defaultDimensions={{ width: 500, height: 500 }} url={rentalsMarket.image} customClasses={"media"} min_h={"500"} min_w={"500"} attributes={{ "data-preload": "" }} />
+                                  <ImageWrapper timeout={0} key={rentalsMarket.image} defaultDimensions={{ width: 500, height: 500 }} url={rentalsMarket.image} customClasses={"media"} min_h={"500"} min_w={"500"} attributes={{ "data-preload": "" }} />
                                 )}
                               </div>
                               <div className="container-text">
@@ -404,7 +404,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                     data-cursor-style="view"
                                   >
                                     <div className="wrapper-img">
-                                      <ImageWrapper key={blogRef.coverImage} defaultDimensions={{ width: 400, height: 180 }} url={blogRef.coverImage} min_h={"180"} min_w={"400"} />
+                                      <ImageWrapper timeout={0} key={blogRef.coverImage} defaultDimensions={{ width: 400, height: 180 }} url={blogRef.coverImage} min_h={"180"} min_w={"400"} />
                                     </div>
                                   </div>
                                   <div className="container-text">

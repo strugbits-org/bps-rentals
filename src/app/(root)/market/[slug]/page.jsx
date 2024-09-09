@@ -79,7 +79,7 @@ export default async function Page({ params }) {
     highlightsSectionData,
     bestSellerProducts,
   ] = await Promise.all([
-    getNewArrivalSectionContent(),
+    getNewArrivalSectionContent(slug),
     getHomeSectionDetails(),
     getDreamBigSectionContent(),
     getMarketSliderData(marketSection._id),

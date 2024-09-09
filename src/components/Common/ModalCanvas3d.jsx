@@ -1,7 +1,8 @@
 import { initializeCanvasTrigger } from "@/Utils/AnimationFunctions";
 import { useEffect } from "react";
 
-const ModalCanvas3d = ({ path }) => {  
+const ModalCanvas3d = ({ path }) => {
+  if (!path) return;
   useEffect(() => {
     initializeCanvasTrigger();
   }, []);
