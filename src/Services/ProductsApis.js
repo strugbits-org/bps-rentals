@@ -222,7 +222,11 @@ export const fetchAllProductsPaths = async () => {
     };
     const response = await getDataFetchFunction(payload);
     if (response && response._items) {
-      return response._items.map((x) => ({ slug: x.data.product.slug }));
+      const paths = response._items
+        .map(x => x.data?.product?.slug)
+        .filter(slug => slug !== undefined)
+        .map(slug => ({ slug }));
+      return paths;
     } else {
       throw new Error("Response does not contain _items");
     }
