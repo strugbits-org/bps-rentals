@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import ModalCanvas3d from "../ModalCanvas3d";
-import { reloadCartModal, resetSlideIndex } from "@/Utils/AnimationFunctions";
+import { reloadCartModal, resetSlideIndexModal } from "@/Utils/AnimationFunctions";
 import { AvailabilityCard } from "@/components/Product/AvailabilityCard";
 import { SaveProductButton } from "../SaveProductButton";
 import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
@@ -55,7 +55,7 @@ const CartModal = ({
 
   useEffect(() => {
     reloadCartModal();
-    resetSlideIndex();
+    resetSlideIndexModal();
   }, [selectedVariantData]);
 
   useEffect(() => {
@@ -190,14 +190,17 @@ const CartModal = ({
                                         );
                                       }
                                     )}
-                                  <div class="swiper-slide slide-360">
-                                    <div class="wrapper-img">
-                                      <i class="icon-360"></i>
-                                      <div class="container-img">
-                                        <ModalCanvas3d path={selectedVariantData?.modalUrl} />
+                                  {selectedVariantData?.modalUrl && (
+                                    <div class="swiper-slide slide-360">
+                                      <div class="wrapper-img">
+                                        <i class="icon-360"></i>
+                                        <div class="container-img">
+                                          <ModalCanvas3d path={selectedVariantData?.modalUrl} />
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  )}
+
                                 </div>
                               </div>
                               <div class="swiper-button-prev">
