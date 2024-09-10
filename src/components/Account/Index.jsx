@@ -25,6 +25,34 @@ const links = [
     icon: "icon-change",
     href: "/my-account-change-password",
   },
+  {
+    name: "Manage Products",
+    icon: "icon-account",
+    href: "https://illumeet.editorx.io/rentalx/account/manage-product",
+    target: "_blank",
+    adminOnly: true,
+  },
+  {
+    name: "Manage Blogs",
+    icon: "icon-account",
+    href: "https://illumeet.editorx.io/rentalx/account/reference-blogs",
+    target: "_blank",
+    adminOnly: true,
+  },
+  {
+    name: "Manage Projects",
+    icon: "icon-account",
+    href: "https://illumeet.editorx.io/rentalx/account/reference-projects",
+    target: "_blank",
+    adminOnly: true,
+  },
+  {
+    name: "Manage Cache",
+    icon: "icon-account",
+    href: "https://illumeet.editorx.io/rentalx/account/manage-cache",
+    target: "_blank",
+    adminOnly: true,
+  },
 ];
 
 const accountSections = {
@@ -38,6 +66,8 @@ const Account = ({ children, footerData, banner }) => {
   const { firstName } = useUserData();
   const pathname = usePathname();
   const router = useRouter();
+  const { role } = useUserData();
+
   const [cookies, setCookie, removeCookie] = useCookies([
     "authToken",
     "userData",
@@ -57,7 +87,7 @@ const Account = ({ children, footerData, banner }) => {
         removeCookie("userTokens", { path: "/" });
         removeCookie("cartQuantity", { path: "/" });
         setTimeout(() => {
-          router.push("/"); 
+          router.push("/");
         }, 200);
       }
     } catch (error) {
@@ -79,14 +109,15 @@ const Account = ({ children, footerData, banner }) => {
           </h2>
           <ul className="list-menu-my-account mt-lg-65 mt-tablet-30">
             {links.map((data, index) => {
-              const { name, href, icon } = data;
+              const { name, href, icon, adminOnly, target } = data;
+              if (role !== "admin" && adminOnly) return;
               return (
                 <li
                   key={index}
                   style={{ cursor: "pointer" }}
                   className="list-item"
                 >
-                  <AnimateLink key={index} to={href} className="link-account">
+                  <AnimateLink key={index} to={href} target={target} className="link-account">
                     <i className={icon}></i>
                     <span>{name}</span>
                   </AnimateLink>
