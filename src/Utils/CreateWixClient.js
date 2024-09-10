@@ -3,6 +3,7 @@ import { collections, items } from "@wix/data";
 import { members, badges } from "@wix/members";
 import { submissions } from "@wix/forms";
 import { cart, currentCart } from "@wix/ecom";
+import { contacts } from "@wix/crm";
 
 export const createWixClientApiStrategy = async () => {
   try {
@@ -14,6 +15,7 @@ export const createWixClientApiStrategy = async () => {
         items,
         cart,
         submissions,
+        contacts
       },
       auth: ApiKeyStrategy({
         siteId: process.env.CLIENT_SITE_ID_WIX,

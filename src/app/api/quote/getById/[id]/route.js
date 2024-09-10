@@ -1,15 +1,9 @@
 import { NextResponse } from "next/server";
 
-import handleAuthentication from "@/Utils/HandleAuthentication";
 import { createWixClient } from "@/Utils/CreateWixClient";
 
 export const GET = async (req, context) => {
   try {
-    const authenticatedUserData = await handleAuthentication(req);
-    if (!authenticatedUserData) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
     const { params } = context;
     const id = params.id;
 
