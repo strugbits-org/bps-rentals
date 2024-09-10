@@ -23,6 +23,8 @@ export const ImageWrapper = ({
     const [src, setSrc] = useState();
 
     const generateSrc = () => {
+        if (original) return generateImageURL({ wix_url: url, original });
+
         if (ref.current) {
             const newWidth = ref.current.clientWidth;
             const newHeight = ref.current.clientHeight;
