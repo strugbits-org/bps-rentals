@@ -58,6 +58,7 @@ const Footer = ({ menu, footerData, contactData, socialLinks }) => {
                             label: item.title,
                             action: item.rentalsAction
                           }}
+                          target={"self"}
                         >
                         </CustomButton>
                       </li>

@@ -6,7 +6,8 @@ export const MarketSlider = ({ content, marketSliderData }) => {
     if (marketSliderData.length === 0) return;
 
     const handleNavigate = (path) => {
-        window.open(process.env.CORPORATE_URL + path, "_blank");
+        // window.open(process.env.CORPORATE_URL + path, "_blank");
+        window.location.href = process.env.CORPORATE_URL + path;
     }
 
     return (

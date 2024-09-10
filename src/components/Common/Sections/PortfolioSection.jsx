@@ -27,7 +27,7 @@ const PortfolioSection = ({ data }) => {
                       <div key={index} className="swiper-slide grid-item">
                         <a
                           href={`${CORPORATE_URL}/project/${slug}`}
-                          target={"_blank"}
+                          // target={"_blank"}
                           className="link-portfolio link-portfolio-animation"
                           data-aos="d:loop"
                         >
@@ -95,7 +95,7 @@ const PortfolioSection = ({ data }) => {
           >
             <AnimateLink
               to={`${CORPORATE_URL}/portfolio`}
-              target={"_blank"}
+              // target={"_blank"}
               className="btn-border-blue"
               data-cursor-style="off"
             >

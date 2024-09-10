@@ -35,7 +35,7 @@ const ArticleSection = ({ data }) => {
                       <div key={index} className="swiper-slide grid-item">
                         <AnimateLink
                           to={`${CORPORATE_URL}/article/${slug}`}
-                          target={"_blank"}
+                          // target={"_blank"}
                           className="link-blog"
                         >
                           <div
@@ -115,7 +115,7 @@ const ArticleSection = ({ data }) => {
           <div className="col-lg-2 offset-lg-5 flex-center mt-70">
             <AnimateLink
               to={`${CORPORATE_URL}/blog`}
-              target={"_blank"}
+              // target={"_blank"}
               className="btn-border-blue"
               data-cursor-style="off"
             >
