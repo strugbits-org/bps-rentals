@@ -1,5 +1,6 @@
 "use server";
-import { getAuthToken, getMemberTokens } from "./GetAuthToken";
+import { getAuthToken, getCartId, getMemberTokens } from "./GetAuthToken";
+import { createPriceQuoteVisitor } from "./QuoteApisVisitor";
 
 const baseUrl = process.env.BASE_URL;
 
@@ -7,6 +8,13 @@ export const createPriceQuote = async ({ lineItems, customerDetails }) => {
   try {
     const authToken = await getAuthToken();
     const memberTokens = await getMemberTokens();
+
+    if (!authToken) {
+      const cartId = await getCartId();
+      const response = createPriceQuoteVisitor({ cartId, lineItems, customerDetails });
+      return response;
+    }
+
     const payload = { memberTokens, lineItems, customerDetails };
 
     const response = await fetch(`${baseUrl}/api/quote/create`, {

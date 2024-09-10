@@ -195,7 +195,7 @@ const ProductPostPage = ({
       };
       const response = await AddProductToCart(productData);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
-      setCookie("cartQuantity", total);
+      setCookie("cartQuantity", total, { path: "/"});
       pageLoadStart();
 
       if (response) {

@@ -70,7 +70,7 @@ const Navbar = ({
   const getCartTotalQuantity = async () => {
     const response = await getProductsCart();
     const total = response ? calculateTotalCartQuantity(response) : "0";
-    setCookie("cartQuantity", total);
+    setCookie("cartQuantity", total, { path: "/"});
   };
 
   useEffect(() => {

@@ -116,7 +116,7 @@ const CartModal = ({
 
       const response = await AddProductToCart(cartData);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
-      setCookie("cartQuantity", total);
+      setCookie("cartQuantity", total, { path: "/" });
       handleClose();
       setModalState({ success: true, error: false });
       setMessage("Product Successfully Added to Cart!");
