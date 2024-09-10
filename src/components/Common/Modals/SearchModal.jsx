@@ -276,7 +276,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                         </h2>
                         <AnimateLink
                           to={`${CORPORATE_URL}/portfolio`}
-                          target={"_blank"}
+                          // target={"_blank"}
                           data-menu-close
                           className="btn-border-blue"
                         >
@@ -299,7 +299,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                 >
                                   <AnimateLink
                                     to={`${CORPORATE_URL}/project/${portfolio.slug}`}
-                                    target={"_blank"}
+                                    // target={"_blank"}
                                     className="link-portfolio "
                                     data-menu-close
                                   >
@@ -372,7 +372,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                       </h2>
                       <AnimateLink
                         to={`${CORPORATE_URL}/blog`}
-                        target={"_blank"}
+                        // target={"_blank"}
                         data-menu-close
                         className="btn-border-blue"
                       >
@@ -395,7 +395,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                               >
                                 <AnimateLink
                                   to={`${CORPORATE_URL}/article/${blog.slug}`}
-                                  target={"_blank"}
+                                  // target={"_blank"}
                                   className="link-blog "
                                   data-menu-close
                                 >
@@ -453,7 +453,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                             <AnimateLink
                               key={index}
                               to={page.redirectToRentals ? path : process.env.CORPORATE_URL + path}
-                              target={page.redirectToRentals ? "" : "_blank"}
+                              // target={page.redirectToRentals ? "" : "_blank"}
                               data-menu-close
                               className="link-order-pages"
                             >

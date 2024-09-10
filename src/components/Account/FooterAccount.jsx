@@ -37,6 +37,7 @@ export const FooterAccount = ({ footerData }) => {
                                                 label: item.title,
                                                 action: item.rentalsAction
                                             }}
+                                            target={"self"}
                                         >
                                         </CustomButton>
                                     </li>

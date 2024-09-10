@@ -2,7 +2,7 @@ import AnimateLink from "../AnimateLink";
 import { ImageWrapper } from "../ImageWrapper";
 
 const Studios = ({ content, studiosData }) => {
-  const url = process.env.CORPORATE_URL;
+  const CORPORATE_URL = process.env.CORPORATE_URL;
 
   return (
     <section className="section-studios">
@@ -48,8 +48,8 @@ const Studios = ({ content, studiosData }) => {
                         <div className="container-accordion-text">
                           <p className="accordion-text">{cardDescription}</p>
                           <AnimateLink
-                            to={`${url}/services/${slug}`}
-                            target={"_blank"}
+                            to={`${CORPORATE_URL}/services/${slug}`}
+                            // target={"_blank"}
                           >
                             <span>See more</span>
                             <i className="icon-arrow-right"></i>

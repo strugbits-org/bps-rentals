@@ -10,43 +10,15 @@ const StudiosFixedMenu = ({ data }) => {
             {data.map((data, index) => {
               return (
                 <li key={index}>
-                  <AnimateLink target={"_blank"} to={`${url}/services/${data.slug}`} className="btn-underline-white">
+                  <AnimateLink
+                    to={`${url}/services/${data.slug}`}
+                    // target={"_blank"}
+                    className="btn-underline-white">
                     <span>{data.cardName}</span>
                   </AnimateLink>
                 </li>
               );
             })}
-            {/* <li>
-              <AnimateLink to="/">
-                <i className="icon-bps-logo"></i>
-                <span className="hide">Blueprint Studios</span>
-              </AnimateLink>
-            </li>
-            <li>
-              <AnimateLink to="/" className="btn-underline-white">
-                <span>Event Design & Production</span>
-              </AnimateLink>
-            </li>
-            <li>
-              <AnimateLink to="/" className="btn-underline-white">
-                <span>Creative Agency</span>
-              </AnimateLink>
-            </li>
-            <li>
-              <AnimateLink to="/" className="btn-underline-white">
-                <span>Custom Fabrication</span>
-              </AnimateLink>
-            </li>
-            <li>
-              <AnimateLink to="/" className="btn-underline-white">
-                <span>Floral Design</span>
-              </AnimateLink>
-            </li>
-            <li>
-              <AnimateLink to="/" className="btn-underline-white">
-                <span>Printing Services</span>
-              </AnimateLink>
-            </li> */}
           </ul>
         </div>
         <button className="btn-close-category-menu" data-category-menu-close>

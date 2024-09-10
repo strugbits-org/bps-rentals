@@ -9,7 +9,7 @@ const Disclaimer = ({ textClass, data }) => {
       By continuing, you are agreeing with{" "}
       <AnimateLink
         to={`${CORPORATE_URL}/terms-of-use`}
-        target={"_blank"}
+        // target={"_blank"}
         className={textClass}
       >
         <span>Blueprint Studios Terms & Conditions</span>
@@ -17,7 +17,7 @@ const Disclaimer = ({ textClass, data }) => {
       and{" "}
       <AnimateLink
         to={`${CORPORATE_URL}/privacy-policy`}
-        target={"_blank"}
+        // target={"_blank"}
         className={textClass}
       >
         <span>Privacy Policy.</span>
