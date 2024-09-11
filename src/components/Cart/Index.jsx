@@ -71,10 +71,7 @@ const CartPage = () => {
       const total = calculateTotalCartQuantity(response.cart.lineItems);
 
       // setCartItems(response.cart.lineItems);
-      setCookie("cartQuantity", total, {
-        path: "/",
-        expires: new Date("2099-01-01"),
-      });
+      setCookie("cartQuantity", total, { path: "/"});
     } catch (error) {
       console.error("Error while removing product", error);
     }
@@ -85,10 +82,7 @@ const CartPage = () => {
       const data = await getProductsCart();
       setCartItems(data);
       const total = calculateTotalCartQuantity(data);
-      setCookie("cartQuantity", total > 0 ? String(total) : "0", {
-        path: "/",
-        expires: new Date("2099-01-01"),
-      });
+      setCookie("cartQuantity", total > 0 ? String(total) : "0", { path: "/"});
       setTimeout(markPageLoaded, 200);
     } catch (error) {
       markPageLoaded();

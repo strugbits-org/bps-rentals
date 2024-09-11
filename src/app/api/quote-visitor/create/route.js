@@ -5,7 +5,6 @@ import { createWixClient, createWixClientApiStrategy } from "@/Utils/CreateWixCl
 async function fetchData(url, options) {
   const response = await fetch(url, options);
   if (!response.ok) {
-    console.log("response", response);
     throw new Error(`HTTP error! status: ${response.status}`);
   }
   return await response.json();
@@ -75,8 +74,6 @@ export const POST = async (req) => {
       },
     };
 
-    console.log("customerEmail", customerEmail);
-
     const contactInfo = {
       "info": {
         "emails": {
@@ -94,8 +91,6 @@ export const POST = async (req) => {
       }
     }
     const contact = await createContact(contactInfo);
-    console.log("contact",contact);
-    
 
     let customer = {
       email: customerEmail,

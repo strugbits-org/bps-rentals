@@ -6,12 +6,13 @@ import QuoteItems from "./QuoteItems";
 import { quoteDateFormatter } from "@/Utils/Utils";
 import { getQuotesById } from "@/Services/QuoteApis";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const QuoteDetails = ({ quoteRequestPageContent, quoteDetailPageContent }) => {
   const searchParams = useSearchParams();
   const quoteId = searchParams.get("id");
-
   const [quoteData, setQuoteData] = useState();
+  const router = useRouter();
 
   const fetchQuote = async () => {
     try {
@@ -19,7 +20,7 @@ const QuoteDetails = ({ quoteRequestPageContent, quoteDetailPageContent }) => {
       setQuoteData(data);
       setTimeout(markPageLoaded, 200);
     } catch (error) {
-      markPageLoaded();
+      router.push("/error");
       console.error("Error while fetching quote data:", error);
     }
   };
