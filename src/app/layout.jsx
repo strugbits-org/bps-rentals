@@ -114,6 +114,8 @@ export default async function RootLayout({ children }) {
             searchPagesData={searchPagesData}
           />
           <CookiesConsent />
+          <SpeedInsights />
+          <GoogleTagManager gtmId="G-4D3S4F1X60" />
           <Wrapper>
             <main>
               {children}
@@ -129,8 +131,6 @@ export default async function RootLayout({ children }) {
               contactData={contactData}
               socialLinks={socialLinks}
             />
-            <SpeedInsights />
-            <GoogleTagManager gtmId="G-4D3S4F1X60" />
           </Wrapper>
           <StudiosFixedMenu data={studiosData} />
           <ContactUsModal
