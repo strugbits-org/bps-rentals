@@ -8,11 +8,15 @@ import { getProductsCart } from "@/Services/CartApis";
 
 import QuoteConfirmedModal from "../Common/Modals/QuoteConfirmedModal";
 import Modal from "../Common/Modals/Modal";
+import useUserData from "@/Hooks/useUserData";
 
 const QuoteRequest = ({ quoteRequestPageContent }) => {
+  const { firstName, lastName, email } = useUserData();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [cartItems, setCartItems] = useState();
   const [message, setMessage] = useState("");
+  const [modalButtonLabel, setModalButtonLabel] = useState("Try Again!");
+  const [modalButtonRedirection, setModalButtonRedirection] = useState();
   const [modalState, setModalState] = useState({
     success: false,
     error: false,
@@ -116,6 +120,12 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
 
   const getCart = async () => {
     const cartData = await getProductsCart();
+    if (!cartData.length) {
+      setMessage("Your cart is currently empty. Please add items to continue.");
+      setModalButtonLabel("View Cart");
+      setModalButtonRedirection("/cart");      
+      setModalState({ success: false, error: true });
+    }
     setCartItems(cartData);
     setTimeout(markPageLoaded, 200);
   };
@@ -124,6 +134,16 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
     getCart();
   }, []);
 
+  useEffect(() => {
+    if (email) {
+      setFormData({
+        ...formData,
+        customerName: firstName + " " + lastName,
+        customerEmail: email,
+      });
+    }
+  }, [email]);
+
   return (
     <>
       {modalState.error && (
@@ -131,6 +151,8 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
           message={message}
           setModalStatus={setModalState}
           modalStatus={modalState}
+          buttonLabel={modalButtonLabel}
+          redirectUrl={modalButtonRedirection}
         />
       )}
       {modalState.success && <QuoteConfirmedModal />}
