@@ -30,6 +30,7 @@ const AnimateLink = ({ to, children, className, target, attributes }) => {
 
   return (
     <Link
+      prefetch={false}
       href={to || ""}
       target={target}
       className={className}
