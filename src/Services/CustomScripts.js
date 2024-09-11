@@ -25,6 +25,20 @@ export const CustomScripts = () => {
 
   return (
     <>
+
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=G-4D3S4F1X60`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-4D3S4F1X60');
+          `}
+      </Script>
+
       <Script type="module" rel="modulepreload" src="/assets/loader.js" />
       <Script
         onReady={onReadyScript}

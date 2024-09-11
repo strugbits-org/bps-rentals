@@ -27,7 +27,7 @@ export async function generateMetadata({ params }) {
     const { title, noFollowTag } = metaData;
     if (!productData) console.log("product is empty:", slug, productData);
     if (!productData?.data) return;
-    
+
     const { product } = productData.data;
 
     const description = removeHTMLTags(product.description);
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }) {
 export const generateStaticParams = async () => {
   try {
     const paths = await fetchAllProductsPaths() || [];
-    return paths;
+    return paths.slice(0, 1);
   } catch (error) {
     console.error("Error:", error);
   }
