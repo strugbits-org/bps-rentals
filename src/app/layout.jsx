@@ -37,7 +37,6 @@ import {
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
 import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
-import { GoogleTagManager } from '@next/third-parties/google'
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata = {
@@ -115,7 +114,6 @@ export default async function RootLayout({ children }) {
           />
           <CookiesConsent />
           <SpeedInsights />
-          <GoogleTagManager gtmId="G-4D3S4F1X60" />
           <Wrapper>
             <main>
               {children}
