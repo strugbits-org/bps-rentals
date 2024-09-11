@@ -6,6 +6,7 @@ import { ImageWrapper } from '../ImageWrapper';
 
 export const SocialSection = ({ data, posts, insta_feed }) => {
   const pathname = usePathname();
+  const CORPORATE_URL = process.env.CORPORATE_URL;
 
   const disabledPages = [
     '/my-account',
@@ -67,7 +68,7 @@ export const SocialSection = ({ data, posts, insta_feed }) => {
                       return (
                         <li key={data._id}>
                           <AnimateLink
-                            to={`/article/${encodeURIComponent(data.slug)}`}
+                            to={`${CORPORATE_URL}/article/${encodeURIComponent(data.slug)}`}
                             className="link-blog"
                           >
                             <div

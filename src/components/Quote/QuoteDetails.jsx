@@ -16,7 +16,8 @@ const QuoteDetails = ({ quoteRequestPageContent, quoteDetailPageContent }) => {
 
   const fetchQuote = async () => {
     try {
-      const data = await getQuotesById(quoteId);
+      const id = encodeURIComponent(quoteId); 
+      const data = await getQuotesById(id);
       setQuoteData(data);
       setTimeout(markPageLoaded, 200);
     } catch (error) {
