@@ -8,6 +8,7 @@ import {
   pageLoadEnd,
   pageLoadStart,
   resetSlideIndex,
+  updatedWatched,
 } from "@/Utils/AnimationFunctions";
 import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
 import { checkParameters } from "@/Utils/CheckParams";
@@ -83,7 +84,6 @@ const ProductPostPage = ({
       setSelectedVariantIndex(index);
       setSelectedVariant(combinedVariantData);
     }
-    resetSlideIndex();
   };
 
   useEffect(() => {
@@ -237,6 +237,15 @@ const ProductPostPage = ({
     setTimeout(markPageLoaded, 100);
     fetchSavedProducts();
   }, []);
+
+
+  useEffect(() => {
+    if (selectedVariant) {
+      resetSlideIndex();
+      updatedWatched(true);
+    }
+  }, [selectedVariant])
+  
 
   return (
     <>
