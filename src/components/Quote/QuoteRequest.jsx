@@ -122,8 +122,8 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
     const cartData = await getProductsCart();
     if (!cartData.length) {
       setMessage("Your cart is currently empty. Please add items to continue.");
-      setModalButtonLabel("View Cart");
-      setModalButtonRedirection("/cart");      
+      setModalButtonLabel("Continue Shopping");
+      setModalButtonRedirection("/category/new");      
       setModalState({ success: false, error: true });
     }
     setCartItems(cartData);
