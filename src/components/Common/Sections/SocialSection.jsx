@@ -156,6 +156,7 @@ export const SocialSection = ({ data, posts, insta_feed }) => {
                   </div>
                   <ul className="list-pinterest">
                     <Link
+                      prefetch={false}
                       data-pin-do="embedUser"
                       data-pin-scale-height="400"
                       data-pin-scale-width="1200"

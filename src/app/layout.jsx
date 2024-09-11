@@ -38,6 +38,7 @@ import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
 import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
 import { GoogleTagManager } from '@next/third-parties/google'
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata = {
   title: "Rent Event Furnishings - Blueprint Studios",
@@ -128,6 +129,7 @@ export default async function RootLayout({ children }) {
               contactData={contactData}
               socialLinks={socialLinks}
             />
+            <SpeedInsights />
             <GoogleTagManager gtmId="G-4D3S4F1X60" />
           </Wrapper>
           <StudiosFixedMenu data={studiosData} />

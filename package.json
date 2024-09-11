@@ -11,6 +11,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
     "@next/third-parties": "^14.2.9",
+    "@vercel/speed-insights": "^1.0.12",
     "@wix/crm": "^1.0.125",
     "@wix/data": "^1.0.121",
     "@wix/ecom": "^1.0.685",
