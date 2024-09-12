@@ -16,8 +16,10 @@ function useUserData() {
       }
     }
   }, [cookies]);
+  console.log("role encrypted", signedUserData?.role);
 
   const role = decryptField(signedUserData?.role);
+  console.log("role decrypted", role);
   return {
     signedUserData,
     email: signedUserData?.loginEmail,
