@@ -2,6 +2,22 @@ import { instafeed, refreshToken } from "instafeed-node-js";
 import getDataFetchFunction from "./FetchFunction";
 import { fetchProductsByIds } from "./ProductsApis";
 
+export const getAllPagesMetaData = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "PageSeoConfigurationRentals",
+    });
+    if (response && response._items) {
+      return response._items.map(x => x.data);
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching All PageMetaData:", error);
+    return [];
+  }
+};
+
 export const getPageMetaData = async (path) => {
   try {
     const response = await getDataFetchFunction({
@@ -20,7 +36,6 @@ export const getPageMetaData = async (path) => {
     }
   } catch (error) {
     console.error("Error fetching PageMetaData:", error);
-    return [];
   }
 };
 
@@ -331,7 +346,7 @@ export const getProductPortfolioData = async (productId) => {
       ne: [{ key: "isHidden", value: true }],
     });
     if (response && response._items) {
-      const portfolios = response._items.map((x) => x.data);      
+      const portfolios = response._items.map((x) => x.data);
       const productPortfolios = portfolios.filter(({ storeProducts }) =>
         storeProducts?.find(({ _id }) => _id === productId)
       );
@@ -355,7 +370,7 @@ export const getProductBlogsData = async (productId) => {
     });
 
     if (response && response._items) {
-      const blogs = response._items.map((x) => x.data);      
+      const blogs = response._items.map((x) => x.data);
       const productBlogs = blogs.filter(({ storeProducts }) =>
         storeProducts?.find(({ _id }) => _id === productId)
       );

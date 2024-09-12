@@ -38,6 +38,7 @@ import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
 import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import RevalidateButton from "@/components/Common/RevalidateButton";
 
 export const metadata = {
   title: "Rent Event Furnishings - Blueprint Studios",
@@ -113,6 +114,7 @@ export default async function RootLayout({ children }) {
             searchPagesData={searchPagesData}
           />
           <CookiesConsent />
+          <RevalidateButton />
           <SpeedInsights />
           <Wrapper>
             <main>

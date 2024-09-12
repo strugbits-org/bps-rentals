@@ -111,12 +111,7 @@ const getDataFetchFunction = async (payload) => {
     }
 
     // Create Wix client
-    let client;
-    if (dataCollectionId !== "PortfolioCollection") {
-      client = await createWixClientApiStrategy();
-    } else {
-      client = await createWixClient();
-    }
+    const client = await createWixClientApiStrategy();
 
     // Set up query options
     let dataQuery = client.items.queryDataItems({
