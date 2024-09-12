@@ -13,8 +13,8 @@ import { redirect } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   try {
-    const _slug = decodeURIComponent(params.slug);
-    const slug = "/category/" + _slug;
+    // const _slug = decodeURIComponent(params.slug);
+    const slug = "/category/" + params.slug;
     const [
       metaData,
       categoriesData,
@@ -44,6 +44,7 @@ export const generateStaticParams = async () => {
     const categoriesData = await fetchAllCategoriesData();
     const slugs = getAllCategoriesPaths(categoriesData);
     const paths = slugs.map((slug) => ({ slug }));
+
     return paths;
   } catch (error) {
     console.log("Error:", error);
@@ -55,12 +56,16 @@ export default async function Page({ params }) {
   try {
     const _slug = decodeURIComponent(params.slug);
     const slug = "/category/" + _slug;
+    const param_slug = "/category/" + params.slug;
 
     const categoriesData = await fetchAllCategoriesData();
 
-    const selectedCategoryData = findCategoryData(categoriesData, slug);
+    let selectedCategoryData = findCategoryData(categoriesData, slug);
     if (!selectedCategoryData) {
-      redirect("/error");
+      selectedCategoryData = findCategoryData(categoriesData, param_slug);
+      if (!selectedCategoryData) {
+        throw `Category Data not found: ${_slug} ${slug}, ${selectedCategoryData}`;
+      }
     }
 
     const categoryIds = extractCategoryIds(selectedCategoryData);

@@ -41,7 +41,7 @@ export const resetSlideIndexModal = () => {
 export const resetSlideIndex = () => {
   if (typeof window !== "undefined") {
     const swiper = document.querySelector(".swiper-container.reset-slide-enabled");
-    if (!swiper.swiper) return;
+    if (!swiper?.swiper) return;
     swiper.swiper.updateSlides()
     swiper.swiper.slideTo(0);
   }
