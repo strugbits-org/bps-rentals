@@ -49,7 +49,7 @@ export async function generateMetadata({ params }) {
 export const generateStaticParams = async () => {
   try {
     const paths = await fetchAllProductsPaths() || [];
-    return paths.slice(0,1);
+    return paths.slice(0, 1);
   } catch (error) {
     console.error("Error:", error);
   }

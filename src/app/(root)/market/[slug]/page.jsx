@@ -47,7 +47,7 @@ export const generateStaticParams = async () => {
   try {
     const marketsData = await getMarketsData();
     const paths = marketsData.map((data) => ({ slug: data.slug }));
-    return paths.slice(0,1);
+    return paths;
   } catch (error) {
     console.log("Error:", error);
   }

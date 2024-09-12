@@ -7,8 +7,6 @@ import { useState } from "react";
 const RevalidateButton = () => {
     const path = usePathname();
     const { role } = useUserData();
-    console.log("role", role);
-    
     const [revalidationState, setRevalidationState] = useState({
         isRevalidatingPage: false,
         isRevalidatingSite: false,
