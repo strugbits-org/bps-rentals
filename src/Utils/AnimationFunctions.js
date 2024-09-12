@@ -141,8 +141,8 @@ export const closeModals = () => {
       if (isActive) document.querySelector("#bt-menu")?.click();
       document.querySelector(".closeModals").click();
       
-      const revalidateModalActive = document.querySelector(".revalidate-button").classList.contains("active");
-      if (revalidateModalActive) document.querySelector(".revalidate-button")?.classList.remove("active");
+      const revalidateModalActive = document.querySelector(".revalidate-button")?.classList?.contains("active");
+      if (revalidateModalActive) document.querySelector(".revalidate-button")?.classList?.remove("active");
       
     }, 200);
   }
