@@ -40,6 +40,7 @@ export const CustomScripts = () => {
       </Script>
 
       <Script type="module" rel="modulepreload" src="/assets/loader.js" />
+      <Script type="module" rel="modulepreload" src="/assets/chat.js" />
       <Script
         onReady={onReadyScript}
         type="module"

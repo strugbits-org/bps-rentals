@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 const Error404Page = () => {
   useEffect(() => {
-    markPageLoaded();
+    setTimeout(markPageLoaded, 200);
   }, []);
   return (
     <section className="section-error-404">

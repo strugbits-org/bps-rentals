@@ -1,6 +1,8 @@
 import AnimateLink from "./AnimateLink";
 
 const CookiesConsent = () => {
+  const CORPORATE_URL = process.env.CORPORATE_URL;
+
   return (
     <div
       className="container-cookies d-none"
@@ -12,7 +14,7 @@ const CookiesConsent = () => {
           This website uses cookies to provide necessary website functionality,
           improve your experience and analyze our traffic. By using our website,
           you agree to our
-          <AnimateLink className="btn-underline-white" to="/privacy-policy">
+          <AnimateLink className="btn-underline-white" to={`${CORPORATE_URL}/privacy-policy`} >
             <span>Privacy Policy</span>
           </AnimateLink>
           and our cookies usage.

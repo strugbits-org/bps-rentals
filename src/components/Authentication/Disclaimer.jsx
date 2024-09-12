@@ -1,7 +1,7 @@
 "use client";
 import AnimateLink from "@/components/Common/AnimateLink";
 
-const Disclaimer = ({ textClass, data }) => {
+const Disclaimer = ({ textClass }) => {
   const CORPORATE_URL = process.env.CORPORATE_URL;
 
   return (
