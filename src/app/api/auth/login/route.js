@@ -57,6 +57,10 @@ export const POST = async (req) => {
     const memberBadges = await wixClient.badges.listBadgesPerMember([selectedMemberData._id]);
     const ADMIN_BADGE_ID = process.env.ADMIN_BADGE_ID;
     const isAdmin = memberBadges?.memberBadgeIds[0]?.badgeIds?.includes(ADMIN_BADGE_ID);
+    console.log("isAdmin", isAdmin);
+    console.log("ADMIN_BADGE_ID", ADMIN_BADGE_ID);
+    console.log("memberBadges?.memberBadgeIds[0]?.badgeIds", memberBadges?.memberBadgeIds[0]?.badgeIds);
+    
     const role = isAdmin ? "admin" : "user";
 
     const memberTokens = await wixClient.auth.getMemberTokensForExternalLogin(
