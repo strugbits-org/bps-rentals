@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import handleAuthentication from "@/Utils/HandleAuthentication";
-import { createWixClient } from "@/Utils/CreateWixClient";
+import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 
 export const GET = async (req) => {
   try {
@@ -10,7 +10,7 @@ export const GET = async (req) => {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const wixClient = await createWixClient();
+    const wixClient = await createWixClientApiStrategy();
     const data = await wixClient.items
       .queryDataItems({
         dataCollectionId: "RequestQuote",
