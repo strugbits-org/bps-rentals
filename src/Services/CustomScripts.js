@@ -2,11 +2,28 @@
 
 import { useRouter } from "next/navigation";
 import Script from "next/script";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getPageName, markPageLoaded } from "@/Utils/AnimationFunctions";
+import useUserData from "@/Hooks/useUserData";
 
 export const CustomScripts = () => {
   const router = useRouter();
+  const { email } = useUserData();
+  const [userEmail, setUserEmail] = useState();
+  const [hasRun, setHasRun] = useState(false);
+
+  useEffect(() => {
+    if (email) {
+      setUserEmail(email);
+    } else {
+      if (hasRun) {
+        setUserEmail("visitor");
+      }
+    }
+    setHasRun(true);
+  }, [email, hasRun]);
+
+
   const onReadyScript = () => {
     if (["home"].includes(getPageName())) markPageLoaded();
   };
@@ -38,6 +55,33 @@ export const CustomScripts = () => {
             gtag('config', 'G-4D3S4F1X60');
           `}
       </Script>
+      {userEmail && userEmail !== "visitor" ? (
+        <Script id="pinterest-tags" strategy="afterInteractive">
+          {`
+          !function(e){if(!window.pintrk){window.pintrk = function () {
+          window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
+            n=window.pintrk;n.queue=[],n.version="3.0";var
+            t=document.createElement("script");t.async=!0,t.src=e;var
+            r=document.getElementsByTagName("script")[0];
+            r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
+          pintrk('load', '2613816880133', {em: '${userEmail}'});
+          pintrk('page');
+          `}
+        </Script>
+      ) : userEmail === "visitor" ? (
+        <Script id="pinterest-tags" strategy="afterInteractive">
+          {`
+          !function(e){if(!window.pintrk){window.pintrk = function () {
+          window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
+            n=window.pintrk;n.queue=[],n.version="3.0";var
+            t=document.createElement("script");t.async=!0,t.src=e;var
+            r=document.getElementsByTagName("script")[0];
+            r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
+          pintrk('load', '2613816880133');
+          pintrk('page');
+          `}
+        </Script>
+      ) : null}
 
       <Script type="module" rel="modulepreload" src="/assets/loader.js" />
       <Script type="module" rel="modulepreload" src="/assets/chat.js" />

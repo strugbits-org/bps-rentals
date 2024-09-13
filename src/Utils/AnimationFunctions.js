@@ -64,16 +64,24 @@ export const updatedWatched = (refreshScroll = false) => {
 export const loadPinterest = () => {
   if (typeof window !== 'undefined') {
     setTimeout(() => {
-      const script = document.createElement("script");
-      script.async = true;
-      script.type = "text/javascript";
-      script.dataset.pinBuild = "doBuild";
-      script.src = "//assets.pinterest.com/js/pinit.js";
-      document.body.appendChild(script);
-      if (window.doBuild) window.doBuild();
+      try {
+        const script = document.createElement("script");
+        script.async = true;
+        script.type = "text/javascript";
+        script.dataset.pinBuild = "doBuild";
+        script.src = "//assets.pinterest.com/js/pinit.js";
+        document.body.appendChild(script);
+
+        if (typeof window.doBuild === 'function') {
+          window.doBuild();
+        }
+      } catch (error) {
+        // console.error("Error loading Pinterest script:", error);
+      }
     }, 1000);
   }
 };
+
 export const markPageLoaded = (watched = true) => {
   if (typeof window !== "undefined") {
     setTimeout(() => window.scrollTo({ top: 0 }), 200);
@@ -140,10 +148,10 @@ export const closeModals = () => {
       const isActive = document.querySelector("body").classList.contains("menu-active");
       if (isActive) document.querySelector("#bt-menu")?.click();
       document.querySelector(".closeModals").click();
-      
+
       const revalidateModalActive = document.querySelector(".revalidate-button")?.classList?.contains("active");
       if (revalidateModalActive) document.querySelector(".revalidate-button")?.classList?.remove("active");
-      
+
     }, 200);
   }
 };
