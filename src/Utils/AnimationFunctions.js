@@ -52,7 +52,8 @@ export const updatedWatched = (refreshScroll = false) => {
     setTimeout(() => {
 
       const customEvent = new Event("customUpdateWatch");
-      document.querySelector(".updateWatched").dispatchEvent(customEvent);
+      const elem = document.querySelector(".updateWatched");
+      if (elem) elem.dispatchEvent(customEvent);
 
       if (refreshScroll) {
         const scrollRefreshEvent = new Event("refreshScroll");
