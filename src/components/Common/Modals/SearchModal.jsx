@@ -95,6 +95,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
 
   const handleProductsFilter = async (term = "") => {
     const filteredProductsData = await searchProducts(term, cookies.location);
+    console.log("filteredProductsData", filteredProductsData);
     setFilteredProducts(filteredProductsData);
     updatedWatched();
   }
