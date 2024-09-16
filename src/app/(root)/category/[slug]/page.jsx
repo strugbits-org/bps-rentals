@@ -9,7 +9,7 @@ import {
 } from "@/Services/ProductsApis";
 import { getHomeSectionDetails, getMarketsData, getPageMetaData } from "@/Services/SectionsApis";
 import { extractCategoryIds, findCategoryData, getAllCategoriesPaths } from "@/Utils/Utils";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   try {
@@ -45,7 +45,7 @@ export const generateStaticParams = async () => {
     const slugs = getAllCategoriesPaths(categoriesData);
     const paths = slugs.map((slug) => ({ slug }));
 
-    return paths;
+    return [];
   } catch (error) {
     console.log("Error:", error);
     return [];
@@ -103,6 +103,7 @@ export default async function Page({ params }) {
     );
   } catch (error) {
     console.error("Error fetching category page data:", error);
-    redirect("/error");
+    notFound();
+    // redirect("/error");
   }
 }
