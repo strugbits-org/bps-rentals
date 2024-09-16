@@ -4,38 +4,51 @@ import { getAuthToken, getCartId, getMemberTokens } from "./GetAuthToken";
 
 const baseUrl = process.env.BASE_URL;
 
-export const getProductsCart = async () => {
-  try {
-    const authToken = await getAuthToken();
-    const memberTokens = await getMemberTokens();
+export const getProductsCart = async (retries = 3, delay = 1000) => {
+  const retryDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-    if (!authToken) {
-      const cartId = await getCartId();
-      const response = getProductsCartVisitor(cartId);
-      return response;
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const authToken = await getAuthToken();
+      const memberTokens = await getMemberTokens();
+
+      if (!authToken) {
+        const cartId = await getCartId();
+        const response = await getProductsCartVisitor(cartId);
+        return response;
+      }
+
+      const response = await fetch(`${baseUrl}/api/cart/get`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+        body: JSON.stringify(memberTokens),
+        cache: "no-store",
+      });
+
+      const data = await response.json();
+      if (!data.cart?.lineItems) {
+        throw new Error("Error fetching cart items");
+      }
+      return data.cart.lineItems;
+      
+    } catch (error) {
+      console.error(`Error fetching cart: Attempt ${attempt + 1} failed: ${error}`);
+
+      if (attempt < retries) {
+        console.log(`Retrying in ${delay}ms...`);
+        await retryDelay(delay);
+        delay *= 2;
+      } else {
+        console.error("Max retries reached. Returning empty array.");
+        return [];
+      }
     }
-
-    const response = await fetch(`${baseUrl}/api/cart/get`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: authToken,
-      },
-      body: JSON.stringify(memberTokens),
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
-    const data = await response.json();
-
-    return data.cart.lineItems;
-  } catch (error) {
-    console.error("Error", error);
-    return null;
   }
 };
+
 
 export const AddProductToCart = async (productData) => {
   try {

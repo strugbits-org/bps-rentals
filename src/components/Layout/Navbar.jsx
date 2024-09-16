@@ -68,24 +68,32 @@ const Navbar = ({
   };
 
   const getCartTotalQuantity = async () => {
-    const response = await getProductsCart();
-    const total = response ? calculateTotalCartQuantity(response) : "0";
-    setCookie("cartQuantity", total, { path: "/"});
+    try {
+      const response = await getProductsCart();
+      const total = response ? calculateTotalCartQuantity(response) : "0";
+      if (total !== cookies.cartQuantity) {
+        setCookie("cartQuantity", total, { path: "/" });
+      }
+    } catch (error) {
+      console.error("Failed to fetch cart data:", error);
+    }
   };
 
   useEffect(() => {
-    setLoggedIn(cookies.authToken && cookies.authToken !== "undefined");
-    getCartTotalQuantity();
-  }, [cookies]);
+    const authTokenValid = cookies.authToken && cookies.authToken !== "undefined";
+    setLoggedIn(authTokenValid);
+    if (authTokenValid) {
+      getCartTotalQuantity();
+    }
+  }, [cookies.authToken]);
 
   useEffect(() => {
-    const quantity =
-      cookies?.cartQuantity !== undefined
-        ? String(cookies.cartQuantity)
-        : "0";
-
+    const quantity = cookies?.cartQuantity !== undefined
+      ? String(cookies.cartQuantity)
+      : "0";
+    
     setCartQuantity(quantity);
-  }, [cookies]);
+  }, [cookies.cartQuantity]);
 
   return (
     <>

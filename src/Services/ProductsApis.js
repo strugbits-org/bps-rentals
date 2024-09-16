@@ -519,32 +519,43 @@ export const getAllCategoriesData = async () => {
     return [];
   }
 };
-export const getSavedProductData = async () => {
-  try {
-    const authToken = await getAuthToken();
-    if (!authToken) return;
-    const response = await fetch(`${baseUrl}/api/product/getSavedProducts`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
-      },
-      cache: "no-store",
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
 
-    if (data && data._items) {
-      return data._items.map((x) => x.data);
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    console.log("Error:", error);
+export const getSavedProductData = async (retries = 3, delay = 1000) => {
+  const retryDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-    return [];
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const authToken = await getAuthToken();
+      if (!authToken) return [];
+
+      const response = await fetch(`${baseUrl}/api/product/getSavedProducts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+        cache: "no-store",
+      });
+
+      const data = await response.json();
+
+      if (data && data._items) {
+        return data._items.map((x) => x.data);
+      } else {
+        throw new Error("Response does not contain _items", response);
+      }
+    } catch (error) {
+      console.error(`Error fetching saved products: Attempt ${attempt + 1} failed: ${error}`);
+
+      if (attempt < retries) {
+        console.log(`Retrying in ${delay}ms...`);
+        await retryDelay(delay);
+        delay *= 2;
+      } else {
+        console.error("Max retries reached. Returning empty array.");
+        return [];
+      }
+    }
   }
 };
 
