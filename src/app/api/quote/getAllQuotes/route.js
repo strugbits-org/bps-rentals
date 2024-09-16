@@ -18,10 +18,6 @@ export const GET = async (req) => {
       .eq("memberId", authenticatedUserData.memberId)
       .find();
 
-    if (data._items.length === 0) {
-      return NextResponse.json({ error: "Quote not found" }, { status: 404 });
-    }
-
     return NextResponse.json(
       {
         message: "Quotes data Successfully fetched",

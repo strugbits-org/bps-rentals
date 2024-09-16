@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 
 import handleAuthentication from "@/Utils/HandleAuthentication";
-import { createWixClient } from "@/Utils/CreateWixClient";
+import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import { isValidPassword } from "@/Utils/AuthApisUtils";
 
 export const POST = async (req) => {
@@ -42,7 +42,7 @@ export const POST = async (req) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    const wixClient = await createWixClient();
+    const wixClient = await createWixClientApiStrategy();
     await wixClient.items.updateDataItem(authenticatedUserData._id, {
       dataCollectionId: "membersPassword",
       dataItemId: authenticatedUserData._id,

@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { createWixClient } from "@/Utils/CreateWixClient";
+import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 
 export const POST = async (req) => {
   try {
     const body = await req.json();
     const { cartId, productData } = body;
 
-    const wixClient = await createWixClient();
+    const wixClient = await createWixClientApiStrategy();
     const cart = await wixClient.cart.addToCart(cartId, productData);
 
     return NextResponse.json(
