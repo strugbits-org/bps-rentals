@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { createWixClient } from "@/Utils/CreateWixClient";
+import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import { isValidEmail } from "@/Utils/AuthApisUtils";
 
 export const POST = async (req) => {
@@ -8,7 +8,7 @@ export const POST = async (req) => {
   const { email } = body;
 
   try {
-    const wixClient = await createWixClient();
+    const wixClient = await createWixClientApiStrategy();
 
     const invalidEmail = isValidEmail(email);
     if (!invalidEmail) {

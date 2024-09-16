@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import { authWixClient, cartWixClient, createWixClient } from "@/Utils/CreateWixClient";
+import { authWixClient, cartWixClient, createWixClient, createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import { encryptField } from "@/Utils/Encrypt";
 
 export const POST = async (req) => {
@@ -10,9 +10,9 @@ export const POST = async (req) => {
     const body = await req.json();
     const { email, password } = body;
 
-    const wixClient = await createWixClient();
+    const wixClientApi = await createWixClientApiStrategy();
 
-    const memberData = await wixClient.items
+    const memberData = await wixClientApi.items
       .queryDataItems({
         dataCollectionId: "membersPassword",
       })
@@ -54,6 +54,7 @@ export const POST = async (req) => {
 
     const selectedMemberData = privateMemberData._items[0].data;
 
+    const wixClient = await createWixClient();
     const memberBadges = await wixClient.badges.listBadgesPerMember([selectedMemberData._id]);
     const ADMIN_BADGE_ID = process.env.ADMIN_BADGE_ID;
     const isAdmin = memberBadges?.memberBadgeIds[0]?.badgeIds?.includes(ADMIN_BADGE_ID);
@@ -65,8 +66,7 @@ export const POST = async (req) => {
     );
 
     if (body?.cartId) {
-      const wixClient = await createWixClient();
-      const visitorCart = await wixClient.cart.getCart(body.cartId);
+      const visitorCart = await wixClientApi.cart.getCart(body.cartId);
 
       const cartClient = await cartWixClient(memberTokens);
       const lineItems = visitorCart.lineItems.map(x => ({
@@ -97,6 +97,8 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
+    console.error("error", error);
+
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 };
