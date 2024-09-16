@@ -174,3 +174,14 @@ export const formatDescriptionLines = (items) => {
 export const removeHTMLTags = (html) => {
   return html.replace(/<[^>]*>/g, '');
 }
+export const buildMetadata = (title, description, noFollowTag) => {
+
+  const metadata = { title };
+  if (description) metadata.description = description;
+
+  if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
+    metadata.robots = "noindex,nofollow";
+  }
+
+  return metadata;
+}

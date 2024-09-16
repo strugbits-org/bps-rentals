@@ -240,7 +240,7 @@ export const getMarketSection = async (slug) => {
     });
 
     if (response && response._items) {
-      return response._items[0].data;
+      return response._items[0]?.data;
     } else {
       throw new Error("Response does not contain _items");
     }

@@ -11,10 +11,11 @@ import {
   fetchAllProducts
 } from '@/Services/ProductsApis';
 import { getPageMetaData, getProductBlogsData, getProductPortfolioData } from "@/Services/SectionsApis";
-import { removeHTMLTags } from '@/Utils/Utils';
+import { buildMetadata, removeHTMLTags } from '@/Utils/Utils';
 
 export async function generateMetadata({ params }) {
   try {
+
     const slug = decodeURIComponent(params.slug);
     const [
       metaData,
@@ -25,86 +26,100 @@ export async function generateMetadata({ params }) {
     ]);
 
     const { title, noFollowTag } = metaData;
-    if (!productData) console.log("product is empty:", slug, productData);
-    if (!productData?.data) return;
+    if (!productData && !productData?.data) {
+      throw new Error(`Product Data not found for slug: ${slug}`);
+    }
 
     const { product } = productData.data;
-
     const description = removeHTMLTags(product.description);
-    const metadata = {
-      title: product.name + title,
-      description: description,
-    };
 
-    if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
-      metadata.robots = "noindex,nofollow";
-    }
+    const metadata = buildMetadata(
+      product.name + title,
+      description,
+      noFollowTag
+    );
 
     return metadata;
   } catch (error) {
-    console.log("Error:", error);
+    console.error("Error in metadata:", error);
+
+    const metaData = await getPageMetaData("error");
+    const { title, noFollowTag } = metaData;
+
+    return buildMetadata(title, noFollowTag);
   }
 }
 
 export const generateStaticParams = async () => {
   try {
     const paths = await fetchAllProductsPaths() || [];
-    return [];
+    return paths;
   } catch (error) {
     console.error("Error:", error);
   }
 }
 
 export default async function Page({ params }) {
-  const slug = decodeURIComponent(params.slug);
+  try {
+    const slug = decodeURIComponent(params.slug);
 
-  const [
-    pairWithData,
-    products,
-    categoriesData,
-    bestSeller
-  ] = await Promise.all([
-    getPairWithData(),
-    getAllProducts({}),
-    getAllCategoriesData(),
-    fetchBestSellers()
-  ]);
-  const selectedProduct = products.find((x) => decodeURIComponent(x.product.slug) === slug);
-  if (!selectedProduct) notFound();
-  const selectedProductId = selectedProduct.product._id;
-
-  const [
-    blogsData,
-    portfolioData
-  ] = await Promise.all([
-    getProductBlogsData(selectedProductId),
-    getProductPortfolioData(selectedProductId),
-  ]);
-
-  const dataMap = new Map(selectedProduct.productVariantsData.map(({ sku, _id }) => [sku, _id]));
-
-  selectedProduct.variantData = selectedProduct.variantData.reduce((acc, variant) => {
-    const variantId = dataMap.get(variant.sku);
-    if (variantId) {
-      variant.variant.variantId = variantId;
-      acc.push(variant);
+    const [
+      pairWithData,
+      products,
+      categoriesData,
+      bestSeller
+    ] = await Promise.all([
+      getPairWithData(),
+      getAllProducts({}),
+      getAllCategoriesData(),
+      fetchBestSellers()
+    ]);
+    const selectedProduct = products.find((x) => decodeURIComponent(x.product.slug) === slug);
+    if (!selectedProduct) {
+      throw new Error(`Product Data not found for slug: ${slug}`);
     }
-    return acc;
-  }, []);
-  if (selectedProduct.variantData.length === 0) notFound();
+    const selectedProductId = selectedProduct.product._id;
 
-  const pairedProductsIds = pairWithData.filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);
-  const matchedProducts = products.filter(product => pairedProductsIds.includes(product.product._id));
+    const [
+      blogsData,
+      portfolioData
+    ] = await Promise.all([
+      getProductBlogsData(selectedProductId),
+      getProductPortfolioData(selectedProductId),
+    ]);
 
-  return (
-    <ProductPostPage
-      selectedProduct={selectedProduct}
-      selectedProductDetails={selectedProduct}
-      matchedProductsData={matchedProducts}
-      categoriesData={categoriesData}
-      blogsData={blogsData}
-      portfolioData={portfolioData}
-      bestSeller={bestSeller}
-    />
-  );
+    const dataMap = new Map(selectedProduct.productVariantsData.map(({ sku, _id }) => [sku, _id]));
+
+    selectedProduct.variantData = selectedProduct.variantData.reduce((acc, variant) => {
+      const variantId = dataMap.get(variant.sku);
+      if (variantId) {
+        variant.variant.variantId = variantId;
+        acc.push(variant);
+      }
+      return acc;
+    }, []);
+
+    if (selectedProduct.variantData.length === 0) {
+      throw new Error(`No Variants found for product/slug: ${slug}`);
+    }
+    if (selectedProduct.variantData.length === 0) notFound();
+
+    const pairedProductsIds = pairWithData.filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);
+    const matchedProducts = products.filter(product => pairedProductsIds.includes(product.product._id));
+
+    return (
+      <ProductPostPage
+        selectedProduct={selectedProduct}
+        selectedProductDetails={selectedProduct}
+        matchedProductsData={matchedProducts}
+        categoriesData={categoriesData}
+        blogsData={blogsData}
+        portfolioData={portfolioData}
+        bestSeller={bestSeller}
+      />
+    );
+  } catch (error) {
+    console.error("Error fetching product page data:", error);
+    notFound();
+  }
 }

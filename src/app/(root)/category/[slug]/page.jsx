@@ -8,34 +8,40 @@ import {
   getAllProducts,
 } from "@/Services/ProductsApis";
 import { getHomeSectionDetails, getMarketsData, getPageMetaData } from "@/Services/SectionsApis";
-import { extractCategoryIds, findCategoryData, getAllCategoriesPaths } from "@/Utils/Utils";
+import { buildMetadata, extractCategoryIds, findCategoryData, getAllCategoriesPaths } from "@/Utils/Utils";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   try {
-    // const _slug = decodeURIComponent(params.slug);
-    const slug = "/category/" + params.slug;
-    const [
-      metaData,
-      categoriesData,
-    ] = await Promise.all([
+    const decodedSlug = decodeURIComponent(params.slug);
+    const slug = "/category/" + decodedSlug;
+
+    const [metaData, categoriesData] = await Promise.all([
       getPageMetaData("category"),
       fetchAllCategoriesData(),
     ]);
+
     const { title, noFollowTag } = metaData;
-    const selectedCategoryData = findCategoryData(categoriesData, slug);
 
-    const metadata = {
-      title: (selectedCategoryData?.parentCollection?.name || selectedCategoryData?.name) + title,
-    };
+    let selectedCategoryData = findCategoryData(categoriesData, slug) || findCategoryData(categoriesData, "/category/" + params.slug);
 
-    if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
-      metadata.robots = "noindex,nofollow";
+    if (!selectedCategoryData) {
+      throw new Error(`Category Data not found for slug: ${slug}`);
     }
+
+    const metadata = buildMetadata(
+      (selectedCategoryData.parentCollection?.name || selectedCategoryData.name) + title,
+      noFollowTag
+    );
 
     return metadata;
   } catch (error) {
-    console.log("Error:", error);
+    console.error("Error in metadata:", error);
+
+    const metaData = await getPageMetaData("error");
+    const { title, noFollowTag } = metaData;
+
+    return buildMetadata(title, noFollowTag);
   }
 }
 
@@ -44,8 +50,7 @@ export const generateStaticParams = async () => {
     const categoriesData = await fetchAllCategoriesData();
     const slugs = getAllCategoriesPaths(categoriesData);
     const paths = slugs.map((slug) => ({ slug }));
-
-    return [];
+    return paths;
   } catch (error) {
     console.log("Error:", error);
     return [];
@@ -54,18 +59,14 @@ export const generateStaticParams = async () => {
 
 export default async function Page({ params }) {
   try {
-    const _slug = decodeURIComponent(params.slug);
-    const slug = "/category/" + _slug;
-    const param_slug = "/category/" + params.slug;
+    const slug = "/category/" + decodeURIComponent(params.slug);
 
     const categoriesData = await fetchAllCategoriesData();
 
-    let selectedCategoryData = findCategoryData(categoriesData, slug);
+    const selectedCategoryData = findCategoryData(categoriesData, slug) || findCategoryData(categoriesData, "/category/" + params.slug);
+
     if (!selectedCategoryData) {
-      selectedCategoryData = findCategoryData(categoriesData, param_slug);
-      if (!selectedCategoryData) {
-        throw `Category Data not found: ${_slug} ${slug}, ${selectedCategoryData}`;
-      }
+      throw new Error(`Category Data not found for slug: ${slug}`);
     }
 
     const categoryIds = extractCategoryIds(selectedCategoryData);
@@ -104,6 +105,5 @@ export default async function Page({ params }) {
   } catch (error) {
     console.error("Error fetching category page data:", error);
     notFound();
-    // redirect("/error");
   }
 }

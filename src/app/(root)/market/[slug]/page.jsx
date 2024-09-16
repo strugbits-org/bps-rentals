@@ -12,6 +12,7 @@ import {
   getPeopleReviewSliderData,
   getStudiosData,
 } from "@/Services/SectionsApis";
+import { buildMetadata } from "@/Utils/Utils";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
@@ -27,84 +28,97 @@ export async function generateMetadata({ params }) {
     ]);
     const { title, noFollowTag } = metaData;
     const selectedMarketData = marketsData.find(x => x.slug === slug);
-    const metadata = {
-      title: selectedMarketData.cardname + title,
-      description: selectedMarketData.description,
-    };
-
-    if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
-      metadata.robots = "noindex,nofollow";
+    if (!selectedMarketData) {
+      throw new Error(`Market Data not found for slug: ${slug}`);
     }
-    
+
+    const metadata = buildMetadata(
+      selectedMarketData.cardname + title,
+      selectedMarketData.description,
+      noFollowTag
+    );
+
     return metadata;
   } catch (error) {
-    console.log("Error:", error);
+    console.error("Error in metadata:", error);
+
+    const metaData = await getPageMetaData("error");
+    const { title, noFollowTag } = metaData;
+
+    return buildMetadata(title, noFollowTag);
   }
 }
-
 
 export const generateStaticParams = async () => {
   try {
     const marketsData = await getMarketsData();
     const paths = marketsData.map((data) => ({ slug: data.slug }));
-    return [];
+    return paths;
   } catch (error) {
     console.log("Error:", error);
   }
 }
 
 export default async function Page({ params }) {
-  const slug = decodeURIComponent(params.slug);
+  try {
+    const slug = decodeURIComponent(params.slug);
 
-  const marketSection = await getMarketSection(slug);
-  if (!marketSection) notFound();
-  const bestSeller = await fetchBestSellers(slug);
+    const marketSection = await getMarketSection(slug);
+    if (!marketSection) {
+      throw new Error(`Market Data not found for slug: ${slug}`);
+    }
 
-  const collectionIds = {
-    "tradeshows": "HighlightsTradeshow",
-    "social": "HighlightsSocial",
-    "weddings": "HighlightsWedding",
-    "corporate": "HighlightsCorporate",
+    const bestSeller = await fetchBestSellers(slug);
+
+    const collectionIds = {
+      "tradeshows": "HighlightsTradeshow",
+      "social": "HighlightsSocial",
+      "weddings": "HighlightsWedding",
+      "corporate": "HighlightsCorporate",
+    }
+    const highlightsCollection = collectionIds[slug];
+
+    const [
+      homeNewArrivalSectionContent,
+      homeSectionDetails,
+      homeDreamBigSectionContent,
+      marketSliderData,
+      studiosData,
+      marketsData,
+      peopleReviewSliderData,
+      highlightsSectionData,
+      bestSellerProducts,
+      bestSellers
+    ] = await Promise.all([
+      getNewArrivalSectionContent(slug),
+      getHomeSectionDetails(),
+      getDreamBigSectionContent(),
+      getMarketSliderData(marketSection._id),
+      getStudiosData(),
+      getMarketsData(),
+      getPeopleReviewSliderData(),
+      getHighlightsSection(highlightsCollection),
+      getBestSellerProducts(bestSeller),
+      fetchBestSellers()
+    ]);
+
+    return (
+      <MarketPage
+        marketSection={marketSection.rentalsMarket}
+        newArrivalSectionContent={homeNewArrivalSectionContent}
+        homeSectionDetails={homeSectionDetails}
+        highlightsSectionData={highlightsSectionData}
+        dreamBigSectionContent={homeDreamBigSectionContent}
+        marketSliderData={marketSliderData}
+        studiosData={studiosData}
+        marketsData={marketsData}
+        peopleReviewSliderData={peopleReviewSliderData}
+        bestSellerProducts={bestSellerProducts}
+        bestSellers={bestSellers}
+      />
+    );
+  } catch (error) {
+    console.error("Error fetching market page data:", error);
+    notFound();
   }
-  const highlightsCollection = collectionIds[slug];
-
-  const [
-    homeNewArrivalSectionContent,
-    homeSectionDetails,
-    homeDreamBigSectionContent,
-    marketSliderData,
-    studiosData,
-    marketsData,
-    peopleReviewSliderData,
-    highlightsSectionData,
-    bestSellerProducts,
-    bestSellers
-  ] = await Promise.all([
-    getNewArrivalSectionContent(slug),
-    getHomeSectionDetails(),
-    getDreamBigSectionContent(),
-    getMarketSliderData(marketSection._id),
-    getStudiosData(),
-    getMarketsData(),
-    getPeopleReviewSliderData(),
-    getHighlightsSection(highlightsCollection),
-    getBestSellerProducts(bestSeller),
-    fetchBestSellers()
-  ]);
-
-  return (
-    <MarketPage
-      marketSection={marketSection.rentalsMarket}
-      newArrivalSectionContent={homeNewArrivalSectionContent}
-      homeSectionDetails={homeSectionDetails}
-      highlightsSectionData={highlightsSectionData}
-      dreamBigSectionContent={homeDreamBigSectionContent}
-      marketSliderData={marketSliderData}
-      studiosData={studiosData}
-      marketsData={marketsData}
-      peopleReviewSliderData={peopleReviewSliderData}
-      bestSellerProducts={bestSellerProducts}
-      bestSellers={bestSellers}
-    />
-  );
 }
