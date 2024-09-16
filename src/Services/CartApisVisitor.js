@@ -27,16 +27,15 @@ export const getProductsCartVisitor = async (cartId) => {
       body: JSON.stringify(cartId),
       cache: "no-store",
     });
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
     const data = await response.json();
+
+    if (!data.cart?.lineItems) {
+      throw new Error("Error fetching visitor cart");
+    }
 
     return data.cart.lineItems;
   } catch (error) {
-    console.error("Error", error);
-    return null;
+    throw new Error(error);
   }
 };
 

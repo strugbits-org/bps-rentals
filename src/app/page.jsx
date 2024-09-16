@@ -26,7 +26,7 @@ export async function generateMetadata() {
     if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
       metadata.robots = "noindex,nofollow";
     }
-    
+
     return metadata;
   } catch (error) {
     console.log("Error:", error);
@@ -34,46 +34,50 @@ export async function generateMetadata() {
 }
 
 export default async function Page() {
-  const bestSeller = await fetchBestSellers("all");
+  try {
+    const bestSeller = await fetchBestSellers("all");
 
-  const [
-    homeHeroSectionContent,
-    homeNewArrivalSectionContent,
-    homeHotTrendsSectionContent,
-    highlightsSectionData,
-    bestSellerProducts,
-    homeSectionDetails,
-    homeDreamBigSectionContent,
-    studiosData,
-    marketsData,
-    bestSellers
-  ] = await Promise.all([
-    getHomeHeroSectionContent(),
-    getNewArrivalSectionContent(),
-    getHotTrendsSection(),
-    getHighlightsSection("HighlightsProducts"),
-    getBestSellerProducts(bestSeller, 12),
-    getHomeSectionDetails(),
-    getDreamBigSectionContent(),
-    getStudiosData(),
-    getMarketsData(),
-    fetchBestSellers()
-  ]);
+    const [
+      homeHeroSectionContent,
+      homeNewArrivalSectionContent,
+      homeHotTrendsSectionContent,
+      highlightsSectionData,
+      bestSellerProducts,
+      homeSectionDetails,
+      homeDreamBigSectionContent,
+      studiosData,
+      marketsData,
+      bestSellers
+    ] = await Promise.all([
+      getHomeHeroSectionContent(),
+      getNewArrivalSectionContent(),
+      getHotTrendsSection(),
+      getHighlightsSection("HighlightsProducts"),
+      getBestSellerProducts(bestSeller, 12),
+      getHomeSectionDetails(),
+      getDreamBigSectionContent(),
+      getStudiosData(),
+      getMarketsData(),
+      fetchBestSellers()
+    ]);
 
-  return (
-    <HomePage
-      heroSectionContent={homeHeroSectionContent}
-      newArrivalSectionContent={homeNewArrivalSectionContent}
-      hotTrendsSectionContent={homeHotTrendsSectionContent}
-      bestSellerProducts={bestSellerProducts}
-      highlightsSectionData={highlightsSectionData}
-      homeSectionDetails={homeSectionDetails}
-      dreamBigSectionContent={homeDreamBigSectionContent}
-      studiosData={studiosData}
-      marketsData={marketsData}
-      bestSellers={bestSellers}
-    />
-  );
+    return (
+      <HomePage
+        heroSectionContent={homeHeroSectionContent}
+        newArrivalSectionContent={homeNewArrivalSectionContent}
+        hotTrendsSectionContent={homeHotTrendsSectionContent}
+        bestSellerProducts={bestSellerProducts}
+        highlightsSectionData={highlightsSectionData}
+        homeSectionDetails={homeSectionDetails}
+        dreamBigSectionContent={homeDreamBigSectionContent}
+        studiosData={studiosData}
+        marketsData={marketsData}
+        bestSellers={bestSellers}
+      />
+    );
+  } catch (error) {
+    console.error("Error fetching home page data:", error);
+  }
 }
 
 export const dynamic = 'force-static'
