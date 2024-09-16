@@ -264,6 +264,7 @@ export const searchProducts = async (term, location) => {
       contains: ["search", term],
       limit: 3,
     });
+    console.log("response", response);
 
     if (!response || !response._items) {
       throw new Error("Response does not contain _items", response);
