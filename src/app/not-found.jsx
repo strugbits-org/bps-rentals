@@ -22,3 +22,4 @@ export async function generateMetadata() {
 export default function NotFound() {
   return <Error404Page />;
 }
+export const dynamic = 'force-dynamic';

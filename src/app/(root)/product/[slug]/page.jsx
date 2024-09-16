@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 
 import ProductPostPage from '@/components/Product/Index';
 
@@ -70,7 +70,7 @@ export default async function Page({ params }) {
     fetchBestSellers()
   ]);
   const selectedProduct = products.find((x) => decodeURIComponent(x.product.slug) === slug);
-  if (!selectedProduct) redirect("/error");
+  if (!selectedProduct) notFound();
   const selectedProductId = selectedProduct.product._id;
 
   const [
@@ -91,7 +91,7 @@ export default async function Page({ params }) {
     }
     return acc;
   }, []);
-  if (selectedProduct.variantData.length === 0) redirect("/error");
+  if (selectedProduct.variantData.length === 0) notFound();
 
   const pairedProductsIds = pairWithData.filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);
   const matchedProducts = products.filter(product => pairedProductsIds.includes(product.product._id));

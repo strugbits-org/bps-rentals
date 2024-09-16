@@ -12,7 +12,7 @@ import {
   getPeopleReviewSliderData,
   getStudiosData,
 } from "@/Services/SectionsApis";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   try {
@@ -57,7 +57,7 @@ export default async function Page({ params }) {
   const slug = decodeURIComponent(params.slug);
 
   const marketSection = await getMarketSection(slug);
-  if (!marketSection) redirect("/error");
+  if (!marketSection) notFound();
   const bestSeller = await fetchBestSellers(slug);
 
   const collectionIds = {
