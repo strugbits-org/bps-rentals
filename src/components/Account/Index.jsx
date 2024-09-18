@@ -7,6 +7,7 @@ import { useCookies } from "react-cookie";
 import useUserData from "@/Hooks/useUserData";
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
 import { TeamsBannerAccount } from "./TeamsBannerAccount";
+import logError from "@/Utils/ServerActions";
 
 const links = [
   { name: "My Account", icon: "icon-account", href: "/my-account" },
@@ -91,7 +92,7 @@ const Account = ({ children, footerData, banner }) => {
         }, 200);
       }
     } catch (error) {
-      console.error("Error:", error);
+      logError("Error:", error);
     }
   };
   return (

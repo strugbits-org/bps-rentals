@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import handleAuthentication from "@/Utils/HandleAuthentication";
 import { authWixClient } from "@/Utils/CreateWixClient";
+import logError from "@/Utils/ServerActions";
 
 export const POST = async (req) => {
   try {
@@ -44,7 +45,7 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
+    logError(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 };

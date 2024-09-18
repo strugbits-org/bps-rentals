@@ -12,6 +12,7 @@ import {
 } from '@/Services/ProductsApis';
 import { getPageMetaData, getProductBlogsData, getProductPortfolioData } from "@/Services/SectionsApis";
 import { buildMetadata, removeHTMLTags } from '@/Utils/Utils';
+import logError from '@/Utils/ServerActions';
 
 export async function generateMetadata({ params }) {
   try {
@@ -41,7 +42,7 @@ export async function generateMetadata({ params }) {
 
     return metadata;
   } catch (error) {
-    console.error("Error in metadata:", error);
+    logError("Error in metadata:", error);
 
     const metaData = await getPageMetaData("error");
     const { title, noFollowTag } = metaData;
@@ -53,9 +54,10 @@ export async function generateMetadata({ params }) {
 export const generateStaticParams = async () => {
   try {
     const paths = await fetchAllProductsPaths() || [];
-    return paths;
+    return [];
   } catch (error) {
-    console.error("Error:", error);
+    logError("Error generating static params(product page):", error);
+    return [];
   }
 }
 
@@ -119,7 +121,7 @@ export default async function Page({ params }) {
       />
     );
   } catch (error) {
-    console.error("Error fetching product page data:", error);
+    logError("Error fetching product page data:", error);
     notFound();
   }
 }

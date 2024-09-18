@@ -2,6 +2,7 @@ import { Suspense } from "react";
 
 import ResetPassword from "@/components/Authentication/ResetPassword";
 import { getPageMetaData } from "@/Services/SectionsApis";
+import logError from "@/Utils/ServerActions";
 
 export async function generateMetadata() {
   try {
@@ -18,7 +19,7 @@ const metadata = {
     
     return metadata;
   } catch (error) {
-    console.log("Error:", error);
+    logError("Error in metadata(Reset Password page):", error);
   }
 }
 

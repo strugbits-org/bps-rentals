@@ -4,6 +4,7 @@ export const ExternalTriggers = () => {
     return (
         <div className="external-triggers d-none">
             <span className="initScript"></span>
+            <span className="activateRevalidateButton"></span>
             <span className="closeModals"></span>
             <span className="scrollRefresh"></span>
             <span className="initializeCanvas"></span>

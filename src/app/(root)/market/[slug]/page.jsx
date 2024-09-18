@@ -12,6 +12,7 @@ import {
   getPeopleReviewSliderData,
   getStudiosData,
 } from "@/Services/SectionsApis";
+import logError from "@/Utils/ServerActions";
 import { buildMetadata } from "@/Utils/Utils";
 import { notFound } from "next/navigation";
 
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }) {
 
     return metadata;
   } catch (error) {
-    console.error("Error in metadata:", error);
+    logError("Error in metadata:", error);
 
     const metaData = await getPageMetaData("error");
     const { title, noFollowTag } = metaData;
@@ -55,7 +56,8 @@ export const generateStaticParams = async () => {
     const paths = marketsData.map((data) => ({ slug: data.slug }));
     return paths;
   } catch (error) {
-    console.log("Error:", error);
+    logError("Error generating static params(market page):", error);
+    return [];
   }
 }
 
@@ -118,7 +120,7 @@ export default async function Page({ params }) {
       />
     );
   } catch (error) {
-    console.error("Error fetching market page data:", error);
+    logError("Error fetching market page data:", error);
     notFound();
   }
 }

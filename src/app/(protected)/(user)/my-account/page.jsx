@@ -3,6 +3,7 @@ import MyAccount from "@/components/Account/MyAccount";
 import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
 import { getMyAccountPageContent } from "@/Services/MyAccountApis";
 import { getPageMetaData, getRentalsTeamsBanner } from "@/Services/SectionsApis";
+import logError from "@/Utils/ServerActions";
 
 export async function generateMetadata() {
   try {
@@ -19,29 +20,33 @@ export async function generateMetadata() {
 
     return metadata;
   } catch (error) {
-    console.log("Error:", error);
+    logError("Error in metadata(Account page):", error);
   }
 }
 
 export default async function Page() {
-  const [
-    footerContent,
-    contactData,
-    socialLinks,
-    navigationMenu,
-    myAccountPageContent,
-    teamsBanner
-  ] = await Promise.all([
-    getFooterData(),
-    getContactData(),
-    getSocialLinks(),
-    getFooterNavigationMenu(),
-    getMyAccountPageContent(),
-    getRentalsTeamsBanner()
-  ]);
-  return (
-    <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
-      <MyAccount myAccountPageContent={myAccountPageContent} />
-    </Account>
-  );
+  try {
+    const [
+      footerContent,
+      contactData,
+      socialLinks,
+      navigationMenu,
+      myAccountPageContent,
+      teamsBanner
+    ] = await Promise.all([
+      getFooterData(),
+      getContactData(),
+      getSocialLinks(),
+      getFooterNavigationMenu(),
+      getMyAccountPageContent(),
+      getRentalsTeamsBanner()
+    ]);
+    return (
+      <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
+        <MyAccount myAccountPageContent={myAccountPageContent} />
+      </Account>
+    );
+  } catch (error) {
+    logError("Error fetching My Account page data:", error);
+  }
 }

@@ -2,6 +2,7 @@ import { createWixClient, createWixClientApiStrategy } from "@/Utils/CreateWixCl
 import { apiAuth } from "@/Utils/IsAuthenticated";
 import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
 import { encryptPriceFields } from "@/Utils/Encrypt";
+import logError from "@/Utils/ServerActions";
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -13,12 +14,13 @@ async function retryAsyncOperation(operation, retries = 3, delayMs = 1000) {
     try {
       return await operation();
     } catch (error) {
+      logError(`Error fetching query data items: Attempt ${attempt} failed: ${error}`);
       attempt++;
       if (attempt < retries) {
-        console.log(`Attempt ${attempt} failed. Retrying in ${delayMs}ms...`);
+        console.log(`Retrying in ${delayMs}ms...`);
         await delay(delayMs);
       } else {
-        console.log(`Attempt ${attempt} failed. No more retries left.`);
+        logError(`Attempt ${attempt} failed. No more retries left.`);
         throw error;
       }
     }
@@ -180,7 +182,7 @@ const getDataFetchFunction = async (payload) => {
     return data;
 
   } catch (error) {
-    console.error("Error in queryDataItems:", payload.dataCollectionId, error);
+    logError("Error in queryDataItems:", payload.dataCollectionId, error);
     return { error: error.message, status: 500 };
   }
 };

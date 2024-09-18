@@ -46,4 +46,7 @@ function revalidateButton() {
     chat2.classList.add("is-safari");
   }
 }
+document.querySelector(".activateRevalidateButton").addEventListener("click", () => {
+  revalidateButton();
+});
 revalidateButton();

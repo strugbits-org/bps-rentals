@@ -1,4 +1,5 @@
 import { getPageMetaData } from "@/Services/SectionsApis";
+import logError from "@/Utils/ServerActions";
 import CartPage from "@/components/Cart/Index";
 
 export async function generateMetadata() {
@@ -15,7 +16,7 @@ export async function generateMetadata() {
 
     return metadata;
   } catch (error) {
-    console.log("Error:", error);
+    logError("Error in metadata(Cart page):", error);
   }
 }
 

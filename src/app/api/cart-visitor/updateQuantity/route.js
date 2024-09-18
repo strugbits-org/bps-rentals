@@ -1,4 +1,5 @@
 import { createWixClient } from "@/Utils/CreateWixClient";
+import logError from "@/Utils/ServerActions";
 import { NextResponse } from "next/server";
 
 export const POST = async (req) => {
@@ -20,7 +21,7 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
+    logError(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

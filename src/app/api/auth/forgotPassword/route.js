@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import { isValidEmail } from "@/Utils/AuthApisUtils";
+import logError from "@/Utils/ServerActions";
 
 export const POST = async (req) => {
   const body = await req.json();
@@ -95,7 +96,7 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
+    logError(error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 };

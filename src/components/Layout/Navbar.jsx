@@ -16,6 +16,7 @@ import Modal from "../Common/Modals/Modal";
 import AnimateLink from "../Common/AnimateLink";
 import { getProductsCart } from "@/Services/CartApis";
 import { calculateTotalCartQuantity } from "@/Utils/Utils";
+import logError from "@/Utils/ServerActions";
 
 const Navbar = ({
   locations,
@@ -75,7 +76,7 @@ const Navbar = ({
         setCookie("cartQuantity", total, { path: "/" });
       }
     } catch (error) {
-      console.error("Failed to fetch cart data:", error);
+      logError("Failed to fetch cart data:", error);
     }
   };
 

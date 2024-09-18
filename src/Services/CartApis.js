@@ -1,4 +1,5 @@
 "use server";
+import logError from "@/Utils/ServerActions";
 import { AddProductToCartVisitor, getProductsCartVisitor, removeProductFromCartVisitor, updateProductsQuantityCartVisitor } from "./CartApisVisitor";
 import { getAuthToken, getCartId, getMemberTokens } from "./GetAuthToken";
 
@@ -35,14 +36,14 @@ export const getProductsCart = async (retries = 3, delay = 1000) => {
       return data.cart.lineItems;
       
     } catch (error) {
-      console.error(`Error fetching cart: Attempt ${attempt + 1} failed: ${error}`);
+      logError(`Error fetching cart: Attempt ${attempt + 1} failed: ${error}`);
 
       if (attempt < retries) {
         console.log(`Retrying in ${delay}ms...`);
         await retryDelay(delay);
         delay *= 2;
       } else {
-        console.error("Max retries reached. Returning empty array.");
+        logError(`Attempt ${attempt} failed. No more retries left.`);
         return [];
       }
     }

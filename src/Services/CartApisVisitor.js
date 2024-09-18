@@ -1,4 +1,7 @@
 "use server";
+
+import logError from "@/Utils/ServerActions";
+
 const baseUrl = process.env.BASE_URL;
 
 export const createCart = async () => {
@@ -15,7 +18,7 @@ export const createCart = async () => {
 
     return data.cart;
   } catch (error) {
-    console.error("Error", error);
+    logError("Error creating cart", error);
     return null;
   }
 };

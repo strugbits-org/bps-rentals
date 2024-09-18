@@ -1,4 +1,5 @@
 import { createWixClient } from "@/Utils/CreateWixClient";
+import logError from "@/Utils/ServerActions";
 import { NextResponse } from "next/server";
 
 export const POST = async (req, { params }) => {
@@ -17,7 +18,7 @@ export const POST = async (req, { params }) => {
         });
         return NextResponse.json(response, { status: 200 });
     } else {
-        console.error(error);
+        logError(error);
         return NextResponse.json({
             message: "Invalid query parameters, Please contact BE dev",
             body: req.body,

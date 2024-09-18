@@ -8,6 +8,7 @@ import {
   getAllProducts,
 } from "@/Services/ProductsApis";
 import { getHomeSectionDetails, getMarketsData, getPageMetaData } from "@/Services/SectionsApis";
+import logError from "@/Utils/ServerActions";
 import { buildMetadata, extractCategoryIds, findCategoryData, getAllCategoriesPaths } from "@/Utils/Utils";
 import { notFound } from "next/navigation";
 
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }) {
 
     return metadata;
   } catch (error) {
-    console.error("Error in metadata:", error);
+    logError("Error in metadata:", error);
 
     const metaData = await getPageMetaData("error");
     const { title, noFollowTag } = metaData;
@@ -52,7 +53,7 @@ export const generateStaticParams = async () => {
     const paths = slugs.map((slug) => ({ slug }));
     return paths;
   } catch (error) {
-    console.log("Error:", error);
+    logError("Error generating static params(category page):", error);
     return [];
   }
 };
@@ -103,7 +104,7 @@ export default async function Page({ params }) {
       />
     );
   } catch (error) {
-    console.error("Error fetching category page data:", error);
+    logError("Error fetching category page data:", error);
     notFound();
   }
 }

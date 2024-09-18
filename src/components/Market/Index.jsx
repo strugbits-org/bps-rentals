@@ -12,6 +12,7 @@ import { MarketBestSeller } from "./MarketBestSeller";
 import { MarketSlider } from "./MarketSlider";
 import { getSavedProductData } from "@/Services/ProductsApis";
 import CartModal from "../Common/Modals/CartModal";
+import logError from "@/Utils/ServerActions";
 
 const MarketPage = ({
   marketSection,
@@ -69,7 +70,7 @@ const MarketPage = ({
         });
       }
     } catch (error) {
-      console.log("Error:", error);
+      logError("Error:", error);
     }
   };
 
@@ -111,7 +112,7 @@ const MarketPage = ({
       const savedProducts = await getSavedProductData();
       setSavedProductsData(savedProducts);
     } catch (error) {
-      console.log("Error while fetching Saved Product", error);
+      logError("Error while fetching Saved Product", error);
     }
   }
 

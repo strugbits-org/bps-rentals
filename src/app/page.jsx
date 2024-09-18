@@ -14,6 +14,7 @@ import {
   getPageMetaData,
   getStudiosData,
 } from "@/Services/SectionsApis";
+import logError from "@/Utils/ServerActions";
 
 export async function generateMetadata() {
   try {
@@ -29,7 +30,7 @@ export async function generateMetadata() {
 
     return metadata;
   } catch (error) {
-    console.log("Error:", error);
+    logError("Error in metadata(home page):", error);
   }
 }
 
@@ -76,7 +77,7 @@ export default async function Page() {
       />
     );
   } catch (error) {
-    console.error("Error fetching home page data:", error);
+    logError("Error fetching home page data:", error);
   }
 }
 

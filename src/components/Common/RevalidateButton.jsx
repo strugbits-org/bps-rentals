@@ -1,8 +1,10 @@
 "use client";
 import useUserData from "@/Hooks/useUserData";
 import { revalidateAllPages, revalidatePage } from "@/Services/RevalidateService";
+import { enableRevalidate } from "@/Utils/AnimationFunctions";
+import logError from "@/Utils/ServerActions";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const RevalidateButton = () => {
     const path = usePathname();
@@ -16,6 +18,11 @@ const RevalidateButton = () => {
         failedRoutes: [],
         reloading: false,
     });
+    useEffect(() => {
+        if (role !== "admin") return;
+        enableRevalidate();
+    }, [role])
+
     if (role !== "admin") return;
     const handleRevalidate = async (type) => {
         const isPage = type === "page";
@@ -58,7 +65,7 @@ const RevalidateButton = () => {
                 window.location.reload();
             }, 2000);
         } catch (error) {
-            console.error(error);
+            logError("something wene wrong during revalidation: ",error);
             setRevalidationState((prevState) => ({
                 ...prevState,
                 [setStateKey]: false,

@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 
 import { authWixClient, createWixClient } from "./CreateWixClient";
 import { encryptField } from "./Encrypt";
+import logError from "./ServerActions";
 
 const unAuthCollections = [
   "RentalsQuotesDetailPage",
@@ -103,7 +104,7 @@ export const isAuthenticated = async (token) => {
 
     return loggedInUserData;
   } catch (error) {
-    console.error(error);
+    logError(error);
     throw new Error(`Unauthorized: ${error.message}`);
   }
 };

@@ -1,5 +1,6 @@
 import { getQuoteRequestPageContent } from "@/Services/Index";
 import { getPageMetaData } from "@/Services/SectionsApis";
+import logError from "@/Utils/ServerActions";
 
 import QuoteRequest from "@/components/Quote/QuoteRequest";
 
@@ -18,11 +19,15 @@ const metadata = {
     
     return metadata;
   } catch (error) {
-    console.log("Error:", error);
+    logError("Error in metadata(Quote Request page):", error);
   }
 }
 
 export default async function Page() {
-  const quoteRequestPageContent = await getQuoteRequestPageContent();
-  return <QuoteRequest quoteRequestPageContent={quoteRequestPageContent} />;
+  try {
+    const quoteRequestPageContent = await getQuoteRequestPageContent();
+    return <QuoteRequest quoteRequestPageContent={quoteRequestPageContent} />;
+  } catch (error) {
+    logError("Error fetching Quote Request page data:", error);
+  }
 }
