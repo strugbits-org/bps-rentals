@@ -54,7 +54,7 @@ export async function generateMetadata({ params }) {
 export const generateStaticParams = async () => {
   try {
     const paths = await fetchAllProductsPaths() || [];
-    return [];
+    return paths;
   } catch (error) {
     logError("Error generating static params(product page):", error);
     return [];
