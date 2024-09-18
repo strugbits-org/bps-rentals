@@ -11,6 +11,7 @@ import { compareArray, shuffleArray } from "@/Utils/Utils";
 import ProductCard from "../Category/ProductCard";
 import { Banner } from "../Category/Banner";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
+import logError from "@/Utils/ServerActions";
 
 const SearchPage = ({
     searchFor,
@@ -74,7 +75,7 @@ const SearchPage = ({
             setFilteredProducts(filteredProductsList);
             updatedWatched(true);
         } catch (error) {
-            console.error("Error fetching products:", error);
+            logError("Error fetching products:", error);
         }
     };
 
@@ -168,7 +169,7 @@ const SearchPage = ({
                 });
             }
         } catch (error) {
-            console.log("Error:", error);
+            logError("Error:", error);
         }
     };
 

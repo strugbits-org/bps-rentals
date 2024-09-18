@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { saveProduct, unSaveProduct } from "@/Services/ProductsApis";
 import useUserData from "@/Hooks/useUserData";
 import { useCookies } from "react-cookie";
+import logError from "@/Utils/ServerActions";
 
 export const SaveProductButton = ({
   productData,
@@ -41,7 +42,7 @@ export const SaveProductButton = ({
         }
       }
     } catch (error) {
-      console.error(
+      logError(
         `Error ${isSaving ? "saving" : "unsaving"} product:`,
         error
       );

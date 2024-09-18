@@ -1,4 +1,5 @@
 import { isAuthenticated } from "./IsAuthenticated";
+import logError from "./ServerActions";
 
 async function handleAuthentication(req) {
   try {
@@ -14,7 +15,7 @@ async function handleAuthentication(req) {
     }
     return authenticatedUserData;
   } catch (error) {
-    console.error("Authentication error:", error);
+    logError("Authentication error:", error);
     return null;
   }
 }

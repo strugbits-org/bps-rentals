@@ -1,5 +1,6 @@
 "use server";
 
+import logError from "@/Utils/ServerActions";
 import getDataFetchFunction from "./FetchFunction";
 
 export const getFooterData = async () => {
@@ -13,7 +14,7 @@ export const getFooterData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching FooterData:", error);
+    logError("Error fetching FooterData:", error);
   }
 }
 
@@ -28,7 +29,7 @@ export const getContactData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching ContactDetails:", error);
+    logError("Error fetching ContactDetails:", error);
     return [];
   }
 }
@@ -44,7 +45,7 @@ export const getSocialLinks = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching SocialLinks:", error);
+    logError("Error fetching SocialLinks:", error);
     return [];
   }
 }
@@ -70,7 +71,7 @@ export const getFooterNavigationMenu = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching FooterNavigationMenu:", error);
+    logError("Error fetching FooterNavigationMenu:", error);
     return [];
   }
 }
@@ -86,7 +87,7 @@ export const getContactUsContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching FooterNavigationMenu:", error);
+    logError("Error fetching FooterNavigationMenu:", error);
     return [];
   }
 }

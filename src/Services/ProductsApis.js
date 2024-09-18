@@ -1,4 +1,5 @@
 "use server";
+import logError from "@/Utils/ServerActions";
 import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
@@ -49,7 +50,7 @@ export const getAllProducts = async ({ categories = [], searchTerm }) => {
       product.subCategoryData.some(x => categories.includes(x._id))
     );
   } catch (error) {
-    console.error("Error fetching products:", error);
+    logError("Error fetching products:", error);
     return [];
   }
 };
@@ -72,7 +73,7 @@ export const getProductId = async (slug) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching selected ProductId:", slug, error);
+    logError("Error fetching selected ProductId:", slug, error);
   }
 };
 export const getProductData = async (slug) => {
@@ -93,7 +94,7 @@ export const getProductData = async (slug) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching selected Product:", slug, error);
+    logError("Error fetching selected Product:", slug, error);
   }
 };
 export const fetchProductById = async (slug) => {
@@ -132,7 +133,7 @@ export const fetchProductById = async (slug) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching products by ids:", error);
+    logError("Error fetching products by ids:", error);
     return [];
   }
 };
@@ -170,7 +171,7 @@ export const fetchProductsByIds = async (products) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching products by ids:", error);
+    logError("Error fetching products by ids:", error);
     return [];
   }
 };
@@ -199,7 +200,7 @@ export const fetchAllProducts = async (slug) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching all products:", error);
+    logError("Error fetching all products:", error);
   }
 };
 export const fetchAllProductsPaths = async () => {
@@ -237,7 +238,7 @@ export const fetchAllProductsPaths = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching all products:", error);
+    logError("Error fetching all products:", error);
   }
 };
 export const searchProducts = async (term, location) => {
@@ -270,7 +271,7 @@ export const searchProducts = async (term, location) => {
     }
     return response._items.map(x => x.data);
   } catch (error) {
-    console.error("Error searching products:", error);
+    logError("Error searching products:", error);
     return [];
   }
 };
@@ -288,7 +289,7 @@ export const getAllColorsData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching colors:", error);
+    logError("Error fetching colors:", error);
   }
 };
 export const getAllProductVariantsImages = async () => {
@@ -305,7 +306,7 @@ export const getAllProductVariantsImages = async () => {
       throw new Error("Response does not contain _items", response);
     }
   } catch (error) {
-    console.error("Error fetching product variant images:", error);
+    logError("Error fetching product variant images:", error);
     return [];
   }
 };
@@ -322,7 +323,7 @@ export const getAllProductVariants = async () => {
       throw new Error("Response does not contain _items", response);
     }
   } catch (error) {
-    console.error("Error fetching product variants:", error);
+    logError("Error fetching product variants:", error);
     return [];
   }
 };
@@ -365,7 +366,7 @@ export const getBestSellerProducts = async (bestSeller, limit) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching products by ids:", error);
+    logError("Error fetching products by ids:", error);
     return [];
   }
 };
@@ -389,7 +390,7 @@ export const fetchBestSellers = async (slug) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching best seller ids:", error);
+    logError("Error fetching best seller ids:", error);
     return [];
   }
 };
@@ -415,7 +416,7 @@ export const fetchAllCategoriesData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching all categories:", error);
+    logError("Error fetching all categories:", error);
     return [];
   }
 };
@@ -434,7 +435,7 @@ export const getPairWithData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching products(getPairWithData):", error);
+    logError("Error fetching products(getPairWithData):", error);
   }
 };
 
@@ -462,7 +463,7 @@ export const getProductVariants = async (id) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching product variants:", error);
+    logError("Error fetching product variants:", error);
     return [];
   }
 };
@@ -490,7 +491,7 @@ export const getProductVariantsImages = async (id) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching product snapshots:", error);
+    logError("Error fetching product snapshots:", error);
     return [];
   }
 };
@@ -515,7 +516,7 @@ export const getAllCategoriesData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching all categories:", error);
+    logError("Error fetching all categories:", error);
     return [];
   }
 };
@@ -545,14 +546,14 @@ export const getSavedProductData = async (retries = 3, delay = 1000) => {
         throw new Error("Response does not contain _items", response);
       }
     } catch (error) {
-      console.error(`Error fetching saved products: Attempt ${attempt + 1} failed: ${error}`);
+      logError(`Error fetching saved products: Attempt ${attempt + 1} failed: ${error}`);
 
       if (attempt < retries) {
         console.log(`Retrying in ${delay}ms...`);
         await retryDelay(delay);
         delay *= 2;
       } else {
-        console.error("Max retries reached. Returning empty array.");
+        logError(`Attempt ${attempt} failed. No more retries left.`);
         return [];
       }
     }
@@ -632,7 +633,7 @@ export const getCatalogIdBySku = async (productSku) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching product variants:", error);
+    logError("Error fetching product variants:", error);
     return [];
   }
 };

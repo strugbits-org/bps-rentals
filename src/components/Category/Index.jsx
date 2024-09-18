@@ -12,6 +12,7 @@ import CartModal from "../Common/Modals/CartModal";
 import { Banner } from "./Banner";
 import { compareArray, extractCategoryIds, shuffleArray } from "@/Utils/Utils";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
+import logError from "@/Utils/ServerActions";
 
 const CategoryPage = ({
   pageContent,
@@ -95,7 +96,7 @@ const CategoryPage = ({
       setFilteredProducts(filteredProductsList);
       updatedWatched(true);
     } catch (error) {
-      console.error("Error fetching products:", error);
+      logError("Error fetching products:", error);
     }
   };
 
@@ -215,7 +216,7 @@ const CategoryPage = ({
         });
       }
     } catch (error) {
-      console.log("Error:", error);
+      logError("Error:", error);
     }
   };
 

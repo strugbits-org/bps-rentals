@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import ProductCard from "../Category/ProductCard";
 import CartModal from "../Common/Modals/CartModal";
+import logError from "@/Utils/ServerActions";
 
 const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsData, bestSeller }) => {
   const [selectedProductData, setSelectedProductData] = useState(null);
@@ -45,7 +46,7 @@ const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsD
         });
       }
     } catch (error) {
-      console.log("Error:", error);
+      logError("Error:", error);
     }
   };
 

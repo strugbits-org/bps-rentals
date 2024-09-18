@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 
 import { authWixClient, cartWixClient, createWixClient, createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import { encryptField } from "@/Utils/Encrypt";
+import logError from "@/Utils/ServerActions";
 
 export const POST = async (req) => {
   try {
@@ -97,7 +98,7 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
-    console.error("error", error);
+    logError("error", error);
 
     return NextResponse.json({ message: error.message }, { status: 500 });
   }

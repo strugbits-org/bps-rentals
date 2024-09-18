@@ -33,7 +33,6 @@ const CreateAccount = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Called");
 
     if (submittingForm) return;
     setSubmittingForm(true);

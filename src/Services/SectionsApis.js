@@ -1,6 +1,7 @@
 import { instafeed, refreshToken } from "instafeed-node-js";
 import getDataFetchFunction from "./FetchFunction";
 import { fetchProductsByIds } from "./ProductsApis";
+import logError from "@/Utils/ServerActions";
 
 export const getAllPagesMetaData = async () => {
   try {
@@ -13,7 +14,7 @@ export const getAllPagesMetaData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching All PageMetaData:", error);
+    logError("Error fetching All PageMetaData:", error);
     return [];
   }
 };
@@ -35,7 +36,7 @@ export const getPageMetaData = async (path) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching PageMetaData:", error);
+    logError("Error fetching PageMetaData:", error);
   }
 };
 
@@ -56,7 +57,7 @@ export const getNewArrivalSectionContent = async (slug) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching RentalsNewArrivals data:", error);
+    logError("Error fetching RentalsNewArrivals data:", error);
     return [];
   }
 };
@@ -79,7 +80,7 @@ export const getHighlightsSection = async (dataCollectionId) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching HighlightsSection:", error);
+    logError("Error fetching HighlightsSection:", error);
     return [];
   }
 };
@@ -101,7 +102,7 @@ export const getHotTrendsSection = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching HomeHotTrendsSectionContent data:", error);
+    logError("Error fetching HomeHotTrendsSectionContent data:", error);
     return [];
   }
 };
@@ -123,7 +124,7 @@ export const fetchSearchPages = async () => {
       throw new Error("Response does not contain _items", response);
     }
   } catch (error) {
-    console.error("Error fetching search pages data:", error);
+    logError("Error fetching search pages data:", error);
     return [];
   }
 }
@@ -139,7 +140,7 @@ export const getHomeSectionDetails = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching HomeSectionDetails:", error);
+    logError("Error fetching HomeSectionDetails:", error);
   }
 };
 
@@ -154,7 +155,7 @@ export const getDreamBigSectionContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching HomeDreamBigSectionContent data:", error);
+    logError("Error fetching HomeDreamBigSectionContent data:", error);
     return [];
   }
 };
@@ -172,7 +173,7 @@ export const getPeopleReviewSliderData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching StudiosData data:", error);
+    logError("Error fetching StudiosData data:", error);
     return [];
   }
 };
@@ -189,7 +190,7 @@ export const getStudiosData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching StudiosData data:", error);
+    logError("Error fetching StudiosData data:", error);
     return [];
   }
 };
@@ -205,7 +206,7 @@ export const getRentalsTeamsBanner = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching Rentals Teams Banner data:", error);
+    logError("Error fetching Rentals Teams Banner data:", error);
     return [];
   }
 };
@@ -224,7 +225,7 @@ export const getMarketsData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching MarketsData data:", error);
+    logError("Error fetching MarketsData data:", error);
     return [];
   }
 };
@@ -245,7 +246,7 @@ export const getMarketSection = async (slug) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching Market Section data:", error);
+    logError("Error fetching Market Section data:", error);
   }
 };
 export const getMarketSliderData = async (id) => {
@@ -267,7 +268,7 @@ export const getMarketSliderData = async (id) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching MarketSliderData data:", error);
+    logError("Error fetching MarketSliderData data:", error);
     return [];
   }
 };
@@ -286,7 +287,7 @@ export const getSocialSectionBlogs = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error(error, "error occured");
+    logError(error, "error occured");
     return [];
   }
 }
@@ -303,7 +304,7 @@ export const getSocialSectionDetails = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching SocialSectionDetails:", error);
+    logError("Error fetching SocialSectionDetails:", error);
   }
 }
 
@@ -332,7 +333,7 @@ export const getPortfolioData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching Portfolio data:", error);
+    logError("Error fetching Portfolio data:", error);
     return [];
   }
 };
@@ -355,7 +356,7 @@ export const getProductPortfolioData = async (productId) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching Portfolio data:", error);
+    logError("Error fetching Portfolio data:", error);
     return [];
   }
 };
@@ -379,7 +380,7 @@ export const getProductBlogsData = async (productId) => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching Blogs data:", error);
+    logError("Error fetching Blogs data:", error);
     return [];
   }
 };
@@ -399,7 +400,7 @@ export const getBlogsData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching Blogs data:", error);
+    logError("Error fetching Blogs data:", error);
     return [];
   }
 };

@@ -8,6 +8,7 @@ import {
 import ProductCard from "../Category/ProductCard";
 import CartModal from "../Common/Modals/CartModal";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
+import logError from "@/Utils/ServerActions";
 
 const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
 
@@ -57,7 +58,7 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
         });
       }
     } catch (error) {
-      console.log("Error:", error);
+      logError("Error:", error);
     }
   };
 
@@ -116,7 +117,7 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
       setSavedProductsData(items);
       setTimeout(markPageLoaded, 200);
     } catch (error) {
-      console.log("Error while fetching Saved Product", error);
+      logError("Error while fetching Saved Product", error);
     }
   }
   useEffect(() => {

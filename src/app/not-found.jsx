@@ -1,5 +1,6 @@
 import Error404Page from "@/components/Error404Page";
 import { getPageMetaData } from "@/Services/SectionsApis";
+import logError from "@/Utils/ServerActions";
 
 export async function generateMetadata() {
   try {
@@ -15,7 +16,7 @@ export async function generateMetadata() {
 
     return metadata;
   } catch (error) {
-    console.log("Error:", error);
+    logError("Error in metadata(404 page):", error);
   }
 }
 

@@ -1,5 +1,6 @@
 "use server";
 
+import logError from "@/Utils/ServerActions";
 import getDataFetchFunction from "./FetchFunction";
 
 const BASE_URL = process.env.BASE_URL;
@@ -35,7 +36,7 @@ export const getRentalsBanners = async () => {
       throw new Error("Response does not contain _items", response);
     }
   } catch (error) {
-    console.error("Error fetching Rentals Banners data:", error);
+    logError("Error fetching Rentals Banners data:", error);
     return [];
   }
 };
@@ -52,8 +53,7 @@ export const getQuoteRequestPageContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching privacy and policy page data:", error);
-    return [];
+    logError("Error fetching RentalsQuoteRequestPage data:", error);
   }
 };
 
@@ -69,7 +69,6 @@ export const getQuoteDetailPageContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching privacy and policy page data:", error);
-    return [];
+    logError("Error fetching RentalsQuotesDetailPage data:", error);
   }
 };

@@ -2,13 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { getAllPagesMetaData } from "./SectionsApis";
+import logError from "@/Utils/ServerActions";
 
 export const revalidatePage = async (path) => {    
     try {
         await revalidatePath(path);
         return `Invalidated Path: ${path}`;
     } catch (error) {
-        console.error(`Error invalidating: ${path}`, error);
+        logError(`Error invalidating: ${path}`, error);
         return `Failed to invalidate Path: ${path}`;
     }
 };
@@ -28,14 +29,14 @@ export const revalidateAllPages = async () => {
                     success.push(route);
                 } catch (error) {
                     failed.push(route);
-                    console.error(`Failed to invalidate path: ${route}`, error);
+                    logError(`Failed to invalidate path: ${route}`, error);
                 }
             })
         );
 
         return { success, failed };
     } catch (error) {
-        console.error("Error invalidating site", error);
+        logError("Error invalidating site", error);
         return { success: [], failed: ["Error occurred during the invalidation process."] };
     }
 };

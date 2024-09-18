@@ -1,5 +1,6 @@
 "use server";
 
+import logError from "@/Utils/ServerActions";
 import getDataFetchFunction from "./FetchFunction";
 
 export const getHomeHeroSectionContent = async () => {
@@ -13,7 +14,6 @@ export const getHomeHeroSectionContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching HomeHeroSectionContent data:", error);
-    return [];
+    logError("Error fetching HomeHeroSectionContent data:", error);
   }
 };

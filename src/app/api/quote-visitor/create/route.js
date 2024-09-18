@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { createWixClient, createWixClientApiStrategy } from "@/Utils/CreateWixClient";
+import logError from "@/Utils/ServerActions";
 
 async function fetchData(url, options) {
   const response = await fetch(url, options);
@@ -162,7 +163,7 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
-    console.log("error", error);
+    logError("error", error);
 
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

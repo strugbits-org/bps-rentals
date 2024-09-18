@@ -9,6 +9,7 @@ import { getProductsCart } from "@/Services/CartApis";
 import QuoteConfirmedModal from "../Common/Modals/QuoteConfirmedModal";
 import Modal from "../Common/Modals/Modal";
 import useUserData from "@/Hooks/useUserData";
+import logError from "@/Utils/ServerActions";
 
 const QuoteRequest = ({ quoteRequestPageContent }) => {
   const { firstName, lastName, email } = useUserData();
@@ -112,7 +113,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
     } catch (error) {
       setMessage("Error while creating quote");
       setModalState({ success: false, error: true });
-      console.error("Error while creating quote:", error);
+      logError("Error while creating quote:", error);
     } finally {
       setIsButtonDisabled(false);
     }

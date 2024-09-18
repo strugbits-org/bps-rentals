@@ -1,5 +1,7 @@
 "use client";
 
+import logError from "./ServerActions";
+
 export const initAnimations = () => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
@@ -62,6 +64,15 @@ export const updatedWatched = (refreshScroll = false) => {
     }, 200);
   }
 };
+
+export const enableRevalidate = () => {
+  if (typeof window !== 'undefined') {
+    setTimeout(() => {
+      document.querySelector(".activateRevalidateButton").click();
+    }, 200);
+  }
+};
+
 export const loadPinterest = () => {
   if (typeof window !== 'undefined') {
     setTimeout(() => {
@@ -77,7 +88,7 @@ export const loadPinterest = () => {
           window.doBuild();
         }
       } catch (error) {
-        // console.error("Error loading Pinterest script:", error);
+        logError("Error loading Pinterest script:", error);
       }
     }, 1000);
   }

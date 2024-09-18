@@ -1,4 +1,5 @@
 import { confirmEmail } from "@/Services/AuthApis";
+import logError from "@/Utils/ServerActions";
 import { useState } from "react";
 
 const ForgotPassword = ({
@@ -32,7 +33,7 @@ const ForgotPassword = ({
         email: "",
       });
     } catch (error) {
-      console.error("Error during confirm email:", error);
+      logError("Error during confirm email:", error);
       setModalState({ success: false, error: true });
       setMessage(error?.message);
     } finally {

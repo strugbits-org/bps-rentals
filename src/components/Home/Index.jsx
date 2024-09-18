@@ -11,6 +11,7 @@ import BannerHome from "./BannerHome";
 import BestSellersHome from "./BestSellersHome";
 import { getSavedProductData } from "@/Services/ProductsApis";
 import CartModal from "../Common/Modals/CartModal";
+import logError from "@/Utils/ServerActions";
 
 const HomePage = ({
   heroSectionContent,
@@ -66,7 +67,7 @@ const HomePage = ({
         });
       }
     } catch (error) {
-      console.log("Error:", error);
+      logError("Error:", error);
     }
   };
 
@@ -108,7 +109,7 @@ const HomePage = ({
       const savedProducts = await getSavedProductData();
       setSavedProductsData(savedProducts);
     } catch (error) {
-      console.log("Error while fetching Saved Product", error);
+      logError("Error while fetching Saved Product", error);
     }
   }
 

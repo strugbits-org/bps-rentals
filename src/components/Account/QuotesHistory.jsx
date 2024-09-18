@@ -16,6 +16,7 @@ import { getAllQuotes } from "@/Services/QuoteApis";
 import { AddProductToCart } from "@/Services/CartApis";
 import { getCatalogIdBySku } from "@/Services/ProductsApis";
 import { revalidatePage } from "@/Services/RevalidateService";
+import logError from "@/Utils/ServerActions";
 
 const QuotesHistory = () => {
   const [cookies, setCookie] = useCookies(["cartQuantity"]);
@@ -72,7 +73,7 @@ const QuotesHistory = () => {
 
           products.push(product);
         } catch (error) {
-          console.error(`Error processing SKU ${productSku}:`, error);
+          logError(`Error processing SKU ${productSku}:`, error);
         }
       }
 
@@ -87,7 +88,7 @@ const QuotesHistory = () => {
       setCookie("cartQuantity", total, { path: "/"});
       router.push("/cart");
     } catch (error) {
-      console.error("Error while adding products to cart:", error);
+      logError("Error while adding products to cart:", error);
       setMessage("Error while adding products to cart");
       setModalState({ success: false, error: true });
     } finally {
@@ -106,7 +107,7 @@ const QuotesHistory = () => {
       setTimeout(markPageLoaded, 200);
     } catch (error) {
       markPageLoaded();
-      console.error("Error while fetching quote data:", error);
+      logError("Error while fetching quote data:", error);
     }
   };
 

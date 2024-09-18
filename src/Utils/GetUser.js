@@ -1,3 +1,5 @@
+import logError from "./ServerActions";
+
 function getCookie(name) {
   if (typeof document !== "undefined") {
     const value = `; ${document.cookie}`;
@@ -14,7 +16,7 @@ export const getUserData = () => {
       const userData = JSON.parse(decodeURIComponent(userDataCookie));
       return userData;
     } catch (error) {
-      console.error("Error parsing user data from cookie", error);
+      logError("Error parsing user data from cookie", error);
     }
   }
   return null;

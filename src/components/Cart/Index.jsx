@@ -19,6 +19,7 @@ import {
 import AnimateLink from "../Common/AnimateLink";
 import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
+import logError from "@/Utils/ServerActions";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -57,7 +58,7 @@ const CartPage = () => {
       const total = calculateTotalCartQuantity(response.cart.lineItems);
       setCookie("cartQuantity", total, { path: "/"});
     } catch (error) {
-      console.error("Error while updating cart:", error);
+      logError("Error while updating cart:", error);
     }
   };
 
@@ -73,7 +74,7 @@ const CartPage = () => {
       // setCartItems(response.cart.lineItems);
       setCookie("cartQuantity", total, { path: "/"});
     } catch (error) {
-      console.error("Error while removing product", error);
+      logError("Error while removing product", error);
     }
   };
 
@@ -86,7 +87,7 @@ const CartPage = () => {
       setTimeout(markPageLoaded, 200);
     } catch (error) {
       markPageLoaded();
-      console.error("Error while fetching cart data:", error);
+      logError("Error while fetching cart data:", error);
     }
   };
 

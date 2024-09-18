@@ -11,6 +11,7 @@ import Modal from "./Modal";
 import useUserData from "@/Hooks/useUserData";
 import { decryptField } from "@/Utils/Encrypt";
 import { ImageWrapper } from "../ImageWrapper";
+import logError from "@/Utils/ServerActions";
 
 const CartModal = ({
   productData,
@@ -121,7 +122,7 @@ const CartModal = ({
       setModalState({ success: true, error: false });
       setMessage("Product Successfully Added to Cart!");
     } catch (error) {
-      console.error("Error:", error);
+      logError("Error:", error);
       setMessage("Failed to Add Product to Cart");
       setModalState({ success: false, error: true });
     } finally {

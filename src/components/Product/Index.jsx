@@ -29,6 +29,7 @@ import SnapShots from "./SnapShotsSection";
 import useUserData from "@/Hooks/useUserData";
 import { decryptField } from "@/Utils/Encrypt";
 import { ImageWrapper } from "../Common/ImageWrapper";
+import logError from "@/Utils/ServerActions";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -195,7 +196,7 @@ const ProductPostPage = ({
       };
       const response = await AddProductToCart(productData);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
-      setCookie("cartQuantity", total, { path: "/"});
+      setCookie("cartQuantity", total, { path: "/" });
       pageLoadStart();
 
       if (response) {
@@ -203,7 +204,7 @@ const ProductPostPage = ({
       }
     } catch (error) {
       pageLoadEnd();
-      console.error("Error while adding item to cart:", error);
+      logError("Error while adding item to cart:", error);
     } finally {
       setIsButtonDisabled(false);
     }
@@ -229,7 +230,7 @@ const ProductPostPage = ({
       const savedProducts = await getSavedProductData();
       setSavedProductsData(savedProducts);
     } catch (error) {
-      console.log("Error while fetching Saved Product", error);
+      logError("Error while fetching Saved Product", error);
     }
   };
 
@@ -245,7 +246,7 @@ const ProductPostPage = ({
       updatedWatched(true);
     }
   }, [selectedVariant])
-  
+
 
   return (
     <>

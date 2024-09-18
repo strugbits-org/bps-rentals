@@ -1,5 +1,7 @@
 "use server";
 
+import logError from "@/Utils/ServerActions";
+
 const baseUrl = process.env.BASE_URL;
 
 export const createPriceQuoteVisitor = async ({ cartId, lineItems, customerDetails }) => {
@@ -17,7 +19,7 @@ export const createPriceQuoteVisitor = async ({ cartId, lineItems, customerDetai
     const data = await response.json();
     return data;
   } catch (error) {
-    console.log("errrrr", error);
+    logError("Error creating cart: ", error);
     throw new Error(error);
   }
 };

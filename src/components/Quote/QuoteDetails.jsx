@@ -7,6 +7,7 @@ import { quoteDateFormatter } from "@/Utils/Utils";
 import { getQuotesById } from "@/Services/QuoteApis";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import logError from "@/Utils/ServerActions";
 
 const QuoteDetails = ({ quoteRequestPageContent, quoteDetailPageContent }) => {
   const searchParams = useSearchParams();
@@ -22,7 +23,7 @@ const QuoteDetails = ({ quoteRequestPageContent, quoteDetailPageContent }) => {
       setTimeout(markPageLoaded, 200);
     } catch (error) {
       router.push("/error");
-      console.error("Error while fetching quote data:", error);
+      logError("Error while fetching quote data:", error);
     }
   };
 

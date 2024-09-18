@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { markPageLoaded, pageLoadStart } from "@/Utils/AnimationFunctions";
 import { resetPassword } from "@/Services/AuthApis";
 import Modal from "../Common/Modals/Modal";
+import logError from "@/Utils/ServerActions";
 
 const ResetPassword = () => {
   const searchParams = useSearchParams();
@@ -59,7 +60,7 @@ const ResetPassword = () => {
         router.push("/");
       }
     } catch (error) {
-      console.error("Error during password reset:", error);
+      logError("Error during password reset:", error);
       setMessage(error.message);
       setModalState({ success: false, error: true });
     } finally {

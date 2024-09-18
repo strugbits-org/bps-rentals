@@ -1,5 +1,6 @@
 "use server";
 
+import logError from "@/Utils/ServerActions";
 import getDataFetchFunction from "./FetchFunction";
 
 export const getLoginModalContent = async () => {
@@ -21,7 +22,7 @@ export const getLoginModalContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    logError("Error fetching homepage data:", error);
     return [];
   }
 };
@@ -45,7 +46,7 @@ export const getCreateAccountModalContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    logError("Error fetching homepage data:", error);
     return [];
   }
 };
@@ -69,7 +70,7 @@ export const getForgotPasswordModalContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching homepage data:", error);
+    logError("Error fetching homepage data:", error);
     return [];
   }
 };
@@ -84,7 +85,7 @@ export const getSearchSectionDetails = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching search section data:", error);
+    logError("Error fetching search section data:", error);
     return [];
   }
 };
@@ -100,7 +101,7 @@ export const getFilterLocations = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching FilterLocations data:", error);
+    logError("Error fetching FilterLocations data:", error);
     return [];
   }
 };
@@ -127,7 +128,7 @@ export const getNavbarCategoriesData = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching all categories:", error);
+    logError("Error fetching all categories:", error);
     return [];
   }
 };

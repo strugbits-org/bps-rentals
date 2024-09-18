@@ -1,5 +1,6 @@
 "use server";
 
+import logError from "@/Utils/ServerActions";
 import getDataFetchFunction from "./FetchFunction";
 
 export const getMyAccountPageContent = async () => {
@@ -13,7 +14,7 @@ export const getMyAccountPageContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching RentalsMyAccountPage data:", error);
+    logError("Error fetching RentalsMyAccountPage data:", error);
     return [];
   }
 };
@@ -29,7 +30,7 @@ export const getChangePasswordPageContent = async () => {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    console.error("Error fetching RentalsChangePasswordPage data:", error);
+    logError("Error fetching RentalsChangePasswordPage data:", error);
     return [];
   }
 };

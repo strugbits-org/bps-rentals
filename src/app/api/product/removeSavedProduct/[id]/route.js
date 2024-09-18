@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import handleAuthentication from "@/Utils/HandleAuthentication";
 import { createWixClient } from "@/Utils/CreateWixClient";
+import logError from "@/Utils/ServerActions";
 
 export const GET = async (req, context) => {
   try {
@@ -53,7 +54,7 @@ export const GET = async (req, context) => {
 
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
-    console.error(error);
+    logError(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

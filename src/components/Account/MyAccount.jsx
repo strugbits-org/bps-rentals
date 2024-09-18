@@ -12,6 +12,7 @@ import {
   pageLoadEnd,
   pageLoadStart,
 } from "@/Utils/AnimationFunctions";
+import logError from "@/Utils/ServerActions";
 
 const MyAccount = ({ myAccountPageContent }) => {
   useEffect(() => {
@@ -68,7 +69,7 @@ const MyAccount = ({ myAccountPageContent }) => {
       setInitialData(formData);
     } catch (error) {
       setMessage("An error occurred. Please try again.");
-      console.error("Error updating profile", error);
+      logError("Error updating profile", error);
       setModalState({ success: false, error: true });
     } finally {
       setIsButtonDisabled(false);
