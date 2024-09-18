@@ -16,6 +16,16 @@ const nextConfig = {
     SECRET_KEY: process.env.SECRET_KEY,
     DEBUG_LOGS: process.env.DEBUG_LOGS,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+        port: '',
+        pathname: '**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

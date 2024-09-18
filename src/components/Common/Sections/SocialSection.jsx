@@ -3,6 +3,7 @@ import Link from 'next/link';
 import AnimateLink from '../AnimateLink';
 import { usePathname } from 'next/navigation';
 import { ImageWrapper } from '../ImageWrapper';
+import Image from 'next/image';
 
 export const SocialSection = ({ data, posts, insta_feed }) => {
   const pathname = usePathname();
@@ -123,11 +124,14 @@ export const SocialSection = ({ data, posts, insta_feed }) => {
                               }}
                             >
                               <div className="container-img">
-                                <img
+                                <Image
                                   src={item.image}
-                                  data-preload
+                                  quality={90}
+                                  loading={"eager"}
+                                  width={150}
+                                  height={150}
+                                  alt={item.caption}
                                   className="media"
-                                  alt=""
                                 />
                               </div>
                             </AnimateLink>
