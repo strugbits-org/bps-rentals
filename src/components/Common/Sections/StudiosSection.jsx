@@ -43,7 +43,7 @@ const Studios = ({ content, studiosData }) => {
                       </div>
                       <div className="accordion-content">
                         <div className="container-img bg-blue">
-                          <ImageWrapper key={image} defaultDimensions={{ width: 1337, height: 620 }} url={image} min_h={"620"} />
+                          <ImageWrapper key={image} useNextImage={true} defaultDimensions={{ width: 1337, height: 620 }} url={image} min_h={"620"} />
                         </div>
                         <div className="container-accordion-text">
                           <p className="accordion-text">{cardDescription}</p>

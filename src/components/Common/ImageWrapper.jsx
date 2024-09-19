@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { generateImageURL, generateImageUrl2 } from "@/Utils/GenerateImageURL";
 import { debounce } from 'lodash';
+import Image from 'next/image';
 
 export const ImageWrapper = ({
     url,
@@ -14,13 +15,16 @@ export const ImageWrapper = ({
     customClasses = "",
     attributes,
     defaultDimensions,
-    timeout = 200
+    timeout = 200,
+    useNextImage = false
 }) => {
-    
+
     if (!url) return null;
 
     const ref = useRef();
     const [src, setSrc] = useState();
+    const [height, setHeight] = useState();
+    const [width, setWidth] = useState();
 
     const generateSrc = () => {
         if (original) return generateImageURL({ wix_url: url, original });
@@ -33,7 +37,8 @@ export const ImageWrapper = ({
 
             if (!width) width = defaultDimensions.width;
             if (!height) height = defaultDimensions.height;
-
+            setHeight(height);
+            setWidth(width);
             switch (type) {
                 case "default":
                     return generateImageURL({ wix_url: url, w: width, h: height, original, fit, q });
@@ -55,7 +60,7 @@ export const ImageWrapper = ({
     useEffect(() => {
         setTimeout(() => {
             const newSrc = generateSrc();
-            setSrc(newSrc);            
+            setSrc(newSrc);
         }, timeout);
 
         window.addEventListener('resize', handleResize);
@@ -65,11 +70,15 @@ export const ImageWrapper = ({
     }, []);
 
     return (
-        <img
-            ref={ref}
-            src={src}
-            className={customClasses}
-            {...attributes}
-        />
+        <>
+            {useNextImage && src && height && width ? <Image ref={ref} src={src} quality={q} loading={"eager"} height={height} width={width} className={customClasses} {...attributes} /> :
+                <img
+                    ref={ref}
+                    src={src}
+                    className={customClasses}
+                    {...attributes}
+                />
+            }
+        </>
     );
 };

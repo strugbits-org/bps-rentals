@@ -53,6 +53,7 @@ export async function generateMetadata({ params }) {
 
 export const generateStaticParams = async () => {
   try {
+    return [];
     const paths = await fetchAllProductsPaths() || [];
     return paths;
   } catch (error) {
