@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Script from "next/script";
 import React, { useEffect, useState } from "react";
 import { getPageName, markPageLoaded } from "@/Utils/AnimationFunctions";
@@ -8,6 +8,9 @@ import useUserData from "@/Hooks/useUserData";
 
 export const CustomScripts = () => {
   const router = useRouter();
+  const pathname = usePathname();
+  const baseUrl = process.env.BASE_URL;
+
   const { email } = useUserData();
   const [userEmail, setUserEmail] = useState();
   const [hasRun, setHasRun] = useState(false);
@@ -40,9 +43,11 @@ export const CustomScripts = () => {
     };
   }, []);
 
+  const canonicalUrl = `${baseUrl}${pathname}`;
+
   return (
     <>
-
+      <link rel="canonical" href={canonicalUrl} />
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=G-4D3S4F1X60`}
         strategy="afterInteractive"

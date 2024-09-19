@@ -65,7 +65,7 @@ const RevalidateButton = () => {
                 window.location.reload();
             }, 2000);
         } catch (error) {
-            logError("something wene wrong during revalidation: ",error);
+            logError("Something went wrong during revalidation: ",error);
             setRevalidationState((prevState) => ({
                 ...prevState,
                 [setStateKey]: false,
