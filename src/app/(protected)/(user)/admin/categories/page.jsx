@@ -1,9 +1,8 @@
 import Account from "@/components/Account/Index";
 import { CategoriesListing } from "@/components/Admin/CategoriesListing";
 import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
-import { fetchAllCategoriesData } from "@/Services/ProductsApis";
+import { fetchAllCategoriesCollections, fetchAllCategoriesData } from "@/Services/ProductsApis";
 import { getRentalsTeamsBanner } from "@/Services/SectionsApis";
-import { getAllCategoriesWithChilds } from "@/Utils/Utils";
 
 export const metadata = {
   title: "Admin",
@@ -18,21 +17,19 @@ export default async function Page() {
     socialLinks,
     navigationMenu,
     teamsBanner,
-    categoriesData
+    collectionsData
   ] = await Promise.all([
     getFooterData(),
     getContactData(),
     getSocialLinks(),
     getFooterNavigationMenu(),
     getRentalsTeamsBanner(),
-    fetchAllCategoriesData()
+    fetchAllCategoriesCollections()
   ]);
-
-  const categories = getAllCategoriesWithChilds(categoriesData);
 
   return (
     <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
-      <CategoriesListing data={categories} />
+      <CategoriesListing data={collectionsData} />
     </Account>
   );
 }

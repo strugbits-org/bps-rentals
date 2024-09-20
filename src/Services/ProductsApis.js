@@ -395,6 +395,25 @@ export const fetchBestSellers = async (slug) => {
   }
 };
 
+export const fetchAllCategoriesCollections = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "Stores/Collections",
+      increasedLimit: 100,
+      limit: "infinite",
+    });
+    if (response && response._items) {
+      const categoriesData = response._items.map((x) => x.data);
+      return categoriesData;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    logError("Error fetching all categories from Stores/Collections:", error);
+    return [];
+  }
+};
+
 export const fetchAllCategoriesData = async () => {
   try {
     const response = await getDataFetchFunction({
