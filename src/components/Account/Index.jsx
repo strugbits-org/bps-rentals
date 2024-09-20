@@ -96,7 +96,7 @@ const Account = ({ children, footerData, banner }) => {
     }
   };
   return (
-    <section className={`my-account-intro ${activeSection}`}>
+    <section className={`my-account-intro ${activeSection || "section-saved-products"}`}>
       <div
         className="menu-my-account"
         data-sticky
