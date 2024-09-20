@@ -17,7 +17,7 @@ const nextConfig = {
     DEBUG_LOGS: process.env.DEBUG_LOGS,
   },
   images: {
-    domains: ['scontent.cdninstagram.com', 'static.wixstatic.com', 'instagram.com'],
+    domains: ['scontent.cdninstagram.com', "https://scontent-iad3-1.cdninstagram.com", 'static.wixstatic.com', 'instagram.com'],
   },
 };
 
