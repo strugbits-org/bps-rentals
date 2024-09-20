@@ -17,7 +17,14 @@ const nextConfig = {
     DEBUG_LOGS: process.env.DEBUG_LOGS,
   },
   images: {
-    domains: ['**'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+        port: '',
+        pathname: '**',
+      },
+    ],
   },
 };
 
