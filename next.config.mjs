@@ -17,8 +17,16 @@ const nextConfig = {
     DEBUG_LOGS: process.env.DEBUG_LOGS,
   },
   images: {
-    domains: ['scontent.cdninstagram.com', 'static.wixstatic.com'],
+      remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+        port: '',
+        pathname: '**',
+      },
+    ],
   },
 };
 
 export default nextConfig;
+

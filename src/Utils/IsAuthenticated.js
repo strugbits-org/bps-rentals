@@ -5,6 +5,7 @@ import { encryptField } from "./Encrypt";
 import logError from "./ServerActions";
 
 const unAuthCollections = [
+  "DemoProducts",
   "Stores/Collections",
   "RentalsQuotesDetailPage",
   "PageSeoConfigurationRentals",

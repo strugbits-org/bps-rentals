@@ -55,6 +55,45 @@ export const getAllProducts = async ({ categories = [], searchTerm }) => {
   }
 };
 
+export const getProductsByCategory = async (category) => {
+  try {
+    const payload = {
+      dataCollectionId: "DemoProducts",
+      includeReferencedItems: ["product"],
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+      hasSome: [
+        {
+          key: "subCategory",
+          values: [category]
+        }
+      ],
+      includeVariants: true,
+      limit: "infinite",
+      increasedLimit: 700,
+    };
+
+    const response = await getDataFetchFunction(payload);
+
+    if (!response || !response._items) {
+      throw new Error("Response does not contain _items", response);
+    }
+    return response._items;
+
+  } catch (error) {
+    logError("Error fetching products(admin):", error);
+    return [];
+  }
+};
+
 export const getProductId = async (slug) => {
   try {
     const response = await getDataFetchFunction({
@@ -403,7 +442,8 @@ export const fetchAllCategoriesCollections = async () => {
       limit: "infinite",
     });
     if (response && response._items) {
-      const categoriesData = response._items.map((x) => x.data);
+      const all = "00000000-000000-000000-000000000001";
+      const categoriesData = response._items.map((x) => x.data).filter(x => x._id !== all);
       return categoriesData;
     } else {
       throw new Error("Response does not contain _items");

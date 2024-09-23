@@ -1,4 +1,4 @@
-import { createWixClient, createWixClientApiStrategy } from "@/Utils/CreateWixClient";
+import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import { apiAuth } from "@/Utils/IsAuthenticated";
 import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
 import { encryptPriceFields } from "@/Utils/Encrypt";
@@ -46,6 +46,7 @@ const getDataFetchFunction = async (payload) => {
 
     // Validate collection ID
     const authCollections = [
+      "DemoProducts",
       "Stores/Collections",
       "RentalsQuotesDetailPage",
       "PageSeoConfigurationRentals",
