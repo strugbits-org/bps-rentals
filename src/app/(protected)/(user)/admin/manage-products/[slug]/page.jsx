@@ -1,9 +1,11 @@
 import Account from "@/components/Account/Index";
 import { ProductsListing } from "@/components/Admin/ProductsListing";
 import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
-import { fetchAllCategoriesData, getProductsByCategory } from "@/Services/ProductsApis";
+import { fetchAllCategoriesData, getAllProducts, getProductsByCategory } from "@/Services/ProductsApis";
 import { getRentalsTeamsBanner } from "@/Services/SectionsApis";
+import logError from "@/Utils/ServerActions";
 import { extractCategoryIds, findCategoryData } from "@/Utils/Utils";
+import { notFound } from "next/navigation";
 
 export const metadata = {
   title: "Admin | Manage Products | Products",
@@ -19,26 +21,30 @@ export default async function Page({ params }) {
 
     const selectedCategoryData = findCategoryData(categoriesData, slug) || findCategoryData(categoriesData, "/category/" + params.slug);
 
-    if (!selectedCategoryData) {
+    if (!selectedCategoryData && params.slug !== "all") {
       throw new Error(`Category Data not found for slug: ${slug}`);
     }
 
-    const categoryId = extractCategoryIds(selectedCategoryData)[0];
+    let productsData;
+    if (params.slug !== "all") {
+      const categoryId = extractCategoryIds(selectedCategoryData)[0];
+      productsData = await getProductsByCategory(categoryId);
+    } else {
+      productsData = await getAllProducts({ all: true });
+    }
 
     const [
       footerContent,
       contactData,
       socialLinks,
       navigationMenu,
-      teamsBanner,
-      productsData
+      teamsBanner
     ] = await Promise.all([
       getFooterData(),
       getContactData(),
       getSocialLinks(),
       getFooterNavigationMenu(),
-      getRentalsTeamsBanner(),
-      getProductsByCategory(categoryId),
+      getRentalsTeamsBanner()
     ]);
 
     return (

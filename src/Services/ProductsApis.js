@@ -4,7 +4,7 @@ import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
-export const getAllProducts = async ({ categories = [], searchTerm }) => {
+export const getAllProducts = async ({ categories = [], searchTerm, all = false }) => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
@@ -19,12 +19,13 @@ export const getAllProducts = async ({ categories = [], searchTerm }) => {
           value: true,
         },
       ],
-      includeVariants: true,
+      includeVariants: !all ? true : false,
       limit: "infinite",
       increasedLimit: 700,
     };
 
     const response = await getDataFetchFunction(payload);
+    if (all) return response._items;
 
     if (!response || !response._items) {
       throw new Error("Response does not contain _items", response);

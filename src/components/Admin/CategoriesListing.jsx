@@ -5,7 +5,7 @@ import AnimateLink from '../Common/AnimateLink';
 import { ImageWrapper } from '../Common/ImageWrapper';
 import { getSlug } from '@/Utils/Utils';
 
-export const CategoriesListing = ({ data }) => {
+export const CategoriesListing = ({ data, adminPagesData }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredCategories, setFilteredCategories] = useState(data);
 
@@ -21,7 +21,7 @@ export const CategoriesListing = ({ data }) => {
     useEffect(() => {
         setTimeout(markPageLoaded, 500);
     }, [data]);
-    
+
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value.toLowerCase());
     };
@@ -49,6 +49,25 @@ export const CategoriesListing = ({ data }) => {
                     </div>
                 ) : (
                     <ul className="list-saved-products grid-lg-25 grid-tablet-33 grid-phone-50">
+                        <li key={"all"} className="grid-item">
+                            <div className="product-link small saved-products active">
+                                <AnimateLink to={"manage-products/all"} className="link">
+                                    <div className="container-top">
+                                        <h2 className="product-title">All Products</h2>
+                                    </div>
+                                    <div className="wrapper-product-img">
+                                        <div className="container-img product-img active">
+                                            <ImageWrapper
+                                                timeout={0}
+                                                defaultDimensions={{ width: 350, height: 350 }}
+                                                url={adminPagesData.allCategoriesImage}
+                                            />
+                                        </div>
+                                    </div>
+                                </AnimateLink>
+                            </div>
+                        </li>
+
                         {filteredCategories.map((category, index) => {
                             const { name, mainMedia } = category;
                             const slug = getSlug(category["link-copy-of-category-name-2"]);

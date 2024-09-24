@@ -4,7 +4,8 @@ import { DndContext } from '@dnd-kit/core';
 import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable';
 import { ImageWrapper } from '../Common/ImageWrapper';
 import { markPageLoaded } from '@/Utils/AnimationFunctions';
-import { UpdateProductsSorting } from '@/Services/AdminApis';
+import { bulkUpdateCollection } from '@/Services/AdminApis';
+import { revalidatePage } from '@/Services/RevalidateService';
 
 const SortableItem = ({ product }) => {
     const { _id, name, mainMedia } = product;
@@ -38,11 +39,6 @@ export const ProductsListing = ({ data, slug }) => {
     const [updatedProducts, setUpdatedProducts] = useState([]);
     const [pageLimit, setPageLimit] = useState(pageSize);
 
-    useEffect(() => {
-        initListing();
-        setTimeout(markPageLoaded, 500);
-    }, [data]);
-
     const handleDragEnd = (event) => {
         const { active, over } = event;
         if (!over || active.id === over.id) return;
@@ -72,25 +68,28 @@ export const ProductsListing = ({ data, slug }) => {
         setFilteredProducts(prev => arrayMove(prev, oldIndex, newIndex));
     };
 
-
-    const initListing = () => {
-        setFilteredProducts(
-            data
-                .sort((a, b) => {
-                    const orderA = a.data.orderNumber?.[slug] ?? 0;
-                    const orderB = b.data.orderNumber?.[slug] ?? 0;
-                    return orderA + orderB;
-                })
-                .map(x => x.data)
-        );
-
+    const setInitialData = () => {
+        const products = data.map(x => x.data);
+        const sortedProducts = products.sort((a, b) => a.orderNumber[slug] - b.orderNumber[slug]);
+        setFilteredProducts(sortedProducts);
     };
 
     const handleSave = async () => {
         if (!updatedProducts.length) return;
-        const res = await UpdateProductsSorting(updatedProducts);
-        // console.log("res", res);
+        try {
+            const res = await bulkUpdateCollection("locationFilteredVariant", updatedProducts);
+            setUpdatedProducts([]);
+            revalidatePage(`/admin/manage-products/${slug}`)
+            console.log("Bulk update response:", res.bulkActionMetadata);
+        } catch (error) {
+            console.error("Error updating chunk:", error);
+        }
     };
+
+    useEffect(() => {
+        setInitialData();
+        setTimeout(markPageLoaded, 500);
+    }, [data]);
 
     return (
         <div className="wrapper-account">
@@ -100,7 +99,7 @@ export const ProductsListing = ({ data, slug }) => {
                     <button onClick={handleSave} className="btn-3-blue btn-blue btn-small mr-10 order-mobile-1">
                         <span>Save</span>
                     </button>
-                    <button onClick={initListing} className="btn-1 btn-border-blue btn-small">
+                    <button onClick={setInitialData} className="btn-1 btn-border-blue btn-small">
                         <span>Reset</span>
                     </button>
                 </div>

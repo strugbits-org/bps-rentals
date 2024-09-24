@@ -6,6 +6,7 @@ import logError from "./ServerActions";
 
 const unAuthCollections = [
   "DemoProducts",
+  "AdminPagesData",
   "Stores/Collections",
   "RentalsQuotesDetailPage",
   "PageSeoConfigurationRentals",
