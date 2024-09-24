@@ -6,6 +6,8 @@ import { ImageWrapper } from '../Common/ImageWrapper';
 import { markPageLoaded } from '@/Utils/AnimationFunctions';
 import { bulkUpdateCollection } from '@/Services/AdminApis';
 import { revalidatePage } from '@/Services/RevalidateService';
+import { chunkArray } from '@/Utils/Utils';
+import logError from '@/Utils/ServerActions';
 
 const SortableItem = ({ product }) => {
     const { _id, name, mainMedia } = product;
@@ -36,53 +38,53 @@ const SortableItem = ({ product }) => {
 export const ProductsListing = ({ data, slug }) => {
     const pageSize = 16;
     const [filteredProducts, setFilteredProducts] = useState([]);
-    const [updatedProducts, setUpdatedProducts] = useState([]);
     const [pageLimit, setPageLimit] = useState(pageSize);
+    const [loading, setLoading] = useState(false);
 
     const handleDragEnd = (event) => {
         const { active, over } = event;
-        if (!over || active.id === over.id) return;
-
-        const oldIndex = filteredProducts.findIndex(item => item.product._id === active.id);
-        const newIndex = filteredProducts.findIndex(item => item.product._id === over.id);
-        const activeProduct = data.find(({ data }) => data.product._id === active.id);
-
-        if (!activeProduct) return;
-
-        const updatedProduct = { ...activeProduct };
-        if (!updatedProduct.data.orderNumber) {
-            updatedProduct.data.orderNumber = {};
-        }
-        updatedProduct.data.orderNumber[slug] = newIndex;
-
-        setUpdatedProducts(prev => {
-            const existingIndex = prev.findIndex(p => p.data.product._id === updatedProduct.data.product._id);
-            if (existingIndex !== -1) {
-                const updatedProducts = [...prev];
-                updatedProducts[existingIndex] = updatedProduct;
-                return updatedProducts;
-            }
-            return [...prev, updatedProduct];
+        if (!over || active.id === over.id || loading) return;
+        setFilteredProducts(prev => {
+            const oldIndex = prev.findIndex(item => item.data.product._id === active.id);
+            const newIndex = prev.findIndex(item => item.data.product._id === over.id);
+            return arrayMove(prev, oldIndex, newIndex);
         });
-
-        setFilteredProducts(prev => arrayMove(prev, oldIndex, newIndex));
     };
 
     const setInitialData = () => {
-        const products = data.map(x => x.data);
-        const sortedProducts = products.sort((a, b) => a.orderNumber[slug] - b.orderNumber[slug]);
+        const sortedProducts = [...data].sort((a, b) => {
+            const orderA = a.data.orderNumber && a.data.orderNumber[slug] !== undefined ? a.data.orderNumber[slug] : 0;
+            const orderB = b.data.orderNumber && b.data.orderNumber[slug] !== undefined ? b.data.orderNumber[slug] : 0;
+            return orderA - orderB;
+        });
         setFilteredProducts(sortedProducts);
     };
 
+
     const handleSave = async () => {
-        if (!updatedProducts.length) return;
+        if (loading) return;
+        setLoading(true);
         try {
-            const res = await bulkUpdateCollection("locationFilteredVariant", updatedProducts);
-            setUpdatedProducts([]);
-            revalidatePage(`/admin/manage-products/${slug}`)
-            console.log("Bulk update response:", res.bulkActionMetadata);
+            const updatedProducts = filteredProducts.map((item, index) => {
+                const product = { ...item }
+                product.data.orderNumber[slug] = index;
+                return product;
+            });
+            if (!updatedProducts.length) return;
+            const chunkedItems = chunkArray(updatedProducts, 200);
+            for (const chunk of chunkedItems) {
+                try {
+                    await bulkUpdateCollection("DemoProductsData", chunk);
+                    // console.log("Bulk update response:", res.bulkActionMetadata);
+                } catch (error) {
+                    logError("Error updating chunk:", error);
+                }
+            }
+            revalidatePage(`/admin/manage-products/${slug}`);
         } catch (error) {
-            console.error("Error updating chunk:", error);
+            logError("Sort update request was not successful completely.", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -96,10 +98,10 @@ export const ProductsListing = ({ data, slug }) => {
             <div className="wrapper-bottom d-flex-lg products-listing-admin">
                 <h1 className="fs--60 blue-1 split-words">Products</h1>
                 <div className="d-flex-lg flex-mobile-center align-self-center ml-auto mt-10">
-                    <button onClick={handleSave} className="btn-3-blue btn-blue btn-small mr-10 order-mobile-1">
-                        <span>Save</span>
+                    <button onClick={handleSave} className="btn-3-blue btn-blue btn-small mr-10 order-mobile-1" disabled={loading}>
+                        <span>{loading ? "Saving" : "Save"}</span>
                     </button>
-                    <button onClick={setInitialData} className="btn-1 btn-border-blue btn-small">
+                    <button onClick={setInitialData} className="btn-1 btn-border-blue btn-small" disabled={loading}>
                         <span>Reset</span>
                     </button>
                 </div>
@@ -111,11 +113,14 @@ export const ProductsListing = ({ data, slug }) => {
                     </div>
                 ) : (
                     <DndContext onDragEnd={handleDragEnd}>
-                        <SortableContext items={filteredProducts.map((item) => item.product._id)}>
+                        <SortableContext items={filteredProducts.map((item) => item.data.product._id)}>
                             <ul className="list-saved-products grid-lg-25 grid-tablet-33 grid-phone-50">
-                                {filteredProducts.slice(0, pageLimit).map((item) => (
-                                    <SortableItem key={item.product._id} product={item.product} />
-                                ))}
+                                {filteredProducts.slice(0, pageLimit).map((item) => {
+                                    const { data } = item;
+                                    return (
+                                        <SortableItem key={data.product._id} product={data.product} />
+                                    )
+                                })}
                             </ul>
                         </SortableContext>
                     </DndContext>

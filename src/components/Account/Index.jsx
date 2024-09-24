@@ -54,6 +54,11 @@ const links = [
     target: "_blank",
     adminOnly: true,
   },
+  {
+    name: "Manage Projects",
+    icon: "icon-account",
+    href: "/admin/manage-products",
+    adminOnly: true,  },
 ];
 
 const accountSections = {

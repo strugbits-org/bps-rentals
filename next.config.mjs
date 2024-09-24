@@ -17,7 +17,7 @@ const nextConfig = {
     DEBUG_LOGS: process.env.DEBUG_LOGS,
   },
   images: {
-      remotePatterns: [
+    remotePatterns: [
       {
         protocol: 'https',
         hostname: '**',
@@ -25,6 +25,11 @@ const nextConfig = {
         pathname: '**',
       },
     ],
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
   },
 };
 

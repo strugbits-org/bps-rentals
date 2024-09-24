@@ -7,7 +7,7 @@ const baseUrl = process.env.BASE_URL;
 export const getAllProducts = async ({ categories = [], searchTerm, all = false }) => {
   try {
     const payload = {
-      dataCollectionId: "locationFilteredVariant",
+      dataCollectionId: all ? "DemoProductsData" : "locationFilteredVariant",
       includeReferencedItems: ["product"],
       ne: [
         {
@@ -56,10 +56,11 @@ export const getAllProducts = async ({ categories = [], searchTerm, all = false 
   }
 };
 
-export const getProductsByCategory = async (category) => {
+export const getProductsByCategory = async (category, all = false) => {
   try {
     const payload = {
-      dataCollectionId: "DemoProducts",
+      dataCollectionId: "locationFilteredVariant",
+      dataCollectionId: all ? "DemoProductsData" : "locationFilteredVariant",
       includeReferencedItems: ["product"],
       ne: [
         {
@@ -77,7 +78,7 @@ export const getProductsByCategory = async (category) => {
           values: [category]
         }
       ],
-      includeVariants: true,
+      includeVariants: !all ? true : false,
       limit: "infinite",
       increasedLimit: 700,
     };

@@ -28,7 +28,7 @@ export default async function Page({ params }) {
     let productsData;
     if (params.slug !== "all") {
       const categoryId = extractCategoryIds(selectedCategoryData)[0];
-      productsData = await getProductsByCategory(categoryId);
+      productsData = await getProductsByCategory(categoryId, true);
     } else {
       productsData = await getAllProducts({ all: true });
     }
