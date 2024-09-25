@@ -70,6 +70,9 @@ export const ProductsListing = ({ data, slug }) => {
         try {
             const updatedProducts = filteredProducts.map((item, index) => {
                 const product = { ...item }
+                if (!product.data.orderNumber) {
+                    product.data.orderNumber = {};
+                }
                 product.data.orderNumber[slug] = index;
                 return product;
             });
@@ -83,6 +86,7 @@ export const ProductsListing = ({ data, slug }) => {
                 }
             }
             revalidatePage(`/admin/manage-products/${slug}`);
+            revalidatePage(`/category/${slug}`);
         } catch (error) {
             logError("Error updating sort order:", error);
         } finally {

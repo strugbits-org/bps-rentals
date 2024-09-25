@@ -4,10 +4,10 @@ import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
-export const getAllProducts = async ({ categories = [], searchTerm, all = false }) => {
+export const getAllProducts = async ({ categories = [], searchTerm, adminPage = false }) => {
   try {
     const payload = {
-      dataCollectionId: all ? "DemoProductsData" : "locationFilteredVariant",
+      dataCollectionId: adminPage ? "DemoProductsData" : "locationFilteredVariant",
       includeReferencedItems: ["product"],
       ne: [
         {
@@ -19,13 +19,13 @@ export const getAllProducts = async ({ categories = [], searchTerm, all = false 
           value: true,
         },
       ],
-      includeVariants: !all ? true : false,
+      includeVariants: !adminPage ? true : false,
       limit: "infinite",
       increasedLimit: 700,
     };
 
     const response = await getDataFetchFunction(payload);
-    if (all) return response._items;
+    if (adminPage) return response._items;
 
     if (!response || !response._items) {
       throw new Error("Response does not contain _items", response);
@@ -56,11 +56,11 @@ export const getAllProducts = async ({ categories = [], searchTerm, all = false 
   }
 };
 
-export const getProductsByCategory = async (category, all = false) => {
+export const getProductsByCategory = async (category, adminPage = false) => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
-      dataCollectionId: all ? "DemoProductsData" : "locationFilteredVariant",
+      dataCollectionId: adminPage ? "DemoProductsData" : "locationFilteredVariant",
       includeReferencedItems: ["product"],
       ne: [
         {
@@ -78,7 +78,7 @@ export const getProductsByCategory = async (category, all = false) => {
           values: [category]
         }
       ],
-      includeVariants: !all ? true : false,
+      includeVariants: !adminPage ? true : false,
       limit: "infinite",
       increasedLimit: 700,
     };

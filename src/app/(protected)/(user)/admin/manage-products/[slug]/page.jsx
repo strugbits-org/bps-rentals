@@ -30,7 +30,7 @@ export default async function Page({ params }) {
       const categoryId = extractCategoryIds(selectedCategoryData)[0];
       productsData = await getProductsByCategory(categoryId, true);
     } else {
-      productsData = await getAllProducts({ all: true });
+      productsData = await getAllProducts({ adminPage: true });
     }
 
     const [

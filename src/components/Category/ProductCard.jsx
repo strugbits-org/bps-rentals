@@ -74,7 +74,7 @@ const ProductCard = ({
           </button>
         </div>
       )}
-      <AnimateLink to={`/product/${product.slug}`} className="link">
+      <AnimateLink to={`/product/${product.slug}?variant=${activeVariant.sku}`} className="link">
         <div className="container-top">
           <h2 className="product-title">{product.name}</h2>
           {!isSavedProduct && (
