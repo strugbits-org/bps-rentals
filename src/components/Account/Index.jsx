@@ -55,10 +55,11 @@ const links = [
     adminOnly: true,
   },
   {
-    name: "Manage Projects",
+    name: "Manage Products (New)",
     icon: "icon-account",
     href: "/admin/manage-products",
-    adminOnly: true,  },
+    adminOnly: true,
+  },
 ];
 
 const accountSections = {

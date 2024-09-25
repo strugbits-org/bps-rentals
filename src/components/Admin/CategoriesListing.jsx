@@ -4,10 +4,13 @@ import React, { useEffect, useState } from 'react';
 import AnimateLink from '../Common/AnimateLink';
 import { ImageWrapper } from '../Common/ImageWrapper';
 import { getSlug } from '@/Utils/Utils';
+import useUserData from '@/Hooks/useUserData';
+import Error404Page from '../Error404Page';
 
-export const CategoriesListing = ({ data, adminPagesData }) => {
+export const CategoriesListing = ({ data }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredCategories, setFilteredCategories] = useState(data);
+    const { role } = useUserData();
 
     useEffect(() => {
         const updatedCategories = data.filter(category => {
@@ -25,6 +28,8 @@ export const CategoriesListing = ({ data, adminPagesData }) => {
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value.toLowerCase());
     };
+
+    if (role !== "admin") return <Error404Page inline={true} />
 
     return (
         <div className="wrapper-account">
@@ -49,32 +54,13 @@ export const CategoriesListing = ({ data, adminPagesData }) => {
                     </div>
                 ) : (
                     <ul className="list-saved-products grid-lg-25 grid-tablet-33 grid-phone-50">
-                        <li key={"all"} className="grid-item">
-                            <div className="product-link small saved-products active">
-                                <AnimateLink to={"manage-products/all"} className="link">
-                                    <div className="container-top">
-                                        <h2 className="product-title">All Products</h2>
-                                    </div>
-                                    <div className="wrapper-product-img">
-                                        <div className="container-img product-img active">
-                                            <ImageWrapper
-                                                timeout={0}
-                                                defaultDimensions={{ width: 350, height: 350 }}
-                                                url={adminPagesData.allCategoriesImage}
-                                            />
-                                        </div>
-                                    </div>
-                                </AnimateLink>
-                            </div>
-                        </li>
-
                         {filteredCategories.map((category, index) => {
-                            const { name, mainMedia } = category;
-                            const slug = getSlug(category["link-copy-of-category-name-2"]);
+                            const { name, mainMedia, slug } = category;
+                            const link = category.all ? slug : getSlug(category["link-copy-of-category-name-2"]);
                             return (
                                 <li key={index} className="grid-item">
                                     <div className="product-link small saved-products active">
-                                        <AnimateLink to={"manage-products/" + slug} className="link">
+                                        <AnimateLink to={"manage-products/" + link} className="link">
                                             <div className="container-top">
                                                 <h2 className="product-title">{name}</h2>
                                             </div>
@@ -82,7 +68,7 @@ export const CategoriesListing = ({ data, adminPagesData }) => {
                                                 <div className="container-img product-img active">
                                                     <ImageWrapper
                                                         timeout={0}
-                                                        key={slug}
+                                                        key={link}
                                                         defaultDimensions={{ width: 350, height: 350 }}
                                                         url={mainMedia}
                                                     />

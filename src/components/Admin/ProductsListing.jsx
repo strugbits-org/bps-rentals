@@ -8,6 +8,8 @@ import { bulkUpdateCollection } from '@/Services/AdminApis';
 import { revalidatePage } from '@/Services/RevalidateService';
 import { chunkArray } from '@/Utils/Utils';
 import logError from '@/Utils/ServerActions';
+import useUserData from '@/Hooks/useUserData';
+import Error404Page from '../Error404Page';
 
 const SortableItem = ({ product }) => {
     const { _id, name, mainMedia } = product;
@@ -40,6 +42,7 @@ export const ProductsListing = ({ data, slug }) => {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [pageLimit, setPageLimit] = useState(pageSize);
     const [loading, setLoading] = useState(false);
+    const { role } = useUserData();
 
     const handleDragEnd = (event) => {
         const { active, over } = event;
@@ -75,14 +78,13 @@ export const ProductsListing = ({ data, slug }) => {
             for (const chunk of chunkedItems) {
                 try {
                     await bulkUpdateCollection("DemoProductsData", chunk);
-                    // console.log("Bulk update response:", res.bulkActionMetadata);
                 } catch (error) {
                     logError("Error updating chunk:", error);
                 }
             }
             revalidatePage(`/admin/manage-products/${slug}`);
         } catch (error) {
-            logError("Sort update request was not successful completely.", error);
+            logError("Error updating sort order:", error);
         } finally {
             setLoading(false);
         }
@@ -93,12 +95,14 @@ export const ProductsListing = ({ data, slug }) => {
         setTimeout(markPageLoaded, 500);
     }, [data]);
 
+    if (role !== "admin") return <Error404Page inline={true} />
+
     return (
         <div className="wrapper-account">
             <div className="wrapper-bottom d-flex-lg products-listing-admin">
                 <h1 className="fs--60 blue-1 split-words">Products</h1>
                 <div className="d-flex-lg flex-mobile-center align-self-center ml-auto mt-10">
-                    <button onClick={handleSave} className="btn-3-blue btn-blue btn-small mr-10 order-mobile-1" disabled={loading}>
+                    <button onClick={handleSave} className={`btn-3-blue btn-blue btn-small mr-10 order-mobile-1 ${loading ? "btn-disabled" : ""}`} disabled={loading}>
                         <span>{loading ? "Saving" : "Save"}</span>
                     </button>
                     <button onClick={setInitialData} className="btn-1 btn-border-blue btn-small" disabled={loading}>

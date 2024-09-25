@@ -671,3 +671,8 @@ li.IMPORTANT.long-desc {
 .touch-action-none {
     touch-action: none;
 }
+
+.section-error-404.inline {
+    min-height: 50vh;
+    padding: 0;
+}

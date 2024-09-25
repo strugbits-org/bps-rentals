@@ -13,29 +13,37 @@ export const metadata = {
 
 export default async function Page() {
   try {
-      const [
-        footerContent,
-        contactData,
-        socialLinks,
-        navigationMenu,
-        teamsBanner,
-        collectionsData,
-        adminPagesData
-      ] = await Promise.all([
-        getFooterData(),
-        getContactData(),
-        getSocialLinks(),
-        getFooterNavigationMenu(),
-        getRentalsTeamsBanner(),
-        fetchAllCategoriesCollections(),
-        getAdminPagesData()
-      ]);
-    
-      return (
-        <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
-          <CategoriesListing adminPagesData={adminPagesData} data={collectionsData} />
-        </Account>
-      );
+    const [
+      footerContent,
+      contactData,
+      socialLinks,
+      navigationMenu,
+      teamsBanner,
+      collectionsData,
+      adminPagesData
+    ] = await Promise.all([
+      getFooterData(),
+      getContactData(),
+      getSocialLinks(),
+      getFooterNavigationMenu(),
+      getRentalsTeamsBanner(),
+      fetchAllCategoriesCollections(),
+      getAdminPagesData()
+    ]);
+
+    const allProductsCard = {
+      "name": "All Products",
+      "mainMedia": adminPagesData.allCategoriesImage,
+      "slug": "all",
+      "all": true,
+    }
+    const categoriesData = [allProductsCard, ...collectionsData];
+
+    return (
+      <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
+        <CategoriesListing data={categoriesData} />
+      </Account>
+    );
   } catch (error) {
     logError("Error fetching product management page(categories listing) data:", error);
   }
