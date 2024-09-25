@@ -13,6 +13,7 @@ import {
 import { getPageMetaData, getProductBlogsData, getProductPortfolioData } from "@/Services/SectionsApis";
 import { buildMetadata, removeHTMLTags } from '@/Utils/Utils';
 import logError from '@/Utils/ServerActions';
+import { Suspense } from 'react';
 
 export async function generateMetadata({ params }) {
   try {
@@ -55,7 +56,7 @@ export const generateStaticParams = async () => {
   try {
     const paths = await fetchAllProductsPaths() || [];
     // return paths;
-    return paths.slice(0,3);
+    return paths.slice(0, 1);
   } catch (error) {
     logError("Error generating static params(product page):", error);
     return [];
@@ -111,15 +112,17 @@ export default async function Page({ params }) {
     const matchedProducts = products.filter(product => pairedProductsIds.includes(product.product._id));
 
     return (
-      <ProductPostPage
-        selectedProduct={selectedProduct}
-        selectedProductDetails={selectedProduct}
-        matchedProductsData={matchedProducts}
-        categoriesData={categoriesData}
-        blogsData={blogsData}
-        portfolioData={portfolioData}
-        bestSeller={bestSeller}
-      />
+      <Suspense>
+        <ProductPostPage
+          selectedProduct={selectedProduct}
+          selectedProductDetails={selectedProduct}
+          matchedProductsData={matchedProducts}
+          categoriesData={categoriesData}
+          blogsData={blogsData}
+          portfolioData={portfolioData}
+          bestSeller={bestSeller}
+        />
+      </Suspense>
     );
   } catch (error) {
     logError("Error fetching product page data:", error);
