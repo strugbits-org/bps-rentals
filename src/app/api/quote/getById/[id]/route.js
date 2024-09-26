@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 
-import { createWixClient } from "@/Utils/CreateWixClient";
+import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 
 export const GET = async (req, context) => {
   try {
     const { params } = context;
     const id = params.id;
 
-    const wixClient = await createWixClient();
+    const wixClient = await createWixClientApiStrategy();
     const data = await wixClient.items.getDataItem(id, {
       dataCollectionId: "RequestQuote",
     });
