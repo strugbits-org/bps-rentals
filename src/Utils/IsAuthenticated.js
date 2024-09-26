@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { authWixClient, createWixClient } from "./CreateWixClient";
 import { encryptField } from "./Encrypt";
 import logError from "./ServerActions";
+import { PERMISSIONS } from "./Schema/permissions";
 
 const unAuthCollections = [
   "DemoProductsData",
@@ -86,11 +87,20 @@ export const isAuthenticated = async (token) => {
       .eq("userEmail", decoded.email)
       .find();
 
-    const id = privateMemberData._items[0].data._id;
+    const id = privateMemberData._items?.[0]?.data?._id;
     const memberBadges = await wixClient.badges.listBadgesPerMember([id]);
+
     const ADMIN_BADGE_ID = process.env.ADMIN_BADGE_ID;
-    const isAdmin = memberBadges?.memberBadgeIds[0]?.badgeIds?.includes(ADMIN_BADGE_ID);
-    const role = isAdmin ? "admin" : "user";
+    const FIREPROOF_CERTIFICATES_BADGE_ID = process.env.FIREPROOF_CERTIFICATES_BADGE_ID;
+
+    const badgeIds = memberBadges?.memberBadgeIds?.[0]?.badgeIds || [];
+    const isAdmin = badgeIds.includes(ADMIN_BADGE_ID);
+    const hasCertPermission = badgeIds.includes(FIREPROOF_CERTIFICATES_BADGE_ID);
+
+    const role = encryptField(isAdmin ? "admin" : "user");
+
+    const permissions = [];
+    if (hasCertPermission) permissions.push(encryptField(PERMISSIONS.FIREPROOF_CERTIFICATES));
 
     const loggedInUserData = {
       ...memberData._items[0].data,
@@ -98,7 +108,8 @@ export const isAuthenticated = async (token) => {
       firstName: privateMemberData._items[0].data.firstName,
       lastName: privateMemberData._items[0].data.lastName,
       phone: privateMemberData._items[0].data.mainPhone,
-      role: encryptField(role),
+      role: role,
+      permissions: permissions
     };
 
     if (memberData._items.length === 0) {

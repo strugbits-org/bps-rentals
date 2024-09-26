@@ -29,6 +29,7 @@ import useUserData from "@/Hooks/useUserData";
 import { decryptField } from "@/Utils/Encrypt";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
+import { PERMISSIONS } from "@/Utils/Schema/permissions";
 
 const ProductPostPage = ({
   searchParams,
@@ -61,7 +62,8 @@ const ProductPostPage = ({
   const [cartQuantity, setCartQuantity] = useState(1);
   const [customTextFields, setCustomTextFields] = useState({});
 
-  const { role } = useUserData();
+  const { role, permissions } = useUserData();
+  const FIREPROOF_DOCS_PERMISSION = permissions && permissions.includes(PERMISSIONS.FIREPROOF_CERTIFICATES) || false;
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
@@ -609,6 +611,32 @@ const ProductPostPage = ({
                       data-aos="fadeIn .8s ease-in-out"
                     >
                       {selectedProductDetails.productDocs.map((data, index) => {
+                        const { fileName, downloadUrl } = data;
+                        return (
+                          <a key={index} href={downloadUrl} download={fileName}>
+                            <button class="btn-small-tag">
+                              <span>{fileName}</span>
+                              <i class="icon-arrow-down"></i>
+                            </button>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+              {/* Certificates */}
+              {selectedProductDetails && FIREPROOF_DOCS_PERMISSION &&
+                selectedProductDetails.fireProofCertificates?.length > 0 && (
+                  <div class="container-info-text" data-aos="">
+                    <h3 class="title-info-text split-words" data-aos="">
+                      Fireproof Certificates
+                    </h3>
+                    <div
+                      class="container-btn container-btn-downloads"
+                      data-aos="fadeIn .8s ease-in-out"
+                    >
+                      {selectedProductDetails.fireProofCertificates.map((data, index) => {
                         const { fileName, downloadUrl } = data;
                         return (
                           <a key={index} href={downloadUrl} download={fileName}>

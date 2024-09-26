@@ -19,6 +19,7 @@ function useUserData() {
   }, [cookies]);
 
   const role = decryptField(signedUserData?.role);
+  const permissions = signedUserData?.permissions?.map(x => decryptField(x)) || [];
   return {
     signedUserData,
     email: signedUserData?.loginEmail,
@@ -27,6 +28,7 @@ function useUserData() {
     memberId: signedUserData?.memberId,
     phone: signedUserData?.mainPhone,
     role: role || "user",
+    permissions
   };
 }
 
