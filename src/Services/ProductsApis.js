@@ -4,10 +4,10 @@ import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
-export const getAllProducts = async ({ categories = [], searchTerm }) => {
+export const getAllProducts = async ({ categories = [], searchTerm, adminPage = false }) => {
   try {
     const payload = {
-      dataCollectionId: "locationFilteredVariant",
+      dataCollectionId: adminPage ? "DemoProductsData" : "locationFilteredVariant",
       includeReferencedItems: ["product"],
       ne: [
         {
@@ -19,12 +19,13 @@ export const getAllProducts = async ({ categories = [], searchTerm }) => {
           value: true,
         },
       ],
-      includeVariants: true,
+      includeVariants: !adminPage ? true : false,
       limit: "infinite",
       increasedLimit: 700,
     };
 
     const response = await getDataFetchFunction(payload);
+    if (adminPage) return response._items;
 
     if (!response || !response._items) {
       throw new Error("Response does not contain _items", response);
@@ -51,6 +52,46 @@ export const getAllProducts = async ({ categories = [], searchTerm }) => {
     );
   } catch (error) {
     logError("Error fetching products:", error);
+    return [];
+  }
+};
+
+export const getProductsByCategory = async (category, adminPage = false) => {
+  try {
+    const payload = {
+      dataCollectionId: "locationFilteredVariant",
+      dataCollectionId: adminPage ? "DemoProductsData" : "locationFilteredVariant",
+      includeReferencedItems: ["product"],
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+      hasSome: [
+        {
+          key: "subCategory",
+          values: [category]
+        }
+      ],
+      includeVariants: !adminPage ? true : false,
+      limit: "infinite",
+      increasedLimit: 700,
+    };
+
+    const response = await getDataFetchFunction(payload);
+
+    if (!response || !response._items) {
+      throw new Error("Response does not contain _items", response);
+    }
+    return response._items;
+
+  } catch (error) {
+    logError("Error fetching products(admin):", error);
     return [];
   }
 };
@@ -403,7 +444,8 @@ export const fetchAllCategoriesCollections = async () => {
       limit: "infinite",
     });
     if (response && response._items) {
-      const categoriesData = response._items.map((x) => x.data);
+      const all = "00000000-000000-000000-000000000001";
+      const categoriesData = response._items.map((x) => x.data).filter(x => x._id !== all);
       return categoriesData;
     } else {
       throw new Error("Response does not contain _items");

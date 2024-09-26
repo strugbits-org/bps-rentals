@@ -8,8 +8,8 @@ const AnimateLink = ({ to, children, className, target, attributes }) => {
   const pathname = usePathname();
 
   const delayedRedirect = (e) => {
-    e.preventDefault();
-    if (to === undefined) return;
+    e.preventDefault();    
+    if (to === undefined || !to || to === "") return;
 
     if (pathname === to) {
       pageLoadStart();

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCookies } from "react-cookie";
 
 import {
@@ -62,6 +62,8 @@ const ProductPostPage = ({
   const [customTextFields, setCustomTextFields] = useState({});
 
   const { role } = useUserData();
+  const params = useSearchParams();
+
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
       (variant) => variant.colorVariation === selectedVariantData.variantId
@@ -88,8 +90,13 @@ const ProductPostPage = ({
   };
 
   useEffect(() => {
+    const defaultVariant = params.get("variant");
+    console.log("defaultVariant", defaultVariant);
+
+    const defaultVariantIndex = defaultVariant ? selectedProductDetails.variantData.findIndex(x => x.sku === defaultVariant) : 0;
+
     if (selectedProductDetails && productSnapshotData) {
-      const selectedVariantData = selectedProductDetails.variantData[0].variant;
+      const selectedVariantData = selectedProductDetails.variantData[defaultVariantIndex].variant;
       const selectedVariantFilteredData = productSnapshotData.find(
         (variant) => variant.colorVariation === selectedVariantData.variantId
       );
@@ -98,19 +105,19 @@ const ProductPostPage = ({
         const combinedVariantData = {
           ...selectedVariantData,
           ...selectedVariantFilteredData,
-          modalUrl: selectedProductDetails.variantData[0].zipUrl,
+          modalUrl: selectedProductDetails.variantData[defaultVariantIndex].zipUrl,
         };
 
-        setSelectedVariantIndex(0);
+        setSelectedVariantIndex(defaultVariantIndex);
         setSelectedVariant(combinedVariantData);
       } else {
         const combinedVariantData = {
           ...selectedVariantData,
           ...selectedVariantFilteredData,
-          modalUrl: selectedProductDetails.variantData[0].zipUrl,
+          modalUrl: selectedProductDetails.variantData[defaultVariantIndex].zipUrl,
           images: [{ src: selectedVariantData.imageSrc }],
         };
-        setSelectedVariantIndex(0);
+        setSelectedVariantIndex(defaultVariantIndex);
         setSelectedVariant(combinedVariantData);
       }
 
@@ -144,6 +151,7 @@ const ProductPostPage = ({
 
       setProductFoundInCategories(categoriesFound);
     }
+    setTimeout(markPageLoaded, 500);
   }, [selectedProductDetails]);
 
   const handleQuantityChange = async (value) => {
@@ -209,16 +217,6 @@ const ProductPostPage = ({
       setIsButtonDisabled(false);
     }
   };
-  useEffect(() => {
-    const params = [
-      selectedProductDetails,
-      matchedProductsData,
-      productSnapshotData,
-    ];
-    if (checkParameters(params)) {
-      markPageLoaded();
-    }
-  }, [selectedProductDetails, matchedProductsData, productSnapshotData]);
 
   const updatedDescription = selectedProductDetails.product.description.replace(
     /color:#000000;/g,
@@ -235,7 +233,6 @@ const ProductPostPage = ({
   };
 
   useEffect(() => {
-    setTimeout(markPageLoaded, 100);
     fetchSavedProducts();
   }, []);
 

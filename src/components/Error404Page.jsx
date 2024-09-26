@@ -3,12 +3,12 @@
 import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import { useEffect } from "react";
 
-const Error404Page = () => {
+const Error404Page = ({ inline = false }) => {
   useEffect(() => {
-    setTimeout(markPageLoaded, 200);
+    if (!inline) setTimeout(markPageLoaded, 200);
   }, []);
   return (
-    <section className="section-error-404">
+    <section className={`section-error-404 ${inline ? "inline" : ""}`}>
       <div className="container-title">
         <h1 className="fs--900 blue-1 split-chars" data-aos="d:loop">
           <span>404</span>

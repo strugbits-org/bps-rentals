@@ -92,6 +92,7 @@ export default async function Page({ params }) {
 
     return (
       <CategoryPage
+        slug={params.slug}
         pageContent={homePageContent}
         bannersData={bannersData}
         locations={locations}
