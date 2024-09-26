@@ -35,12 +35,11 @@ function revalidateButton() {
   let chat2 = document.querySelector(".revalidate-button");
   let btnChat = document.querySelector(".btn-revalidate-button");
   if (!chat2 || !btnChat) return;
+  const running = chat2.classList.contains("js-running");
+  if (running) return;
+  chat2.classList.add("js-running");
   btnChat.addEventListener("click", () => {
-    if (chat2.classList.contains("active")) {
-      chat2.removeActive();
-    } else {
-      chat2.addActive();
-    }
+    chat2.classList.toggle("active");
   });
   if (screen.isSafariDesktop) {
     chat2.classList.add("is-safari");

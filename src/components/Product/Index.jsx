@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCookies } from "react-cookie";
 
 import {
@@ -11,7 +11,6 @@ import {
   updatedWatched,
 } from "@/Utils/AnimationFunctions";
 import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
-import { checkParameters } from "@/Utils/CheckParams";
 
 import { getSavedProductData } from "@/Services/ProductsApis";
 import { AddProductToCart } from "@/Services/CartApis";
@@ -32,6 +31,7 @@ import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 
 const ProductPostPage = ({
+  searchParams,
   selectedProductDetails,
   matchedProductsData,
   categoriesData,
@@ -62,7 +62,6 @@ const ProductPostPage = ({
   const [customTextFields, setCustomTextFields] = useState({});
 
   const { role } = useUserData();
-  const params = useSearchParams();
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
@@ -90,9 +89,7 @@ const ProductPostPage = ({
   };
 
   useEffect(() => {
-    const defaultVariant = params.get("variant");
-    console.log("defaultVariant", defaultVariant);
-
+    const defaultVariant = searchParams?.variant;
     const defaultVariantIndex = defaultVariant ? selectedProductDetails.variantData.findIndex(x => x.sku === defaultVariant) : 0;
 
     if (selectedProductDetails && productSnapshotData) {
