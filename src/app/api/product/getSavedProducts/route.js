@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import handleAuthentication from "@/Utils/HandleAuthentication";
-import { createWixClient } from "@/Utils/CreateWixClient";
+import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import logError from "@/Utils/ServerActions";
 
 export const POST = async (req) => {
@@ -11,7 +11,7 @@ export const POST = async (req) => {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const wixClient = await createWixClient();
+    const wixClient = await createWixClientApiStrategy();
     let locationFilterVariantData = await wixClient.items
       .queryDataItems({
         dataCollectionId: "locationFilteredVariant",

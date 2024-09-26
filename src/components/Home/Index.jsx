@@ -114,7 +114,6 @@ const HomePage = ({
   }
 
   useEffect(() => {
-    setTimeout(markPageLoaded, 200);
     fetchSavedProducts();
   }, [])
 
