@@ -3,26 +3,47 @@ import React, { useState, useEffect } from 'react';
 import { DndContext } from '@dnd-kit/core';
 import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable';
 import { ImageWrapper } from '../Common/ImageWrapper';
-import { markPageLoaded } from '@/Utils/AnimationFunctions';
+import { markPageLoaded, updatedWatched } from '@/Utils/AnimationFunctions';
 import { bulkUpdateCollection } from '@/Services/AdminApis';
 import { revalidatePage } from '@/Services/RevalidateService';
 import { chunkArray } from '@/Utils/Utils';
 import logError from '@/Utils/ServerActions';
 import useUserData from '@/Hooks/useUserData';
 import Error404Page from '../Error404Page';
+import AutoClickWrapper from '../Common/AutoClickWrapper';
 
 const SortableItem = ({ product }) => {
     const { _id, name, mainMedia } = product;
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: _id });
+    const { attributes, listeners, setNodeRef, transform, transition, setActivatorNodeRef } = useSortable({ id: _id });
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
+
     const style = {
         transform: `translate3d(${transform?.x || 0}px, ${transform?.y || 0}px, 0)`,
-        transition
+        transition,
     };
 
+    useEffect(() => {
+        const handleTouchDetection = () => {
+            setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches);
+        };
+
+        handleTouchDetection();
+        window.addEventListener('resize', handleTouchDetection);
+
+        return () => window.removeEventListener('resize', handleTouchDetection);
+    }, []);
+
     return (
-        <li ref={setNodeRef} style={style} {...attributes} {...listeners} className="grid-item touch-action-none">
+        <li ref={setNodeRef} style={style} {...attributes} className="grid-item no-select">
             <div className="product-link small saved-products active">
-                <div className="cursor-pointer link">
+                {isTouchDevice && (
+                    <div className="container-tags drag-handle cursor-grab touch-action-none" ref={setActivatorNodeRef} {...listeners}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="rgba(15,65,250,1)">
+                            <path d="M18 11V8L22 12L18 16V13H13V18H16L12 22L8 18H11V13H6V16L2 12L6 8V11H11V6H8L12 2L16 6H13V11H18Z"></path>
+                        </svg>
+                    </div>
+                )}
+                <div className={`cursor-pointer link ${!isTouchDevice ? "cursor-grab" : ""} `} {...(!isTouchDevice && listeners)}>
                     <div className="container-top">
                         <h2 className="product-title">{name}</h2>
                     </div>
@@ -38,7 +59,7 @@ const SortableItem = ({ product }) => {
 };
 
 export const ProductsListing = ({ data, slug }) => {
-    const pageSize = 16;
+    const pageSize = 20;
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [pageLimit, setPageLimit] = useState(pageSize);
     const [loading, setLoading] = useState(false);
@@ -94,6 +115,11 @@ export const ProductsListing = ({ data, slug }) => {
         }
     };
 
+    const handleAutoSeeMore = () => {
+        setPageLimit((prev) => prev + pageSize);
+        updatedWatched(true);
+    }
+
     useEffect(() => {
         setInitialData();
         setTimeout(markPageLoaded, 500);
@@ -135,9 +161,11 @@ export const ProductsListing = ({ data, slug }) => {
                 )}
                 {pageLimit < filteredProducts.length && (
                     <div className="flex-center">
-                        <button onClick={() => setPageLimit((prev) => prev + pageSize)} className="btn-border-blue mt-90">
-                            <span>See more</span>
-                        </button>
+                        <AutoClickWrapper onIntersect={handleAutoSeeMore}>
+                            <button onClick={handleAutoSeeMore} className="btn-border-blue mt-90">
+                                <span>See more</span>
+                            </button>
+                        </AutoClickWrapper>
                     </div>
                 )}
             </div>

@@ -676,3 +676,15 @@ li.IMPORTANT.long-desc {
     min-height: 50vh;
     padding: 0;
 }
+
+.no-select {
+    user-select: none;
+}
+
+.container-tags.drag-handle {
+    pointer-events: all;
+}
+
+.cursor-grab {
+    cursor: grab;
+}
