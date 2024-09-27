@@ -4,10 +4,10 @@ import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
-export const getAllProducts = async ({ categories = [], searchTerm }) => {
+export const getAllProducts = async ({ categories = [], searchTerm, adminPage = false }) => {
   try {
     const payload = {
-      dataCollectionId: "locationFilteredVariant",
+      dataCollectionId: adminPage ? "DemoProductsData" : "locationFilteredVariant",
       includeReferencedItems: ["product"],
       ne: [
         {
@@ -19,12 +19,14 @@ export const getAllProducts = async ({ categories = [], searchTerm }) => {
           value: true,
         },
       ],
-      includeVariants: true,
+      includeVariants: adminPage ? false : true,
+      encodePrice: adminPage ? false : true,
       limit: "infinite",
       increasedLimit: 700,
     };
 
     const response = await getDataFetchFunction(payload);
+    if (adminPage) return response._items;
 
     if (!response || !response._items) {
       throw new Error("Response does not contain _items", response);
@@ -55,57 +57,12 @@ export const getAllProducts = async ({ categories = [], searchTerm }) => {
   }
 };
 
-export const getProductId = async (slug) => {
+export const getProductsByCategory = async (category, adminPage = false) => {
   try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "Stores/Products",
-      eq: [
-        {
-          key: "slug",
-          value: slug,
-        },
-      ],
-    });
-    if (response && response._items) {
-      const product = response._items[0].data;
-      return product._id;
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    logError("Error fetching selected ProductId:", slug, error);
-  }
-};
-export const getProductData = async (slug) => {
-  try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "Stores/Products",
-      eq: [
-        {
-          key: "slug",
-          value: slug,
-        },
-      ],
-    });
-    if (response && response._items) {
-      const product = response._items[0].data;
-      return product;
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    logError("Error fetching selected Product:", slug, error);
-  }
-};
-export const fetchProductById = async (slug) => {
-  try {
-    const id = await getProductId(slug);
-    if (!id) return;
-    const response = await getDataFetchFunction({
+    const payload = {
       dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: [
-        "product"
-      ],
+      dataCollectionId: adminPage ? "DemoProductsData" : "locationFilteredVariant",
+      includeReferencedItems: ["product"],
       ne: [
         {
           key: "hidden",
@@ -118,25 +75,28 @@ export const fetchProductById = async (slug) => {
       ],
       hasSome: [
         {
-          key: "product",
-          values: [id],
-        },
+          key: "subCategory",
+          values: [category]
+        }
       ],
-      includeSubCategory: true,
-      includeVariants: true,
+      includeVariants: !adminPage ? true : false,
       limit: "infinite",
       increasedLimit: 700,
-    });
-    if (response && response._items) {
-      return response._items.map((x) => x.data.subCategoryData ? x.data : { subCategoryData: [], ...x.data })[0];
-    } else {
-      throw new Error("Response does not contain _items");
+    };
+
+    const response = await getDataFetchFunction(payload);
+
+    if (!response || !response._items) {
+      throw new Error("Response does not contain _items", response);
     }
+    return response._items;
+
   } catch (error) {
-    logError("Error fetching products by ids:", error);
+    logError("Error fetching products(admin):", error);
     return [];
   }
 };
+
 export const fetchProductsByIds = async (products) => {
   try {
     const response = await getDataFetchFunction({
@@ -391,6 +351,26 @@ export const fetchBestSellers = async (slug) => {
     }
   } catch (error) {
     logError("Error fetching best seller ids:", error);
+    return [];
+  }
+};
+
+export const fetchAllCategoriesCollections = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "Stores/Collections",
+      increasedLimit: 100,
+      limit: "infinite",
+    });
+    if (response && response._items) {
+      const all = "00000000-000000-000000-000000000001";
+      const categoriesData = response._items.map((x) => x.data).filter(x => x._id !== all);
+      return categoriesData;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    logError("Error fetching all categories from Stores/Collections:", error);
     return [];
   }
 };

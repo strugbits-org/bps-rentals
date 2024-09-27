@@ -54,6 +54,12 @@ const links = [
     target: "_blank",
     adminOnly: true,
   },
+  {
+    name: "Manage Products (Sort)",
+    icon: "icon-account",
+    href: "/admin/manage-products-sorting",
+    adminOnly: true,
+  }
 ];
 
 const accountSections = {
@@ -96,7 +102,7 @@ const Account = ({ children, footerData, banner }) => {
     }
   };
   return (
-    <section className={`my-account-intro ${activeSection}`}>
+    <section className={`my-account-intro ${activeSection || "section-saved-products"}`}>
       <div
         className="menu-my-account"
         data-sticky

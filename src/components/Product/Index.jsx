@@ -11,7 +11,6 @@ import {
   updatedWatched,
 } from "@/Utils/AnimationFunctions";
 import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
-import { checkParameters } from "@/Utils/CheckParams";
 
 import { getSavedProductData } from "@/Services/ProductsApis";
 import { AddProductToCart } from "@/Services/CartApis";
@@ -30,8 +29,10 @@ import useUserData from "@/Hooks/useUserData";
 import { decryptField } from "@/Utils/Encrypt";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
+import { PERMISSIONS } from "@/Utils/Schema/permissions";
 
 const ProductPostPage = ({
+  searchParams,
   selectedProductDetails,
   matchedProductsData,
   categoriesData,
@@ -61,7 +62,9 @@ const ProductPostPage = ({
   const [cartQuantity, setCartQuantity] = useState(1);
   const [customTextFields, setCustomTextFields] = useState({});
 
-  const { role } = useUserData();
+  const { role, permissions } = useUserData();
+  const FIREPROOF_DOCS_PERMISSION = permissions && permissions.includes(PERMISSIONS.FIREPROOF_CERTIFICATES);
+
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
       (variant) => variant.colorVariation === selectedVariantData.variantId
@@ -88,8 +91,11 @@ const ProductPostPage = ({
   };
 
   useEffect(() => {
+    const defaultVariant = searchParams?.variant;
+    const defaultVariantIndex = defaultVariant ? selectedProductDetails.variantData.findIndex(x => x.sku === defaultVariant) : 0;
+
     if (selectedProductDetails && productSnapshotData) {
-      const selectedVariantData = selectedProductDetails.variantData[0].variant;
+      const selectedVariantData = selectedProductDetails.variantData[defaultVariantIndex].variant;
       const selectedVariantFilteredData = productSnapshotData.find(
         (variant) => variant.colorVariation === selectedVariantData.variantId
       );
@@ -98,19 +104,19 @@ const ProductPostPage = ({
         const combinedVariantData = {
           ...selectedVariantData,
           ...selectedVariantFilteredData,
-          modalUrl: selectedProductDetails.variantData[0].zipUrl,
+          modalUrl: selectedProductDetails.variantData[defaultVariantIndex].zipUrl,
         };
 
-        setSelectedVariantIndex(0);
+        setSelectedVariantIndex(defaultVariantIndex);
         setSelectedVariant(combinedVariantData);
       } else {
         const combinedVariantData = {
           ...selectedVariantData,
           ...selectedVariantFilteredData,
-          modalUrl: selectedProductDetails.variantData[0].zipUrl,
+          modalUrl: selectedProductDetails.variantData[defaultVariantIndex].zipUrl,
           images: [{ src: selectedVariantData.imageSrc }],
         };
-        setSelectedVariantIndex(0);
+        setSelectedVariantIndex(defaultVariantIndex);
         setSelectedVariant(combinedVariantData);
       }
 
@@ -144,6 +150,7 @@ const ProductPostPage = ({
 
       setProductFoundInCategories(categoriesFound);
     }
+    setTimeout(markPageLoaded, 500);
   }, [selectedProductDetails]);
 
   const handleQuantityChange = async (value) => {
@@ -209,16 +216,6 @@ const ProductPostPage = ({
       setIsButtonDisabled(false);
     }
   };
-  useEffect(() => {
-    const params = [
-      selectedProductDetails,
-      matchedProductsData,
-      productSnapshotData,
-    ];
-    if (checkParameters(params)) {
-      markPageLoaded();
-    }
-  }, [selectedProductDetails, matchedProductsData, productSnapshotData]);
 
   const updatedDescription = selectedProductDetails.product.description.replace(
     /color:#000000;/g,
@@ -235,7 +232,6 @@ const ProductPostPage = ({
   };
 
   useEffect(() => {
-    setTimeout(markPageLoaded, 100);
     fetchSavedProducts();
   }, []);
 
@@ -615,6 +611,32 @@ const ProductPostPage = ({
                       data-aos="fadeIn .8s ease-in-out"
                     >
                       {selectedProductDetails.productDocs.map((data, index) => {
+                        const { fileName, downloadUrl } = data;
+                        return (
+                          <a key={index} href={downloadUrl} download={fileName}>
+                            <button class="btn-small-tag">
+                              <span>{fileName}</span>
+                              <i class="icon-arrow-down"></i>
+                            </button>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+              {/* Certificates */}
+              {selectedProductDetails && FIREPROOF_DOCS_PERMISSION &&
+                selectedProductDetails.fireProofCertificates?.length > 0 && (
+                  <div class="container-info-text" data-aos="">
+                    <h3 class="title-info-text split-words" data-aos="">
+                      Fireproof Certificates
+                    </h3>
+                    <div
+                      class="container-btn container-btn-downloads"
+                      data-aos="fadeIn .8s ease-in-out"
+                    >
+                      {selectedProductDetails.fireProofCertificates.map((data, index) => {
                         const { fileName, downloadUrl } = data;
                         return (
                           <a key={index} href={downloadUrl} download={fileName}>

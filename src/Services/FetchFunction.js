@@ -41,11 +41,14 @@ const getDataFetchFunction = async (payload) => {
       skip,
       includeVariants,
       increasedLimit,
+      encodePrice = true,
       log
     } = payload;
 
     // Validate collection ID
     const authCollections = [
+      "DemoProductsData",
+      "AdminPagesData",
       "Stores/Collections",
       "RentalsQuotesDetailPage",
       "PageSeoConfigurationRentals",
@@ -167,7 +170,7 @@ const getDataFetchFunction = async (payload) => {
 
     // Encrypt specific fields if needed
     const collectionsToEncrypt = ["Stores/Products", "locationFilteredVariant", "RentalsNewArrivals"];
-    if (data._items.length > 0 && collectionsToEncrypt.includes(dataCollectionId)) {
+    if (data._items.length > 0 && collectionsToEncrypt.includes(dataCollectionId) && encodePrice) {
       data._items = data._items.map(val => {
         if (dataCollectionId === "locationFilteredVariant" && val.data.variantData) {
           val.data.variantData = val.data.variantData.map(val2 => {

@@ -53,8 +53,9 @@ export const setCookie = (key, value) => {
 
 export const findCategoryData = (data, slug) => (data.find(x => x.parentCollection['link-copy-of-category-name-2'] === slug) || data.find((item) => item.level2Collections.some((x) => x['link-copy-of-category-name-2'] === slug))?.level2Collections.find((x) => x['link-copy-of-category-name-2'] === slug));
 
+export const getSlug = (url) => url.match(/\/category\/(.+)/)[1];
+
 export const getAllCategoriesPaths = (categoriesData) => {
-  const getSlug = (url) => url.match(/\/category\/(.+)/)[1];
 
   const paths = categoriesData.flatMap(category => {
     const parentCategory = category.parentCollection["link-copy-of-category-name-2"]
@@ -187,3 +188,11 @@ export const buildMetadata = (title, description, noFollowTag) => {
 
   return metadata;
 }
+
+export const chunkArray = (array, chunkSize) => {
+  const chunks = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+      chunks.push(array.slice(i, i + chunkSize));
+  }
+  return chunks;
+};

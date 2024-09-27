@@ -55,14 +55,14 @@ export const generateStaticParams = async () => {
   try {
     const paths = await fetchAllProductsPaths() || [];
     // return paths;
-    return paths.slice(0,3);
+    return paths.slice(0, 1);
   } catch (error) {
     logError("Error generating static params(product page):", error);
     return [];
   }
 }
 
-export default async function Page({ params }) {
+export default async function Page({ params, searchParams }) {
   try {
     const slug = decodeURIComponent(params.slug);
 
@@ -112,6 +112,7 @@ export default async function Page({ params }) {
 
     return (
       <ProductPostPage
+        searchParams={searchParams}
         selectedProduct={selectedProduct}
         selectedProductDetails={selectedProduct}
         matchedProductsData={matchedProducts}
