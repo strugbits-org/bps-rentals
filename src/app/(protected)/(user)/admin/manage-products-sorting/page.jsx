@@ -7,7 +7,7 @@ import { getRentalsTeamsBanner } from "@/Services/SectionsApis";
 import logError from "@/Utils/ServerActions";
 
 export const metadata = {
-  title: "Admin | Manage Products | Categories",
+  title: "Admin | Manage Products | Sorting",
   robots: "noindex,nofollow"
 }
 

@@ -8,7 +8,7 @@ import { extractCategoryIds, findCategoryData } from "@/Utils/Utils";
 import { notFound } from "next/navigation";
 
 export const metadata = {
-  title: "Admin | Manage Products | Products",
+  title: "Admin | Manage Products | Sorting",
   robots: "noindex,nofollow"
 }
 

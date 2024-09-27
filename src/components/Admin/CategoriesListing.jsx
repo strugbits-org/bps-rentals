@@ -60,7 +60,7 @@ export const CategoriesListing = ({ data }) => {
                             return (
                                 <li key={index} className="grid-item">
                                     <div className="product-link small saved-products active">
-                                        <AnimateLink to={"manage-products/" + link} className="link">
+                                        <AnimateLink to={"manage-products-sorting/" + link} className="link">
                                             <div className="container-top">
                                                 <h2 className="product-title">{name}</h2>
                                             </div>

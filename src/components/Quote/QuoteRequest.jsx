@@ -124,7 +124,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
     if (!cartData.length) {
       setMessage("Your cart is currently empty. Please add items to continue");
       setModalButtonLabel("Continue Shopping");
-      setModalButtonRedirection("/category/new");      
+      setModalButtonRedirection("/category/new");
       setModalState({ success: false, error: true });
     }
     setCartItems(cartData);
@@ -456,7 +456,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
                     <div className="container-submit col-12">
                       <button
                         type="submit"
-                        className="bt-submit btn-blue btn-large w-100"
+                        className={`bt-submit btn-blue btn-large w-100 ${isButtonDisabled ? "btn-disabled" : ""}`}
                         disabled={isButtonDisabled}
                       >
                         <span className="submit-text">

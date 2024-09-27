@@ -19,7 +19,8 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
           value: true,
         },
       ],
-      includeVariants: !adminPage ? true : false,
+      includeVariants: adminPage ? false : true,
+      encodePrice: adminPage ? false : true,
       limit: "infinite",
       increasedLimit: 700,
     };
@@ -96,88 +97,6 @@ export const getProductsByCategory = async (category, adminPage = false) => {
   }
 };
 
-export const getProductId = async (slug) => {
-  try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "Stores/Products",
-      eq: [
-        {
-          key: "slug",
-          value: slug,
-        },
-      ],
-    });
-    if (response && response._items) {
-      const product = response._items[0].data;
-      return product._id;
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    logError("Error fetching selected ProductId:", slug, error);
-  }
-};
-export const getProductData = async (slug) => {
-  try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "Stores/Products",
-      eq: [
-        {
-          key: "slug",
-          value: slug,
-        },
-      ],
-    });
-    if (response && response._items) {
-      const product = response._items[0].data;
-      return product;
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    logError("Error fetching selected Product:", slug, error);
-  }
-};
-export const fetchProductById = async (slug) => {
-  try {
-    const id = await getProductId(slug);
-    if (!id) return;
-    const response = await getDataFetchFunction({
-      dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: [
-        "product"
-      ],
-      ne: [
-        {
-          key: "hidden",
-          value: true,
-        },
-        {
-          key: "isF1Exclusive",
-          value: true,
-        },
-      ],
-      hasSome: [
-        {
-          key: "product",
-          values: [id],
-        },
-      ],
-      includeSubCategory: true,
-      includeVariants: true,
-      limit: "infinite",
-      increasedLimit: 700,
-    });
-    if (response && response._items) {
-      return response._items.map((x) => x.data.subCategoryData ? x.data : { subCategoryData: [], ...x.data })[0];
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    logError("Error fetching products by ids:", error);
-    return [];
-  }
-};
 export const fetchProductsByIds = async (products) => {
   try {
     const response = await getDataFetchFunction({

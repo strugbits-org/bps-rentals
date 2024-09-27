@@ -63,7 +63,7 @@ const ProductPostPage = ({
   const [customTextFields, setCustomTextFields] = useState({});
 
   const { role, permissions } = useUserData();
-  const FIREPROOF_DOCS_PERMISSION = permissions && permissions.includes(PERMISSIONS.FIREPROOF_CERTIFICATES) || false;
+  const FIREPROOF_DOCS_PERMISSION = permissions && permissions.includes(PERMISSIONS.FIREPROOF_CERTIFICATES);
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(

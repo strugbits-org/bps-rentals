@@ -85,7 +85,7 @@ export const ProductsListing = ({ data, slug }) => {
                     logError("Error updating chunk:", error);
                 }
             }
-            revalidatePage(`/admin/manage-products/${slug}`);
+            revalidatePage(`/admin/manage-products-sorting/${slug}`);
             revalidatePage(`/category/${slug}`);
         } catch (error) {
             logError("Error updating sort order:", error);

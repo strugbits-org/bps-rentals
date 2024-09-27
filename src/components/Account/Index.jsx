@@ -55,11 +55,11 @@ const links = [
     adminOnly: true,
   },
   {
-    name: "Manage Products (New)",
+    name: "Manage Products (Sort)",
     icon: "icon-account",
-    href: "/admin/manage-products",
+    href: "/admin/manage-products-sorting",
     adminOnly: true,
-  },
+  }
 ];
 
 const accountSections = {
