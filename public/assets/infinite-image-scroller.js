@@ -4645,8 +4645,14 @@ class InfiniteImageScroller {
   }
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.drawImage(this.images[this.currentIndex], 0, 0, this.canvas.width, this.canvas.height);
+    const image = this.images[this.currentIndex];
+    if (image instanceof HTMLImageElement && image.complete) {
+      this.ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+    } else {
+      console.error('Image not ready or not a valid type for drawImage:', image);
+    }
   }
+
   attachEventListeners() {
     this.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this));
     this.canvas.addEventListener("touchstart", this.handleTouchStart.bind(this), { passive: false });
@@ -4711,10 +4717,12 @@ class InfiniteImageScroller {
     window.removeEventListener("touchend", this.boundTouchEnd);
   }
   resize() {
+    if (!this.canvas || !this.canvas.parentElement) return;
     this.canvas.width = this.canvas.parentElement.offsetWidth;
     this.canvas.height = this.canvas.parentElement.offsetHeight;
     this.draw();
   }
+  
 }
 export {
   DataSetGet as D,

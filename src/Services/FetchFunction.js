@@ -47,8 +47,6 @@ const getDataFetchFunction = async (payload) => {
 
     // Validate collection ID
     const authCollections = [
-      "DemoProductsData",
-      "AdminPagesData",
       "Stores/Collections",
       "RentalsQuotesDetailPage",
       "PageSeoConfigurationRentals",
@@ -152,6 +150,8 @@ const getDataFetchFunction = async (payload) => {
       data._items = items;
     }
 
+    if (!encodePrice && !includeVariants) return data;
+    
     // Include variants if needed
     if (includeVariants) {
       const [productsVariantImagesData, productsVariantsData] = await Promise.all([

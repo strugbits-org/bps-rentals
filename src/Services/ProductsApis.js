@@ -7,7 +7,7 @@ const baseUrl = process.env.BASE_URL;
 export const getAllProducts = async ({ categories = [], searchTerm, adminPage = false }) => {
   try {
     const payload = {
-      dataCollectionId: adminPage ? "DemoProductsData" : "locationFilteredVariant",
+      dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: ["product"],
       ne: [
         {
@@ -57,11 +57,10 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
   }
 };
 
-export const getProductsByCategory = async (category, adminPage = false) => {
+export const getProductsByCategory = async (categories = [], adminPage = false) => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
-      dataCollectionId: adminPage ? "DemoProductsData" : "locationFilteredVariant",
       includeReferencedItems: ["product"],
       ne: [
         {
@@ -76,10 +75,11 @@ export const getProductsByCategory = async (category, adminPage = false) => {
       hasSome: [
         {
           key: "subCategory",
-          values: [category]
+          values: categories
         }
       ],
-      includeVariants: !adminPage ? true : false,
+      includeVariants: adminPage ? false : true,
+      encodePrice: adminPage ? false : true,
       limit: "infinite",
       increasedLimit: 700,
     };
@@ -364,8 +364,16 @@ export const fetchAllCategoriesCollections = async () => {
     });
     if (response && response._items) {
       const all = "00000000-000000-000000-000000000001";
-      const categoriesData = response._items.map((x) => x.data).filter(x => x._id !== all);
+      const categoriesData = response._items
+        .map(x => ({
+          ...x.data,
+          slug: x.data._id === all ? "all" : x.data.slug,
+          all: x.data._id === all
+        }))
+        .sort((a, b) => a._id === all ? -1 : 0);
+
       return categoriesData;
+
     } else {
       throw new Error("Response does not contain _items");
     }

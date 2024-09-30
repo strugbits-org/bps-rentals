@@ -58,7 +58,7 @@ const SortableItem = ({ product }) => {
     );
 };
 
-export const ProductsListing = ({ data, slug }) => {
+export const ProductsListing = ({ selectedCategoryData, data, slug }) => {
     const pageSize = 20;
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [pageLimit, setPageLimit] = useState(pageSize);
@@ -101,7 +101,7 @@ export const ProductsListing = ({ data, slug }) => {
             const chunkedItems = chunkArray(updatedProducts, 200);
             for (const chunk of chunkedItems) {
                 try {
-                    await bulkUpdateCollection("DemoProductsData", chunk);
+                    await bulkUpdateCollection("locationFilteredVariant", chunk);
                 } catch (error) {
                     logError("Error updating chunk:", error);
                 }
@@ -130,7 +130,7 @@ export const ProductsListing = ({ data, slug }) => {
     return (
         <div className="wrapper-account">
             <div className="wrapper-bottom d-flex-lg products-listing-admin">
-                <h1 className="fs--60 blue-1 split-words">Products</h1>
+                <h1 className="fs--60 blue-1 split-words">{selectedCategoryData.name}</h1>
                 <div className="d-flex-lg flex-mobile-center align-self-center ml-auto mt-10">
                     <button onClick={handleSave} className={`btn-3-blue btn-blue btn-small mr-10 order-mobile-1 ${loading ? "btn-disabled" : ""}`} disabled={loading}>
                         <span>{loading ? "Saving" : "Save"}</span>

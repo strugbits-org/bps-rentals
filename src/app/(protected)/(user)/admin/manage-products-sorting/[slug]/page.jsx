@@ -27,8 +27,8 @@ export default async function Page({ params }) {
 
     let productsData;
     if (params.slug !== "all") {
-      const categoryId = extractCategoryIds(selectedCategoryData)[0];
-      productsData = await getProductsByCategory(categoryId, true);
+      const categoryIds = extractCategoryIds(selectedCategoryData);
+      productsData = await getProductsByCategory(categoryIds, true);
     } else {
       productsData = await getAllProducts({ adminPage: true });
     }
@@ -49,7 +49,7 @@ export default async function Page({ params }) {
 
     return (
       <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
-        <ProductsListing data={productsData} slug={params.slug} />
+        <ProductsListing selectedCategoryData={selectedCategoryData} data={productsData} slug={params.slug} />
       </Account>
     );
   } catch (error) {

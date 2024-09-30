@@ -1,6 +1,5 @@
 import Account from "@/components/Account/Index";
 import { CategoriesListing } from "@/components/Admin/CategoriesListing";
-import { getAdminPagesData } from "@/Services/AdminApis";
 import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
 import { fetchAllCategoriesCollections } from "@/Services/ProductsApis";
 import { getRentalsTeamsBanner } from "@/Services/SectionsApis";
@@ -19,8 +18,7 @@ export default async function Page() {
       socialLinks,
       navigationMenu,
       teamsBanner,
-      collectionsData,
-      adminPagesData
+      collectionsData
     ] = await Promise.all([
       getFooterData(),
       getContactData(),
@@ -28,20 +26,11 @@ export default async function Page() {
       getFooterNavigationMenu(),
       getRentalsTeamsBanner(),
       fetchAllCategoriesCollections(),
-      getAdminPagesData()
     ]);
-
-    const allProductsCard = {
-      "name": "All Products",
-      "mainMedia": adminPagesData.allCategoriesImage,
-      "slug": "all",
-      "all": true,
-    }
-    const categoriesData = [allProductsCard, ...collectionsData];
 
     return (
       <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
-        <CategoriesListing data={categoriesData} />
+        <CategoriesListing data={collectionsData} />
       </Account>
     );
   } catch (error) {

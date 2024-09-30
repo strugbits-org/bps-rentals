@@ -15,7 +15,7 @@ import AutoClickWrapper from "../Common/AutoClickWrapper";
 import logError from "@/Utils/ServerActions";
 
 const CategoryPage = ({
-  // slug,
+  slug,
   pageContent,
   bannersData,
   locations,
@@ -153,16 +153,11 @@ const CategoryPage = ({
     }
 
     const sortedProducts = [...productsData].filter((product) => product.location.some((x) => x === cookies.location)).sort((a, b) => {
-      const orderA = a.data?.orderNumber && a.data.orderNumber[slug] !== undefined ? a.data.orderNumber[slug] : 0;
-      const orderB = b.data?.orderNumber && b.data.orderNumber[slug] !== undefined ? b.data.orderNumber[slug] : 0;
+      const orderA = a?.orderNumber && a.orderNumber[slug] !== undefined ? a.orderNumber[slug] : 0;
+      const orderB = b?.orderNumber && b.orderNumber[slug] !== undefined ? b.orderNumber[slug] : 0;
       return orderA - orderB;
     });
-
     setFilteredProducts(sortedProducts);
-    // const products = productsData.filter((product) =>
-    //   product.location.some((x) => x === cookies.location)
-    // );
-    // setFilteredProducts(products);
 
     setTimeout(markPageLoaded, 500);
     setTimeout(setEnableFilterTrigger(true), 500);

@@ -113,7 +113,6 @@ export default async function Page({ params, searchParams }) {
     return (
       <ProductPostPage
         searchParams={searchParams}
-        selectedProduct={selectedProduct}
         selectedProductDetails={selectedProduct}
         matchedProductsData={matchedProducts}
         categoriesData={categoriesData}

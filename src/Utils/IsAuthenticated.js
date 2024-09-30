@@ -6,8 +6,6 @@ import logError from "./ServerActions";
 import { PERMISSIONS } from "./Schema/permissions";
 
 const unAuthCollections = [
-  "DemoProductsData",
-  "AdminPagesData",
   "Stores/Collections",
   "RentalsQuotesDetailPage",
   "PageSeoConfigurationRentals",

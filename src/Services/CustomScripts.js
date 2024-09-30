@@ -3,11 +3,9 @@
 import { usePathname, useRouter } from "next/navigation";
 import Script from "next/script";
 import React, { useEffect, useState } from "react";
-import { getPageName, markPageLoaded } from "@/Utils/AnimationFunctions";
 import useUserData from "@/Hooks/useUserData";
 
 export const CustomScripts = () => {
-  const router = useRouter();
   const pathname = usePathname();
   const baseUrl = process.env.BASE_URL;
 
@@ -26,23 +24,6 @@ export const CustomScripts = () => {
     setHasRun(true);
   }, [email, hasRun]);
 
-
-  const onReadyScript = () => {
-    if (["home"].includes(getPageName())) markPageLoaded();
-  };
-  useEffect(() => {
-    const handleHashChange = () => {
-      if (["home"].includes(getPageName()))
-        router.push(`/${window.location.hash}`);
-    };
-
-    window.addEventListener("hashchange", handleHashChange);
-
-    return () => {
-      window.removeEventListener("hashchange", handleHashChange);
-    };
-  }, []);
-
   const canonicalUrl = `${baseUrl}${pathname}`;
 
   return (
@@ -52,6 +33,8 @@ export const CustomScripts = () => {
         src={`https://www.googletagmanager.com/gtag/js?id=G-4D3S4F1X60`}
         strategy="afterInteractive"
       />
+      <Script src='//fw-cdn.com/11846215/4437905.js' chat='false' strategy="afterInteractive" />
+
       <Script id="google-analytics" strategy="afterInteractive">
         {`
             window.dataLayer = window.dataLayer || [];
@@ -91,7 +74,6 @@ export const CustomScripts = () => {
       <Script type="module" rel="modulepreload" src="/assets/loader.js" />
       <Script type="module" rel="modulepreload" src="/assets/chat.js" />
       <Script
-        onReady={onReadyScript}
         type="module"
         rel="modulepreload"
         src="/assets/app2.js"
@@ -122,7 +104,6 @@ export const CustomScripts = () => {
 
       <Script type="module" src="/assets/loader.js"></Script>
       <Script
-        onReady={onReadyScript}
         type="module"
         src="/assets/app2.js"
       ></Script>
