@@ -150,7 +150,7 @@ const ProductPostPage = ({
 
       setProductFoundInCategories(categoriesFound);
     }
-    setTimeout(markPageLoaded, 500);
+    setTimeout(markPageLoaded, 900);
   }, [selectedProductDetails]);
 
   const handleQuantityChange = async (value) => {
@@ -290,7 +290,7 @@ const ProductPostPage = ({
                             <div className="wrapper-img">
                               <i className="icon-360"></i>
                               <div className="container-img">
-                                <ModalCanvas3d path={selectedVariant?.modalUrl} />
+                                <ModalCanvas3d key={selectedVariant?.modalUrl} path={selectedVariant?.modalUrl} />
                               </div>
                             </div>
                           </div>
