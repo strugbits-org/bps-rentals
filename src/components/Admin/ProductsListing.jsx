@@ -12,7 +12,7 @@ import useUserData from '@/Hooks/useUserData';
 import Error404Page from '../Error404Page';
 import AutoClickWrapper from '../Common/AutoClickWrapper';
 
-const SortableItem = ({ product }) => {
+const SortableItem = ({ index, product }) => {
     const { _id, name, mainMedia } = product;
     const { attributes, listeners, setNodeRef, transform, transition, setActivatorNodeRef } = useSortable({ id: _id });
     const [isTouchDevice, setIsTouchDevice] = useState(false);
@@ -34,16 +34,16 @@ const SortableItem = ({ product }) => {
     }, []);
 
     return (
-        <li ref={setNodeRef} style={style} {...attributes} className="grid-item no-select">
+        <li ref={setNodeRef} style={style} {...attributes} className="grid-item no-select sorting-product" data-cursor-style="off">
             <div className="product-link small saved-products active">
                 {isTouchDevice && (
-                    <div className="container-tags drag-handle cursor-grab touch-action-none" ref={setActivatorNodeRef} {...listeners}>
+                    <div className="container-tags drag-handle cursor-move touch-action-none" ref={setActivatorNodeRef} {...listeners}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="rgba(15,65,250,1)">
                             <path d="M18 11V8L22 12L18 16V13H13V18H16L12 22L8 18H11V13H6V16L2 12L6 8V11H11V6H8L12 2L16 6H13V11H18Z"></path>
                         </svg>
                     </div>
                 )}
-                <div className={`cursor-pointer link ${!isTouchDevice ? "cursor-grab" : ""} `} {...(!isTouchDevice && listeners)}>
+                <div className={`cursor-pointer link ${!isTouchDevice ? "cursor-move" : ""} `} {...(!isTouchDevice && listeners)}>
                     <div className="container-top">
                         <h2 className="product-title">{name}</h2>
                     </div>
@@ -51,6 +51,11 @@ const SortableItem = ({ product }) => {
                         <div className="container-img product-img active">
                             <ImageWrapper url={mainMedia} defaultDimensions={{ width: 350, height: 350 }} />
                         </div>
+                    </div>
+                </div>
+                <div className="container-color-options">
+                    <div className="colors-number">
+                        <span>{index + 1}</span>
                     </div>
                 </div>
             </div>
@@ -149,10 +154,10 @@ export const ProductsListing = ({ selectedCategoryData, data, slug }) => {
                     <DndContext onDragEnd={handleDragEnd}>
                         <SortableContext items={filteredProducts.map((item) => item.data.product._id)}>
                             <ul className="list-saved-products grid-lg-25 grid-tablet-33 grid-phone-50">
-                                {filteredProducts.slice(0, pageLimit).map((item) => {
+                                {filteredProducts.slice(0, pageLimit).map((item, index) => {
                                     const { data } = item;
                                     return (
-                                        <SortableItem key={data.product._id} product={data.product} />
+                                        <SortableItem key={data.product._id} index={index} product={data.product} />
                                     )
                                 })}
                             </ul>
