@@ -180,13 +180,13 @@ export const fetchAllProductsPaths = async () => {
           value: true,
         },
       ],
+      hasSome: [
+        {
+          key: "subCategory",
+          values: ["77f8aa7c-38c7-ac49-ef1e-fea401cdc075"],
+        },
+      ],
     };
-    // hasSome: [
-    //   {
-    //     key: "subCategory",
-    //     values: ["77f8aa7c-38c7-ac49-ef1e-fea401cdc075"],
-    //   },
-    // ],
     const response = await getDataFetchFunction(payload);
     if (response && response._items) {
       const paths = response._items

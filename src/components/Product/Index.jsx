@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCookies } from "react-cookie";
 
 import {
@@ -32,7 +32,6 @@ import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
 
 const ProductPostPage = ({
-  searchParams,
   selectedProductDetails,
   matchedProductsData,
   categoriesData,
@@ -42,6 +41,8 @@ const ProductPostPage = ({
 }) => {
   const descriptionRef = useRef(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [cookies, setCookie] = useCookies([
     "authToken",
     "userData",
@@ -91,8 +92,8 @@ const ProductPostPage = ({
   };
 
   useEffect(() => {
-    const defaultVariant = searchParams?.variant;
-    const defaultVariantIndex = defaultVariant ? selectedProductDetails.variantData.findIndex(x => x.sku === defaultVariant) : 0;
+    const defaultVariant = searchParams.get("variant");
+    const defaultVariantIndex = searchParams.has("variant") ? selectedProductDetails.variantData.findIndex(x => x.sku === defaultVariant) : 0;
 
     if (selectedProductDetails && productSnapshotData) {
       const selectedVariantData = selectedProductDetails.variantData[defaultVariantIndex].variant;
