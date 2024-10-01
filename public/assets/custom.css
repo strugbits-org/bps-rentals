@@ -685,6 +685,27 @@ li.IMPORTANT.long-desc {
     pointer-events: all;
 }
 
-.cursor-grab {
-    cursor: grab;
+.cursor-move {
+    cursor: move;
+}
+
+.sorting-product:hover .product-title {
+    text-overflow: unset !important;
+    white-space: break-spaces !important;
+    overflow: visible!important;
+}
+
+.sorting-product .best-seller {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    min-height: 3rem;
+    color: var(--blue-1);
+    border-radius: 2.8rem;
+    background: var(--yellow-1);
+    padding: 0.5rem 1.3718rem;
+    margin-right: 0.6rem;
 }
