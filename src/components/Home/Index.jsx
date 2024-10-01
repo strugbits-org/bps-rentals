@@ -55,7 +55,14 @@ const HomePage = ({
       }
       setProductSnapshots(productSnapshotData);
       setProductFilteredVariantData(filteredVariantData);
-      const currentActiveIndex = productData.variantData.findIndex(x => x.variant._id === activeVariant.variant._id);
+      const currentActiveIndex = productData.variantData.findIndex(x => {
+        if (x.variant._id) {
+          return x.variant._id === activeVariant.variant._id;
+        } else if (x.variant.variantId) {
+          return x.variant.variantId === activeVariant.variant.variantId;
+        }
+        return false;
+      });
       const currentActive = productData.variantData[currentActiveIndex];
 
       if (filteredVariantData && currentActive && filteredVariantData.length > 0) {
