@@ -196,7 +196,7 @@ const CartModal = ({
                                       <div class="wrapper-img">
                                         <i class="icon-360"></i>
                                         <div class="container-img">
-                                          <ModalCanvas3d path={selectedVariantData?.modalUrl} />
+                                          <ModalCanvas3d key={selectedVariantData?.modalUrl} path={selectedVariantData?.modalUrl} />
                                         </div>
                                       </div>
                                     </div>
