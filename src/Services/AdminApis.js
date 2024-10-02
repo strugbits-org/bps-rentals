@@ -1,7 +1,6 @@
 "use server";
 import logError from "@/Utils/ServerActions";
 import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
-import getDataFetchFunction from "./FetchFunction";
 
 export const bulkUpdateCollection = async (dataCollectionId, items) => {
     try {

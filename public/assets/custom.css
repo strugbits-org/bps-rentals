@@ -709,3 +709,20 @@ li.IMPORTANT.long-desc {
     padding: 0.5rem 1.3718rem;
     margin-right: 0.6rem;
 }
+
+.menu-my-account .list-menu-my-account .link-account span {
+    flex-grow: 1;
+    max-width: 80%;
+}
+
+.menu-my-account .list-menu-my-account .link-account img {
+    display: block;
+    width: 2rem;
+    font-size: 2rem;
+    color: var(--blue-1);
+    margin: 0px 10px 0px 0px;
+}
+
+  .menu-my-account .list-menu-my-account .link-account:hover img {
+    color: var(--white-1);
+  }

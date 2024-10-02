@@ -8,6 +8,11 @@ import useUserData from "@/Hooks/useUserData";
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
 import { TeamsBannerAccount } from "./TeamsBannerAccount";
 import logError from "@/Utils/ServerActions";
+import mangeBlogIcon from "@/assets/menu-icons/blog.svg"
+import mangeCacheIcon from "@/assets/menu-icons/cache.svg"
+import mangeProductIcon from "@/assets/menu-icons/product.svg"
+import mangeProjectsIcon from "@/assets/menu-icons/project.svg"
+import mangeSortIcon from "@/assets/menu-icons/sort.svg"
 
 const links = [
   { name: "My Account", icon: "icon-account", href: "/my-account" },
@@ -28,35 +33,35 @@ const links = [
   },
   {
     name: "Manage Products",
-    icon: "icon-account",
+    icon: mangeProductIcon,
     href: "https://illumeet.editorx.io/rentalx/account/manage-product",
     target: "_blank",
     adminOnly: true,
   },
   {
     name: "Manage Blogs",
-    icon: "icon-account",
+    icon: mangeBlogIcon,
     href: "https://illumeet.editorx.io/rentalx/account/reference-blogs",
     target: "_blank",
     adminOnly: true,
   },
   {
     name: "Manage Projects",
-    icon: "icon-account",
+    icon: mangeProjectsIcon,
     href: "https://illumeet.editorx.io/rentalx/account/reference-projects",
     target: "_blank",
     adminOnly: true,
   },
   {
     name: "Manage Cache",
-    icon: "icon-account",
+    icon: mangeCacheIcon,
     href: "https://illumeet.editorx.io/rentalx/account/manage-cache",
     target: "_blank",
     adminOnly: true,
   },
   {
-    name: "Manage Products (Sort)",
-    icon: "icon-account",
+    name: "Product Sorting by Category",
+    icon: mangeSortIcon,
     href: "/admin/manage-products-sorting",
     adminOnly: true,
   }
@@ -125,7 +130,11 @@ const Account = ({ children, footerData, banner }) => {
                   className="list-item"
                 >
                   <AnimateLink key={index} to={href} target={target} className="link-account">
-                    <i className={icon}></i>
+                    {!adminOnly ? (
+                      <i className={icon}></i>
+                    ) : (
+                      <img src={icon.src} alt="" />
+                    )}
                     <span>{name}</span>
                   </AnimateLink>
                 </li>
