@@ -715,14 +715,10 @@ li.IMPORTANT.long-desc {
     max-width: 80%;
 }
 
-.menu-my-account .list-menu-my-account .link-account img {
-    display: block;
-    width: 2rem;
-    font-size: 2rem;
-    color: var(--blue-1);
-    margin: 0px 10px 0px 0px;
+.menu-my-account .list-menu-my-account .link-account .svg-custom {
+    width: 3.1rem;
 }
 
-  .menu-my-account .list-menu-my-account .link-account:hover img {
-    color: var(--white-1);
-  }
+.menu-my-account .list-menu-my-account .link-account .svg-custom img {
+    width: 18px;
+}

@@ -133,7 +133,9 @@ const Account = ({ children, footerData, banner }) => {
                     {!adminOnly ? (
                       <i className={icon}></i>
                     ) : (
-                      <img src={icon.src} alt="" />
+                      <div className="svg-custom">
+                        <img src={icon.src} alt="" />
+                      </div>
                     )}
                     <span>{name}</span>
                   </AnimateLink>
