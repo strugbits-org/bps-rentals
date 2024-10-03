@@ -20,7 +20,6 @@
     "@wix/members": "^1.0.89",
     "@wix/sdk": "^1.12.0",
     "bcryptjs": "^2.4.3",
-    "instafeed-node-js": "^0.1.4",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "next": "14.2.4",
