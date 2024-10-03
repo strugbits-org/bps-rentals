@@ -123,7 +123,7 @@ export const SocialSection = ({ data, posts, insta_feed }) => {
                               }}
                             >
                               <div className="container-img">
-                                <ImageWrapper alt={item.caption} type='insta' fit={"fit"} className="media" q={"100"} timeout={0} key={item.image} url={item.image} defaultDimensions={{ width: 150, height: 150 }} />
+                                <ImageWrapper alt={item.caption} type='insta' fit={"fit"} className="media" q={"100"} timeout={0} key={item.image} url={item.image}  min_h={"350"} min_w={"350"} defaultDimensions={{ width: 150, height: 150 }} />
                               </div>
                             </AnimateLink>
                           </li>
