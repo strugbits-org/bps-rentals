@@ -36,7 +36,7 @@ const NewArrival = ({ content }) => {
         data-translate-y-from="-20vh"
         data-translate-y-to="20vh"
       >
-        <ImageWrapper defaultDimensions={{ width: 1336, height: 568 }} url={content.bannerImage} q={"90"} />
+        <ImageWrapper useNextImage={true} defaultDimensions={{ width: 1336, height: 568 }} url={content.bannerImage} q={"90"} />
       </div>
     </section>
   );
