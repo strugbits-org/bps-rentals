@@ -11,7 +11,7 @@ const Footer = ({ menu, footerData, contactData, socialLinks }) => {
   const disabledPages = ["/my-account", "/my-account-saved-products", "/my-account-quotes-history", "/my-account-change-password"];
 
   return (
-    <footer id="footer" className={`footer ${disabledPages.includes(pathname) ? "d-lg-none" : ""}`} data-cursor-style="off">
+    <footer id="footer" className={`footer ${disabledPages.includes(pathname) || pathname.startsWith("/admin/") ? "d-lg-none" : ""}`} data-cursor-style="off">
       <div className="container-fluid">
         <div className="row row-1">
           <div className="col-lg-7 column-1">

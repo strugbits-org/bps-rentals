@@ -135,7 +135,7 @@ export const ProductsListing = ({ selectedCategoryData, data, slug }) => {
     return (
         <div className="wrapper-account">
             <div className="wrapper-bottom d-flex-lg products-listing-admin">
-                <h1 className="fs--60 blue-1 split-words">{selectedCategoryData.name}</h1>
+                <h1 className="fs--60 blue-1 split-words">{selectedCategoryData?.name || "All"}</h1>
                 <div className="d-flex-lg flex-mobile-center align-self-center ml-auto mt-10">
                     <button onClick={handleSave} className={`btn-3-blue btn-blue btn-small mr-10 order-mobile-1 ${loading ? "btn-disabled" : ""}`} disabled={loading}>
                         <span>{loading ? "Saving" : "Save"}</span>
