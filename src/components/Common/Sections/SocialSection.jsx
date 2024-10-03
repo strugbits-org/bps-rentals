@@ -16,7 +16,7 @@ export const SocialSection = ({ data, posts, insta_feed }) => {
     '/my-account-change-password',
   ];
 
-  if (disabledPages.includes(pathname)) return;
+  if (disabledPages.includes(pathname) || pathname.startsWith("/admin/")) return;
 
   return (
     <section className="section-lets-get-social z-5 pt-lg-195 pt-tablet-105 pt-phone-155 pb-lg-130 pb-tablet-105 pb-phone-140 mt-lg-240">
