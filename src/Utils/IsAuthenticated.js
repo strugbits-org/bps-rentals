@@ -6,6 +6,7 @@ import logError from "./ServerActions";
 import { PERMISSIONS } from "./Schema/permissions";
 
 const unAuthCollections = [
+  "InstagramFeed",
   "Stores/Collections",
   "RentalsQuotesDetailPage",
   "PageSeoConfigurationRentals",

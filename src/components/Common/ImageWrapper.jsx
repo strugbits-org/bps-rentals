@@ -13,6 +13,7 @@ export const ImageWrapper = ({
     min_w,
     min_h,
     customClasses = "",
+    alt = "",
     attributes,
     defaultDimensions,
     timeout = 200,
@@ -46,6 +47,8 @@ export const ImageWrapper = ({
                     return generateImageUrl2({ wix_url: url, w: width, h: height, original, fit, q });
                 case "product":
                     return `${url}/v1/${fit}/w_${width},h_${height},al_c,q_${q},usm_0.66_1.00_0.01,enc_auto/compress.webp`;
+                case "insta":
+                    return `https://static.wixstatic.com/media/${url}/v1/${fit}/w_${width},h_${height},al_c,q_${q},usm_0.66_1.00_0.01,enc_auto/compress.webp`;
                 default:
                     return "";
             }
@@ -71,11 +74,12 @@ export const ImageWrapper = ({
 
     return (
         <>
-            {useNextImage && src && height && width ? <Image ref={ref} src={src} quality={q} loading={"eager"} height={height} width={width} className={customClasses} {...attributes} alt='' /> :
+            {useNextImage && src && height && width ? <Image ref={ref} src={src} quality={q} loading={"eager"} height={height} width={width} className={customClasses} {...attributes} /> :
                 <img
                     ref={ref}
                     src={src}
                     className={customClasses}
+                    alt={alt}
                     {...attributes}
                 />
             }

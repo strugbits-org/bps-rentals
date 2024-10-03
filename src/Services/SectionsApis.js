@@ -1,4 +1,3 @@
-import { instafeed, refreshToken } from "instafeed-node-js";
 import getDataFetchFunction from "./FetchFunction";
 import { fetchProductsByIds } from "./ProductsApis";
 import logError from "@/Utils/ServerActions";
@@ -310,13 +309,18 @@ export const getSocialSectionDetails = async () => {
 
 export const fetchInstaFeed = async () => {
   try {
-    const response = await instafeed({ access_token: process.env.INSTA_ACCESS_TOKEN, requestedCount: 24 });
-    return response.data;
+    const response = await getDataFetchFunction({
+      "dataCollectionId": "InstagramFeed"
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data)
+    } else {
+      throw new Error("Response does not contain _items", response);
+    }
   } catch (error) {
-    throw new Error(error.message);
-  } finally {
-    refreshToken({ access_token: process.env.INSTA_ACCESS_TOKEN });
-  };
+    logError("Error fetching InstaFeed:", error);
+  }
 }
 
 export const getPortfolioData = async () => {
