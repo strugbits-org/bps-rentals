@@ -281,60 +281,54 @@ const CategoryPage = ({
       <section className="section-category-content section-category-fixed-pin">
         <div className="container-fluid">
           <div className="row pos-relative">
-            {selectedCategoryData && (
-              <>
-                <div className="col-12">
-                  <h1
-                    className="d-block section-category-title fs--60 fw-600 pb-lg-50 pb-tablet-20 pb-phone-30 split-words"
-                    data-aos
+            <div className="col-12">
+              {selectedCategoryData && (
+                <h1
+                  className="d-block section-category-title fs--60 fw-600 pb-lg-50 pb-tablet-20 pb-phone-30 split-words"
+                  data-aos
+                >
+                  {selectedCategoryData.parentCollection
+                    ? selectedCategoryData.parentCollection.name
+                    : selectedCategoryData.name}
+                </h1>
+              )}
+            </div>
+
+            <div className={`col-12 col-tablet-6 z-6 ${!selectedCategoryData.parentCollection && !filterCategories.length ? "no-mobile" : ""}`}>
+              <div className="container-category-filter pb-lg-60 pb-mobile-40">
+                <div
+                  className="blog-tags dropdown-tags"
+                  data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                >
+                  <button
+                    className="btn-tag-mobile no-desktop"
+                    onClick={() => { setCategoriesDropdown(prev => !prev) }}
                   >
-                    {selectedCategoryData.parentCollection
-                      ? selectedCategoryData.parentCollection.name
-                      : selectedCategoryData.name}
-                  </h1>
-                </div>
-                {selectedCategoryData.parentCollection && filterCategories.length ? (
-                  <>
-                    <div className="col-12 col-tablet-6 z-6">
-                      <div className="container-category-filter pb-lg-60 pb-mobile-40">
-                        <div
-                          className="blog-tags dropdown-tags"
-                          data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                        >
-                          <button
-                            className="btn-tag-mobile no-desktop"
-                            onClick={() => { setCategoriesDropdown(prev => !prev) }}
-                          >
-                            <span>All Categories</span>
-                            <i className="icon-arrow-down"></i>
-                          </button>
-                          <div className={`list-dropdown ${categoriesDropdown ? "active" : ""}`}>
-                            <div className="container-wrapper-list">
-                              <div className="wrapper-list">
-                                <ul className="list-blog-tags list-dropdown-tags">
-                                  {filterCategories.map((item, index) => (
-                                    <li key={index}>
-                                      <AnimateLink
-                                        to={
-                                          item["link-copy-of-category-name-2"]
-                                        }
-                                        className="blog-btn-tag"
-                                      >
-                                        <span>{item.name}</span>
-                                      </AnimateLink>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                    <span>All Categories</span>
+                    <i className="icon-arrow-down"></i>
+                  </button>
+                  <div className={`list-dropdown ${categoriesDropdown ? "active" : ""}`}>
+                    <div className="container-wrapper-list">
+                      <div className="wrapper-list">
+                        <ul className="list-blog-tags list-dropdown-tags">
+                          {filterCategories.map((item, index) => (
+                            <li key={index}>
+                              <AnimateLink
+                                to={item["link-copy-of-category-name-2"]}
+                                className="blog-btn-tag"
+                              >
+                                <span>{item.name}</span>
+                              </AnimateLink>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
-                  </>
-                ) : null}
-              </>
-            )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="col-lg-2 col-tablet-6 z-7">
               <div
                 className="category-menu"
@@ -381,7 +375,7 @@ const CategoryPage = ({
             </div>
             <div className="col-lg-10 column-content">
               <div className="product-list-wrapper container-wrapper-list">
-                <ul className="product-list grid-lg-33 grid-tablet-50 grid-list">
+                <ul className="product-list grid-lg-33 grid-tablet-50 grid-list" style={{ minHeight: "100vh" }}>
                   {filteredProducts.slice(0, pageLimit).map((data, index) => {
                     return (
                       <React.Fragment key={index}>
@@ -410,16 +404,16 @@ const CategoryPage = ({
                       </React.Fragment>
                     );
                   })}
+                  {filteredProducts.length === 0 && (
+                    <h6
+                      className="w-full fs--40 text-center split-words mt-90"
+                      data-aos="d:loop"
+                    >
+                      No Products Found
+                    </h6>
+                  )}
 
                 </ul>
-                {filteredProducts.length === 0 && (
-                  <h6
-                    className="fs--40 text-center split-words mt-90"
-                    data-aos="d:loop"
-                  >
-                    No Products Found
-                  </h6>
-                )}
                 {pageLimit < filteredProducts.length && (
                   <div className="flex-center">
                     <AutoClickWrapper onIntersect={handleAutoSeeMore}>

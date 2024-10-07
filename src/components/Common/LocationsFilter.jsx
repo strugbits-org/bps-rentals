@@ -22,7 +22,7 @@ import { closeLocationsDropdown } from '@/Utils/AnimationFunctions';
 
    return (
      <li className="local-item accordion-item">
-       <div className="accordion-header custom-close">
+       <div className="accordion-header custom-close location-dropdown">
          <i className="icon-pin"></i>
          <span>{selectedLocation && selectedLocation.label}</span>
        </div>
