@@ -722,3 +722,10 @@ li.IMPORTANT.long-desc {
 .menu-my-account .list-menu-my-account .link-account .svg-custom img {
     width: 18px;
 }
+
+
+@media only screen and (min-width: 1025.1px) {
+    .header-info-list li.local-item .accordion-header.location-dropdown {
+        justify-content: flex-start;
+    }
+}
