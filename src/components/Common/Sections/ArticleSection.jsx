@@ -13,7 +13,7 @@ const ArticleSection = ({ data }) => {
         <div className="row">
           <div className="col-12 column-1">
             <h2
-              className="fs--60 text-center mb-lg-45 mb-mobile-40 split-words"
+              className="fs--60 text-center mb-lg-45 mb-mobile-40"
               data-aos="d:loop"
             >
               As Seen In Our Articles

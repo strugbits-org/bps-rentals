@@ -23,6 +23,7 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
+    console.error("Error fetching cart: ", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

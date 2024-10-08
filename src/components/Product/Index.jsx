@@ -19,7 +19,7 @@ import PortfolioSection from "../Common/Sections/PortfolioSection";
 import { SaveProductButton } from "../Common/SaveProductButton";
 import ArticleSection from "../Common/Sections/ArticleSection";
 import ModalCanvas3d from "../Common/ModalCanvas3d";
-import Breadcrumb from "../Common/BreadCrumbData";
+// import Breadcrumb from "../Common/BreadCrumbData";
 import AnimateLink from "../Common/AnimateLink";
 
 import { AvailabilityCard } from "./AvailabilityCard";
@@ -352,16 +352,16 @@ const ProductPostPage = ({
               </ul>
             </div>
             <div className="col-lg-3 column-2 mt-tablet-20 mt-phone-25">
-              <ul className="list-breadcrumb" data-aos="fadeIn .8s ease-in-out">
+              {/* <ul className="list-breadcrumb" data-aos="fadeIn .8s ease-in-out">
                 <Breadcrumb selectedProductDetails={selectedProductDetails} />
-              </ul>
+              </ul> */}
               <div className="container-product-description">
                 <form className="form-cart" onSubmit={handleAddToCart}>
                   <input type="hidden" name="sku[]" defaultValue="MODCH09" />
                   <div className="wrapper-product-name">
                     <div className="container-product-name">
                       <h1
-                        className="fs--60 fs-phone-30 product-name split-words"
+                        className="fs--60 fs-phone-30 product-name"
                         data-aos="d:loop"
                       >
                         {selectedProductDetails.product.name}
@@ -371,6 +371,7 @@ const ProductPostPage = ({
                   <ul
                     className="list-specs mt-tablet-20 mt-phone-15"
                     data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                    style={{ minHeight: "200px" }}
                   >
                     {selectedVariant && selectedVariant.sku && (
                       <li class="sku">
@@ -570,7 +571,7 @@ const ProductPostPage = ({
                       }`}
                     data-aos=""
                   >
-                    <h3 className="title-info-text split-words" data-aos="">
+                    <h3 className="title-info-text" data-aos="">
                       <span>Description</span>
                     </h3>
                     <div
@@ -604,7 +605,7 @@ const ProductPostPage = ({
                 role === "admin" &&
                 selectedProductDetails.productDocs?.length > 0 && (
                   <div class="container-info-text" data-aos="">
-                    <h3 class="title-info-text split-words" data-aos="">
+                    <h3 class="title-info-text" data-aos="">
                       Downloads
                     </h3>
                     <div
@@ -630,7 +631,7 @@ const ProductPostPage = ({
               {selectedProductDetails && FIREPROOF_DOCS_PERMISSION &&
                 selectedProductDetails.fireProofCertificates?.length > 0 && (
                   <div class="container-info-text" data-aos="">
-                    <h3 class="title-info-text split-words" data-aos="">
+                    <h3 class="title-info-text" data-aos="">
                       Fireproof Certificates
                     </h3>
                     <div
@@ -656,7 +657,7 @@ const ProductPostPage = ({
               {selectedProductDetails &&
                 productFoundInCategories.length > 0 && (
                   <div className="container-info-text" data-aos="">
-                    <h3 className="title-info-text split-words" data-aos="">
+                    <h3 className="title-info-text" data-aos="">
                       Product found in
                     </h3>
                     <div

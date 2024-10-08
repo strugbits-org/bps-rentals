@@ -104,7 +104,7 @@ const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsD
           <div className="row">
             <div className="col-lg-10 offset-lg-1">
               <h2
-                className="fs--60 fw-600 text-center split-chars"
+                className="fs--60 fw-600 text-center"
                 data-aos="d:loop"
               >
                 Match it with

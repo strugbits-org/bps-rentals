@@ -8,7 +8,7 @@ const AnimateLink = ({ to, children, className, target, attributes }) => {
   const pathname = usePathname();
 
   const delayedRedirect = (e) => {
-    e.preventDefault();    
+    e.preventDefault();
     if (to === undefined || !to || to === "") return;
 
     if (pathname === to) {
@@ -17,15 +17,19 @@ const AnimateLink = ({ to, children, className, target, attributes }) => {
       return;
     }
 
-    if (target === undefined || !target || target === "") {
+    if (!target) {
       pageLoadStart();
       setTimeout(() => {
-        router.push(to);
-        router.refresh();
-      }, 900);
+        if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "auto" });
+        setTimeout(() => {
+          router.push(to);
+          router.refresh();
+        }, 300);
+      }, 600);
     } else {
       window.open(to, target);
     }
+
   };
 
   return (
