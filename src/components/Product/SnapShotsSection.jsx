@@ -7,7 +7,7 @@ const SnapShots = ({ data }) => {
         <div className="row">
           <div className="col-lg-10 offset-lg-1">
             <h2
-              className="fs--60 text-center mb-md-40 mb-phone-30 split-chars"
+              className="fs--60 text-center mb-md-40 mb-phone-30"
               data-aos="d:loop"
             >
               Snapshots

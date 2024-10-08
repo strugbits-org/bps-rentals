@@ -692,7 +692,7 @@ li.IMPORTANT.long-desc {
 .sorting-product:hover .product-title {
     text-overflow: unset !important;
     white-space: break-spaces !important;
-    overflow: visible!important;
+    overflow: visible !important;
 }
 
 .sorting-product .best-seller {
