@@ -132,9 +132,11 @@ export const pageLoadStart = ({ noScroll = false }) => {
     document.body.classList.add("page-leave-active");
 
     if (!noScroll) {
-      const scrollContainer = document.querySelector("[data-scroll-container]");
-      window.scrollTo({ top: 0, behavior: "auto" });
-      if (scrollContainer) scrollContainer.classList.add("wrapper-no-transform");
+      setTimeout(() => {
+        const scrollContainer = document.querySelector("[data-scroll-container]");
+        window.scrollTo({ top: 0, behavior: "auto" });
+        if (scrollContainer) scrollContainer.classList.add("wrapper-no-transform");
+      }, 500);
     }
   }
 };
