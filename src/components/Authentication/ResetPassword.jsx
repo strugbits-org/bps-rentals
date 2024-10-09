@@ -68,15 +68,11 @@ const ResetPassword = () => {
     }
   };
 
-  const handleClose = () => {
-    router.push("/");
-  };
-
   useEffect(() => {
     if (userId) {
       markPageLoaded();
     } else {
-      handleClose();
+      router.push("/");
     }
   }, [userId]);
 

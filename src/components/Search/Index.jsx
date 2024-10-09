@@ -227,7 +227,7 @@ const SearchPage = ({
                 savedProductsData={savedProductsData}
                 setSavedProductsData={setSavedProductsData}
             />
-            <section className="section-category-content section-category-fixed-pin">
+            <section className="section-category-content section-category-fixed-pin min-h-100">
                 <div className="container-fluid">
                     <div className="row pos-relative">
                         <div className="col-12">
