@@ -12,19 +12,16 @@ const AnimateLink = ({ to, children, className, target, attributes }) => {
     if (to === undefined || !to || to === "") return;
 
     if (pathname === to) {
-      pageLoadStart();
+      pageLoadStart({ noScroll: true });
       setTimeout(() => pageLoadEnd(), 900);
       return;
     }
 
-    if (!target) {
-      pageLoadStart();
+    if (target === undefined || !target || target === "") {
+      pageLoadStart({});
       setTimeout(() => {
-        if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "auto" });
-        setTimeout(() => {
-          router.push(to);
-          router.refresh();
-        }, 300);
+        router.push(to);
+        router.refresh();
       }, 600);
     } else {
       window.open(to, target);

@@ -78,7 +78,7 @@ const MyAccount = ({ myAccountPageContent }) => {
 
   const discardChanges = (e) => {
     e.preventDefault();
-    pageLoadStart();
+    pageLoadStart({});
     setTimeout(() => {
       setFormData(initialData);
       pageLoadEnd();

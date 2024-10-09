@@ -87,7 +87,7 @@ const CreateAccount = ({
       removeCookie("cartId", { path: "/" });
 
       if (authToken) {
-        pageLoadStart();
+        pageLoadStart({});
         submenuLogin.classList.remove("active");
         router.push("/my-account");
       }
@@ -98,6 +98,8 @@ const CreateAccount = ({
       setModalState({ success: false, error: true });
     } finally {
       setTimeout(() => {
+        setMessage("");
+        setModalState({ success: false, error: false });
         setSubmittingForm(false);
       }, 1500);
     }

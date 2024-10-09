@@ -118,14 +118,14 @@ export default async function RootLayout({ children }) {
           <RevalidateButton />
           <SpeedInsights />
           <Wrapper>
-            <main>
+            <main className={"min-h-100"}>
               {children}
-              <SocialSection
-                data={socialSectionDetails}
-                posts={socialSectionBlogs}
-                insta_feed={instaFeed}
-              />
             </main>
+            <SocialSection
+              data={socialSectionDetails}
+              posts={socialSectionBlogs}
+              insta_feed={instaFeed}
+            />
             <Footer
               menu={navigationMenu}
               footerData={footerData}

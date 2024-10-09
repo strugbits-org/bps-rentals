@@ -19,7 +19,7 @@ import PortfolioSection from "../Common/Sections/PortfolioSection";
 import { SaveProductButton } from "../Common/SaveProductButton";
 import ArticleSection from "../Common/Sections/ArticleSection";
 import ModalCanvas3d from "../Common/ModalCanvas3d";
-// import Breadcrumb from "../Common/BreadCrumbData";
+import Breadcrumb from "../Common/BreadCrumbData";
 import AnimateLink from "../Common/AnimateLink";
 
 import { AvailabilityCard } from "./AvailabilityCard";
@@ -205,7 +205,7 @@ const ProductPostPage = ({
       const response = await AddProductToCart(productData);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
       setCookie("cartQuantity", total, { path: "/" });
-      pageLoadStart();
+      pageLoadStart({});
 
       if (response) {
         router.push("/cart");
@@ -338,6 +338,7 @@ const ProductPostPage = ({
                                     src="/images/3d.svg"
                                     data-preload
                                     class="media"
+                                     alt="3d model"
                                   />
                                 </div>
                                 <span class="hide">360</span>
@@ -352,9 +353,9 @@ const ProductPostPage = ({
               </ul>
             </div>
             <div className="col-lg-3 column-2 mt-tablet-20 mt-phone-25">
-              {/* <ul className="list-breadcrumb" data-aos="fadeIn .8s ease-in-out">
+              <ul className="list-breadcrumb" data-aos="fadeIn .8s ease-in-out">
                 <Breadcrumb selectedProductDetails={selectedProductDetails} />
-              </ul> */}
+              </ul>
               <div className="container-product-description">
                 <form className="form-cart" onSubmit={handleAddToCart}>
                   <input type="hidden" name="sku[]" defaultValue="MODCH09" />
@@ -370,8 +371,7 @@ const ProductPostPage = ({
                   </div>
                   <ul
                     className="list-specs mt-tablet-20 mt-phone-15"
-                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                    style={{ minHeight: "200px" }}
+                    data-aos="fadeIn .8s ease-in-out .2s, d:loop min-h-200-px"
                   >
                     {selectedVariant && selectedVariant.sku && (
                       <li class="sku">

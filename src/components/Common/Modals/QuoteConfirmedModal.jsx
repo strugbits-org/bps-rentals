@@ -30,7 +30,7 @@ const QuoteConfirmedModal = () => {
                   <div class="col-lg-6 offset-lg-3">
                     <div class="content" data-feedback-area>
                       <div class="container-img">
-                        <img src="/images/logo.svg" class=" " />
+                        <img src="/images/logo.svg" class=" " alt="logo" />
                       </div>
                       <h2
                         class="fs--60 mt-lg-75 mt-mobile-70 mb-lg-75 mb-mobile-70 text-center text-uppercase split-words"

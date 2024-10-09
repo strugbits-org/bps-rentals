@@ -94,7 +94,7 @@ export const loadPinterest = () => {
   }
 };
 
-export const markPageLoaded = (watched = true) => {  
+export const markPageLoaded = (watched = true) => {
   if (typeof window !== "undefined") {
     setTimeout(() => window.scrollTo({ top: 0 }), 200);
     initAnimations();
@@ -125,14 +125,24 @@ export const firstLoadAnimation = async () => {
   }, 1200);
 };
 
-export const pageLoadStart = () => {
+export const pageLoadStart = ({ noScroll = false }) => {
   if (typeof window !== "undefined") {
     closeModals();
     document.body.setAttribute("data-form-cart-state", "");
     document.body.classList.add("page-leave-active");
+
+    if (!noScroll) {
+      const scrollContainer = document.querySelector("[data-scroll-container]");
+      window.scrollTo({ top: 0, behavior: "auto" });
+      if (scrollContainer) scrollContainer.classList.add("wrapper-no-transform");
+    }
   }
 };
 export const pageLoadEnd = () => {
+  if (typeof window !== "undefined") {
+    const scrollContainer = document.querySelector("[data-scroll-container]");
+    if (scrollContainer && scrollContainer.classList.contains("wrapper-no-transform")) scrollContainer.classList.remove("wrapper-no-transform");
+  }
   if (typeof window !== "undefined") {
     window.scrollTo({ top: 0 });
     const body = document.body;

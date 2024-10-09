@@ -30,13 +30,12 @@ export const getProductsCart = async (retries = 3, delay = 1000) => {
       });
 
       const data = await response.json();
-      if (!data.cart?.lineItems) {
-        throw new Error("Error fetching cart items");
-      }
+      if (!data.cart?.lineItems) throw new Error(data.error);
+
       return data.cart.lineItems;
-      
+
     } catch (error) {
-      logError(`Error fetching cart: Attempt ${attempt + 1} failed: ${error}`);
+      logError(`Error fetching cart: Attempt ${attempt} failed: ${error}`);
 
       if (attempt < retries) {
         console.log(`Retrying in ${delay}ms...`);
