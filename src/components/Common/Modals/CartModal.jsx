@@ -239,6 +239,7 @@ const CartModal = ({
                                         <div class="wrapper-img">
                                           <div class="container-img">
                                             <img
+                                             alt="3d model"
                                               src="/images/3d.svg"
                                               class=" "
                                             />
@@ -370,6 +371,7 @@ const CartModal = ({
                                             />
                                             <div class="container-img">
                                               <img
+                                               alt="3d model"
                                                 src={
                                                   variantData.variant.imageSrc
                                                 }

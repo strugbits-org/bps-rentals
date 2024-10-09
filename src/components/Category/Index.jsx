@@ -375,7 +375,7 @@ const CategoryPage = ({
             </div>
             <div className="col-lg-10 column-content">
               <div className="product-list-wrapper container-wrapper-list">
-                <ul className="product-list grid-lg-33 grid-tablet-50 grid-list" style={{ minHeight: "100vh" }}>
+                <ul className="product-list grid-lg-33 grid-tablet-50 grid-list min-h-100">
                   {filteredProducts.slice(0, pageLimit).map((data, index) => {
                     return (
                       <React.Fragment key={index}>

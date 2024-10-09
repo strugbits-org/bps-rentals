@@ -74,7 +74,7 @@ export const ImageWrapper = ({
 
     return (
         <>
-            {useNextImage && src && height && width ? <Image ref={ref} src={src} quality={q} loading={"eager"} height={height} width={width} className={customClasses} {...attributes} /> :
+            {useNextImage && src && height && width ? <Image ref={ref} src={src} quality={q} loading={"eager"} height={height} width={width} className={customClasses} {...attributes} alt={alt} /> :
                 <img
                     ref={ref}
                     src={src}

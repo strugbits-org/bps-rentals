@@ -19,7 +19,7 @@ const Modal = ({
     });
 
     if (redirectUrl) {
-      pageLoadStart();
+      pageLoadStart({});
       setTimeout(() => {
         router.push(redirectUrl);
       }, 400);
@@ -46,7 +46,7 @@ const Modal = ({
                   <div className="col-lg-6 offset-lg-3">
                     <div className="content" data-feedback-area>
                       <div class="container-img">
-                        <img src="/images/logo.svg" class=" " />
+                        <img src="/images/logo.svg" class=" " alt="logo" />
                       </div>
                       {message && (
                         <h2

@@ -208,7 +208,8 @@
 
 body[data-modal-state="active"][data-modal="modal-quotes-history"] .wrapper[data-scroll-container],
 body[data-modal-state="active"][data-modal="modal-product-2"] .wrapper[data-scroll-container],
-body[data-form-cart-state="success"] .wrapper[data-scroll-container] {
+body[data-form-cart-state="success"] .wrapper[data-scroll-container],
+.wrapper-no-transform {
     transform: none !important;
 }
 
@@ -268,6 +269,13 @@ li.IMPORTANT.long-desc {
 @media only screen and (min-width: 1025px) {
     .d-flex-lg {
         display: flex;
+    }
+    .min-h-100 {
+        min-height: 100vh !important;
+    }
+
+    .min-h-200-px {
+        min-height: 200px !important;
     }
 }
 

@@ -90,7 +90,7 @@ const Account = ({ children, footerData, banner }) => {
   const activeSection = accountSections[pathname] || "";
 
   const handleLogOut = () => {
-    pageLoadStart();
+    pageLoadStart({});
     try {
       const loggedIn = cookies.authToken !== undefined;
       if (loggedIn) {
