@@ -370,8 +370,8 @@ const ProductPostPage = ({
                     </div>
                   </div>
                   <ul
-                    className="list-specs mt-tablet-20 mt-phone-15"
-                    data-aos="fadeIn .8s ease-in-out .2s, d:loop min-h-200-px"
+                    className="list-specs mt-tablet-20 mt-phone-15 min-h-200-px"
+                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                   >
                     {selectedVariant && selectedVariant.sku && (
                       <li class="sku">
