@@ -61,17 +61,34 @@ export const getAllCategoriesPaths = (categoriesData) => {
     const parentCategory = category.parentCollection["link-copy-of-category-name-2"]
       ? [getSlug(category.parentCollection["link-copy-of-category-name-2"])]
       : [];
-
-    const subcategories = category.level2Collections.flatMap(subcategory =>
-      subcategory["link-copy-of-category-name-2"]
-        ? [getSlug(subcategory["link-copy-of-category-name-2"])]
-        : []
-    );
-
-    return [...parentCategory, ...subcategories];
+    return parentCategory;
   });
   return paths;
 }
+
+export const getAllCategoriesPathsMultiple = (categoriesData) => {
+  const paths = categoriesData.flatMap(category => {
+    const slug = category.parentCollection["link-copy-of-category-name-2"]
+      ? getSlug(category.parentCollection["link-copy-of-category-name-2"])
+      : null;
+
+    const subCategories = category.level2Collections.flatMap(subcategory => {
+      const subCategory = subcategory["link-copy-of-category-name-2"]
+        ? getSlug(subcategory["link-copy-of-category-name-2"])
+        : null;
+
+      if (slug && subCategory) {
+        return [{ slug, subCategory }];
+      }
+      return [];
+    });
+
+    return subCategories;
+  });
+
+  return paths;
+};
+
 
 export const hasMatchingColor = (colorsArray, variantColors) => {
   const labels = colorsArray.map(item => item.label);
@@ -192,7 +209,7 @@ export const buildMetadata = (title, description, noFollowTag) => {
 export const chunkArray = (array, chunkSize) => {
   const chunks = [];
   for (let i = 0; i < array.length; i += chunkSize) {
-      chunks.push(array.slice(i, i + chunkSize));
+    chunks.push(array.slice(i, i + chunkSize));
   }
   return chunks;
 };

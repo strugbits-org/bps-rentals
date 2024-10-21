@@ -10,7 +10,7 @@ import {
 import { useCookies } from "react-cookie";
 import CartModal from "../Common/Modals/CartModal";
 import { Banner } from "./Banner";
-import { compareArray, extractCategoryIds, shuffleArray } from "@/Utils/Utils";
+import { compareArray, extractCategoryIds, getSlug, shuffleArray } from "@/Utils/Utils";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
 import logError from "@/Utils/ServerActions";
 
@@ -314,7 +314,8 @@ const CategoryPage = ({
                           {filterCategories.map((item, index) => (
                             <li key={index}>
                               <AnimateLink
-                                to={item["link-copy-of-category-name-2"]}
+                                to={`${selectedCategoryData.parentCollection["link-copy-of-category-name-2"]}/${getSlug(item["link-copy-of-category-name-2"])}`}
+                                // to={item["link-copy-of-category-name-2"]}
                                 className="blog-btn-tag"
                               >
                                 <span>{item.name}</span>
