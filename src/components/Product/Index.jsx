@@ -51,7 +51,7 @@ const ProductPostPage = ({
     "location",
   ]);
 
-  const { productSnapshotData } = selectedProductDetails;
+  const { productSnapshotData, defaultVariant } = selectedProductDetails;
   const [productFoundInCategories, setProductFoundInCategories] = useState([]);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -92,8 +92,9 @@ const ProductPostPage = ({
   };
 
   useEffect(() => {
-    const defaultVariant = searchParams.get("variant");
-    const defaultVariantIndex = searchParams.has("variant") ? selectedProductDetails.variantData.findIndex(x => x.sku === defaultVariant) : 0;
+    const defaultVariantIndexFromParams = searchParams.get("variant");
+    const variantIndex = selectedProductDetails.variantData.findIndex((x) => x.sku === (searchParams.has("variant") ? defaultVariantIndexFromParams : defaultVariant));
+    const defaultVariantIndex = variantIndex > -1 ? variantIndex : 0;    
 
     if (selectedProductDetails && productSnapshotData) {
       const selectedVariantData = selectedProductDetails.variantData[defaultVariantIndex].variant;
@@ -338,7 +339,7 @@ const ProductPostPage = ({
                                     src="/images/3d.svg"
                                     data-preload
                                     class="media"
-                                     alt="3d model"
+                                    alt="3d model"
                                   />
                                 </div>
                                 <span class="hide">360</span>
