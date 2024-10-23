@@ -56,7 +56,7 @@ const CartPage = () => {
       const response = await updateProductsQuantityCart(lineItems);
 
       const total = calculateTotalCartQuantity(response.cart.lineItems);
-      setCookie("cartQuantity", total, { path: "/"});
+      setCookie("cartQuantity", total, { path: "/" });
     } catch (error) {
       logError("Error while updating cart:", error);
     }
@@ -72,7 +72,7 @@ const CartPage = () => {
       const total = calculateTotalCartQuantity(response.cart.lineItems);
 
       // setCartItems(response.cart.lineItems);
-      setCookie("cartQuantity", total, { path: "/"});
+      setCookie("cartQuantity", total, { path: "/" });
     } catch (error) {
       logError("Error while removing product", error);
     }
@@ -83,7 +83,7 @@ const CartPage = () => {
       const data = await getProductsCart();
       setCartItems(data);
       const total = calculateTotalCartQuantity(data);
-      setCookie("cartQuantity", total > 0 ? String(total) : "0", { path: "/"});
+      setCookie("cartQuantity", total > 0 ? String(total) : "0", { path: "/" });
       setTimeout(markPageLoaded, 200);
     } catch (error) {
       markPageLoaded();
@@ -102,7 +102,7 @@ const CartPage = () => {
           <div className="col-lg-8 offset-lg-2">
             <div className="container-title flex-center">
               <h1
-                className="fs--60 blue-1 text-center split-words"
+                className="fs--60 blue-1 text-center"
                 data-aos="d:loop"
               >
                 Your Cart
@@ -113,146 +113,145 @@ const CartPage = () => {
               className="mt-lg-55 mt-tablet-40 mt-phone-30"
             >
               <form action="" className="form-cart">
-                <ul className="list-cart list-cart-product" data-aos="d:loop">
-                  {cartItems &&
-                    cartItems.map((cart, index) => {
-                      const {
-                        _id,
-                        quantity,
-                        productName,
-                        url,
-                        image,
-                        physicalProperties,
-                        descriptionLines,
-                        price,
-                      } = cart;
+                <ul className="list-cart list-cart-product min-h-100-sm" data-aos="d:loop">
+                  {cartItems && cartItems.map((cart, index) => {
+                    const {
+                      _id,
+                      quantity,
+                      productName,
+                      url,
+                      image,
+                      physicalProperties,
+                      descriptionLines,
+                      price,
+                    } = cart;
 
-                      const formattedDescription = formatDescriptionLines(descriptionLines);
-                      return (
-                        <li key={index} className="list-item">
-                          <input
-                            type="hidden"
-                            name="sku[]"
-                            defaultValue="MODCH09"
-                          />
-                          <div className="cart-product">
-                            <div className="container-img">
+                    const formattedDescription = formatDescriptionLines(descriptionLines);
+                    return (
+                      <li key={index} className="list-item">
+                        <input
+                          type="hidden"
+                          name="sku[]"
+                          defaultValue="MODCH09"
+                        />
+                        <div className="cart-product">
+                          <div className="container-img">
                             <ImageWrapper key={_id} defaultDimensions={{ width: 120, height: 120 }} url={image} />
-                            </div>
-                            <div className="wrapper-product-info">
-                              <div className="container-top">
-                                <div className="container-product-name">
-                                  <h2 className="product-name">
-                                    {productName.original}
-                                  </h2>
-                                  <AnimateLink
-                                    to={"/product" + extractSlugFromUrl(url)}
-                                    className="btn-view"
-                                  >
-                                    <span>View</span>
-                                    <i className="icon-arrow-right"></i>
-                                  </AnimateLink>
-                                </div>
-                                <button
-                                  onClick={() => removeProduct(_id)}
-                                  type="button"
-                                  className="btn-cancel"
+                          </div>
+                          <div className="wrapper-product-info">
+                            <div className="container-top">
+                              <div className="container-product-name">
+                                <h2 className="product-name">
+                                  {productName.original}
+                                </h2>
+                                <AnimateLink
+                                  to={"/product" + extractSlugFromUrl(url)}
+                                  className="btn-view"
                                 >
-                                  <i className="icon-close"></i>
-                                </button>
+                                  <span>View</span>
+                                  <i className="icon-arrow-right"></i>
+                                </AnimateLink>
                               </div>
-                              <div className="container-specs">
-                                <ul className="list-specs">
-                                  <li className="sku">
-                                    <span className="specs-title">SKU</span>
-                                    <span className="specs-text">
-                                      {physicalProperties.sku}
-                                    </span>
-                                  </li>
-                                  {formattedDescription.map((item) => {
-                                    const { title, value } = item;
-                                    if (!value) return null;
+                              <button
+                                onClick={() => removeProduct(_id)}
+                                type="button"
+                                className="btn-cancel"
+                              >
+                                <i className="icon-close"></i>
+                              </button>
+                            </div>
+                            <div className="container-specs">
+                              <ul className="list-specs">
+                                <li className="sku">
+                                  <span className="specs-title">SKU</span>
+                                  <span className="specs-text">
+                                    {physicalProperties.sku}
+                                  </span>
+                                </li>
+                                {formattedDescription.map((item) => {
+                                  const { title, value } = item;
+                                  if (!value) return null;
 
-                                    const titleWordCount = title.split(" ").length;
-                                    const valueWordCount = value.split(" ").length;
+                                  const titleWordCount = title.split(" ").length;
+                                  const valueWordCount = value.split(" ").length;
 
-                                    return (
-                                      <li
-                                        className={`location ${titleWordCount >= 2 || valueWordCount > 4 ? "long-desc" : ""}`}
-                                      >
-                                        <span className="specs-title capitalize">
-                                          {title}
-                                        </span>
-                                        <span className="specs-text">
-                                          {value}
-                                          {title === "location" && (
-                                            <>
-                                              {" "}
-                                              <i className="icon-pin"></i>
-                                            </>
-                                          )}
-                                        </span>
-                                      </li>
-                                    );
-                                  })}
-
-                                  {role === "admin" && (
-                                    <li className="price">
-                                      <span className="specs-title">Price</span>
+                                  return (
+                                    <li
+                                      className={`location ${titleWordCount >= 2 || valueWordCount > 4 ? "long-desc" : ""}`}
+                                    >
+                                      <span className="specs-title capitalize">
+                                        {title}
+                                      </span>
                                       <span className="specs-text">
-                                        {formatPrice(price, quantity)}
+                                        {value}
+                                        {title === "location" && (
+                                          <>
+                                            {" "}
+                                            <i className="icon-pin"></i>
+                                          </>
+                                        )}
                                       </span>
                                     </li>
-                                  )}
-                                </ul>
-                                <div className="quantity">
-                                  <span className="fs--20 no-mobile">
-                                    Quantity
-                                  </span>
-                                  <div className="container-input container-input-quantity">
-                                    <button
-                                      onClick={() =>
-                                        handleQuantityChange(_id, quantity - 1)
-                                      }
-                                      type="button"
-                                      className="minus"
-                                    >
-                                      <i className="icon-minus"></i>
-                                    </button>
-                                    <input
-                                      type="number"
-                                      min="1"
-                                      value={quantity}
-                                      placeholder="1"
-                                      className="input-number"
-                                      onInput={(e) =>
-                                        handleQuantityChange(
-                                          _id,
-                                          e.target.value,
-                                          true
-                                        )
-                                      }
-                                      onBlur={(e) =>
-                                        updateProducts(_id, e.target.value)
-                                      }
-                                    />
-                                    <button
-                                      onClick={() =>
-                                        handleQuantityChange(_id, quantity + 1)
-                                      }
-                                      type="button"
-                                      className="plus"
-                                    >
-                                      <i className="icon-plus"></i>
-                                    </button>
-                                  </div>
+                                  );
+                                })}
+
+                                {role === "admin" && (
+                                  <li className="price">
+                                    <span className="specs-title">Price</span>
+                                    <span className="specs-text">
+                                      {formatPrice(price, quantity)}
+                                    </span>
+                                  </li>
+                                )}
+                              </ul>
+                              <div className="quantity">
+                                <span className="fs--20 no-mobile">
+                                  Quantity
+                                </span>
+                                <div className="container-input container-input-quantity">
+                                  <button
+                                    onClick={() =>
+                                      handleQuantityChange(_id, quantity - 1)
+                                    }
+                                    type="button"
+                                    className="minus"
+                                  >
+                                    <i className="icon-minus"></i>
+                                  </button>
+                                  <input
+                                    type="number"
+                                    min="1"
+                                    value={quantity}
+                                    placeholder="1"
+                                    className="input-number"
+                                    onInput={(e) =>
+                                      handleQuantityChange(
+                                        _id,
+                                        e.target.value,
+                                        true
+                                      )
+                                    }
+                                    onBlur={(e) =>
+                                      updateProducts(_id, e.target.value)
+                                    }
+                                  />
+                                  <button
+                                    onClick={() =>
+                                      handleQuantityChange(_id, quantity + 1)
+                                    }
+                                    type="button"
+                                    className="plus"
+                                  >
+                                    <i className="icon-plus"></i>
+                                  </button>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </li>
-                      );
-                    })}
+                        </div>
+                      </li>
+                    );
+                  })}
                   {cartItems.length === 0 && (
                     <h6
                       className="fs--40 blue-1 text-center split-words"

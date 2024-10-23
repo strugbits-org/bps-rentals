@@ -250,7 +250,7 @@ const ProductPostPage = ({
       <section className="product-intro pt-lg-70" data-product-content>
         <div className="container-fluid">
           <div className="row">
-            <div className="col-lg-7 offset-lg-1 column-1">
+            <div className="col-lg-7 offset-lg-1 column-1 min-h-45-vh">
               <ul
                 className="list-slider-product"
                 data-aos="fadeIn .8s ease-in-out .2s, d:loop"
@@ -369,8 +369,7 @@ const ProductPostPage = ({
                       </h1>
                     </div>
                   </div>
-                  <ul
-                    className="list-specs mt-tablet-20 mt-phone-15 min-h-200-px"
+                  <ul className="list-specs mt-tablet-20 mt-phone-15 min-h-250-px"
                     data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                   >
                     {selectedVariant && selectedVariant.sku && (

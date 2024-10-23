@@ -119,7 +119,7 @@ const Account = ({ children, footerData, banner }) => {
           <h2 className="fs--35 blue-1">
             Hello, <br className="no-tablet" /> {firstName}
           </h2>
-          <ul className="list-menu-my-account mt-lg-65 mt-tablet-30">
+          <ul className="list-menu-my-account mt-lg-65 mt-tablet-30 min-h-45-vh">
             {links.map((data, index) => {
               const { name, href, icon, adminOnly, target } = data;
               if (role !== "admin" && adminOnly) return;

@@ -266,19 +266,28 @@ li.IMPORTANT.long-desc {
 }
 
 /* lg/desktop */
+.min-h-100 {
+    min-height: 100vh !important;
+}
+
 @media only screen and (min-width: 1025px) {
     .d-flex-lg {
         display: flex;
     }
-    .min-h-100 {
-        min-height: 100vh !important;
-    }
 
-    .min-h-200-px {
+    .min-h-250-px {
         min-height: 250px !important;
     }
 }
-
+@media only screen and (max-width: 1025px) {
+    .min-h-45-vh {
+        min-height: 45vh !important;
+    }
+    .min-h-100-sm {
+        min-height: 100vh !important;
+    }
+    
+}
 /* Mobile */
 @media only screen and (max-width: 1025px) {
     .feedback-quote-request-confirmed .content {

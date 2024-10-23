@@ -294,8 +294,8 @@ const CategoryPage = ({
               )}
             </div>
 
-            <div className={`col-12 col-tablet-6 z-6 ${!selectedCategoryData.parentCollection && !filterCategories.length ? "no-mobile" : ""}`}>
-              <div className="container-category-filter pb-lg-60 pb-mobile-40">
+            <div className={"col-12 col-tablet-6 z-6"}>
+              <div className={`container-category-filter pb-lg-60 pb-mobile-40 ${!filterCategories.length ? "no-mobile" : ""}`}>
                 <div
                   className="blog-tags dropdown-tags"
                   data-aos="fadeIn .8s ease-in-out .2s, d:loop"
