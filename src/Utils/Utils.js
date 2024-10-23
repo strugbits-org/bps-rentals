@@ -11,6 +11,7 @@ export const parseArrayFromParams = (queryParams) => {
   }
   return [];
 };
+
 export const extractUniqueColors = (data) => {
   let allColors = [];
   data.forEach(item => {
@@ -19,6 +20,7 @@ export const extractUniqueColors = (data) => {
   const uniqueColors = [...new Set(allColors)];
   return uniqueColors;
 }
+
 export const findColor = (data) => {
   return data.filter((x) => x.colorInfo !== undefined).map((x) => x.colorInfo.original)
 }
@@ -28,12 +30,14 @@ export const findLocation = (data) => {
     .filter((x) => x.plainText !== undefined)
     .map((x) => x.plainText.original);
 };
+
 export const formatPrice = (price, quantity) => {
   const currencySymbol = price.formattedAmount.charAt(0);
   const totalPrice = price.amount * quantity;
   const formattedPrice = totalPrice.toFixed(2);
   return `${currencySymbol}${formattedPrice}`;
 }
+
 export const extractSlugFromUrl = (url) => {
   const regex = /\/([^\/]+)\/?$/;
   const match = regex.exec(url);
@@ -77,6 +81,7 @@ export const hasMatchingColor = (colorsArray, variantColors) => {
   const labels = colorsArray.map(item => item.label);
   return variantColors.some(item => labels.includes(item));
 };
+
 export const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -84,6 +89,7 @@ export const shuffleArray = (array) => {
   }
   return array;
 };
+
 export const compareArray = (arr1, arr2) => {
   const set1 = new Set(arr1);
   const set2 = new Set(arr2);
@@ -152,6 +158,7 @@ export const quoteDateFormatter = (date) => {
   }
   return "";
 };
+
 export const extractCategoryIds = (selectedCategoryData) => {
   if (selectedCategoryData.level2Collections) {
     const parentCollectionId = selectedCategoryData.parentCollection._id;
@@ -177,6 +184,7 @@ export const formatDescriptionLines = (items) => {
 export const removeHTMLTags = (html) => {
   return html.replace(/<[^>]*>/g, '');
 }
+
 export const buildMetadata = (title, description, noFollowTag) => {
 
   const metadata = { title };
