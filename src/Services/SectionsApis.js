@@ -63,7 +63,10 @@ export const getNewArrivalSectionContent = async (slug) => {
 
 export const getHighlightsSection = async (dataCollectionId) => {
   try {
-    const response = await getDataFetchFunction({ dataCollectionId });
+    const response = await getDataFetchFunction({
+      dataCollectionId,
+      sortKey: "orderNumber",
+    });
     if (response && response._items) {
       const items = response._items.map((x) => x.data);
       const productIds = items.map(x => (x.product || x.products));
@@ -71,15 +74,16 @@ export const getHighlightsSection = async (dataCollectionId) => {
       fullProducts.forEach((fullProduct) => {
         const matchingItem = items.find(item => (item.product || item.products) === fullProduct.product._id);
         if (matchingItem) {
+          fullProduct.orderNumber = matchingItem.orderNumber;
           fullProduct.featureImage = matchingItem.featureImage;
         }
       });
-      return fullProducts.filter(x => x.product._id);
+      return fullProducts.filter(x => x.product._id).sort((a, b) => a.orderNumber - b.orderNumber);
     } else {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
-    logError("Error fetching HighlightsSection:", error);
+    logError(`Error fetching HighlightsSection ${dataCollectionId} :`, error);
     return [];
   }
 };
