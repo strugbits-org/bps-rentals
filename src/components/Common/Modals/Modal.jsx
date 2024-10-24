@@ -45,8 +45,8 @@ const Modal = ({
                 <div className="row">
                   <div className="col-lg-6 offset-lg-3">
                     <div className="content" data-feedback-area>
-                      <div class="container-img">
-                        <img src="/images/logo.svg" class=" " alt="logo" />
+                      <div className="container-img">
+                        <img src="/images/logo.svg" alt="logo" />
                       </div>
                       {message && (
                         <h2

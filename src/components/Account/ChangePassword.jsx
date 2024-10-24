@@ -90,21 +90,21 @@ const ChangePassword = ({ changePasswordPageContent }) => {
           modalStatus={modalState}
         />
       )}
-      <div class="wrapper-account">
-        <div class="wrapper-top">
-          <h1 class="fs--60 blue-1 split-words" data-aos="d:loop">
+      <div className="wrapper-account">
+        <div className="wrapper-top">
+          <h1 className="fs--60 blue-1 split-words" data-aos="d:loop">
             {changePasswordPageContent && changePasswordPageContent.title}
           </h1>
         </div>
         <div
-          class="wrapper-bottom mt-lg-90 mt-tablet-25 mt-phone-35"
+          className="wrapper-bottom mt-lg-90 mt-tablet-25 mt-phone-35"
           data-aos="fadeIn .8s ease-in-out .2s, d:loop"
         >
           <div
-            class="container-password"
+            className="container-password"
             data-form-state={modalState.success ? "success" : ""}
           >
-            <form class="form-password form-password" onSubmit={handleSubmit}>
+            <form className="form-password form-password" onSubmit={handleSubmit}>
               {[
                 {
                   label:
@@ -155,18 +155,18 @@ const ChangePassword = ({ changePasswordPageContent }) => {
                 </div>
               ))}
 
-              <div class="container-submit flex-mobile-center col-lg-12 mt-lg-50">
+              <div className="container-submit flex-mobile-center col-lg-12 mt-lg-50">
                 <button
                   type="submit"
-                  class="btn-2-blue"
+                  className="btn-2-blue"
                   disabled={isButtonDisabled}
                 >
-                  <span class="submit-text">
+                  <span className="submit-text">
                     {changePasswordPageContent && !isButtonDisabled
                       ? changePasswordPageContent.resetPasswordButtonLabel
                       : "Resetting Password..."}
                   </span>
-                  <i class="icon-arrow-right-2"></i>
+                  <i className="icon-arrow-right-2"></i>
                 </button>
               </div>
             </form>

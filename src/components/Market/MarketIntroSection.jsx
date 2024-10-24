@@ -40,7 +40,7 @@ export const MarketIntroSection = ({ data }) => {
         data-translate-y="20rem"
         data-scale="1.2"
       >
-        <ImageWrapper key={data?.image} defaultDimensions={{ width: 1336, height: 1180 }} url={data?.image} q={"90"} attributes={{ "data?.image": "scaleOut 1.2s ease-out-cubic 0s, d:loop" }} />
+        <ImageWrapper key={data?.image} url={data?.image} defaultDimensions={{ width: 1336, height: 1180 }} q={"90"} attributes={{ "data-aos": "scaleOut 1.2s ease-out-cubic 0s, d:loop" }} />
       </div>
     </section>
   )

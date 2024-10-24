@@ -318,13 +318,13 @@ const ProductPostPage = ({
                               return (
                                 <div
                                   key={index}
-                                  class={`swiper-slide  ${index === selectedVariantIndex
+                                  className={`swiper-slide  ${index === selectedVariantIndex
                                     ? "active"
                                     : ""
                                     }`}
                                 >
-                                  <div class="wrapper-img">
-                                    <div class="container-img">
+                                  <div className="wrapper-img">
+                                    <div className="container-img">
                                       <ImageWrapper timeout={0} key={src} defaultDimensions={{ width: 170, height: 170 }} url={src} min_w={"170"} min_h={"170"} />
                                     </div>
                                   </div>
@@ -332,17 +332,17 @@ const ProductPostPage = ({
                               );
                             })}
                           {selectedVariant?.modalUrl && (
-                            <div class="swiper-slide">
-                              <div class="wrapper-img img-3d">
-                                <div class="container-img">
+                            <div className="swiper-slide">
+                              <div className="wrapper-img img-3d">
+                                <div className="container-img">
                                   <img
                                     src="/images/3d.svg"
                                     data-preload
-                                    class="media"
+                                    className="media"
                                     alt="3d model"
                                   />
                                 </div>
-                                <span class="hide">360</span>
+                                <span className="hide">360</span>
                               </div>
                             </div>
                           )}
@@ -374,27 +374,27 @@ const ProductPostPage = ({
                     data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                   >
                     {selectedVariant && selectedVariant.sku && (
-                      <li class="sku">
-                        <span class="specs-title">SKU</span>
-                        <span class="specs-text">
+                      <li className="sku">
+                        <span className="specs-title">SKU</span>
+                        <span className="specs-text">
                           {selectedVariant && selectedVariant.sku}
                         </span>
                       </li>
                     )}
 
                     {selectedVariant && selectedVariant.color && (
-                      <li class="color">
-                        <span class="specs-title">Color</span>
-                        <span class="specs-text">
+                      <li className="color">
+                        <span className="specs-title">Color</span>
+                        <span className="specs-text">
                           {selectedVariant && selectedVariant.color}
                         </span>
                       </li>
                     )}
 
                     {selectedVariant?.weight ? (
-                      <li class="color cs-weight">
-                        <span class="specs-title">Weight</span>
-                        <span class="specs-text">
+                      <li className="color cs-weight">
+                        <span className="specs-title">Weight</span>
+                        <span className="specs-text">
                           {selectedVariant && selectedVariant.weight}LBS
                         </span>
                       </li>
@@ -408,9 +408,9 @@ const ProductPostPage = ({
 
                           return (
                             <li className={`${title} ${title === "IMPORTANT" ? "long-desc" : ""}`} key={index}>
-                              <span class="specs-title">{title}</span>
+                              <span className="specs-title">{title}</span>
                               <span
-                                class="specs-text"
+                                className="specs-text"
                                 dangerouslySetInnerHTML={{
                                   __html: description,
                                 }}
@@ -440,9 +440,9 @@ const ProductPostPage = ({
                     {selectedProductDetails.variantData.map(
                       (variantData, index) => {
                         return (
-                          <li key={index} class="list-colors-item">
+                          <li key={index} className="list-colors-item">
                             <div
-                              class="container-input"
+                              className="container-input"
                               data-set-color={variantData.variant.color}
                               onClick={() =>
                                 handleImageChange({
@@ -460,7 +460,7 @@ const ProductPostPage = ({
                                   checked={index === selectedVariantIndex}
                                   readOnly
                                 />
-                                <div class="container-img">
+                                <div className="container-img">
                                   <ImageWrapper timeout={0} key={variantData.variant.imageSrc} defaultDimensions={{ width: 50, height: 50 }} url={variantData.variant.imageSrc} type="product" />
                                 </div>
                               </label>
@@ -487,7 +487,7 @@ const ProductPostPage = ({
                         min="1"
                         value={cartQuantity}
                         placeholder="1"
-                        class="input-number"
+                        className="input-number"
                         onInput={(e) => handleQuantityChange(e.target.value)}
                       />
                       <button
@@ -580,7 +580,7 @@ const ProductPostPage = ({
                     >
                       <div
                         ref={descriptionRef}
-                        class="text"
+                        className="text"
                         dangerouslySetInnerHTML={{
                           __html: updatedDescription,
                         }}
@@ -604,21 +604,21 @@ const ProductPostPage = ({
               {selectedProductDetails &&
                 role === "admin" &&
                 selectedProductDetails.productDocs?.length > 0 && (
-                  <div class="container-info-text" data-aos="">
-                    <h3 class="title-info-text" data-aos="">
+                  <div className="container-info-text" data-aos="">
+                    <h3 className="title-info-text" data-aos="">
                       Downloads
                     </h3>
                     <div
-                      class="container-btn container-btn-downloads"
+                      className="container-btn container-btn-downloads"
                       data-aos="fadeIn .8s ease-in-out"
                     >
                       {selectedProductDetails.productDocs.map((data, index) => {
                         const { fileName, downloadUrl } = data;
                         return (
                           <a key={index} href={downloadUrl} download={fileName}>
-                            <button class="btn-small-tag">
+                            <button className="btn-small-tag">
                               <span>{fileName}</span>
-                              <i class="icon-arrow-down"></i>
+                              <i className="icon-arrow-down"></i>
                             </button>
                           </a>
                         );
@@ -630,21 +630,21 @@ const ProductPostPage = ({
               {/* Certificates */}
               {selectedProductDetails && FIREPROOF_DOCS_PERMISSION &&
                 selectedProductDetails.fireProofCertificates?.length > 0 && (
-                  <div class="container-info-text" data-aos="">
-                    <h3 class="title-info-text" data-aos="">
+                  <div className="container-info-text" data-aos="">
+                    <h3 className="title-info-text" data-aos="">
                       Fireproof Certificates
                     </h3>
                     <div
-                      class="container-btn container-btn-downloads"
+                      className="container-btn container-btn-downloads"
                       data-aos="fadeIn .8s ease-in-out"
                     >
                       {selectedProductDetails.fireProofCertificates.map((data, index) => {
                         const { fileName, downloadUrl } = data;
                         return (
                           <a key={index} href={downloadUrl} download={fileName}>
-                            <button class="btn-small-tag">
+                            <button className="btn-small-tag">
                               <span>{fileName}</span>
-                              <i class="icon-arrow-down"></i>
+                              <i className="icon-arrow-down"></i>
                             </button>
                           </a>
                         );
