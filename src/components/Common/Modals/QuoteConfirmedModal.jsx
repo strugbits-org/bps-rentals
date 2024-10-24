@@ -21,31 +21,31 @@ const QuoteConfirmedModal = () => {
 
   return (
     <div id="scripts">
-      <div class="feedback-quote-request-confirmed" data-modal-area>
-        <div class="feedback-container">
-          <div class="feedback-item">
-            <section class="feedback">
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-lg-6 offset-lg-3">
-                    <div class="content" data-feedback-area>
-                      <div class="container-img">
-                        <img src="/images/logo.svg" class=" " alt="logo" />
+      <div className="feedback-quote-request-confirmed" data-modal-area>
+        <div className="feedback-container">
+          <div className="feedback-item">
+            <section className="feedback">
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col-lg-6 offset-lg-3">
+                    <div className="content" data-feedback-area>
+                      <div className="container-img">
+                        <img src="/images/logo.svg" alt="logo" />
                       </div>
                       <h2
-                        class="fs--60 mt-lg-75 mt-mobile-70 mb-lg-75 mb-mobile-70 text-center text-uppercase split-words"
+                        className="fs--60 mt-lg-75 mt-mobile-70 mb-lg-75 mb-mobile-70 text-center text-uppercase split-words"
                         data-aos="d:loop"
                       >
                         Quote request confirmed
                       </h2>
-                      <div class="container-btn">
+                      <div className="container-btn">
                         <AnimateLink
                           to="/my-account"
                           className="btn-blue btn-my-account"
                           data-close-feedback
                           data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                         >
-                          <i class="icon-arrow-right-2"></i>
+                          <i className="icon-arrow-right-2"></i>
                           <span>My Account</span>
                         </AnimateLink>
                         <AnimateLink

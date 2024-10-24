@@ -141,29 +141,29 @@ const CartModal = ({
       <modal-group name="modal-product-2" class="modal-product">
         <modal-container>
           <modal-item>
-            <div class="wrapper-section">
-              <section class="section-modal-product">
-                <div class="container-fluid">
-                  <div class="row">
-                    <div class="col-lg-10 offset-lg-1">
+            <div className="wrapper-section">
+              <section className="section-modal-product">
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-lg-10 offset-lg-1">
                       <div
-                        class="wrapper-product-info"
+                        className="wrapper-product-info"
                         data-modal-area
                         data-product-content
                       >
                         <ul
-                          class="list-slider-product"
+                          className="list-slider-product"
                           data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                         >
                           <li
-                            class="wrapper-slider-product"
+                            className="wrapper-slider-product"
                             data-default-active
                             data-get-color="yellow"
                           >
-                            <div class="slider-product">
-                              <div class="container-btn-top">
+                            <div className="slider-product">
+                              <div className="container-btn-top">
                                 {isBestSeller && (
-                                  <div class="best-seller-tag">
+                                  <div className="best-seller-tag">
                                     <span>Best Seller</span>
                                   </div>
                                 )}
@@ -175,15 +175,15 @@ const CartModal = ({
                                   />
                                 )}
                               </div>
-                              <div class="swiper-container reset-slide-enabled">
-                                <div class="swiper-wrapper">
+                              <div className="swiper-container reset-slide-enabled">
+                                <div className="swiper-wrapper">
                                   {selectedVariantData &&
                                     selectedVariantData.images?.map(
                                       (imageData, index) => {
                                         return (
-                                          <div key={index} class="swiper-slide">
-                                            <div class="wrapper-img">
-                                              <div class="container-img">
+                                          <div key={index} className="swiper-slide">
+                                            <div className="wrapper-img">
+                                              <div className="container-img">
                                                 <ImageWrapper timeout={0} key={imageData.src} defaultDimensions={{ width: 671, height: 671 }} url={imageData.src} />
                                               </div>
                                             </div>
@@ -192,10 +192,10 @@ const CartModal = ({
                                       }
                                     )}
                                   {selectedVariantData?.modalUrl && (
-                                    <div class="swiper-slide slide-360">
-                                      <div class="wrapper-img">
-                                        <i class="icon-360"></i>
-                                        <div class="container-img">
+                                    <div className="swiper-slide slide-360">
+                                      <div className="wrapper-img">
+                                        <i className="icon-360"></i>
+                                        <div className="container-img">
                                           <ModalCanvas3d key={selectedVariantData?.modalUrl} path={selectedVariantData?.modalUrl} />
                                         </div>
                                       </div>
@@ -204,17 +204,17 @@ const CartModal = ({
 
                                 </div>
                               </div>
-                              <div class="swiper-button-prev">
-                                <i class="icon-arrow-left-3"></i>
+                              <div className="swiper-button-prev">
+                                <i className="icon-arrow-left-3"></i>
                               </div>
-                              <div class="swiper-button-next">
-                                <i class="icon-arrow-right-3"></i>
+                              <div className="swiper-button-next">
+                                <i className="icon-arrow-right-3"></i>
                               </div>
                             </div>
-                            <div class="wrapper-slider-thumb no-mobile">
-                              <div class="slider-product-thumb">
-                                <div class="swiper-container">
-                                  <div class="swiper-wrapper">
+                            <div className="wrapper-slider-thumb no-mobile">
+                              <div className="slider-product-thumb">
+                                <div className="swiper-container">
+                                  <div className="swiper-wrapper">
                                     {selectedVariantData &&
                                       selectedVariantData.images?.map(
                                         (data, index) => {
@@ -222,10 +222,10 @@ const CartModal = ({
                                           return (
                                             <div
                                               key={index}
-                                              class="swiper-slide"
+                                              className="swiper-slide"
                                             >
-                                              <div class="wrapper-img">
-                                                <div class="container-img">
+                                              <div className="wrapper-img">
+                                                <div className="container-img">
                                                   <ImageWrapper timeout={0} key={src} defaultDimensions={{ width: 170, height: 170 }} url={src} />
                                                 </div>
                                               </div>
@@ -235,13 +235,13 @@ const CartModal = ({
                                       )}
 
                                     {selectedVariantData?.modalUrl && (
-                                      <div class="swiper-slide">
-                                        <div class="wrapper-img">
-                                          <div class="container-img">
+                                      <div className="swiper-slide">
+                                        <div className="wrapper-img">
+                                          <div className="container-img">
                                             <img
                                              alt="3d model"
                                               src="/images/3d.svg"
-                                              class=" "
+                                              className=" "
                                             />
                                           </div>
                                         </div>
@@ -253,17 +253,17 @@ const CartModal = ({
                             </div>
                           </li>
                         </ul>
-                        <div class="container-product-description">
-                          <div class="form-cart">
+                        <div className="container-product-description">
+                          <div className="form-cart">
                             <input
                               type="hidden"
                               name="sku[]"
                               defaultValue="MODCH09"
                             />
-                            <div class="wrapper-product-name">
-                              <div class="container-product-name">
+                            <div className="wrapper-product-name">
+                              <div className="container-product-name">
                                 <h1
-                                  class="fs--60 fs-phone-30 product-name split-words"
+                                  className="fs--60 fs-phone-30 product-name split-words"
                                   data-aos="d:loop"
                                 >
                                   {productData && productData.product.name}
@@ -271,13 +271,13 @@ const CartModal = ({
                               </div>
                             </div>
                             <ul
-                              class="list-specs mt-tablet-20 mt-phone-15"
+                              className="list-specs mt-tablet-20 mt-phone-15"
                               data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                             >
                               {selectedVariantData?.sku && (
-                                <li class="sku">
-                                  <span class="specs-title">SKU</span>
-                                  <span class="specs-text">
+                                <li className="sku">
+                                  <span className="specs-title">SKU</span>
+                                  <span className="specs-text">
                                     {selectedVariantData &&
                                       selectedVariantData.sku}
                                   </span>
@@ -285,9 +285,9 @@ const CartModal = ({
                               )}
 
                               {selectedVariantData?.color && (
-                                <li class="color">
-                                  <span class="specs-title">Color</span>
-                                  <span class="specs-text">
+                                <li className="color">
+                                  <span className="specs-title">Color</span>
+                                  <span className="specs-text">
                                     {selectedVariantData &&
                                       selectedVariantData.color}
                                   </span>
@@ -295,9 +295,9 @@ const CartModal = ({
                               )}
 
                               {selectedVariantData?.weight ? (
-                                <li class="color cs-weight">
-                                  <span class="specs-title">Weight</span>
-                                  <span class="specs-text">
+                                <li className="color cs-weight">
+                                  <span className="specs-title">Weight</span>
+                                  <span className="specs-text">
                                     {selectedVariantData && selectedVariantData.weight}LBS
                                   </span>
                                 </li>
@@ -311,11 +311,11 @@ const CartModal = ({
 
                                     return (
                                       <li className={`${title} ${title === "IMPORTANT" ? "long-desc" : ""}`} key={index}>
-                                        <span class="specs-title">
+                                        <span className="specs-title">
                                           {title}
                                         </span>
                                         <span
-                                          class="specs-text"
+                                          className="specs-text"
                                           dangerouslySetInnerHTML={{
                                             __html: description,
                                           }}
@@ -336,7 +336,7 @@ const CartModal = ({
                                 )}
                             </ul>
                             <ul
-                              class="list-colors"
+                              className="list-colors"
                               data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                             >
                               {productFilteredVariantData &&
@@ -345,9 +345,9 @@ const CartModal = ({
                                     const { variant } = variantData;
 
                                     return (
-                                      <li key={index} class="list-colors-item">
+                                      <li key={index} className="list-colors-item">
                                         <div
-                                          class="container-input active"
+                                          className="container-input active"
                                           data-set-color={
                                             variantData.variant.color
                                           }
@@ -369,13 +369,13 @@ const CartModal = ({
                                               value={variantData.variant.color}
                                               checked={variant.sku === selectedVariantData.sku}
                                             />
-                                            <div class="container-img">
+                                            <div className="container-img">
                                               <img
                                                alt="3d model"
                                                 src={
                                                   variantData.variant.imageSrc
                                                 }
-                                                class=" "
+                                                className=" "
                                               />
                                             </div>
                                           </label>
@@ -386,25 +386,25 @@ const CartModal = ({
                                 )}
                             </ul>
                             <div
-                              class="container-add-to-cart mt-tablet-20 mt-phone-25"
+                              className="container-add-to-cart mt-tablet-20 mt-phone-25"
                               data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                             >
-                              <div class="container-input container-input-quantity">
+                              <div className="container-input container-input-quantity">
                                 <button
                                   onClick={() =>
                                     handleQuantityChange(+cartQuantity - 1)
                                   }
                                   type="button"
-                                  class="minus"
+                                  className="minus"
                                 >
-                                  <i class="icon-minus"></i>
+                                  <i className="icon-minus"></i>
                                 </button>
                                 <input
                                   type="number"
                                   min="1"
                                   value={cartQuantity}
                                   placeholder="1"
-                                  class="input-number"
+                                  className="input-number"
                                   onInput={(e) =>
                                     handleQuantityChange(e.target.value)
                                   }
@@ -414,9 +414,9 @@ const CartModal = ({
                                     handleQuantityChange(+cartQuantity + 1)
                                   }
                                   type="button"
-                                  class="plus"
+                                  className="plus"
                                 >
-                                  <i class="icon-plus"></i>
+                                  <i className="icon-plus"></i>
                                 </button>
                               </div>
                               {unavailable ? (
@@ -505,7 +505,7 @@ const CartModal = ({
                           </div>
                         </div>
                         <btn-modal-close onClick={handleClose}>
-                          <i class="icon-close"></i>
+                          <i className="icon-close"></i>
                         </btn-modal-close>
                       </div>
                     </div>

@@ -27,7 +27,7 @@ const NewArrival = ({ content }) => {
           }}
         >
           <span>{content && content.buttonLabel} </span>
-          <i class="icon-arrow-right"></i>
+          <i className="icon-arrow-right"></i>
         </AnimateLink>
       </div>
       <div

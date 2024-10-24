@@ -16,12 +16,13 @@ const ProductCard = ({
   filteredProducts = [],
   bestSeller = []
 }) => {
-
-  const { product, variantData } = productData;
+  const { product, variantData, defaultVariant } = productData;
   const categories = productData?.subCategoryData || [];
 
+  const defaultVariantData = variantData.find(variant => variant.sku === defaultVariant) || variantData[0];
+
   const [filteredVariants, setFilteredVariants] = useState(variantData);
-  const [activeVariant, setActiveVariant] = useState(variantData[0]);
+  const [activeVariant, setActiveVariant] = useState(defaultVariantData);
   const [isBestSeller, setIsBestSeller] = useState(false);
   const { role } = useUserData();
 
@@ -31,7 +32,7 @@ const ProductCard = ({
     if (newVariant) {
       setActiveVariant(newVariant)
     } else {
-      setActiveVariant(variantData[0])
+      setActiveVariant(defaultVariantData)
     };
     const isBestSellerProduct = compareArray(bestSeller, categories.map(x => x._id));
     setIsBestSeller(isBestSellerProduct);

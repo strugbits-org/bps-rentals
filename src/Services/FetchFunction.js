@@ -42,6 +42,8 @@ const getDataFetchFunction = async (payload) => {
       includeVariants,
       increasedLimit,
       encodePrice = true,
+      sortOrder,
+      sortKey,
       log
     } = payload;
 
@@ -132,6 +134,7 @@ const getDataFetchFunction = async (payload) => {
     if (skip) dataQuery = dataQuery.skip(skip);
     if (limit && limit !== "infinite") dataQuery = dataQuery.limit(limit);
     if (ne && ne.length > 0) ne.forEach(filter => dataQuery = dataQuery.ne(filter.key, filter.value));
+    if (sortKey) dataQuery = sortOrder === "asc" ? dataQuery.ascending(sortKey) : sortOrder === "desc" ? dataQuery.descending(sortKey) : dataQuery.ascending(sortKey);
 
     // Increase limit if "infinite"
     if (limit === "infinite") {
