@@ -398,6 +398,9 @@ const CategoryPage = ({
                             setSavedProductsData={setSavedProductsData}
                           />
                         </li>
+                        {/* Insert a banner every 6th product in the list */}
+                        {/* on every reload banners order should be random */}
+                        {/* if banners are not enough, they will be repeated */}
                         {(index + 1) % 6 === 0 && (
                           <Banner key={`banner-${index}`} data={shuffledBanners[Math.floor((index + 1) / 6) % shuffledBanners.length]} />
                         )}

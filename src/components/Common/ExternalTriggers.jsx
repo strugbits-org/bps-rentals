@@ -26,6 +26,7 @@ export const ExternalTriggers = () => {
             <span className="updateWatchedTrigger"></span>
             <span className="triggerSplitWordAnimation"></span>
             <span className="stickyAnimationTrigger"></span>
+            <span className="parallaxTrigger"></span>
         </div>
     )
 }
