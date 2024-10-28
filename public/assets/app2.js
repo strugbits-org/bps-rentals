@@ -2305,7 +2305,7 @@ var require_app2 = __commonJS({
           deactivateOnClickOutside: false,
           onClose: () => { },
           onComplete: () => { },
-          onActivate: (item) => { 
+          onActivate: (item) => {
             const element = document.querySelector(".header-info-list li.local-item.active");
             if (element) element.querySelector(".custom-close").click();
           },
@@ -8798,7 +8798,7 @@ var require_app2 = __commonJS({
           onActivate: (item) => {
             const element = document.querySelector(".header-info-list li.local-item.active");
             if (element) element.querySelector(".custom-close").click();
-           },
+          },
           onDeactivate: (item) => { },
         });
         let slider = element.querySelectorAll(
@@ -9023,7 +9023,7 @@ var require_app2 = __commonJS({
           onActivate: (item) => {
             const element = document.querySelector(".header-info-list li.local-item.active");
             if (element) element.querySelector(".custom-close").click();
-           },
+          },
           onDeactivate: (item) => { },
         });
         jsRunning = true;
@@ -9842,6 +9842,12 @@ var require_app2 = __commonJS({
         dropdownTags();
         updateWatched();
         ScrollTrigger$1.refresh();
+      });
+
+    document
+      .querySelector(".parallaxTrigger")
+      .addEventListener("triggerParallax", () => {
+        Parallax();
       });
 
     document

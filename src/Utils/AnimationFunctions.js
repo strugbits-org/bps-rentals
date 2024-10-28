@@ -60,10 +60,19 @@ export const updatedWatched = (refreshScroll = false) => {
       if (refreshScroll) {
         const scrollRefreshEvent = new Event("refreshScroll");
         document.querySelector(".scrollRefresh").dispatchEvent(scrollRefreshEvent);
+        triggerParallax();
       }
     }, 200);
   }
 };
+
+export const triggerParallax = () => {
+  if (typeof window !== "undefined") {
+    const customEvent = new Event("triggerParallax");
+    const elem = document.querySelector(".parallaxTrigger");
+    if (elem) elem.dispatchEvent(customEvent);
+  }
+}
 
 export const enableRevalidate = () => {
   if (typeof window !== 'undefined') {
