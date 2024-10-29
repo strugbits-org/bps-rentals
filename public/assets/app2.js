@@ -8923,6 +8923,7 @@ var require_app2 = __commonJS({
     function main$2() {
       productLinkColor();
       productContent();
+      splitWords();
     }
     const pgMyAccountSavedProducts = new Page({
       pageName: pageName$2,
@@ -9751,11 +9752,15 @@ var require_app2 = __commonJS({
         case "product":
           main();
           break;
+        case "my-account":
+          splitWords();
+        case "change-password":
+          splitWords();
         case "my-account-saved-products":
           main$2();
           break;
         case "my-account-quotes-history":
-          main$3();
+          splitWords();
           break;
         default:
           break;
