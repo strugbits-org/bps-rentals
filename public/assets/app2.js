@@ -9721,9 +9721,6 @@ var require_app2 = __commonJS({
       },
       onDeactivate: (item) => { },
     });
-    // document.addEventListener("pjax:send", function () {
-    //   submenu.deactivateItems();
-    // });
     let btnSubClose = document.querySelectorAll("[data-submenu-close]");
     let submenuItem = document.querySelectorAll(".submenu");
     btnSubClose.forEach((el) => {
@@ -9760,14 +9757,6 @@ var require_app2 = __commonJS({
         case "my-account-quotes-history":
           main$3();
           break;
-        // case 'services':
-        //   main$3();
-        //   break;
-        // case 'contact':
-        //   main$2();
-        // case 'portfolio':
-        //   main$1();
-        //   break;
         default:
           break;
       }
@@ -9798,12 +9787,6 @@ var require_app2 = __commonJS({
         document.querySelector(".accordion-list-studios").classList.add("js-running");
       }
     }
-    // whenContainerReady();0
-    // document.addEventListener("pjax:complete", whenContainerReady);
-    // document.addEventListener("pjax:send", whenContainerLeave);
-    // function whenContainerLeave() {
-    //   document.body.classList.add("page-leave-active");
-    // }
     document.querySelector(".closeModals").addEventListener("click", manualModalCloseControls);
     document.querySelector(".scrollRefresh").addEventListener("refreshScroll", () => {
       ScrollTrigger$1.refresh();
@@ -9817,31 +9800,12 @@ var require_app2 = __commonJS({
         manualModalClose();
         copyLink()
       });
-    // document.querySelector(".initScript").addEventListener("click", () => {
-    //   whenContainerReady();
-    //   if (!firstLoad) {
-    //     closeSearch();
-    //   }
-    // });
+
     document
       .querySelector(".initScript")
       .addEventListener("customInitScript", () => {
         window.scrollTo({ top: 0, behavior: "instant" });
         whenContainerReady();
-      });
-
-    document
-      .querySelector(".stickyAnimationTrigger")
-      .addEventListener("click", () => {
-        sticky();
-      });
-    document
-      .querySelector(".updateWatchedTrigger")
-      .addEventListener("click", () => {
-        initVideo();
-        dropdownTags();
-        updateWatched();
-        ScrollTrigger$1.refresh();
       });
 
     document
@@ -9851,30 +9815,10 @@ var require_app2 = __commonJS({
       });
 
     document
-      .querySelector(".triggerSplitWordAnimation")
-      .addEventListener("click", () => {
-        splitChars();
+      .querySelector(".triggerSplitWordsAnimation")
+      .addEventListener("splitWords", () => {
         splitWords();
-        sliderContentMobile();
       });
-
-    document.querySelector(".myAccount").addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "instant" });
-    });
-
-    document.querySelector(".savedProducts").addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "instant" });
-      productLinkColor();
-    });
-
-    document.querySelector(".changePassword").addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "instant" });
-    });
-
-    document.querySelector(".quotesHistory").addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "instant" });
-      manualModalCloseControls();
-    });
 
     document
       .querySelector(".initializeCanvas")
@@ -9882,36 +9826,9 @@ var require_app2 = __commonJS({
 
     document.querySelector(".addToCart").addEventListener("reloadModal", () => {
       productLinkColor();
-      // formCart();
       filterProducts();
-      // addToCartSlider();
       productContent();
     });
-    // const pages = new PageController();
-    // pages.add(pgHome);
-    // pages.add(pgMarket);
-    // pages.add(pgProduct);
-    // pages.add(pgMyAccountQuotesHistory);
-    // pages.add(pgMyAccountSavedProducts);
-    // pages.add(pgCategory);
-    // if (pages.updateCurrent()) {
-    //   pages.runCurrent();
-    // }
-    // if (typeof loader !== "undefined") {
-    //   loader.onFirstLeaving = () => {
-    //     observers();
-    //     setTimeout(() => {
-    //       updateWatched();
-    //     }, 600);
-    //     document.dispatchEvent(new CustomEvent("loaded"));
-    //   };
-    //   loader.onFirstDone = () => {
-    //     document.body.classList.remove("overflow-hidden");
-    //   };
-    // setTimeout(() => {
-    //   loader.state.scriptReady = true;
-    // }, 10);
-    // }
   },
 });
 export default require_app2();
