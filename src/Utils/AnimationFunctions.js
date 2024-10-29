@@ -29,6 +29,15 @@ export const reloadCartModal = () => {
   }
 };
 
+export const splitWordsAnimation = () => {
+  if (typeof window !== "undefined") {
+    setTimeout(() => {
+      const customEvent = new Event("splitWords");
+      document.querySelector(".triggerSplitWordsAnimation").dispatchEvent(customEvent);
+    }, 200);
+  }
+};
+
 export const resetSlideIndexModal = () => {
   if (typeof window !== "undefined") {
     const swipers = document.querySelectorAll(".swiper-container.reset-slide-enabled");
@@ -61,6 +70,7 @@ export const updatedWatched = (refreshScroll = false) => {
         const scrollRefreshEvent = new Event("refreshScroll");
         document.querySelector(".scrollRefresh").dispatchEvent(scrollRefreshEvent);
         triggerParallax();
+        splitWordsAnimation();
       }
     }, 200);
   }
