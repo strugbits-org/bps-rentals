@@ -84,6 +84,20 @@ export const triggerParallax = () => {
   }
 }
 
+export const openModal = (name) => {
+  if (typeof window !== "undefined") {
+    const modal = document.querySelector(`modal-group[name=${name}]`);
+    if (modal && modal.open) modal.open();
+  }
+}
+
+export const closeModal = (name) => {
+  if (typeof window !== "undefined") {
+    const modal = document.querySelector(`modal-group[name=${name}]`);
+    if (modal && modal.close) modal.close();
+  }
+}
+
 export const enableRevalidate = () => {
   if (typeof window !== 'undefined') {
     setTimeout(() => {

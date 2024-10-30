@@ -44,6 +44,7 @@ const getDataFetchFunction = async (payload) => {
       encodePrice = true,
       sortOrder,
       sortKey,
+      isNotEmpty,
       log
     } = payload;
 
@@ -132,6 +133,7 @@ const getDataFetchFunction = async (payload) => {
     if (eq && eq.length > 0) eq.forEach(filter => dataQuery = dataQuery.eq(filter.key, filter.value));
     if (hasSome && hasSome.length > 0) hasSome.forEach(filter => dataQuery = dataQuery.hasSome(filter.key, filter.values));
     if (skip) dataQuery = dataQuery.skip(skip);
+    if (isNotEmpty) dataQuery = dataQuery.isNotEmpty(isNotEmpty);
     if (limit && limit !== "infinite") dataQuery = dataQuery.limit(limit);
     if (ne && ne.length > 0) ne.forEach(filter => dataQuery = dataQuery.ne(filter.key, filter.value));
     if (sortKey) dataQuery = sortOrder === "asc" ? dataQuery.ascending(sortKey) : sortOrder === "desc" ? dataQuery.descending(sortKey) : dataQuery.ascending(sortKey);

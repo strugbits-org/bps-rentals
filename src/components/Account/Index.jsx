@@ -13,6 +13,7 @@ import mangeCacheIcon from "@/assets/menu-icons/cache.svg"
 import mangeProductIcon from "@/assets/menu-icons/product.svg"
 import mangeProjectsIcon from "@/assets/menu-icons/project.svg"
 import mangeSortIcon from "@/assets/menu-icons/sort.svg"
+import productSetIcon from "@/assets/menu-icons/product-set.svg"
 
 const links = [
   { name: "My Account", icon: "icon-account", href: "/my-account" },
@@ -36,6 +37,12 @@ const links = [
     icon: mangeProductIcon,
     href: "https://illumeet.editorx.io/rentalx/account/manage-product",
     target: "_blank",
+    adminOnly: true,
+  },
+  {
+    name: "Manage Product Sets",
+    icon: productSetIcon,
+    href: "/admin/manage-product-sets",
     adminOnly: true,
   },
   {

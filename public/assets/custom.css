@@ -279,15 +279,17 @@ li.IMPORTANT.long-desc {
         min-height: 250px !important;
     }
 }
+
 @media only screen and (max-width: 1025px) {
     .min-h-45-vh {
         min-height: 45vh !important;
     }
+
     .min-h-100-sm {
         min-height: 100vh !important;
     }
-    
 }
+
 /* Mobile */
 @media only screen and (max-width: 1025px) {
     .feedback-quote-request-confirmed .content {
@@ -746,3 +748,1049 @@ li.IMPORTANT.long-desc {
         justify-content: flex-start;
     }
 }
+
+.search-product-set {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+.search-product-set button {
+    padding: 10px 16px;
+    min-width: 140px;
+    text-align: center;
+}
+
+.sets-listing {
+    width: 100%;
+    display: flex;
+    gap: 4rem;
+}
+
+@media only screen and (max-width: 1025px) {
+    .search-product-set {
+        flex-flow: column;
+        max-width: none;
+        width: 100%;
+    }
+
+    .search-box input {
+        min-width: 100% !important;
+    }
+}
+
+ul.sets-listing li {
+    background: var(--white-2);
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    word-spacing: 4px;
+    letter-spacing: 0.5px;
+}
+
+.products-set-container.d-flex {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+
+/* -------------------------- Modal UI */
+@media only screen and (min-width: 1025.1px) {
+    [name^="modal"] {
+      padding-top: calc(var(--header-height) - 1.2rem);
+    }
+  }
+  [name^="modal"]:before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: 0;
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"]:before {
+      -webkit-backdrop-filter: blur(3rem);
+      backdrop-filter: blur(3rem);
+    }
+  }
+  [name^="modal"].active {
+    overflow-y: auto;
+  }
+  [name^="modal"].active:before {
+    -webkit-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -moz-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -ms-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -o-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  }
+  [name^="modal"].active .column-contact {
+    -webkit-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    -moz-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    -ms-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    -o-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  }
+  [name^="modal"].leave:before {
+    -webkit-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -moz-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -ms-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -o-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  }
+  [name^="modal"].leave .column-contact {
+    -webkit-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    -moz-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    -ms-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    -o-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  }
+  [name^="modal"] .section-modal-contact {
+    width: 100vw;
+    overflow: hidden;
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact {
+      padding-top: calc(var(--header-height) - 1.2rem);
+      background: var(--white-2);
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact {
+    position: relative;
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-top: 9.4rem;
+      padding-bottom: 3.7rem;
+    }
+    [name^="modal"] .section-modal-contact .column-contact:before {
+      content: "";
+      width: calc(100% - var(--padding) * 2);
+      height: 100%;
+      display: block;
+      position: absolute;
+      top: 0;
+      right: auto;
+      bottom: auto;
+      left: var(--padding);
+      background: var(--white-1);
+      border-radius: 2rem;
+    }
+  }
+  @media only screen and (min-width: 768px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-left: calc(var(--padding) + 3.6rem);
+      padding-right: calc(var(--padding) + 3rem);
+    }
+  }
+  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-top: 5rem;
+      padding-bottom: 10rem;
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-left: var(--padding);
+      padding-right: var(--padding);
+      padding-top: 4.4rem;
+      padding-bottom: 10rem;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info {
+    --column-1-max-w: 50%;
+    --column-2-max-w: 50%;
+    --column-2-offset: 0;
+    --contact-color: var(--blue-1);
+    --address-color: var(--blue-1);
+    --social-media-color: var(--blue-1);
+    --contact-mt: 2.5rem;
+    position: relative;
+    z-index: 5;
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1,
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 {
+      padding-left: var(--padding);
+      padding-right: var(--padding);
+    }
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 {
+      padding-right: calc(var(--padding) + 3rem);
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title {
+      font-size: 2.5rem;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title i {
+      display: none;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .form-contact {
+    --color: var(--blue-1);
+    --label-color: var(--blue-1);
+    --border-color: var(--blue-1);
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit {
+    --btn-p: 1.404rem 5.6rem 1.2rem;
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit:hover {
+    --btn-bg-color: var(--white-2);
+  }
+  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+      font-size: 5rem;
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+      font-size: 3.7rem;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    display: block;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 801;
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      position: absolute;
+      top: 1.2rem;
+      right: calc(1.2rem + var(--padding));
+      bottom: auto;
+      left: auto;
+      width: 3.7rem;
+      height: 3.7rem;
+      background: var(--pink-1);
+      border-radius: 50%;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      align-content: center;
+      flex-wrap: wrap;
+      flex-direction: row;
+      min-width: 14.5rem;
+      background: var(--blue-1);
+      border-radius: 3.8rem;
+    }
+  }
+  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      position: absolute;
+      top: 3.7rem;
+      right: calc(1.2rem + var(--padding));
+      bottom: auto;
+      left: auto;
+      padding: 1.7rem 2.6rem 2.1rem;
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      position: absolute;
+      top: 3.6rem;
+      right: var(--padding);
+      bottom: auto;
+      left: auto;
+      padding: 0.9rem 2.6rem 1.1rem;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+    display: inline-block;
+    color: var(--white-1);
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+      position: absolute;
+      top: 50%;
+      right: auto;
+      bottom: auto;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.1rem;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+      margin-top: 0.3rem;
+      font-size: 1.2rem;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-close {
+      display: none;
+    }
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-arrow-left {
+      display: none;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-go-back {
+    color: var(--white-1);
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-hide {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+@media only screen and (min-width: 1025.1px) {
+    [name^="modal"] {
+      padding-top: calc(var(--header-height) - 1.2rem);
+    }
+  }
+  [name^="modal"]:before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: 0;
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"]:before {
+      -webkit-backdrop-filter: blur(3rem);
+      backdrop-filter: blur(3rem);
+    }
+  }
+  [name^="modal"].active {
+    overflow-y: auto;
+  }
+  [name^="modal"].active:before {
+    -webkit-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -moz-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -ms-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -o-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  }
+  [name^="modal"].active .column-contact {
+    -webkit-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    -moz-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    -ms-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    -o-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  }
+  [name^="modal"].leave:before {
+    -webkit-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -moz-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -ms-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -o-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  }
+  [name^="modal"].leave .column-contact {
+    -webkit-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    -moz-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    -ms-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    -o-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  }
+  [name^="modal"] .section-modal-contact {
+    width: 100vw;
+    overflow: hidden;
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact {
+      padding-top: calc(var(--header-height) - 1.2rem);
+      background: var(--white-2);
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact {
+    position: relative;
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-top: 9.4rem;
+      padding-bottom: 3.7rem;
+    }
+    [name^="modal"] .section-modal-contact .column-contact:before {
+      content: "";
+      width: calc(100% - var(--padding) * 2);
+      height: 100%;
+      display: block;
+      position: absolute;
+      top: 0;
+      right: auto;
+      bottom: auto;
+      left: var(--padding);
+      background: var(--white-1);
+      border-radius: 2rem;
+    }
+  }
+  @media only screen and (min-width: 768px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-left: calc(var(--padding) + 3.6rem);
+      padding-right: calc(var(--padding) + 3rem);
+    }
+  }
+  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-top: 5rem;
+      padding-bottom: 10rem;
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-left: var(--padding);
+      padding-right: var(--padding);
+      padding-top: 4.4rem;
+      padding-bottom: 10rem;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info {
+    --column-1-max-w: 50%;
+    --column-2-max-w: 50%;
+    --column-2-offset: 0;
+    --contact-color: var(--blue-1);
+    --address-color: var(--blue-1);
+    --social-media-color: var(--blue-1);
+    --contact-mt: 2.5rem;
+    position: relative;
+    z-index: 5;
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1,
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 {
+      padding-left: var(--padding);
+      padding-right: var(--padding);
+    }
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 {
+      padding-right: calc(var(--padding) + 3rem);
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title {
+      font-size: 2.5rem;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title i {
+      display: none;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .form-contact {
+    --color: var(--blue-1);
+    --label-color: var(--blue-1);
+    --border-color: var(--blue-1);
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit {
+    --btn-p: 1.404rem 5.6rem 1.2rem;
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit:hover {
+    --btn-bg-color: var(--white-2);
+  }
+  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+      font-size: 5rem;
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+      font-size: 3.7rem;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    display: block;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 801;
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      position: absolute;
+      top: 1.2rem;
+      right: calc(1.2rem + var(--padding));
+      bottom: auto;
+      left: auto;
+      width: 3.7rem;
+      height: 3.7rem;
+      background: var(--pink-1);
+      border-radius: 50%;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      align-content: center;
+      flex-wrap: wrap;
+      flex-direction: row;
+      min-width: 14.5rem;
+      background: var(--blue-1);
+      border-radius: 3.8rem;
+    }
+  }
+  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      position: absolute;
+      top: 3.7rem;
+      right: calc(1.2rem + var(--padding));
+      bottom: auto;
+      left: auto;
+      padding: 1.7rem 2.6rem 2.1rem;
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      position: absolute;
+      top: 3.6rem;
+      right: var(--padding);
+      bottom: auto;
+      left: auto;
+      padding: 0.9rem 2.6rem 1.1rem;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+    display: inline-block;
+    color: var(--white-1);
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+      position: absolute;
+      top: 50%;
+      right: auto;
+      bottom: auto;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.1rem;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+      margin-top: 0.3rem;
+      font-size: 1.2rem;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-close {
+      display: none;
+    }
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-arrow-left {
+      display: none;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-go-back {
+    color: var(--white-1);
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-hide {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+  }@media only screen and (min-width: 1025.1px) {
+    [name^="modal"] {
+      padding-top: calc(var(--header-height) - 1.2rem);
+    }
+  }
+  [name^="modal"]:before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: 0;
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"]:before {
+      -webkit-backdrop-filter: blur(3rem);
+      backdrop-filter: blur(3rem);
+    }
+  }
+  [name^="modal"].active {
+    overflow-y: auto;
+  }
+  [name^="modal"].active:before {
+    -webkit-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -moz-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -ms-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -o-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  }
+  [name^="modal"].active .column-contact {
+    -webkit-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    -moz-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    -ms-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    -o-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  }
+  [name^="modal"].leave:before {
+    -webkit-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -moz-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -ms-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -o-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  }
+  [name^="modal"].leave .column-contact {
+    -webkit-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    -moz-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    -ms-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    -o-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  }
+  [name^="modal"] .section-modal-contact {
+    width: 100vw;
+    overflow: hidden;
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact {
+      padding-top: calc(var(--header-height) - 1.2rem);
+      background: var(--white-2);
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact {
+    position: relative;
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-top: 9.4rem;
+      padding-bottom: 3.7rem;
+    }
+    [name^="modal"] .section-modal-contact .column-contact:before {
+      content: "";
+      width: calc(100% - var(--padding) * 2);
+      height: 100%;
+      display: block;
+      position: absolute;
+      top: 0;
+      right: auto;
+      bottom: auto;
+      left: var(--padding);
+      background: var(--white-1);
+      border-radius: 2rem;
+    }
+  }
+  @media only screen and (min-width: 768px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-left: calc(var(--padding) + 3.6rem);
+      padding-right: calc(var(--padding) + 3rem);
+    }
+  }
+  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-top: 5rem;
+      padding-bottom: 10rem;
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-left: var(--padding);
+      padding-right: var(--padding);
+      padding-top: 4.4rem;
+      padding-bottom: 10rem;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info {
+    --column-1-max-w: 50%;
+    --column-2-max-w: 50%;
+    --column-2-offset: 0;
+    --contact-color: var(--blue-1);
+    --address-color: var(--blue-1);
+    --social-media-color: var(--blue-1);
+    --contact-mt: 2.5rem;
+    position: relative;
+    z-index: 5;
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1,
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 {
+      padding-left: var(--padding);
+      padding-right: var(--padding);
+    }
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 {
+      padding-right: calc(var(--padding) + 3rem);
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title {
+      font-size: 2.5rem;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title i {
+      display: none;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .form-contact {
+    --color: var(--blue-1);
+    --label-color: var(--blue-1);
+    --border-color: var(--blue-1);
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit {
+    --btn-p: 1.404rem 5.6rem 1.2rem;
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit:hover {
+    --btn-bg-color: var(--white-2);
+  }
+  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+      font-size: 5rem;
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+      font-size: 3.7rem;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    display: block;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 801;
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      position: absolute;
+      top: 1.2rem;
+      right: calc(1.2rem + var(--padding));
+      bottom: auto;
+      left: auto;
+      width: 3.7rem;
+      height: 3.7rem;
+      background: var(--pink-1);
+      border-radius: 50%;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      align-content: center;
+      flex-wrap: wrap;
+      flex-direction: row;
+      min-width: 14.5rem;
+      background: var(--blue-1);
+      border-radius: 3.8rem;
+    }
+  }
+  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      position: absolute;
+      top: 3.7rem;
+      right: calc(1.2rem + var(--padding));
+      bottom: auto;
+      left: auto;
+      padding: 1.7rem 2.6rem 2.1rem;
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      position: absolute;
+      top: 3.6rem;
+      right: var(--padding);
+      bottom: auto;
+      left: auto;
+      padding: 0.9rem 2.6rem 1.1rem;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+    display: inline-block;
+    color: var(--white-1);
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+      position: absolute;
+      top: 50%;
+      right: auto;
+      bottom: auto;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.1rem;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+      margin-top: 0.3rem;
+      font-size: 1.2rem;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-close {
+      display: none;
+    }
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-arrow-left {
+      display: none;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-go-back {
+    color: var(--white-1);
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-hide {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+  }@media only screen and (min-width: 1025.1px) {
+    [name^="modal"] {
+      padding-top: calc(var(--header-height) - 1.2rem);
+    }
+  }
+  [name^="modal"]:before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: 0;
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"]:before {
+      -webkit-backdrop-filter: blur(3rem);
+      backdrop-filter: blur(3rem);
+    }
+  }
+  [name^="modal"].active {
+    overflow-y: auto;
+  }
+  [name^="modal"].active:before {
+    -webkit-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -moz-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -ms-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -o-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  }
+  [name^="modal"].active .column-contact {
+    -webkit-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    -moz-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    -ms-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    -o-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+    animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  }
+  [name^="modal"].leave:before {
+    -webkit-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -moz-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -ms-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    -o-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+    animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  }
+  [name^="modal"].leave .column-contact {
+    -webkit-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    -moz-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    -ms-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    -o-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+    animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  }
+  [name^="modal"] .section-modal-contact {
+    width: 100vw;
+    overflow: hidden;
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact {
+      padding-top: calc(var(--header-height) - 1.2rem);
+      background: var(--white-2);
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact {
+    position: relative;
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-top: 9.4rem;
+      padding-bottom: 3.7rem;
+    }
+    [name^="modal"] .section-modal-contact .column-contact:before {
+      content: "";
+      width: calc(100% - var(--padding) * 2);
+      height: 100%;
+      display: block;
+      position: absolute;
+      top: 0;
+      right: auto;
+      bottom: auto;
+      left: var(--padding);
+      background: var(--white-1);
+      border-radius: 2rem;
+    }
+  }
+  @media only screen and (min-width: 768px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-left: calc(var(--padding) + 3.6rem);
+      padding-right: calc(var(--padding) + 3rem);
+    }
+  }
+  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-top: 5rem;
+      padding-bottom: 10rem;
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact {
+      padding-left: var(--padding);
+      padding-right: var(--padding);
+      padding-top: 4.4rem;
+      padding-bottom: 10rem;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info {
+    --column-1-max-w: 50%;
+    --column-2-max-w: 50%;
+    --column-2-offset: 0;
+    --contact-color: var(--blue-1);
+    --address-color: var(--blue-1);
+    --social-media-color: var(--blue-1);
+    --contact-mt: 2.5rem;
+    position: relative;
+    z-index: 5;
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1,
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 {
+      padding-left: var(--padding);
+      padding-right: var(--padding);
+    }
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 {
+      padding-right: calc(var(--padding) + 3rem);
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title {
+      font-size: 2.5rem;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title i {
+      display: none;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .form-contact {
+    --color: var(--blue-1);
+    --label-color: var(--blue-1);
+    --border-color: var(--blue-1);
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit {
+    --btn-p: 1.404rem 5.6rem 1.2rem;
+  }
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit:hover {
+    --btn-bg-color: var(--white-2);
+  }
+  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+      font-size: 5rem;
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+      font-size: 3.7rem;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    display: block;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 801;
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      position: absolute;
+      top: 1.2rem;
+      right: calc(1.2rem + var(--padding));
+      bottom: auto;
+      left: auto;
+      width: 3.7rem;
+      height: 3.7rem;
+      background: var(--pink-1);
+      border-radius: 50%;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      align-content: center;
+      flex-wrap: wrap;
+      flex-direction: row;
+      min-width: 14.5rem;
+      background: var(--blue-1);
+      border-radius: 3.8rem;
+    }
+  }
+  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      position: absolute;
+      top: 3.7rem;
+      right: calc(1.2rem + var(--padding));
+      bottom: auto;
+      left: auto;
+      padding: 1.7rem 2.6rem 2.1rem;
+    }
+  }
+  @media only screen and (max-width: 767.98px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+      position: absolute;
+      top: 3.6rem;
+      right: var(--padding);
+      bottom: auto;
+      left: auto;
+      padding: 0.9rem 2.6rem 1.1rem;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+    display: inline-block;
+    color: var(--white-1);
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+      position: absolute;
+      top: 50%;
+      right: auto;
+      bottom: auto;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.1rem;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+      margin-top: 0.3rem;
+      font-size: 1.2rem;
+    }
+  }
+  @media only screen and (max-width: 1025px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-close {
+      display: none;
+    }
+  }
+  @media only screen and (min-width: 1025.1px) {
+    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-arrow-left {
+      display: none;
+    }
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-go-back {
+    color: var(--white-1);
+  }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-hide {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+  }
