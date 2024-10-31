@@ -5,8 +5,7 @@ import bcrypt from "bcryptjs";
 
 import { cartWixClient, createWixClient } from "@/Utils/CreateWixClient";
 import { isValidEmail, isValidPassword } from "@/Utils/AuthApisUtils";
-import { encryptField } from "@/Utils/Encrypt";
-import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import { extractPermissions } from "@/Utils/checkPermissions";
 
 export const POST = async (req) => {
   try {
@@ -88,17 +87,9 @@ export const POST = async (req) => {
       );
     }
 
-    const ADMIN_BADGE_ID = process.env.ADMIN_BADGE_ID;
-    const FIREPROOF_CERTIFICATES_BADGE_ID = process.env.FIREPROOF_CERTIFICATES_BADGE_ID;
     const memberBadges = await wixClient.badges.listBadgesPerMember([memberId]);
     const badgeIds = memberBadges?.memberBadgeIds?.[0]?.badgeIds || [];
-
-    const isAdmin = badgeIds.includes(ADMIN_BADGE_ID);
-    const hasCertPermission = badgeIds.includes(FIREPROOF_CERTIFICATES_BADGE_ID);
-
-    const permissions = [];
-    if (hasCertPermission) permissions.push(encryptField(PERMISSIONS.FIREPROOF_CERTIFICATES));
-    const role = encryptField(isAdmin ? "admin" : "user");
+    const permissions = extractPermissions(badgeIds);
 
     const memberTokens = await wixClient.auth.getMemberTokensForExternalLogin(
       memberId,
@@ -126,7 +117,6 @@ export const POST = async (req) => {
       firstName: firstName,
       lastName: lastName,
       mainPhone: [phone],
-      role: role,
       permissions: permissions
     };
 

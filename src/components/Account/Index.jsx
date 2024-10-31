@@ -14,6 +14,7 @@ import mangeProductIcon from "@/assets/menu-icons/product.svg"
 import mangeProjectsIcon from "@/assets/menu-icons/project.svg"
 import mangeSortIcon from "@/assets/menu-icons/sort.svg"
 import productSetIcon from "@/assets/menu-icons/product-set.svg"
+import { PERMISSIONS } from "@/Utils/Schema/permissions";
 
 const links = [
   { name: "My Account", icon: "icon-account", href: "/my-account" },
@@ -85,7 +86,8 @@ const Account = ({ children, footerData, banner }) => {
   const { firstName } = useUserData();
   const pathname = usePathname();
   const router = useRouter();
-  const { role } = useUserData();
+  const { permissions } = useUserData();
+  const ADMIN_PANEL_ACCESS = permissions && permissions.includes(PERMISSIONS.ADMIN_PANEL_ACCESS);  
 
   const [cookies, setCookie, removeCookie] = useCookies([
     "authToken",
@@ -129,7 +131,7 @@ const Account = ({ children, footerData, banner }) => {
           <ul className="list-menu-my-account mt-lg-65 mt-tablet-30 min-h-45-vh">
             {links.map((data, index) => {
               const { name, href, icon, adminOnly, target } = data;
-              if (role !== "admin" && adminOnly) return;
+              if (!ADMIN_PANEL_ACCESS && adminOnly) return;
               return (
                 <li
                   key={index}

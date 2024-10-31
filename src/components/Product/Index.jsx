@@ -63,8 +63,11 @@ const ProductPostPage = ({
   const [cartQuantity, setCartQuantity] = useState(1);
   const [customTextFields, setCustomTextFields] = useState({});
 
-  const { role, permissions } = useUserData();
-  const FIREPROOF_DOCS_PERMISSION = permissions && permissions.includes(PERMISSIONS.FIREPROOF_CERTIFICATES);
+  const { permissions } = useUserData();
+  const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
+  const SHOW_FIREPROOF_CERTIFICATES = permissions && permissions.includes(PERMISSIONS.SHOW_FIREPROOF_CERTIFICATES);
+  const SHOW_DOCUMENTS = permissions && permissions.includes(PERMISSIONS.SHOW_DOCUMENTS);
+
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
@@ -420,8 +423,7 @@ const ProductPostPage = ({
                         }
                       )}
 
-                    {selectedProductDetails &&
-                      role === "admin" &&
+                    {selectedProductDetails && SHOW_PRICES &&
                       selectedProductDetails.product.formattedPrice && (
                         <li className="seat-height">
                           <span className="specs-title">Price</span>
@@ -601,8 +603,7 @@ const ProductPostPage = ({
                 )}
 
               {/* DOWNLOADS */}
-              {selectedProductDetails &&
-                role === "admin" &&
+              {selectedProductDetails && SHOW_DOCUMENTS &&
                 selectedProductDetails.productDocs?.length > 0 && (
                   <div className="container-info-text" data-aos="">
                     <h3 className="title-info-text" data-aos="">
@@ -628,7 +629,7 @@ const ProductPostPage = ({
                 )}
 
               {/* Certificates */}
-              {selectedProductDetails && FIREPROOF_DOCS_PERMISSION &&
+              {selectedProductDetails && SHOW_FIREPROOF_CERTIFICATES &&
                 selectedProductDetails.fireProofCertificates?.length > 0 && (
                   <div className="container-info-text" data-aos="">
                     <h3 className="title-info-text" data-aos="">

@@ -11,6 +11,7 @@ import logError from '@/Utils/ServerActions';
 import useUserData from '@/Hooks/useUserData';
 import Error404Page from '../Error404Page';
 import AutoClickWrapper from '../Common/AutoClickWrapper';
+import { PERMISSIONS } from '@/Utils/Schema/permissions';
 
 const SortableItem = ({ index, product }) => {
     const { _id, name, mainMedia } = product;
@@ -68,7 +69,9 @@ export const ProductsListing = ({ selectedCategoryData, data, slug }) => {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [pageLimit, setPageLimit] = useState(pageSize);
     const [loading, setLoading] = useState(false);
-    const { role } = useUserData();
+    const { permissions } = useUserData();
+    const ADMIN_PANEL_ACCESS = permissions && permissions.includes(PERMISSIONS.ADMIN_PANEL_ACCESS);
+
 
     const handleDragEnd = (event) => {
         const { active, over } = event;
@@ -130,7 +133,7 @@ export const ProductsListing = ({ selectedCategoryData, data, slug }) => {
         setTimeout(markPageLoaded, 500);
     }, [data]);
 
-    if (role !== "admin") return <Error404Page inline={true} />
+    if (!ADMIN_PANEL_ACCESS) return <Error404Page inline={true} />
 
     return (
         <div className="wrapper-account">

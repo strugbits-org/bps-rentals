@@ -17,6 +17,7 @@ import { AddProductToCart } from "@/Services/CartApis";
 import { getCatalogIdBySku } from "@/Services/ProductsApis";
 import { revalidatePage } from "@/Services/RevalidateService";
 import logError from "@/Utils/ServerActions";
+import { PERMISSIONS } from "@/Utils/Schema/permissions";
 
 const QuotesHistory = () => {
   const [cookies, setCookie] = useCookies(["cartQuantity"]);
@@ -32,7 +33,9 @@ const QuotesHistory = () => {
     success: false,
     error: false,
   });
-  const { role } = useUserData();
+  const { permissions } = useUserData();
+  const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
+
 
   const handleAddToCart = async (data, index) => {
     if (disabledButtons[index]) return;
@@ -151,6 +154,7 @@ const QuotesHistory = () => {
               const totalPrice = data.lineItems.reduce((total, item) => {
                 return total + Number(item.price) * item.quantity;
               }, 0);
+console.log("totalPrice", totalPrice);
 
               const issueDate = quoteDateFormatter(data.dates.issueDate);
               return (
@@ -160,11 +164,13 @@ const QuotesHistory = () => {
                       <h2 className="name">{data.title}</h2>
                       <div className="date">{issueDate}</div>
                     </div>
-                    {role === "admin" && totalPrice ? (
+                    {SHOW_PRICES && totalPrice ? (
                       <div className="value">
                         $ {totalPrice.toLocaleString()}
                       </div>
-                    ) : (
+                    ) : totalPrice === 0 ? (
+                      <div className="value">$ 0</div>
+                    ): (
                       <div className="value"></div>
                     )}
                     <div className="container-btn">
