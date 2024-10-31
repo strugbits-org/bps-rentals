@@ -5,12 +5,14 @@ import Error404Page from '../Error404Page';
 import { markPageLoaded } from '@/Utils/AnimationFunctions';
 import { ImageWrapper } from '../Common/ImageWrapper';
 import CreateProductSetModal from '../Common/Modals/CreateProductSetModal';
+import { PERMISSIONS } from '@/Utils/Schema/permissions';
 
 export const ProductSets = ({ products, productSets }) => {
 
     const [dataSets, setDataSets] = useState([]);
     const [toggleCreateNewModal, setToggleCreateNewModal] = useState(false);
-    const { role } = useUserData();
+    const { permissions } = useUserData();
+    const ADMIN_PANEL_ACCESS = permissions && permissions.includes(PERMISSIONS.ADMIN_PANEL_ACCESS);
 
 
     const editSet = async (id) => {
@@ -27,7 +29,7 @@ export const ProductSets = ({ products, productSets }) => {
     }, [])
 
 
-    if (role !== "admin") return <Error404Page inline={true} />
+    if (!ADMIN_PANEL_ACCESS) return <Error404Page inline={true} />
 
     return (
         <>
@@ -52,9 +54,9 @@ export const ProductSets = ({ products, productSets }) => {
                                 const { _id, name, mainMedia } = product;
                                 return (
                                     <li key={index} className="list-item">
-                                        <div className="cart-product">
+                                        <div className="cart-product cart-product-2" style={{ backgroundColor: "var(--white-1)" }}>
                                             <div className="container-img">
-                                                <ImageWrapper key={_id} defaultDimensions={{ width: 120, height: 120 }} url={mainMedia} />
+                                                <ImageWrapper key={_id} defaultDimensions={{ width: 120, height: 120 }} timeout={0} min_w={120} min_h={120} url={mainMedia} />
                                             </div>
                                             <div className="wrapper-product-info">
                                                 <div className="container-top">

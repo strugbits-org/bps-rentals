@@ -286,7 +286,7 @@ li.IMPORTANT.long-desc {
   }
 
   .min-h-100-sm {
-    min-height: 100vh !important;
+    min-height: 100dvh !important;
   }
 }
 
@@ -777,6 +777,11 @@ li.IMPORTANT.long-desc {
   .search-box input {
     min-width: 100% !important;
   }
+
+  .sets-listing {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
 ul.sets-listing li {
@@ -794,19 +799,98 @@ ul.sets-listing li {
   width: 100%;
 }
 
-.cart-product.cart-product-2 {
+@media only screen and (max-width: 1025px) {
+  .products-set-container.d-flex {
+    flex-flow: column;
+  }
+
+  .cart-product-2:not(.main-product) {
+    background: var(--white-1) !important;
+    align-items: center;
+  }
+  .main-product{
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .products-set-wrapper {
+    padding: 4rem 2rem !important;
+  }
+
+  .cart-product-2 .container-img {
+    padding: 4px;
+  }
+
+  .cart-product-2 .wrapper-product-info {
+    padding-left: 1rem;
+  }
+  .products-set-container-top{
+    gap: 2rem;
+  }
+}
+
+.products-set-wrapper {
+  width: 100%;
+  min-height: 50vh;
+}
+
+.cart-product-2 {
   background: var(--white-2);
 }
 
-.cart-product.cart-product-2 .wrapper-product-info .container-top .container-product-name .product-name {
+.cart-product-2.main-product {
+  background: var(--blue-3);
+}
+
+.cart-product-2.main-product .wrapper-product-info .container-top .container-product-name .product-name {
+  color: var(--white-1);
+}
+
+.cart-product-2 .wrapper-product-info .container-top .container-product-name .product-name {
   white-space: break-spaces;
   text-overflow: unset;
 }
 
-.create-product-set-wrapper{
+.create-product-set-wrapper {
   font-family: "MarrSans Cond", sans-serif;
 }
 
+.cart-product-2 .container-img>* {
+  position: static;
+}
+
+.cart-product-2 .container-img {
+  padding: 12px;
+  background: var(--white-1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  .cart-product-2 {
+    padding: 1.3rem 1.9rem;
+  }
+
+  ul.list-cart.list-set-products {
+    max-height: 320px;
+    min-height: 320px;
+    overflow-y: scroll;
+    padding: 0rem 1rem 2rem 0rem;
+  }
+}
+
+.products-set-container-top {
+  border-bottom: 2px dashed;
+  align-items: center;
+}
+
+button.btn-cancel-2 {
+  flex-shrink: 0;
+  height: 2.5rem;
+  width: 2.5rem !important;
+}
 /* -------------------------- Modal UI */
 @media only screen and (min-width: 1025.1px) {
   [name^="modal"] {

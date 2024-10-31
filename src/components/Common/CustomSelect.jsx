@@ -1,18 +1,16 @@
-"use client"
-import React from 'react'
-import Select from 'react-select'
+"use client";
+import React from 'react';
+import Select from 'react-select';
 
-export const CustomSelect = ({ options, label, placeholder, onChange }) => {
-
-    const handleOnChange = (e) => {
-        onChange(e)
-    };
+export const CustomSelect = ({ options, label, placeholder, onChange, selectedValue }) => {
 
     return (
         <>
-            {label && <label className="fs--20 mb-20">{label}</label>}
+            {label && <label className="fs--30">{label}</label>}
             <Select
-                onChange={handleOnChange}
+                className={"mt-10"}
+                value={selectedValue}
+                onChange={onChange}
                 options={options}
                 placeholder={placeholder}
                 hideSelectedOptions={true}
@@ -37,5 +35,5 @@ export const CustomSelect = ({ options, label, placeholder, onChange }) => {
                 }}
             />
         </>
-    )
-}
+    );
+};
