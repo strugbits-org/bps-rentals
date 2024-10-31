@@ -8,9 +8,11 @@ import AnimateLink from "../Common/AnimateLink";
 import React from "react";
 import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
+import { PERMISSIONS } from "@/Utils/Schema/permissions";
 
 const QuoteItems = ({ quoteData }) => {
-  const { role } = useUserData();
+  const { permissions } = useUserData();
+  const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
   if (!quoteData || quoteData.length === 0) return null;
 
@@ -75,7 +77,7 @@ const QuoteItems = ({ quoteData }) => {
                     </li>
                   )
                 })}
-                {role === "admin" && (
+                {SHOW_PRICES && (
                   <li className="price">
                     <span className="specs-title">Price</span>
                     <span className="specs-text">
@@ -145,7 +147,7 @@ const QuoteItems = ({ quoteData }) => {
                     {locations[location]} <i className="icon-pin"></i>
                   </span>
                 </li>
-                {role === "admin" && (
+                {SHOW_PRICES && (
                   <li className="price">
                     <span className="specs-title">Price</span>
                     <span className="specs-text">

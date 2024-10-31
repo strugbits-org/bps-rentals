@@ -2,13 +2,16 @@
 import useUserData from "@/Hooks/useUserData";
 import { revalidateAllPages, revalidatePage } from "@/Services/RevalidateService";
 import { enableRevalidate } from "@/Utils/AnimationFunctions";
+import { PERMISSIONS } from "@/Utils/Schema/permissions";
 import logError from "@/Utils/ServerActions";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const RevalidateButton = () => {
     const path = usePathname();
-    const { role } = useUserData();
+    const { permissions } = useUserData();
+    const ADMIN_PANEL_ACCESS = permissions && permissions.includes(PERMISSIONS.ADMIN_PANEL_ACCESS);
+
     const [revalidationState, setRevalidationState] = useState({
         isRevalidatingPage: false,
         isRevalidatingSite: false,
@@ -19,11 +22,11 @@ const RevalidateButton = () => {
         reloading: false,
     });
     useEffect(() => {
-        if (role !== "admin") return;
+        if (!ADMIN_PANEL_ACCESS) return;
         enableRevalidate();
-    }, [role])
+    }, [ADMIN_PANEL_ACCESS])
 
-    if (role !== "admin") return;
+    if (!ADMIN_PANEL_ACCESS) return;
     const handleRevalidate = async (type) => {
         const isPage = type === "page";
         const setStateKey = isPage ? "isRevalidatingPage" : "isRevalidatingSite";

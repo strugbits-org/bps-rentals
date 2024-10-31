@@ -6,11 +6,14 @@ import { ImageWrapper } from '../Common/ImageWrapper';
 import { getSlug } from '@/Utils/Utils';
 import useUserData from '@/Hooks/useUserData';
 import Error404Page from '../Error404Page';
+import { PERMISSIONS } from '@/Utils/Schema/permissions';
 
 export const CategoriesListing = ({ data }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredCategories, setFilteredCategories] = useState(data);
-    const { role } = useUserData();
+    const { permissions } = useUserData();
+    const ADMIN_PANEL_ACCESS = permissions && permissions.includes(PERMISSIONS.ADMIN_PANEL_ACCESS);
+
 
     useEffect(() => {
         const updatedCategories = data.filter(category => {
@@ -29,7 +32,7 @@ export const CategoriesListing = ({ data }) => {
         setSearchTerm(event.target.value.toLowerCase());
     };
 
-    if (role !== "admin") return <Error404Page inline={true} />
+    if (!ADMIN_PANEL_ACCESS) return <Error404Page inline={true} />
 
     return (
         <div className="wrapper-account">
