@@ -1,5 +1,6 @@
 import { encryptField } from "./Encrypt";
 import { PERMISSIONS } from "./Schema/permissions";
+import logError from "./ServerActions";
 
 export const extractPermissions = (badgeIds) => {
     if (!process.env.ADMIN_BADGE_ID || 
@@ -23,7 +24,7 @@ export const extractPermissions = (badgeIds) => {
             try {
                 permissions.push(encryptField(badgeToPermissionMap[badgeId]));
             } catch (error) {
-                console.error(`System Error: Error encrypting permission for badge ID ${badgeId}: ${error.message}`);
+                logError(`System Error: Error encrypting permission for badge ID ${badgeId}: ${error.message}`);
             }
         }
     });
