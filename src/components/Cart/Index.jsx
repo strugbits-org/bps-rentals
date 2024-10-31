@@ -20,6 +20,7 @@ import AnimateLink from "../Common/AnimateLink";
 import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
+import { PERMISSIONS } from "@/Utils/Schema/permissions";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -29,7 +30,8 @@ const CartPage = () => {
     "cartQuantity",
     "userTokens",
   ]);
-  const { role } = useUserData();
+  const { permissions } = useUserData();
+  const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
   const handleQuantityChange = async (id, quantity, disabled) => {
     if (quantity < 10000 && quantity > 0) {
@@ -195,7 +197,7 @@ const CartPage = () => {
                                   );
                                 })}
 
-                                {role === "admin" && (
+                                {SHOW_PRICES && (
                                   <li className="price">
                                     <span className="specs-title">Price</span>
                                     <span className="specs-text">

@@ -5,6 +5,7 @@ import { compareArray } from "@/Utils/Utils";
 import { decryptField } from "@/Utils/Encrypt";
 import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
+import { PERMISSIONS } from "@/Utils/Schema/permissions";
 
 const ProductCard = ({
   productData,
@@ -24,7 +25,9 @@ const ProductCard = ({
   const [filteredVariants, setFilteredVariants] = useState(variantData);
   const [activeVariant, setActiveVariant] = useState(defaultVariantData);
   const [isBestSeller, setIsBestSeller] = useState(false);
-  const { role } = useUserData();
+  const { permissions } = useUserData();
+  const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
+
 
   const handleFilteredData = () => {
     setFilteredVariants(variantData);
@@ -96,7 +99,7 @@ const ProductCard = ({
                 })}
               </div>
               <div className="dimensions"><span>{activeVariant.location.toString()} <i className="icon-pin"></i></span></div>
-              <div className="dimensions">{product && role === "admin" && (<span>{decryptField(product.formattedPrice)}</span>)}</div>
+              <div className="dimensions">{product && SHOW_PRICES && (<span>{decryptField(product.formattedPrice)}</span>)}</div>
             </div>
           )}
         </div>

@@ -12,6 +12,7 @@ import useUserData from "@/Hooks/useUserData";
 import { decryptField } from "@/Utils/Encrypt";
 import { ImageWrapper } from "../ImageWrapper";
 import logError from "@/Utils/ServerActions";
+import { PERMISSIONS } from "@/Utils/Schema/permissions";
 
 const CartModal = ({
   productData,
@@ -30,7 +31,9 @@ const CartModal = ({
   setSavedProductsData,
 }) => {
 
-  const { role } = useUserData();
+  const { permissions } = useUserData();
+  const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
+
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isBestSeller, setIsBestSeller] = useState(false);
@@ -324,9 +327,7 @@ const CartModal = ({
                                     );
                                   }
                                 )}
-                              {selectedVariantData &&
-                                role === "admin" &&
-                                selectedVariantData.price && (
+                              {selectedVariantData && SHOW_PRICES && selectedVariantData.price && (
                                   <li className="seat-height">
                                     <span className="specs-title">Price</span>
                                     <span className="specs-text">
