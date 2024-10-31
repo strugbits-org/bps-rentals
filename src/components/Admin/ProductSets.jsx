@@ -31,7 +31,7 @@ export const ProductSets = ({ products, productSets }) => {
 
     return (
         <>
-            <div className="wrapper-account">
+            <div className="create-product-set-wrapper wrapper-account">
                 <div className="wrapper-bottom d-flex-lg products-listing-admin">
                     <h1 className="fs--60 blue-1 split-words">PRODUCT SETS</h1>
                     <div className="d-flex-lg flex-mobile-center align-self-center ml-auto mt-10">

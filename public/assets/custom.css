@@ -1,206 +1,206 @@
 .list-pinterest>span {
-    min-width: 100% !important;
-    max-width: 100% !important;
-    display: flex;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  display: flex;
 }
 
 .list-pinterest>span>span:nth-child(1) {
-    display: none;
+  display: none;
 }
 
 .list-pinterest>span>span:nth-child(3) {
-    display: none;
+  display: none;
 }
 
 .insta-feed,
 .list-blog-lets-get-social {
-    height: 100% !important;
-    max-height: 55vh !important;
-    overflow-x: hidden;
+  height: 100% !important;
+  max-height: 55vh !important;
+  overflow-x: hidden;
 }
 
 .list-pinterest>span>span:nth-child(2) {
-    height: 100% !important;
-    max-height: 55vh !important;
-    width: 100%;
+  height: 100% !important;
+  max-height: 55vh !important;
+  width: 100%;
 }
 
 .cursor-pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 1024px) and (max-width: 1600px) {
-    .list-pinterest>span>span:nth-child(2) {
-        max-height: 40vh !important;
-    }
+  .list-pinterest>span>span:nth-child(2) {
+    max-height: 40vh !important;
+  }
 
-    .insta-feed,
-    .list-blog-lets-get-social {
-        max-height: 40vh !important;
-    }
+  .insta-feed,
+  .list-blog-lets-get-social {
+    max-height: 40vh !important;
+  }
 }
 
 .insta-feed::-webkit-scrollbar-thumb,
 .list-blog-lets-get-social::-webkit-scrollbar-thumb {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .container-contact.form-success:not(.formError) .form-contact {
-    opacity: 0.2;
-    pointer-events: none;
-    -webkit-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
-    -moz-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
-    -ms-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
-    -o-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
-    transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
-    transition-delay: 0s;
+  opacity: 0.2;
+  pointer-events: none;
+  -webkit-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+  -moz-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+  -ms-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+  -o-transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+  transition: all 0.6s cubic-bezier(0.42, 0, 0.58, 1);
+  transition-delay: 0s;
 }
 
 .container-newsletter.form-success .form-newsletter {
-    opacity: 0.2;
-    pointer-events: none;
+  opacity: 0.2;
+  pointer-events: none;
 }
 
 .container-newsletter.form-success .feedback-newsletter {
-    position: absolute;
-    top: 55%;
-    right: auto;
-    bottom: auto;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--white-1);
+  position: absolute;
+  top: 55%;
+  right: auto;
+  bottom: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--white-1);
 }
 
 .container-newsletter.form-success .feedback-newsletter {
-    position: absolute;
-    top: auto;
-    right: auto;
-    bottom: -3rem;
-    left: 0;
-    color: var(--white-1);
+  position: absolute;
+  top: auto;
+  right: auto;
+  bottom: -3rem;
+  left: 0;
+  color: var(--white-1);
 }
 
 .container-newsletter.formError .feedback-newsletter {
-    position: absolute;
-    top: auto;
-    right: auto;
-    bottom: -3rem;
-    left: 0;
-    color: var(--white-1);
+  position: absolute;
+  top: auto;
+  right: auto;
+  bottom: -3rem;
+  left: 0;
+  color: var(--white-1);
 }
 
 .container-newsletter.letter-success .form-newsletter {
-    opacity: 0.2;
-    pointer-events: none;
+  opacity: 0.2;
+  pointer-events: none;
 }
 
 .container-newsletter.letter-success .feedback-newsletter {
-    position: absolute;
-    top: 55%;
-    right: auto;
-    bottom: auto;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--white-1);
+  position: absolute;
+  top: 55%;
+  right: auto;
+  bottom: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--white-1);
 }
 
 .capitalize {
-    text-transform: lowercase;
+  text-transform: lowercase;
 }
 
 .capitalize:first-line {
-    text-transform: capitalize;
+  text-transform: capitalize;
 }
 
 @media only screen and (min-width: 1025.1px) {
 
-    [data-pg=pg-my-account] #footer,
-    [data-pg=pg-my-account-saved-products] #footer,
-    [data-pg=pg-my-account-change-password] #footer,
-    [data-pg=pg-my-account-quotes-history] #footer {
-        display: block;
-    }
+  [data-pg=pg-my-account] #footer,
+  [data-pg=pg-my-account-saved-products] #footer,
+  [data-pg=pg-my-account-change-password] #footer,
+  [data-pg=pg-my-account-quotes-history] #footer {
+    display: block;
+  }
 }
 
 .menu-search .wrapper-search .container-results .btn-border-blue {
-    opacity: 1;
+  opacity: 1;
 }
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 .menu-search .wrapper-search .container-results .result-all-studios .list-result-all-studios .grid-item .link-studios:not(.active) {
-    background-color: white;
-    color: #0f41fa;
+  background-color: white;
+  color: #0f41fa;
 }
 
 .menu-search .wrapper-search .container-results .result-all-studios .list-result-all-studios .grid-item .link-studios:not(.active):before {
-    color: #0f41fa;
+  color: #0f41fa;
 }
 
 .menu-search .wrapper-search .container-results .result-all-studios .list-result-all-studios .grid-item .link-studios.disabled {
-    background: var(--gray-3);
-    color: white;
-    user-select: none;
-    pointer-events: none;
+  background: var(--gray-3);
+  color: white;
+  user-select: none;
+  pointer-events: none;
 }
 
 .menu-search .wrapper-search .container-results .result-all-studios .list-result-all-studios .grid-item .link-studios.disabled:before {
-    color: white;
+  color: white;
 }
 
 .menu-search .wrapper-search .container-results .result-our-markets .market-link.disabled {
-    user-select: none;
-    pointer-events: none;
+  user-select: none;
+  pointer-events: none;
 }
 
 .menu-search .wrapper-search .container-results .result-our-markets .market-link.disabled:after {
-    content: "";
-    width: 100%;
-    height: 100%;
-    display: block;
-    position: absolute;
-    top: 0;
-    right: auto;
-    bottom: auto;
-    left: 0;
-    background: var(--white-2) !important;
-    z-index: 5;
-    opacity: 0.8;
-    border-radius: 2rem;
+  content: "";
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  background: var(--white-2) !important;
+  z-index: 5;
+  opacity: 0.8;
+  border-radius: 2rem;
 }
 
 .result-our-markets .grid-item.active .market-link.project-link .container-text {
-    color: #0f41fa;
+  color: #0f41fa;
 }
 
 .mt-3-cs {
-    margin-top: 3rem;
+  margin-top: 3rem;
 }
 
 .btn-disabled {
-    background: #babab2 !important;
-    cursor: not-allowed;
-    pointer-events: none;
-    border: none;
-    user-select: none;
+  background: #babab2 !important;
+  cursor: not-allowed;
+  pointer-events: none;
+  border: none;
+  user-select: none;
 }
 
 .btn-disabled::before {
-    background: #babab2 !important;
+  background: #babab2 !important;
 }
 
 .unavailable-warning-wrapper {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .unavailable-warning {
-    color: red !important;
+  color: red !important;
 }
 
 .unavailable-warning-wrapper btn-modal-open {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* remove #pg-category from app.css */
@@ -210,1587 +210,1756 @@ body[data-modal-state="active"][data-modal="modal-quotes-history"] .wrapper[data
 body[data-modal-state="active"][data-modal="modal-product-2"] .wrapper[data-scroll-container],
 body[data-form-cart-state="success"] .wrapper[data-scroll-container],
 .wrapper-no-transform {
-    transform: none !important;
+  transform: none !important;
 }
 
 body[data-modal-state="active"][data-modal="modal-quotes-history"] #header,
 body[data-modal-state="active"][data-modal="modal-product-2"] #header,
 body[data-form-cart-state="success"] #header {
-    z-index: 0;
+  z-index: 0;
 }
 
 body[data-form-cart-state="success"]:has(.submenu-login.active) #main-transition {
-    z-index: -1;
+  z-index: -1;
 }
 
 .w-full {
-    width: 100% !important;
+  width: 100% !important;
 }
 
 .long-desc {
-    display: flex !important;
-    flex-flow: column !important;
-    align-items: flex-start !important;
+  display: flex !important;
+  flex-flow: column !important;
+  align-items: flex-start !important;
 }
 
 li.IMPORTANT.long-desc {
-    max-width: none !important;
-    flex-flow: row !important;
+  max-width: none !important;
+  flex-flow: row !important;
 }
 
 @media only screen and (min-width: 768px) {
-    .cart-product .wrapper-product-info .container-specs .list-specs {
-        column-count: unset;
-        page-break-inside: unset;
-        break-inside: unset;
-        column-gap: unset;
-        display: flex;
-        flex-wrap: wrap;
-    }
+  .cart-product .wrapper-product-info .container-specs .list-specs {
+    column-count: unset;
+    page-break-inside: unset;
+    break-inside: unset;
+    column-gap: unset;
+    display: flex;
+    flex-wrap: wrap;
+  }
 
-    .cart-product .wrapper-product-info .container-specs .list-specs li {
-        width: 50% !important;
-    }
+  .cart-product .wrapper-product-info .container-specs .list-specs li {
+    width: 50% !important;
+  }
 
-    .container-product-description .list-specs li .specs-title {
-        min-width: 16rem;
-    }
+  .container-product-description .list-specs li .specs-title {
+    min-width: 16rem;
+  }
 }
 
 .form-quote .container-input.input-date input {
-    color-scheme: none;
+  color-scheme: none;
 }
 
 .cart-product .container-img {
-    min-width: 11rem;
+  min-width: 11rem;
 }
 
 /* lg/desktop */
 .min-h-100 {
-    min-height: 100vh !important;
+  min-height: 100vh !important;
 }
 
 @media only screen and (min-width: 1025px) {
-    .d-flex-lg {
-        display: flex;
-    }
+  .d-flex-lg {
+    display: flex;
+  }
 
-    .min-h-250-px {
-        min-height: 250px !important;
-    }
+  .min-h-250-px {
+    min-height: 250px !important;
+  }
 }
 
 @media only screen and (max-width: 1025px) {
-    .min-h-45-vh {
-        min-height: 45vh !important;
-    }
+  .min-h-45-vh {
+    min-height: 45vh !important;
+  }
 
-    .min-h-100-sm {
-        min-height: 100vh !important;
-    }
+  .min-h-100-sm {
+    min-height: 100vh !important;
+  }
 }
 
 /* Mobile */
 @media only screen and (max-width: 1025px) {
-    .feedback-quote-request-confirmed .content {
-        gap: 4rem;
-    }
+  .feedback-quote-request-confirmed .content {
+    gap: 4rem;
+  }
 
-    .list-blog-lets-get-social li .link-blog {
-        gap: 1rem;
-    }
+  .list-blog-lets-get-social li .link-blog {
+    gap: 1rem;
+  }
 
-    .modal-content {
-        padding: 7rem 1rem 5rem !important;
-    }
+  .modal-content {
+    padding: 7rem 1rem 5rem !important;
+  }
 
-    .footer .container-footer-menu .list-footer-menu .list-item .link-footer-menu {
-        white-space: nowrap;
-    }
+  .footer .container-footer-menu .list-footer-menu .list-item .link-footer-menu {
+    white-space: nowrap;
+  }
 
-    .footer .container-newsletter .container-text {
-        flex-flow: column;
-        align-items: flex-start;
-    }
+  .footer .container-newsletter .container-text {
+    flex-flow: column;
+    align-items: flex-start;
+  }
 
-    .container-product-description .container-add-to-cart .btn-add-to-cart:hover {
-        --btn-bg-color: var(--white-1);
-    }
+  .container-product-description .container-add-to-cart .btn-add-to-cart:hover {
+    --btn-bg-color: var(--white-1);
+  }
 
-    .product-link.small {
-        --product-title-max-w: 14rem;
-    }
+  .product-link.small {
+    --product-title-max-w: 14rem;
+  }
 
-    .search-box input {
-        min-width: 0 !important;
-    }
+  .search-box input {
+    min-width: 0 !important;
+  }
 
-    .products-listing-admin button {
-        width: 100%;
-        text-align: center;
-        margin: 8px 0px;
-    }
+  .products-listing-admin button {
+    width: 100%;
+    text-align: center;
+    margin: 8px 0px;
+  }
 }
 
 .revalidate-button .btn-revalidate-button {
-    font-family: "MarrSans Cond", sans-serif;
+  font-family: "MarrSans Cond", sans-serif;
 }
 
 .revalidate-button .container-revalidate {
-    background: white;
-    font-family: "GT Walsheim Pro Medium", sans-serif;
-    line-height: 1.2em;
-    letter-spacing: 0;
-    font-weight: 400;
+  background: white;
+  font-family: "GT Walsheim Pro Medium", sans-serif;
+  line-height: 1.2em;
+  letter-spacing: 0;
+  font-weight: 400;
 }
 
 @media only screen and (min-width: 1025.1px) {
-    .revalidate-button .container-revalidate {
-        font-size: clamp(12px, 1.6rem, 1.6rem);
-    }
+  .revalidate-button .container-revalidate {
+    font-size: clamp(12px, 1.6rem, 1.6rem);
+  }
 }
 
 @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    .revalidate-button .container-revalidate {
-        font-size: clamp(14px, 1.6rem, 1.6rem);
-    }
+  .revalidate-button .container-revalidate {
+    font-size: clamp(14px, 1.6rem, 1.6rem);
+  }
 }
 
 @media only screen and (max-width: 767.98px) {
-    .revalidate-button .container-revalidate {
-        font-size: 1.6rem;
-    }
+  .revalidate-button .container-revalidate {
+    font-size: 1.6rem;
+  }
 }
 
 .revalidate-button .btn-revalidate-button {
-    line-height: 1.2em;
-    letter-spacing: 0;
-    font-weight: 600;
+  line-height: 1.2em;
+  letter-spacing: 0;
+  font-weight: 600;
 }
 
 @media only screen and (min-width: 1025.1px) {
-    .revalidate-button .btn-revalidate-button {
-        font-size: 2.5rem;
-    }
+  .revalidate-button .btn-revalidate-button {
+    font-size: 2.5rem;
+  }
 }
 
 @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    .revalidate-button .btn-revalidate-button {
-        font-size: 2.5rem;
-    }
+  .revalidate-button .btn-revalidate-button {
+    font-size: 2.5rem;
+  }
 }
 
 @media only screen and (max-width: 767.98px) {
-    .revalidate-button .btn-revalidate-button {
-        font-size: 1.8rem;
-    }
+  .revalidate-button .btn-revalidate-button {
+    font-size: 1.8rem;
+  }
 }
 
 @media only screen and (max-width: 1025px) {
-    [data-scroll-position=bottom] .revalidate-button {
-        transform: translateX(50%);
-    }
+  [data-scroll-position=bottom] .revalidate-button {
+    transform: translateX(50%);
+  }
 }
 
 .revalidate-button {
-    --btn-w: 5.3rem;
-    height: 35rem;
-    pointer-events: none;
-    z-index: 90;
-    filter: drop-shadow(0 1rem 1.5rem rgba(0, 0, 0, 0.4));
-    -webkit-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -moz-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -ms-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -o-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition-delay: 0s;
+  --btn-w: 5.3rem;
+  height: 35rem;
+  pointer-events: none;
+  z-index: 90;
+  filter: drop-shadow(0 1rem 1.5rem rgba(0, 0, 0, 0.4));
+  -webkit-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -moz-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -ms-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -o-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition-delay: 0s;
 }
 
 @media only screen and (min-width: 1025.1px) {
-    .revalidate-button {
-        position: fixed;
-        top: 50vh;
-        right: auto;
-        bottom: 20rem;
-        left: calc(var(--w-100vw));
-        transform: translateX(calc(-100% - 4.8rem));
-        width: 43.8rem;
-    }
+  .revalidate-button {
+    position: fixed;
+    top: 50vh;
+    right: auto;
+    bottom: 20rem;
+    left: calc(var(--w-100vw));
+    transform: translateX(calc(-100% - 4.8rem));
+    width: 43.8rem;
+  }
 }
 
 @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    .revalidate-button {
-        position: fixed;
-        top: auto;
-        right: 2.4rem;
-        bottom: 20rem;
-        left: auto;
-        width: 43.8rem;
-    }
+  .revalidate-button {
+    position: fixed;
+    top: auto;
+    right: 2.4rem;
+    bottom: 20rem;
+    left: auto;
+    width: 43.8rem;
+  }
 }
 
 @media only screen and (max-width: 767.98px) {
-    .revalidate-button {
-        position: fixed;
-        top: auto;
-        right: auto;
-        bottom: 20rem;
-        left: 50%;
-        width: calc(100% - var(--padding-fluid) * 4);
-        transform: translateX(-50%);
-    }
+  .revalidate-button {
+    position: fixed;
+    top: auto;
+    right: auto;
+    bottom: 20rem;
+    left: 50%;
+    width: calc(100% - var(--padding-fluid) * 4);
+    transform: translateX(-50%);
+  }
 }
 
 .revalidate-button:before {
-    content: "";
-    width: calc(100% - var(--btn-w));
-    height: calc(100% - 2px);
-    display: block;
-    position: absolute;
-    top: 2px;
-    right: auto;
-    bottom: auto;
-    left: 0;
-    background: var(--blue-2);
-    border-top-left-radius: 2rem;
-    border-bottom-left-radius: 2rem;
-    transform: scaleX(0);
-    transform-origin: right center;
-    -webkit-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -moz-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -ms-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -o-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition-delay: 0.1s;
+  content: "";
+  width: calc(100% - var(--btn-w));
+  height: calc(100% - 2px);
+  display: block;
+  position: absolute;
+  top: 2px;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  background: var(--blue-2);
+  border-top-left-radius: 2rem;
+  border-bottom-left-radius: 2rem;
+  transform: scaleX(0);
+  transform-origin: right center;
+  -webkit-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -moz-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -ms-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -o-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition-delay: 0.1s;
 }
 
 .revalidate-button .container-revalidate {
-    position: relative;
-    height: 100%;
-    padding: 3rem 8rem 3rem 3rem;
-    opacity: 0;
-    transform: translateX(2rem);
-    -webkit-transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -moz-transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -ms-transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -o-transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition-delay: 0s;
+  position: relative;
+  height: 100%;
+  padding: 3rem 8rem 3rem 3rem;
+  opacity: 0;
+  transform: translateX(2rem);
+  -webkit-transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -moz-transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -ms-transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -o-transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition-delay: 0s;
 }
 
 .revalidate-button .btn-revalidate-button {
-    position: absolute;
-    top: auto;
-    right: 0;
-    bottom: 0;
-    left: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    align-content: flex-end;
-    flex-wrap: wrap;
-    flex-direction: row;
-    width: var(--btn-w);
-    height: 100%;
-    color: var(--white-1);
-    z-index: 10;
+  position: absolute;
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  align-content: flex-end;
+  flex-wrap: wrap;
+  flex-direction: row;
+  width: var(--btn-w);
+  height: 100%;
+  color: var(--white-1);
+  z-index: 10;
 }
 
 @media only screen and (max-width: 767.98px) {
-    .revalidate-button .btn-revalidate-button {
-        font-size: 2.2rem;
-    }
+  .revalidate-button .btn-revalidate-button {
+    font-size: 2.2rem;
+  }
 }
 
 .revalidate-button .btn-revalidate-button i {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 .revalidate-button .btn-revalidate-button .btn-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    align-content: center;
-    flex-wrap: wrap;
-    flex-direction: column;
-    position: relative;
-    width: var(--btn-w);
-    min-height: 15rem;
-    pointer-events: auto;
-    -webkit-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -moz-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -ms-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -o-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition-delay: 0.9s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  position: relative;
+  width: var(--btn-w);
+  min-height: 15rem;
+  pointer-events: auto;
+  -webkit-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -moz-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -ms-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -o-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition-delay: 0.9s;
 }
 
 .revalidate-button .btn-revalidate-button .btn-wrapper .container-img {
-    width: 100%;
+  width: 100%;
 }
 
 .revalidate-button .btn-revalidate-button .btn-wrapper .bg-1,
 .revalidate-button .btn-revalidate-button .btn-wrapper .bg-2 {
-    width: 100%;
-    flex: 1;
-    background: var(--blue-1);
+  width: 100%;
+  flex: 1;
+  background: var(--blue-1);
 }
 
 .revalidate-button .btn-revalidate-button .btn-wrapper .btn-middle {
-    margin: -1px 0 -1px;
+  margin: -1px 0 -1px;
 }
 
 .revalidate-button .btn-revalidate-button span {
-    position: absolute;
-    top: 2rem;
-    right: auto;
-    bottom: auto;
-    left: 47%;
-    display: block;
-    writing-mode: vertical-rl;
-    transform: translateX(-50%) rotate(180deg);
+  position: absolute;
+  top: 2rem;
+  right: auto;
+  bottom: auto;
+  left: 47%;
+  display: block;
+  writing-mode: vertical-rl;
+  transform: translateX(-50%) rotate(180deg);
 }
 
 .revalidate-button.active {
-    pointer-events: auto;
+  pointer-events: auto;
 }
 
 .revalidate-button.active:before {
-    transform: scaleX(1);
-    -webkit-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -moz-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -ms-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -o-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition-delay: 0.6s;
+  transform: scaleX(1);
+  -webkit-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -moz-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -ms-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -o-transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition-delay: 0.6s;
 }
 
 .revalidate-button.active .container-revalidate {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateX(0);
-    -webkit-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -moz-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -ms-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -o-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition-delay: 0.9s;
-    border-radius: 10px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+  -webkit-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -moz-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -ms-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -o-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition-delay: 0.9s;
+  border-radius: 10px;
 }
 
 .revalidate-button.active .btn-revalidate-button .btn-wrapper {
-    min-height: 100%;
-    -webkit-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -moz-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -ms-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -o-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition-delay: 0s;
+  min-height: 100%;
+  -webkit-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -moz-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -ms-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -o-transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition-delay: 0s;
 }
 
 .revalidate-button.is-safari .btn-revalidate-button .btn-wrapper .bg-1,
 .revalidate-button.is-safari .btn-revalidate-button .btn-wrapper .bg-2 {
-    width: calc(100% - 1px);
+  width: calc(100% - 1px);
 }
 
 .revalidate-button .modal-add-to-cart {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    flex-wrap: wrap;
-    flex-direction: row;
-    color: var(--white-1);
-    padding: 1.5rem 2rem;
-    margin: 2rem 0rem;
-    border-radius: 4rem;
-    overflow: hidden;
-    background: var(--blue-1);
-    z-index: 5;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  color: var(--white-1);
+  padding: 1.5rem 2rem;
+  margin: 2rem 0rem;
+  border-radius: 4rem;
+  overflow: hidden;
+  background: var(--blue-1);
+  z-index: 5;
 }
 
 .revalidate-button .modal-add-to-cart:before {
-    content: "";
-    width: 100%;
-    height: 100%;
-    display: block;
-    position: absolute;
-    top: 0;
-    right: auto;
-    bottom: auto;
-    left: 0;
-    background: var(--blue-2);
-    transform: translateY(100%);
-    will-change: transform;
-    -webkit-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -moz-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -ms-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -o-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition-delay: 0s;
+  content: "";
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  background: var(--blue-2);
+  transform: translateY(100%);
+  will-change: transform;
+  -webkit-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -moz-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -ms-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -o-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition-delay: 0s;
 }
 
 .revalidate-button .modal-add-to-cart span,
 .revalidate-button .modal-add-to-cart i {
-    position: relative;
-    z-index: 5;
-    -webkit-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -moz-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -ms-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-    -o-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
-    transition-delay: 0s;
+  position: relative;
+  z-index: 5;
+  -webkit-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -moz-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -ms-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+  -o-transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition-delay: 0s;
 }
 
 .revalidate-button .modal-add-to-cart span {
-    display: block;
-    margin-right: 1rem;
+  display: block;
+  margin-right: 1rem;
 }
 
 .revalidate-button .modal-add-to-cart i {
-    font-size: 1.4rem;
+  font-size: 1.4rem;
 }
 
 .revalidate-button .modal-add-to-cart i:before {
-    color: var(--white-1);
+  color: var(--white-1);
 }
 
 .revalidate-button .modal-add-to-cart:hover:before {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 .revalidate-button .divisor {
-    width: calc(100% - var(--padding) * 2);
-    height: 1px;
-    background: transparent;
-    border: none;
-    margin-left: var(--padding);
-    border-bottom: 0.1rem dashed var(--blue-1);
+  width: calc(100% - var(--padding) * 2);
+  height: 1px;
+  background: transparent;
+  border: none;
+  margin-left: var(--padding);
+  border-bottom: 0.1rem dashed var(--blue-1);
 }
 
 .search-box input {
-    font-size: 18px;
-    font-family: 'MarrSans Cond';
-    color: var(--blue-1);
-    background: transparent;
-    border: 2px solid;
-    border-color: var(--blue-1);
-    border-radius: 56px;
-    padding: 10px 16px;
-    width: 100%;
-    min-width: 400px;
-    outline: none;
+  font-size: 18px;
+  font-family: 'MarrSans Cond';
+  color: var(--blue-1);
+  background: transparent;
+  border: 2px solid;
+  border-color: var(--blue-1);
+  border-radius: 56px;
+  padding: 10px 16px;
+  width: 100%;
+  min-width: 400px;
+  outline: none;
 }
 
 .search-box input::placeholder {
-    color: var(--blue-3);
+  color: var(--blue-3);
 }
 
 .touch-action-none {
-    touch-action: none;
+  touch-action: none;
 }
 
 .section-error-404.inline {
-    min-height: 50vh;
-    padding: 0;
+  min-height: 50vh;
+  padding: 0;
 }
 
 .no-select {
-    user-select: none;
+  user-select: none;
 }
 
 .container-tags.drag-handle {
-    pointer-events: all;
+  pointer-events: all;
 }
 
 .cursor-move {
-    cursor: move;
+  cursor: move;
 }
 
 .sorting-product:hover .product-title {
-    text-overflow: unset !important;
-    white-space: break-spaces !important;
-    overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: break-spaces !important;
+  overflow: visible !important;
 }
 
 .sorting-product .best-seller {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  min-height: 3rem;
+  color: var(--blue-1);
+  border-radius: 2.8rem;
+  background: var(--yellow-1);
+  padding: 0.5rem 1.3718rem;
+  margin-right: 0.6rem;
+}
+
+.menu-my-account .list-menu-my-account .link-account span {
+  flex-grow: 1;
+  max-width: 80%;
+}
+
+.menu-my-account .list-menu-my-account .link-account .svg-custom {
+  width: 3.1rem;
+}
+
+.menu-my-account .list-menu-my-account .link-account .svg-custom img {
+  width: 18px;
+}
+
+
+@media only screen and (min-width: 1025.1px) {
+  .header-info-list li.local-item .accordion-header.location-dropdown {
+    justify-content: flex-start;
+  }
+}
+
+.search-product-set {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.search-product-set button {
+  padding: 10px 16px;
+  min-width: 140px;
+  text-align: center;
+}
+
+.sets-listing {
+  width: 100%;
+  display: flex;
+  gap: 4rem;
+}
+
+@media only screen and (max-width: 1025px) {
+  .search-product-set {
+    flex-flow: column;
+    max-width: none;
+    width: 100%;
+  }
+
+  .search-box input {
+    min-width: 100% !important;
+  }
+}
+
+ul.sets-listing li {
+  background: var(--white-2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  word-spacing: 4px;
+  letter-spacing: 0.5px;
+}
+
+.products-set-container.d-flex {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.cart-product.cart-product-2 {
+  background: var(--white-2);
+}
+
+.cart-product.cart-product-2 .wrapper-product-info .container-top .container-product-name .product-name {
+  white-space: break-spaces;
+  text-overflow: unset;
+}
+
+.create-product-set-wrapper{
+  font-family: "MarrSans Cond", sans-serif;
+}
+
+/* -------------------------- Modal UI */
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] {
+    padding-top: calc(var(--header-height) - 1.2rem);
+  }
+}
+
+[name^="modal"]:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"]:before {
+    -webkit-backdrop-filter: blur(3rem);
+    backdrop-filter: blur(3rem);
+  }
+}
+
+[name^="modal"].active {
+  overflow-y: auto;
+}
+
+[name^="modal"].active:before {
+  -webkit-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -moz-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -ms-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -o-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+}
+
+[name^="modal"].active .column-contact {
+  -webkit-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  -moz-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  -ms-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  -o-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+}
+
+[name^="modal"].leave:before {
+  -webkit-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -moz-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -ms-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -o-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+}
+
+[name^="modal"].leave .column-contact {
+  -webkit-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  -moz-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  -ms-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  -o-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+}
+
+[name^="modal"] .section-modal-contact {
+  width: 100vw;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact {
+    padding-top: calc(var(--header-height) - 1.2rem);
+    background: var(--white-2);
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact {
+  position: relative;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-top: 9.4rem;
+    padding-bottom: 3.7rem;
+  }
+
+  [name^="modal"] .section-modal-contact .column-contact:before {
+    content: "";
+    width: calc(100% - var(--padding) * 2);
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: var(--padding);
+    background: var(--white-1);
+    border-radius: 2rem;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-left: calc(var(--padding) + 3.6rem);
+    padding-right: calc(var(--padding) + 3rem);
+  }
+}
+
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-top: 5rem;
+    padding-bottom: 10rem;
+  }
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-left: var(--padding);
+    padding-right: var(--padding);
+    padding-top: 4.4rem;
+    padding-bottom: 10rem;
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info {
+  --column-1-max-w: 50%;
+  --column-2-max-w: 50%;
+  --column-2-offset: 0;
+  --contact-color: var(--blue-1);
+  --address-color: var(--blue-1);
+  --social-media-color: var(--blue-1);
+  --contact-mt: 2.5rem;
+  position: relative;
+  z-index: 5;
+}
+
+@media only screen and (max-width: 1025px) {
+
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1,
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 {
+    padding-left: var(--padding);
+    padding-right: var(--padding);
+  }
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 {
+    padding-right: calc(var(--padding) + 3rem);
+  }
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title {
+    font-size: 2.5rem;
+  }
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title i {
+    display: none;
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .form-contact {
+  --color: var(--blue-1);
+  --label-color: var(--blue-1);
+  --border-color: var(--blue-1);
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit {
+  --btn-p: 1.404rem 5.6rem 1.2rem;
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit:hover {
+  --btn-bg-color: var(--white-2);
+}
+
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+    font-size: 5rem;
+  }
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+    font-size: 3.7rem;
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+  display: block;
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 801;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    position: absolute;
+    top: 1.2rem;
+    right: calc(1.2rem + var(--padding));
+    bottom: auto;
+    left: auto;
+    width: 3.7rem;
+    height: 3.7rem;
+    background: var(--pink-1);
+    border-radius: 50%;
+  }
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     align-content: center;
     flex-wrap: wrap;
     flex-direction: row;
-    min-height: 3rem;
-    color: var(--blue-1);
-    border-radius: 2.8rem;
-    background: var(--yellow-1);
-    padding: 0.5rem 1.3718rem;
-    margin-right: 0.6rem;
+    min-width: 14.5rem;
+    background: var(--blue-1);
+    border-radius: 3.8rem;
+  }
 }
 
-.menu-my-account .list-menu-my-account .link-account span {
-    flex-grow: 1;
-    max-width: 80%;
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    position: absolute;
+    top: 3.7rem;
+    right: calc(1.2rem + var(--padding));
+    bottom: auto;
+    left: auto;
+    padding: 1.7rem 2.6rem 2.1rem;
+  }
 }
 
-.menu-my-account .list-menu-my-account .link-account .svg-custom {
-    width: 3.1rem;
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    position: absolute;
+    top: 3.6rem;
+    right: var(--padding);
+    bottom: auto;
+    left: auto;
+    padding: 0.9rem 2.6rem 1.1rem;
+  }
 }
 
-.menu-my-account .list-menu-my-account .link-account .svg-custom img {
-    width: 18px;
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+  display: inline-block;
+  color: var(--white-1);
 }
-
 
 @media only screen and (min-width: 1025.1px) {
-    .header-info-list li.local-item .accordion-header.location-dropdown {
-        justify-content: flex-start;
-    }
-}
-
-.search-product-set {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-}
-
-.search-product-set button {
-    padding: 10px 16px;
-    min-width: 140px;
-    text-align: center;
-}
-
-.sets-listing {
-    width: 100%;
-    display: flex;
-    gap: 4rem;
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+    position: absolute;
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.1rem;
+  }
 }
 
 @media only screen and (max-width: 1025px) {
-    .search-product-set {
-        flex-flow: column;
-        max-width: none;
-        width: 100%;
-    }
-
-    .search-box input {
-        min-width: 100% !important;
-    }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+    margin-top: 0.3rem;
+    font-size: 1.2rem;
+  }
 }
 
-ul.sets-listing li {
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-close {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-arrow-left {
+    display: none;
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-go-back {
+  color: var(--white-1);
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-hide {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] {
+    padding-top: calc(var(--header-height) - 1.2rem);
+  }
+}
+
+[name^="modal"]:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"]:before {
+    -webkit-backdrop-filter: blur(3rem);
+    backdrop-filter: blur(3rem);
+  }
+}
+
+[name^="modal"].active {
+  overflow-y: auto;
+}
+
+[name^="modal"].active:before {
+  -webkit-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -moz-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -ms-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -o-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+}
+
+[name^="modal"].active .column-contact {
+  -webkit-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  -moz-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  -ms-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  -o-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+}
+
+[name^="modal"].leave:before {
+  -webkit-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -moz-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -ms-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -o-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+}
+
+[name^="modal"].leave .column-contact {
+  -webkit-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  -moz-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  -ms-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  -o-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+}
+
+[name^="modal"] .section-modal-contact {
+  width: 100vw;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact {
+    padding-top: calc(var(--header-height) - 1.2rem);
     background: var(--white-2);
-    padding: 8px 16px;
-    border-radius: 6px;
-    text-transform: uppercase;
-    word-spacing: 4px;
-    letter-spacing: 0.5px;
+  }
 }
 
-.products-set-container.d-flex {
+[name^="modal"] .section-modal-contact .column-contact {
+  position: relative;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-top: 9.4rem;
+    padding-bottom: 3.7rem;
+  }
+
+  [name^="modal"] .section-modal-contact .column-contact:before {
+    content: "";
+    width: calc(100% - var(--padding) * 2);
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: var(--padding);
+    background: var(--white-1);
+    border-radius: 2rem;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-left: calc(var(--padding) + 3.6rem);
+    padding-right: calc(var(--padding) + 3rem);
+  }
+}
+
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-top: 5rem;
+    padding-bottom: 10rem;
+  }
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-left: var(--padding);
+    padding-right: var(--padding);
+    padding-top: 4.4rem;
+    padding-bottom: 10rem;
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info {
+  --column-1-max-w: 50%;
+  --column-2-max-w: 50%;
+  --column-2-offset: 0;
+  --contact-color: var(--blue-1);
+  --address-color: var(--blue-1);
+  --social-media-color: var(--blue-1);
+  --contact-mt: 2.5rem;
+  position: relative;
+  z-index: 5;
+}
+
+@media only screen and (max-width: 1025px) {
+
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1,
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 {
+    padding-left: var(--padding);
+    padding-right: var(--padding);
+  }
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 {
+    padding-right: calc(var(--padding) + 3rem);
+  }
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title {
+    font-size: 2.5rem;
+  }
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title i {
+    display: none;
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .form-contact {
+  --color: var(--blue-1);
+  --label-color: var(--blue-1);
+  --border-color: var(--blue-1);
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit {
+  --btn-p: 1.404rem 5.6rem 1.2rem;
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit:hover {
+  --btn-bg-color: var(--white-2);
+}
+
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+    font-size: 5rem;
+  }
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+    font-size: 3.7rem;
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+  display: block;
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 801;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    position: absolute;
+    top: 1.2rem;
+    right: calc(1.2rem + var(--padding));
+    bottom: auto;
+    left: auto;
+    width: 3.7rem;
+    height: 3.7rem;
+    background: var(--pink-1);
+    border-radius: 50%;
+  }
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    min-width: 14.5rem;
+    background: var(--blue-1);
+    border-radius: 3.8rem;
+  }
 }
 
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    position: absolute;
+    top: 3.7rem;
+    right: calc(1.2rem + var(--padding));
+    bottom: auto;
+    left: auto;
+    padding: 1.7rem 2.6rem 2.1rem;
+  }
+}
 
-/* -------------------------- Modal UI */
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    position: absolute;
+    top: 3.6rem;
+    right: var(--padding);
+    bottom: auto;
+    left: auto;
+    padding: 0.9rem 2.6rem 1.1rem;
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+  display: inline-block;
+  color: var(--white-1);
+}
+
 @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] {
-      padding-top: calc(var(--header-height) - 1.2rem);
-    }
-  }
-  [name^="modal"]:before {
-    content: "";
-    width: 100%;
-    height: 100%;
-    display: block;
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
     position: absolute;
-    top: 0;
+    top: 50%;
     right: auto;
     bottom: auto;
-    left: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.1rem;
   }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"]:before {
-      -webkit-backdrop-filter: blur(3rem);
-      backdrop-filter: blur(3rem);
-    }
-  }
-  [name^="modal"].active {
-    overflow-y: auto;
-  }
-  [name^="modal"].active:before {
-    -webkit-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -moz-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -ms-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -o-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-  }
-  [name^="modal"].active .column-contact {
-    -webkit-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    -moz-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    -ms-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    -o-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-  }
-  [name^="modal"].leave:before {
-    -webkit-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -moz-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -ms-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -o-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-  }
-  [name^="modal"].leave .column-contact {
-    -webkit-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    -moz-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    -ms-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    -o-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-  }
-  [name^="modal"] .section-modal-contact {
-    width: 100vw;
-    overflow: hidden;
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact {
-      padding-top: calc(var(--header-height) - 1.2rem);
-      background: var(--white-2);
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact {
-    position: relative;
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-top: 9.4rem;
-      padding-bottom: 3.7rem;
-    }
-    [name^="modal"] .section-modal-contact .column-contact:before {
-      content: "";
-      width: calc(100% - var(--padding) * 2);
-      height: 100%;
-      display: block;
-      position: absolute;
-      top: 0;
-      right: auto;
-      bottom: auto;
-      left: var(--padding);
-      background: var(--white-1);
-      border-radius: 2rem;
-    }
-  }
-  @media only screen and (min-width: 768px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-left: calc(var(--padding) + 3.6rem);
-      padding-right: calc(var(--padding) + 3rem);
-    }
-  }
-  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-top: 5rem;
-      padding-bottom: 10rem;
-    }
-  }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-left: var(--padding);
-      padding-right: var(--padding);
-      padding-top: 4.4rem;
-      padding-bottom: 10rem;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info {
-    --column-1-max-w: 50%;
-    --column-2-max-w: 50%;
-    --column-2-offset: 0;
-    --contact-color: var(--blue-1);
-    --address-color: var(--blue-1);
-    --social-media-color: var(--blue-1);
-    --contact-mt: 2.5rem;
-    position: relative;
-    z-index: 5;
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1,
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 {
-      padding-left: var(--padding);
-      padding-right: var(--padding);
-    }
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 {
-      padding-right: calc(var(--padding) + 3rem);
-    }
-  }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title {
-      font-size: 2.5rem;
-    }
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title i {
-      display: none;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .form-contact {
-    --color: var(--blue-1);
-    --label-color: var(--blue-1);
-    --border-color: var(--blue-1);
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit {
-    --btn-p: 1.404rem 5.6rem 1.2rem;
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit:hover {
-    --btn-bg-color: var(--white-2);
-  }
-  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
-      font-size: 5rem;
-    }
-  }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
-      font-size: 3.7rem;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-    display: block;
-    pointer-events: auto;
-    cursor: pointer;
-    z-index: 801;
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      position: absolute;
-      top: 1.2rem;
-      right: calc(1.2rem + var(--padding));
-      bottom: auto;
-      left: auto;
-      width: 3.7rem;
-      height: 3.7rem;
-      background: var(--pink-1);
-      border-radius: 50%;
-    }
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      align-content: center;
-      flex-wrap: wrap;
-      flex-direction: row;
-      min-width: 14.5rem;
-      background: var(--blue-1);
-      border-radius: 3.8rem;
-    }
-  }
-  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      position: absolute;
-      top: 3.7rem;
-      right: calc(1.2rem + var(--padding));
-      bottom: auto;
-      left: auto;
-      padding: 1.7rem 2.6rem 2.1rem;
-    }
-  }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      position: absolute;
-      top: 3.6rem;
-      right: var(--padding);
-      bottom: auto;
-      left: auto;
-      padding: 0.9rem 2.6rem 1.1rem;
-    }
-  }
+}
+
+@media only screen and (max-width: 1025px) {
   [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
-    display: inline-block;
-    color: var(--white-1);
+    margin-top: 0.3rem;
+    font-size: 1.2rem;
   }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
-      position: absolute;
-      top: 50%;
-      right: auto;
-      bottom: auto;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.1rem;
-    }
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-close {
+    display: none;
   }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
-      margin-top: 0.3rem;
-      font-size: 1.2rem;
-    }
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-close {
-      display: none;
-    }
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-arrow-left {
-      display: none;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-go-back {
-    color: var(--white-1);
-  }
-  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-hide {
-    opacity: 0;
-    position: absolute;
-    pointer-events: none;
-  }
+}
+
 @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] {
-      padding-top: calc(var(--header-height) - 1.2rem);
-    }
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-arrow-left {
+    display: none;
   }
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-go-back {
+  color: var(--white-1);
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-hide {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] {
+    padding-top: calc(var(--header-height) - 1.2rem);
+  }
+}
+
+[name^="modal"]:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+}
+
+@media only screen and (min-width: 1025.1px) {
   [name^="modal"]:before {
+    -webkit-backdrop-filter: blur(3rem);
+    backdrop-filter: blur(3rem);
+  }
+}
+
+[name^="modal"].active {
+  overflow-y: auto;
+}
+
+[name^="modal"].active:before {
+  -webkit-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -moz-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -ms-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -o-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+}
+
+[name^="modal"].active .column-contact {
+  -webkit-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  -moz-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  -ms-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  -o-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+}
+
+[name^="modal"].leave:before {
+  -webkit-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -moz-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -ms-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -o-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+}
+
+[name^="modal"].leave .column-contact {
+  -webkit-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  -moz-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  -ms-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  -o-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+}
+
+[name^="modal"] .section-modal-contact {
+  width: 100vw;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact {
+    padding-top: calc(var(--header-height) - 1.2rem);
+    background: var(--white-2);
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact {
+  position: relative;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-top: 9.4rem;
+    padding-bottom: 3.7rem;
+  }
+
+  [name^="modal"] .section-modal-contact .column-contact:before {
     content: "";
-    width: 100%;
+    width: calc(100% - var(--padding) * 2);
     height: 100%;
     display: block;
     position: absolute;
     top: 0;
     right: auto;
     bottom: auto;
-    left: 0;
+    left: var(--padding);
+    background: var(--white-1);
+    border-radius: 2rem;
   }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"]:before {
-      -webkit-backdrop-filter: blur(3rem);
-      backdrop-filter: blur(3rem);
-    }
-  }
-  [name^="modal"].active {
-    overflow-y: auto;
-  }
-  [name^="modal"].active:before {
-    -webkit-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -moz-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -ms-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -o-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-  }
-  [name^="modal"].active .column-contact {
-    -webkit-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    -moz-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    -ms-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    -o-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-  }
-  [name^="modal"].leave:before {
-    -webkit-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -moz-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -ms-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -o-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-  }
-  [name^="modal"].leave .column-contact {
-    -webkit-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    -moz-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    -ms-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    -o-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-  }
-  [name^="modal"] .section-modal-contact {
-    width: 100vw;
-    overflow: hidden;
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact {
-      padding-top: calc(var(--header-height) - 1.2rem);
-      background: var(--white-2);
-    }
-  }
+}
+
+@media only screen and (min-width: 768px) {
   [name^="modal"] .section-modal-contact .column-contact {
-    position: relative;
+    padding-left: calc(var(--padding) + 3.6rem);
+    padding-right: calc(var(--padding) + 3rem);
   }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-top: 9.4rem;
-      padding-bottom: 3.7rem;
-    }
-    [name^="modal"] .section-modal-contact .column-contact:before {
-      content: "";
-      width: calc(100% - var(--padding) * 2);
-      height: 100%;
-      display: block;
-      position: absolute;
-      top: 0;
-      right: auto;
-      bottom: auto;
-      left: var(--padding);
-      background: var(--white-1);
-      border-radius: 2rem;
-    }
+}
+
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-top: 5rem;
+    padding-bottom: 10rem;
   }
-  @media only screen and (min-width: 768px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-left: calc(var(--padding) + 3.6rem);
-      padding-right: calc(var(--padding) + 3rem);
-    }
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-left: var(--padding);
+    padding-right: var(--padding);
+    padding-top: 4.4rem;
+    padding-bottom: 10rem;
   }
-  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-top: 5rem;
-      padding-bottom: 10rem;
-    }
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info {
+  --column-1-max-w: 50%;
+  --column-2-max-w: 50%;
+  --column-2-offset: 0;
+  --contact-color: var(--blue-1);
+  --address-color: var(--blue-1);
+  --social-media-color: var(--blue-1);
+  --contact-mt: 2.5rem;
+  position: relative;
+  z-index: 5;
+}
+
+@media only screen and (max-width: 1025px) {
+
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1,
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 {
+    padding-left: var(--padding);
+    padding-right: var(--padding);
   }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-left: var(--padding);
-      padding-right: var(--padding);
-      padding-top: 4.4rem;
-      padding-bottom: 10rem;
-    }
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 {
+    padding-right: calc(var(--padding) + 3rem);
   }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info {
-    --column-1-max-w: 50%;
-    --column-2-max-w: 50%;
-    --column-2-offset: 0;
-    --contact-color: var(--blue-1);
-    --address-color: var(--blue-1);
-    --social-media-color: var(--blue-1);
-    --contact-mt: 2.5rem;
-    position: relative;
-    z-index: 5;
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title {
+    font-size: 2.5rem;
   }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1,
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 {
-      padding-left: var(--padding);
-      padding-right: var(--padding);
-    }
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title i {
+    display: none;
   }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 {
-      padding-right: calc(var(--padding) + 3rem);
-    }
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .form-contact {
+  --color: var(--blue-1);
+  --label-color: var(--blue-1);
+  --border-color: var(--blue-1);
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit {
+  --btn-p: 1.404rem 5.6rem 1.2rem;
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit:hover {
+  --btn-bg-color: var(--white-2);
+}
+
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+    font-size: 5rem;
   }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title {
-      font-size: 2.5rem;
-    }
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+    font-size: 3.7rem;
   }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title i {
-      display: none;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .form-contact {
-    --color: var(--blue-1);
-    --label-color: var(--blue-1);
-    --border-color: var(--blue-1);
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit {
-    --btn-p: 1.404rem 5.6rem 1.2rem;
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit:hover {
-    --btn-bg-color: var(--white-2);
-  }
-  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
-      font-size: 5rem;
-    }
-  }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
-      font-size: 3.7rem;
-    }
-  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+  display: block;
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 801;
+}
+
+@media only screen and (min-width: 1025.1px) {
   [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-    display: block;
-    pointer-events: auto;
-    cursor: pointer;
-    z-index: 801;
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      position: absolute;
-      top: 1.2rem;
-      right: calc(1.2rem + var(--padding));
-      bottom: auto;
-      left: auto;
-      width: 3.7rem;
-      height: 3.7rem;
-      background: var(--pink-1);
-      border-radius: 50%;
-    }
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      align-content: center;
-      flex-wrap: wrap;
-      flex-direction: row;
-      min-width: 14.5rem;
-      background: var(--blue-1);
-      border-radius: 3.8rem;
-    }
-  }
-  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      position: absolute;
-      top: 3.7rem;
-      right: calc(1.2rem + var(--padding));
-      bottom: auto;
-      left: auto;
-      padding: 1.7rem 2.6rem 2.1rem;
-    }
-  }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      position: absolute;
-      top: 3.6rem;
-      right: var(--padding);
-      bottom: auto;
-      left: auto;
-      padding: 0.9rem 2.6rem 1.1rem;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
-    display: inline-block;
-    color: var(--white-1);
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
-      position: absolute;
-      top: 50%;
-      right: auto;
-      bottom: auto;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.1rem;
-    }
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
-      margin-top: 0.3rem;
-      font-size: 1.2rem;
-    }
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-close {
-      display: none;
-    }
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-arrow-left {
-      display: none;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-go-back {
-    color: var(--white-1);
-  }
-  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-hide {
-    opacity: 0;
     position: absolute;
-    pointer-events: none;
-  }@media only screen and (min-width: 1025.1px) {
-    [name^="modal"] {
-      padding-top: calc(var(--header-height) - 1.2rem);
-    }
+    top: 1.2rem;
+    right: calc(1.2rem + var(--padding));
+    bottom: auto;
+    left: auto;
+    width: 3.7rem;
+    height: 3.7rem;
+    background: var(--pink-1);
+    border-radius: 50%;
   }
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    min-width: 14.5rem;
+    background: var(--blue-1);
+    border-radius: 3.8rem;
+  }
+}
+
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    position: absolute;
+    top: 3.7rem;
+    right: calc(1.2rem + var(--padding));
+    bottom: auto;
+    left: auto;
+    padding: 1.7rem 2.6rem 2.1rem;
+  }
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    position: absolute;
+    top: 3.6rem;
+    right: var(--padding);
+    bottom: auto;
+    left: auto;
+    padding: 0.9rem 2.6rem 1.1rem;
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+  display: inline-block;
+  color: var(--white-1);
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+    position: absolute;
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.1rem;
+  }
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+    margin-top: 0.3rem;
+    font-size: 1.2rem;
+  }
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-close {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-arrow-left {
+    display: none;
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-go-back {
+  color: var(--white-1);
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-hide {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] {
+    padding-top: calc(var(--header-height) - 1.2rem);
+  }
+}
+
+[name^="modal"]:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+}
+
+@media only screen and (min-width: 1025.1px) {
   [name^="modal"]:before {
+    -webkit-backdrop-filter: blur(3rem);
+    backdrop-filter: blur(3rem);
+  }
+}
+
+[name^="modal"].active {
+  overflow-y: auto;
+}
+
+[name^="modal"].active:before {
+  -webkit-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -moz-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -ms-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -o-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+}
+
+[name^="modal"].active .column-contact {
+  -webkit-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  -moz-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  -ms-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  -o-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+  animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
+}
+
+[name^="modal"].leave:before {
+  -webkit-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -moz-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -ms-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  -o-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+  animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
+}
+
+[name^="modal"].leave .column-contact {
+  -webkit-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  -moz-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  -ms-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  -o-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+  animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
+}
+
+[name^="modal"] .section-modal-contact {
+  width: 100vw;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact {
+    padding-top: calc(var(--header-height) - 1.2rem);
+    background: var(--white-2);
+  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact {
+  position: relative;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-top: 9.4rem;
+    padding-bottom: 3.7rem;
+  }
+
+  [name^="modal"] .section-modal-contact .column-contact:before {
     content: "";
-    width: 100%;
+    width: calc(100% - var(--padding) * 2);
     height: 100%;
     display: block;
     position: absolute;
     top: 0;
     right: auto;
     bottom: auto;
-    left: 0;
+    left: var(--padding);
+    background: var(--white-1);
+    border-radius: 2rem;
   }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"]:before {
-      -webkit-backdrop-filter: blur(3rem);
-      backdrop-filter: blur(3rem);
-    }
-  }
-  [name^="modal"].active {
-    overflow-y: auto;
-  }
-  [name^="modal"].active:before {
-    -webkit-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -moz-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -ms-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -o-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-  }
-  [name^="modal"].active .column-contact {
-    -webkit-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    -moz-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    -ms-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    -o-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-  }
-  [name^="modal"].leave:before {
-    -webkit-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -moz-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -ms-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -o-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-  }
-  [name^="modal"].leave .column-contact {
-    -webkit-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    -moz-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    -ms-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    -o-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-  }
-  [name^="modal"] .section-modal-contact {
-    width: 100vw;
-    overflow: hidden;
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact {
-      padding-top: calc(var(--header-height) - 1.2rem);
-      background: var(--white-2);
-    }
-  }
+}
+
+@media only screen and (min-width: 768px) {
   [name^="modal"] .section-modal-contact .column-contact {
-    position: relative;
+    padding-left: calc(var(--padding) + 3.6rem);
+    padding-right: calc(var(--padding) + 3rem);
   }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-top: 9.4rem;
-      padding-bottom: 3.7rem;
-    }
-    [name^="modal"] .section-modal-contact .column-contact:before {
-      content: "";
-      width: calc(100% - var(--padding) * 2);
-      height: 100%;
-      display: block;
-      position: absolute;
-      top: 0;
-      right: auto;
-      bottom: auto;
-      left: var(--padding);
-      background: var(--white-1);
-      border-radius: 2rem;
-    }
+}
+
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-top: 5rem;
+    padding-bottom: 10rem;
   }
-  @media only screen and (min-width: 768px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-left: calc(var(--padding) + 3.6rem);
-      padding-right: calc(var(--padding) + 3rem);
-    }
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact {
+    padding-left: var(--padding);
+    padding-right: var(--padding);
+    padding-top: 4.4rem;
+    padding-bottom: 10rem;
   }
-  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-top: 5rem;
-      padding-bottom: 10rem;
-    }
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info {
+  --column-1-max-w: 50%;
+  --column-2-max-w: 50%;
+  --column-2-offset: 0;
+  --contact-color: var(--blue-1);
+  --address-color: var(--blue-1);
+  --social-media-color: var(--blue-1);
+  --contact-mt: 2.5rem;
+  position: relative;
+  z-index: 5;
+}
+
+@media only screen and (max-width: 1025px) {
+
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1,
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 {
+    padding-left: var(--padding);
+    padding-right: var(--padding);
   }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-left: var(--padding);
-      padding-right: var(--padding);
-      padding-top: 4.4rem;
-      padding-bottom: 10rem;
-    }
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 {
+    padding-right: calc(var(--padding) + 3rem);
   }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info {
-    --column-1-max-w: 50%;
-    --column-2-max-w: 50%;
-    --column-2-offset: 0;
-    --contact-color: var(--blue-1);
-    --address-color: var(--blue-1);
-    --social-media-color: var(--blue-1);
-    --contact-mt: 2.5rem;
-    position: relative;
-    z-index: 5;
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title {
+    font-size: 2.5rem;
   }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1,
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 {
-      padding-left: var(--padding);
-      padding-right: var(--padding);
-    }
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title i {
+    display: none;
   }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 {
-      padding-right: calc(var(--padding) + 3rem);
-    }
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .form-contact {
+  --color: var(--blue-1);
+  --label-color: var(--blue-1);
+  --border-color: var(--blue-1);
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit {
+  --btn-p: 1.404rem 5.6rem 1.2rem;
+}
+
+[name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit:hover {
+  --btn-bg-color: var(--white-2);
+}
+
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+    font-size: 5rem;
   }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title {
-      font-size: 2.5rem;
-    }
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
+    font-size: 3.7rem;
   }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title i {
-      display: none;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .form-contact {
-    --color: var(--blue-1);
-    --label-color: var(--blue-1);
-    --border-color: var(--blue-1);
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit {
-    --btn-p: 1.404rem 5.6rem 1.2rem;
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit:hover {
-    --btn-bg-color: var(--white-2);
-  }
-  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
-      font-size: 5rem;
-    }
-  }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
-      font-size: 3.7rem;
-    }
-  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+  display: block;
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 801;
+}
+
+@media only screen and (min-width: 1025.1px) {
   [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-    display: block;
-    pointer-events: auto;
-    cursor: pointer;
-    z-index: 801;
+    position: absolute;
+    top: 1.2rem;
+    right: calc(1.2rem + var(--padding));
+    bottom: auto;
+    left: auto;
+    width: 3.7rem;
+    height: 3.7rem;
+    background: var(--pink-1);
+    border-radius: 50%;
   }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      position: absolute;
-      top: 1.2rem;
-      right: calc(1.2rem + var(--padding));
-      bottom: auto;
-      left: auto;
-      width: 3.7rem;
-      height: 3.7rem;
-      background: var(--pink-1);
-      border-radius: 50%;
-    }
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    min-width: 14.5rem;
+    background: var(--blue-1);
+    border-radius: 3.8rem;
   }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      align-content: center;
-      flex-wrap: wrap;
-      flex-direction: row;
-      min-width: 14.5rem;
-      background: var(--blue-1);
-      border-radius: 3.8rem;
-    }
+}
+
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    position: absolute;
+    top: 3.7rem;
+    right: calc(1.2rem + var(--padding));
+    bottom: auto;
+    left: auto;
+    padding: 1.7rem 2.6rem 2.1rem;
   }
-  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      position: absolute;
-      top: 3.7rem;
-      right: calc(1.2rem + var(--padding));
-      bottom: auto;
-      left: auto;
-      padding: 1.7rem 2.6rem 2.1rem;
-    }
+}
+
+@media only screen and (max-width: 767.98px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
+    position: absolute;
+    top: 3.6rem;
+    right: var(--padding);
+    bottom: auto;
+    left: auto;
+    padding: 0.9rem 2.6rem 1.1rem;
   }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      position: absolute;
-      top: 3.6rem;
-      right: var(--padding);
-      bottom: auto;
-      left: auto;
-      padding: 0.9rem 2.6rem 1.1rem;
-    }
-  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
+  display: inline-block;
+  color: var(--white-1);
+}
+
+@media only screen and (min-width: 1025.1px) {
   [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
-    display: inline-block;
-    color: var(--white-1);
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
-      position: absolute;
-      top: 50%;
-      right: auto;
-      bottom: auto;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.1rem;
-    }
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
-      margin-top: 0.3rem;
-      font-size: 1.2rem;
-    }
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-close {
-      display: none;
-    }
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-arrow-left {
-      display: none;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-go-back {
-    color: var(--white-1);
-  }
-  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-hide {
-    opacity: 0;
     position: absolute;
-    pointer-events: none;
-  }@media only screen and (min-width: 1025.1px) {
-    [name^="modal"] {
-      padding-top: calc(var(--header-height) - 1.2rem);
-    }
-  }
-  [name^="modal"]:before {
-    content: "";
-    width: 100%;
-    height: 100%;
-    display: block;
-    position: absolute;
-    top: 0;
+    top: 50%;
     right: auto;
     bottom: auto;
-    left: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.1rem;
   }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"]:before {
-      -webkit-backdrop-filter: blur(3rem);
-      backdrop-filter: blur(3rem);
-    }
-  }
-  [name^="modal"].active {
-    overflow-y: auto;
-  }
-  [name^="modal"].active:before {
-    -webkit-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -moz-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -ms-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -o-animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    animation: fadeIn 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-  }
-  [name^="modal"].active .column-contact {
-    -webkit-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    -moz-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    -ms-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    -o-animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-    animation: slide-up 0.6s cubic-bezier(0.215, 0.61, 0.355, 1) 0s both 1;
-  }
-  [name^="modal"].leave:before {
-    -webkit-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -moz-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -ms-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    -o-animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-    animation: fadeOut 0.6s cubic-bezier(0.42, 0, 0.58, 1) 0s both 1;
-  }
-  [name^="modal"].leave .column-contact {
-    -webkit-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    -moz-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    -ms-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    -o-animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-    animation: unslide-down 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0s both 1;
-  }
-  [name^="modal"] .section-modal-contact {
-    width: 100vw;
-    overflow: hidden;
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact {
-      padding-top: calc(var(--header-height) - 1.2rem);
-      background: var(--white-2);
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact {
-    position: relative;
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-top: 9.4rem;
-      padding-bottom: 3.7rem;
-    }
-    [name^="modal"] .section-modal-contact .column-contact:before {
-      content: "";
-      width: calc(100% - var(--padding) * 2);
-      height: 100%;
-      display: block;
-      position: absolute;
-      top: 0;
-      right: auto;
-      bottom: auto;
-      left: var(--padding);
-      background: var(--white-1);
-      border-radius: 2rem;
-    }
-  }
-  @media only screen and (min-width: 768px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-left: calc(var(--padding) + 3.6rem);
-      padding-right: calc(var(--padding) + 3rem);
-    }
-  }
-  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-top: 5rem;
-      padding-bottom: 10rem;
-    }
-  }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact {
-      padding-left: var(--padding);
-      padding-right: var(--padding);
-      padding-top: 4.4rem;
-      padding-bottom: 10rem;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info {
-    --column-1-max-w: 50%;
-    --column-2-max-w: 50%;
-    --column-2-offset: 0;
-    --contact-color: var(--blue-1);
-    --address-color: var(--blue-1);
-    --social-media-color: var(--blue-1);
-    --contact-mt: 2.5rem;
-    position: relative;
-    z-index: 5;
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1,
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 {
-      padding-left: var(--padding);
-      padding-right: var(--padding);
-    }
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 {
-      padding-right: calc(var(--padding) + 3rem);
-    }
-  }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title {
-      font-size: 2.5rem;
-    }
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .title i {
-      display: none;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .form-contact {
-    --color: var(--blue-1);
-    --label-color: var(--blue-1);
-    --border-color: var(--blue-1);
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit {
-    --btn-p: 1.404rem 5.6rem 1.2rem;
-  }
-  [name^="modal"] .section-modal-contact .column-contact .contact-info .column-1 .bt-submit:hover {
-    --btn-bg-color: var(--white-2);
-  }
-  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
-      font-size: 5rem;
-    }
-  }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact .contact-info .column-2 .container-info a {
-      font-size: 3.7rem;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-    display: block;
-    pointer-events: auto;
-    cursor: pointer;
-    z-index: 801;
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      position: absolute;
-      top: 1.2rem;
-      right: calc(1.2rem + var(--padding));
-      bottom: auto;
-      left: auto;
-      width: 3.7rem;
-      height: 3.7rem;
-      background: var(--pink-1);
-      border-radius: 50%;
-    }
-  }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      align-content: center;
-      flex-wrap: wrap;
-      flex-direction: row;
-      min-width: 14.5rem;
-      background: var(--blue-1);
-      border-radius: 3.8rem;
-    }
-  }
-  @media only screen and (min-width: 767.98px) and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      position: absolute;
-      top: 3.7rem;
-      right: calc(1.2rem + var(--padding));
-      bottom: auto;
-      left: auto;
-      padding: 1.7rem 2.6rem 2.1rem;
-    }
-  }
-  @media only screen and (max-width: 767.98px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close {
-      position: absolute;
-      top: 3.6rem;
-      right: var(--padding);
-      bottom: auto;
-      left: auto;
-      padding: 0.9rem 2.6rem 1.1rem;
-    }
-  }
+}
+
+@media only screen and (max-width: 1025px) {
   [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
-    display: inline-block;
-    color: var(--white-1);
+    margin-top: 0.3rem;
+    font-size: 1.2rem;
   }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
-      position: absolute;
-      top: 50%;
-      right: auto;
-      bottom: auto;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.1rem;
-    }
+}
+
+@media only screen and (max-width: 1025px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-close {
+    display: none;
   }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i {
-      margin-top: 0.3rem;
-      font-size: 1.2rem;
-    }
+}
+
+@media only screen and (min-width: 1025.1px) {
+  [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-arrow-left {
+    display: none;
   }
-  @media only screen and (max-width: 1025px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-close {
-      display: none;
-    }
-  }
-  @media only screen and (min-width: 1025.1px) {
-    [name^="modal"] .section-modal-contact .column-contact btn-modal-close i.icon-arrow-left {
-      display: none;
-    }
-  }
-  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-go-back {
-    color: var(--white-1);
-  }
-  [name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-hide {
-    opacity: 0;
-    position: absolute;
-    pointer-events: none;
-  }
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-go-back {
+  color: var(--white-1);
+}
+
+[name^="modal"] .section-modal-contact .column-contact btn-modal-close .text-hide {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+}
