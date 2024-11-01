@@ -4,64 +4,9 @@ import { authWixClient, createWixClient } from "./CreateWixClient";
 import logError from "./ServerActions";
 import { extractPermissions } from "./checkPermissions";
 
-const unAuthCollections = [
-  "InstagramFeed",
-  "Stores/Collections",
-  "RentalsQuotesDetailPage",
-  "PageSeoConfigurationRentals",
-  "RentalsHomeNewArrivals",
-  "SearchPages",
-  "Stores/Collections",
-  "RentalsHomeHero",
-  "RentalsNewArrivals",
-  "RentalsHomeStudios",
-  "RentalsHomeHotTrends",
-  "RentalsHomeDreamBig",
-  "Footer",
-  "colorFilterCache",
-  "FilterLocations",
-  "ContactDetails",
-  "MarketSection",
-  "HighlightsProducts",
-  "BestSellers",
-  "SocialLinks",
-  "ContactUsContent",
-  "FooterNavigationMenu",
-  "StudiosSection",
-  "RentalsHomeSectionDetails",
-  "PeopleReviewSlider",
-  "RentalTeamsBanner",
-  "RentalsLoginModal",
-  "SocialSectionDetails",
-  "BlogProductData",
-  "RentalsCreateAccountModal",
-  "RentalsResetPasswordModal",
-  "RentalsFooter",
-  "RentalsFooterLinks",
-  "RentalsSocialMediaLinks",
-  "RentalsAddresses",
-  "DreamBigSection",
-  "RentalsMyAccountPage",
-  "RentalsChangePasswordPage",
-  "BPSCatalogStructure",
-  "HeaderCategoryMenu",
-  "locationFilteredVariant",
-  "Stores/Products",
-  "BPSPairItWith",
-  "BPSProductImages",
-  "Stores/Variants",
-  "RentalsPrivacyPageContent",
-  "RentalsTermsPageContent",
-  "RentalsQuoteRequestPage",
-];
-
 export const isAuthenticated = async (token) => {
   try {
-    // // Allow unauthenticated access for certain collections
-    // if (unAuthCollections.includes(dataCollectionId)) {
-    //     return true; // Or some appropriate default object for unauthenticated users
-    // }
-
+    
     if (!token) {
       throw new Error("Unauthorized: No token provided");
     }
@@ -109,20 +54,4 @@ export const isAuthenticated = async (token) => {
     logError(error);
     throw new Error(`Unauthorized: ${error.message}`);
   }
-};
-
-export const apiAuth = async (apiKey, dataCollectionId) => {
-  if (!apiKey) {
-    throw new Error("Unauthorized: No api key provided");
-  }
-
-  if (unAuthCollections.includes(dataCollectionId)) {
-    return true;
-  }
-
-  if (apiKey.toString() !== process.env.APIKEY) {
-    throw new Error("Unauthorized: Api key does not match");
-  }
-
-  return true;
 };

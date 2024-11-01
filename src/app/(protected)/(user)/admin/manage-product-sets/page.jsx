@@ -18,7 +18,7 @@ export default async function Page() {
       socialLinks,
       navigationMenu,
       teamsBanner,
-      products
+      productsData
     ] = await Promise.all([
       getFooterData(),
       getContactData(),
@@ -28,11 +28,11 @@ export default async function Page() {
       getAllProductsForSets(),
     ]);
 
-    const productSets = products.filter(product => product.productSets);
-    
+    const productSets = productsData.filter(product => product.productSets && product.productSets.length);
+
     return (
       <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
-        <ProductSets products={products} productSets={productSets} />
+        <ProductSets products={productsData} productSets={productSets} />
       </Account>
     );
   } catch (error) {

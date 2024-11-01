@@ -154,7 +154,6 @@ const QuotesHistory = () => {
               const totalPrice = data.lineItems.reduce((total, item) => {
                 return total + Number(item.price) * item.quantity;
               }, 0);
-console.log("totalPrice", totalPrice);
 
               const issueDate = quoteDateFormatter(data.dates.issueDate);
               return (

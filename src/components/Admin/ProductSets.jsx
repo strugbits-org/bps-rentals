@@ -6,6 +6,9 @@ import { markPageLoaded } from '@/Utils/AnimationFunctions';
 import { ImageWrapper } from '../Common/ImageWrapper';
 import CreateProductSetModal from '../Common/Modals/CreateProductSetModal';
 import { PERMISSIONS } from '@/Utils/Schema/permissions';
+import logError from '@/Utils/ServerActions';
+import { getProductForUpdate, updateDataItem } from '@/Services/AdminApis';
+import { revalidatePage } from '@/Services/RevalidateService';
 
 export const ProductSets = ({ products, productSets }) => {
 
@@ -20,9 +23,23 @@ export const ProductSets = ({ products, productSets }) => {
     }
 
     const removeSet = async (id) => {
-        console.log("removeSet", id);
+        try {
+            setDataSets(prev => prev.filter(set => set.product._id !== id));
+            const productData = await getProductForUpdate(id);
+            productData.data.productSets = [];
+            await updateDataItem(productData);
+            revalidatePage("/admin/manage-product-sets");
+        } catch (error) {
+            logError("Error:", error);
+        }
     }
 
+    const handleOnSave = (data) => {
+        console.log("data", data);
+
+        setDataSets(prev => [data, ...prev]);
+        revalidatePage("/admin/manage-product-sets");
+    }
     useEffect(() => {
         setDataSets(productSets);
         markPageLoaded();
@@ -53,7 +70,7 @@ export const ProductSets = ({ products, productSets }) => {
                                 const { product } = item;
                                 const { _id, name, mainMedia } = product;
                                 return (
-                                    <li key={index} className="list-item">
+                                    <li key={index} className="list-item mb-30">
                                         <div className="cart-product cart-product-2" style={{ backgroundColor: "var(--white-1)" }}>
                                             <div className="container-img">
                                                 <ImageWrapper key={_id} defaultDimensions={{ width: 120, height: 120 }} timeout={0} min_w={120} min_h={120} url={mainMedia} />
@@ -71,23 +88,32 @@ export const ProductSets = ({ products, productSets }) => {
                                                         </button>
                                                     </div>
                                                     <button
-                                                        onClick={() => removeSet(item._id)}
+                                                        onClick={() => removeSet(_id)}
                                                         type="button"
                                                         className="btn-cancel"
                                                     >
                                                         <i className="icon-close"></i>
                                                     </button>
                                                 </div>
-                                                <h4 className={"fs--25 mb-10"}>
-                                                    <span>SETS OF PRODUCTS</span>
-                                                </h4>
-                                                <div className="container-specs">
-                                                    <ul className={"sets-listing"}>
-                                                        <li className={"fs--15"}> Charger - Bamboo Slate </li>
-                                                        <li className={"fs--15"}> Charger - Bamboo Slate </li>
-                                                        <li className={"fs--15"}> Charger - Bamboo Slate </li>
-                                                    </ul>
-                                                </div>
+                                                {item?.productSets.length ? (
+                                                    <>
+                                                        <h4 className={"fs--25 mb-10"}>
+                                                            <span>SETS OF PRODUCTS</span>
+                                                        </h4>
+                                                        <div className="container-specs">
+                                                            <ul className={"sets-listing"}>
+                                                                {item.productSets.map(set => {
+                                                                    if (!set) return null;
+                                                                    const product = products.find(product => product._id === set.product);
+                                                                    const variant = product.variantData.find(variant => variant.sku === set.variant);
+                                                                    return (
+                                                                        <li key={set.variant} className={"fs--15"}> {product.product.name} {variant.variant.color ? `| ${variant.variant.color}` : ""} | {variant.sku}</li>
+                                                                    )
+                                                                })}
+                                                            </ul>
+                                                        </div>
+                                                    </>
+                                                ) : null}
                                             </div>
                                         </div>
                                     </li>
@@ -97,7 +123,7 @@ export const ProductSets = ({ products, productSets }) => {
                     )}
                 </div>
             </div>
-            {toggleCreateNewModal && <CreateProductSetModal setToggleCreateNewModal={setToggleCreateNewModal} products={products} />}
+            {toggleCreateNewModal && <CreateProductSetModal setToggleCreateNewModal={setToggleCreateNewModal} products={products.filter(product => !product?.productSets || !product.productSets.length)} onSave={handleOnSave} />}
         </>
     );
 };

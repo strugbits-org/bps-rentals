@@ -265,6 +265,21 @@ li.IMPORTANT.long-desc {
   min-width: 11rem;
 }
 
+.cart-product-2 .container-add-to-cart {
+  justify-content: flex-end;
+}
+
+.cart-product-2 .container-add-to-cart input.input-number {
+  height: 5rem;
+  color: var(--blue-1);
+  border-color: var(--blue-1);
+}
+
+.cart-product-2 .container-product-description .container-add-to-cart .container-input-quantity .plus i,
+.cart-product-2 .container-product-description .container-add-to-cart .container-input-quantity .minus i {
+  color: var(--blue-1);
+}
+
 /* lg/desktop */
 .min-h-100 {
   min-height: 100vh !important;
@@ -764,7 +779,24 @@ li.IMPORTANT.long-desc {
 .sets-listing {
   width: 100%;
   display: flex;
-  gap: 4rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.Toastify__toast {
+  padding: 0;
+  min-height: 48px;
+  font-family: "GT Walsheim Pro Medium";
+}
+
+.Toastify__toast-body {
+  font-size: 16px;
+  margin: 0;
+  padding: 0 12px;
+}
+
+.Toastify__close-button {
+  display: none;
 }
 
 @media only screen and (max-width: 1025px) {
@@ -789,7 +821,7 @@ ul.sets-listing li {
   padding: 8px 16px;
   border-radius: 6px;
   text-transform: uppercase;
-  word-spacing: 4px;
+  /* word-spacing: 4px; */
   letter-spacing: 0.5px;
 }
 
@@ -808,7 +840,8 @@ ul.sets-listing li {
     background: var(--white-1) !important;
     align-items: center;
   }
-  .main-product{
+
+  .main-product {
     align-items: center;
     margin-bottom: 30px;
   }
@@ -824,7 +857,8 @@ ul.sets-listing li {
   .cart-product-2 .wrapper-product-info {
     padding-left: 1rem;
   }
-  .products-set-container-top{
+
+  .products-set-container-top {
     gap: 2rem;
   }
 }
@@ -891,6 +925,19 @@ button.btn-cancel-2 {
   height: 2.5rem;
   width: 2.5rem !important;
 }
+
+.modal-buttons {
+  justify-content: flex-end;
+}
+
+.modal-buttons .btn-3-blue:hover:before {
+  background-color: var(--white-2);
+}
+
+h2.product-name.text-sm-custom {
+  font-size: 2.5rem !important;
+}
+
 /* -------------------------- Modal UI */
 @media only screen and (min-width: 1025.1px) {
   [name^="modal"] {

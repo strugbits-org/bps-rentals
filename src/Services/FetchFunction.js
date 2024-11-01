@@ -1,5 +1,4 @@
 import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
-import { apiAuth } from "@/Utils/IsAuthenticated";
 import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
 import { encryptPriceFields } from "@/Utils/Encrypt";
 import logError from "@/Utils/ServerActions";
@@ -47,76 +46,6 @@ const getDataFetchFunction = async (payload) => {
       isNotEmpty,
       log
     } = payload;
-
-    // Validate collection ID
-    const authCollections = [
-      "InstagramFeed",
-      "Stores/Collections",
-      "RentalsQuotesDetailPage",
-      "PageSeoConfigurationRentals",
-      "RentalsHomeNewArrivals",
-      "SearchPages",
-      "Stores/Collections",
-      "RentalTeamsBanner",
-      "SearchSectionDetails",
-      "RentalsBanners",
-      "RentalsHomeHero",
-      "RentalsNewArrivals",
-      "BestSellers",
-      "RentalsHomeStudios",
-      "RentalsHomeHotTrends",
-      "HighlightsProducts",
-      "MarketSection",
-      "RentalsHomeDreamBig",
-      "Footer",
-      "HighlightsSocial",
-      "HighlightsTradeshow",
-      "HighlightsWedding",
-      "HighlightsCorporate",
-      "ContactDetails",
-      "SocialLinks",
-      "ContactUsContent",
-      "colorFilterCache",
-      "PeopleReviewSlider",
-      "RentalsHomeSectionDetails",
-      "FooterNavigationMenu",
-      "StudiosSection",
-      "RentalsLoginModal",
-      "FilterLocations",
-      "RentalsCreateAccountModal",
-      "RentalsResetPasswordModal",
-      "RentalsFooter",
-      "PortfolioCollection",
-      "SocialSectionDetails",
-      "BlogProductData",
-      "RentalsFooterLinks",
-      "RentalsSocialMediaLinks",
-      "RentalsAddresses",
-      "DreamBigSection",
-      "RentalsMyAccountPage",
-      "RentalsChangePasswordPage",
-      "BPSCatalogStructure",
-      "HeaderCategoryMenu",
-      "locationFilteredVariant",
-      "Stores/Products",
-      "BPSPairItWith",
-      "BPSProductImages",
-      "Stores/Variants",
-      "RentalsPrivacyPageContent",
-      "RentalsTermsPageContent",
-      "RentalsQuoteRequestPage",
-    ];
-
-    if (dataCollectionId && !authCollections.includes(dataCollectionId)) {
-      return { error: "Unauthorized", status: 401 };
-    }
-
-    // Authenticate
-    const apiKey = process.env.APIKEY;
-    const auth = await apiAuth(apiKey, dataCollectionId);
-    if (!auth) {
-      return { error: "Unauthorized", status: 401 };
-    }
 
     // Create Wix client
     const client = await createWixClientApiStrategy();
@@ -175,7 +104,7 @@ const getDataFetchFunction = async (payload) => {
     }
 
     // Encrypt specific fields if needed
-    const collectionsToEncrypt = ["Stores/Products", "locationFilteredVariant", "RentalsNewArrivals"];
+    const collectionsToEncrypt = ["Stores/Products", "locationFilteredVariant", "RentalsNewArrivals", "DemoProductData"];
     if (data._items.length > 0 && collectionsToEncrypt.includes(dataCollectionId) && encodePrice) {
       data._items = data._items.map(val => {
         if (dataCollectionId === "locationFilteredVariant" && val.data.variantData) {
