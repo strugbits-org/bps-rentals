@@ -8,7 +8,7 @@ import { getProductForUpdate, updateDataItem } from "@/Services/AdminApis";
 import { toast } from "react-toastify";
 import logError from "@/Utils/ServerActions";
 
-const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) => {
+const EditProductSetModal = ({ activeSet, products, setToggleEditSetModal, onUpdate, onSave }) => {
   const [mainProduct, setMainProduct] = useState(null);
   const [productsSet, setProductsSet] = useState([]);
   const [productValue, setProductValue] = useState(null);
@@ -59,7 +59,7 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
   }, [productsSet, products]);
 
 
-  const createProductSet = async () => {
+  const updateProductSet = async () => {
     if (!mainProduct) {
       toast.warn("Please select a main product first.");
       return;
@@ -75,7 +75,9 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
       const productData = await getProductForUpdate(mainProduct.product._id);
       productData.data.productSets = productsSet;
       await updateDataItem(productData);
-      onSave({ ...mainProduct, productSets: productsSet });
+      const updatedData = { ...mainProduct, productSets: productsSet };
+      const updateMainProduct = activeSet.product._id === mainProduct.product._id;
+      updateMainProduct ? onUpdate(updatedData) : onSave(updatedData);
       closeThisModal();
     } catch (error) {
       logError("error", error);
@@ -89,7 +91,7 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
     setProductValue(null);
   }
 
-  const removeSetProduct = (id) => {
+  const removeSetProduct = (id) => {    
     setProductsSet(prev => {
       const updatedData = prev.filter(prod => prod.product !== id);
       if (!updatedData.length) setProductSetValue(null);
@@ -97,7 +99,7 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
     });
   };
 
-  const handleQuantityChange = async (id, quantity) => {    
+  const handleQuantityChange = async (id, quantity) => {
     if (quantity < 10000 && quantity > 0) {
       setProductsSet(prev => {
         const updatedProductsSet = prev.map((x) => {
@@ -111,12 +113,23 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
     }
   };
 
+  const setInitialValues = async () => {
+    if (activeSet) {
+      setMainProduct(activeSet);
+      setProductValue({
+        label: activeSet.product.name,
+        value: activeSet._id
+      });
+      setProductsSet(activeSet.productSets);
+    }
+  }
+
   const closeThisModal = useCallback(() => {
-    closeModal("modal-create-product-set");
+    closeModal("modal-edit-product-set");
     setTimeout(() => {
-      setToggleCreateNewModal(false);
+      setToggleEditSetModal(false);
     }, 400);
-  }, [setToggleCreateNewModal]);
+  }, [setToggleEditSetModal]);
 
   const handleEscapeKey = useCallback((e) => {
     if (e.key === "Escape") closeThisModal();
@@ -128,13 +141,14 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
   }, [handleEscapeKey]);
 
   useEffect(() => {
-    openModal("modal-create-product-set");
+    setInitialValues();
+    openModal("modal-edit-product-set");
   }, []);
 
   return (
-    <ModalWrapper name="modal-create-product-set" onClose={closeThisModal}>
+    <ModalWrapper name="modal-edit-product-set" onClose={closeThisModal}>
       <div className="wrapper-section products-set-wrapper min-h-100-sm">
-        <h1 className="fs--60 blue-1">Create New Product Set</h1>
+        <h1 className="fs--60 blue-1">Update Product Set</h1>
         <div className="row products-set-container products-set-container-top mt-lg-35 mt-tablet-20 mt-phone-15">
           <div className="col-lg-6">
             <CustomSelect
@@ -185,7 +199,7 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
             <ul className="list-cart list-cart-product list-set-products">
               {productsSet.map(setProduct => {
                 if (!setProduct) return null;
-                const { quantity } = setProduct;                
+                const { quantity } = setProduct;
                 const product = products.find(product => product._id === setProduct.product);
                 const variant = product.variantData.find(variant => variant.sku === setProduct.variant);
 
@@ -246,8 +260,8 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
           <button onClick={closeThisModal} className="btn-1 btn-border-blue btn-small mr-10" disabled={loading}>
             <span>Cancel</span>
           </button>
-          <button onClick={createProductSet} className={`btn-3-blue btn-blue btn-small order-mobile-1 ${loading ? "btn-disabled" : ""}`} disabled={loading}>
-            <span>{loading ? "Please Wait" : "Create"}</span>
+          <button onClick={updateProductSet} className={`btn-3-blue btn-blue btn-small order-mobile-1 ${loading ? "btn-disabled" : ""}`} disabled={loading}>
+            <span>{loading ? "Please Wait" : "Update"}</span>
           </button>
         </div>
       </div>
@@ -255,4 +269,4 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
   );
 };
 
-export default CreateProductSetModal;
+export default EditProductSetModal;

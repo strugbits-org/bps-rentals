@@ -9,37 +9,59 @@ import { PERMISSIONS } from '@/Utils/Schema/permissions';
 import logError from '@/Utils/ServerActions';
 import { getProductForUpdate, updateDataItem } from '@/Services/AdminApis';
 import { revalidatePage } from '@/Services/RevalidateService';
+import EditProductSetModal from '../Common/Modals/editProductSetModal';
+import { toast } from 'react-toastify';
 
 export const ProductSets = ({ products, productSets }) => {
 
     const [dataSets, setDataSets] = useState([]);
     const [toggleCreateNewModal, setToggleCreateNewModal] = useState(false);
+    const [toggleEditSetModal, setToggleEditSetModal] = useState(false);
+    const [activeSet, setActiveSet] = useState();
     const { permissions } = useUserData();
     const ADMIN_PANEL_ACCESS = permissions && permissions.includes(PERMISSIONS.ADMIN_PANEL_ACCESS);
 
-
-    const editSet = async (id) => {
-        console.log("editSet", id);
-    }
-
-    const removeSet = async (id) => {
+    const removeSet = async (id, alert = true) => {
+        const prevDataSets = [...dataSets];
         try {
             setDataSets(prev => prev.filter(set => set.product._id !== id));
             const productData = await getProductForUpdate(id);
             productData.data.productSets = [];
             await updateDataItem(productData);
+            if (alert) toast.info("Product set removed successfully");
             revalidatePage("/admin/manage-product-sets");
         } catch (error) {
             logError("Error:", error);
+            setDataSets(prevDataSets);
         }
     }
 
     const handleOnSave = (data) => {
-        console.log("data", data);
-
+        if (activeSet) {
+            setDataSets(prev => prev.filter(set => set?.product._id !== activeSet?.product._id));
+            removeSet(activeSet?.product._id, false);
+            setActiveSet(null);
+            toast.info("Product set updated successfully");
+        } else {
+            toast.info("Product set created successfully");
+        }
         setDataSets(prev => [data, ...prev]);
         revalidatePage("/admin/manage-product-sets");
     }
+
+    const handleUpdateSet = (id) => {
+        const set = dataSets.find(set => set?.product._id === id);
+        setActiveSet(set);
+        setToggleEditSetModal(true);
+    }
+
+    const handleOnUpdate = (data) => {
+        setDataSets(prev => prev.map(set => set?.product._id === data?.product._id ? data : set));
+        setActiveSet(null);
+        toast.info("Product set updated successfully");
+        revalidatePage("/admin/manage-product-sets");
+    }
+
     useEffect(() => {
         setDataSets(productSets);
         markPageLoaded();
@@ -80,7 +102,7 @@ export const ProductSets = ({ products, productSets }) => {
                                                     <div className="container-product-name">
                                                         <h2 className="product-name">{name}</h2>
                                                         <button
-                                                            onClick={() => editSet(item._id)}
+                                                            onClick={() => { handleUpdateSet(_id) }}
                                                             className="btn-view"
                                                         >
                                                             <span>Edit</span>
@@ -124,6 +146,7 @@ export const ProductSets = ({ products, productSets }) => {
                 </div>
             </div>
             {toggleCreateNewModal && <CreateProductSetModal setToggleCreateNewModal={setToggleCreateNewModal} products={products.filter(product => !product?.productSets || !product.productSets.length)} onSave={handleOnSave} />}
+            {toggleEditSetModal && activeSet && <EditProductSetModal activeSet={activeSet} setToggleEditSetModal={setToggleEditSetModal} products={products.filter(product => !product?.productSets || !product.productSets.length)} onUpdate={handleOnUpdate} onSave={handleOnSave} />}
         </>
     );
 };
