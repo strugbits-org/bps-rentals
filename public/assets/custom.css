@@ -814,6 +814,15 @@ li.IMPORTANT.long-desc {
     flex-direction: column;
     gap: 1rem;
   }
+
+  .modal-buttons {
+    justify-content: center!important;
+  }
+
+  .modal-buttons button {
+    width: 45%;
+    min-width: unset;
+  }
 }
 
 ul.sets-listing li {

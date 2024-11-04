@@ -6,7 +6,8 @@ export const initAnimations = () => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
       const customEvent = new Event("customInitScript");
-      document.querySelector(".initScript").dispatchEvent(customEvent);
+      const elem = document.querySelector(".initScript");      
+      if (elem) elem.dispatchEvent(customEvent);
     }, 400);
   }
 };
