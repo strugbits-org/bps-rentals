@@ -14,6 +14,7 @@ import { getPageMetaData, getProductBlogsData, getProductPortfolioData } from "@
 import { buildMetadata, removeHTMLTags } from '@/Utils/Utils';
 import logError from '@/Utils/ServerActions';
 import { Suspense } from 'react';
+import ProductCollectionPage from '@/components/Product/ProductCollectionPage';
 
 export async function generateMetadata({ params }) {
   try {
@@ -110,16 +111,30 @@ export default async function Page({ params }) {
     const pairedProductsIds = pairWithData.filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);
     const matchedProducts = products.filter(product => pairedProductsIds.includes(product.product._id));
 
+    const productSets = selectedProduct?.productSets || [];
+
     return (
       <Suspense>
-        <ProductPostPage
-          selectedProductDetails={selectedProduct}
-          matchedProductsData={matchedProducts}
-          categoriesData={categoriesData}
-          blogsData={blogsData}
-          portfolioData={portfolioData}
-          bestSeller={bestSeller}
-        />
+        {productSets && productSets.length ? (
+          <ProductCollectionPage
+            products={products}
+            selectedProductDetails={selectedProduct}
+            matchedProductsData={matchedProducts}
+            categoriesData={categoriesData}
+            blogsData={blogsData}
+            portfolioData={portfolioData}
+            bestSeller={bestSeller}
+          />
+        ) : (
+          <ProductPostPage
+            selectedProductDetails={selectedProduct}
+            matchedProductsData={matchedProducts}
+            categoriesData={categoriesData}
+            blogsData={blogsData}
+            portfolioData={portfolioData}
+            bestSeller={bestSeller}
+          />
+        )}
       </Suspense>
     );
   } catch (error) {

@@ -104,10 +104,10 @@ const getDataFetchFunction = async (payload) => {
     }
 
     // Encrypt specific fields if needed
-    const collectionsToEncrypt = ["Stores/Products", "locationFilteredVariant", "RentalsNewArrivals", "DemoProductData"];
+    const collectionsToEncrypt = ["Stores/Products", "DemoProductData", "RentalsNewArrivals", "DemoProductData"];
     if (data._items.length > 0 && collectionsToEncrypt.includes(dataCollectionId) && encodePrice) {
       data._items = data._items.map(val => {
-        if (dataCollectionId === "locationFilteredVariant" && val.data.variantData) {
+        if (dataCollectionId === "DemoProductData" && val.data.variantData) {
           val.data.variantData = val.data.variantData.map(val2 => {
             encryptPriceFields(val2.variant);
             return val2;

@@ -48,7 +48,9 @@ export const extractSlugFromUrl = (url) => {
 }
 
 export const calculateTotalCartQuantity = (lineItems) => {
-  return lineItems.reduce((total, currentItem) => total + currentItem.quantity, 0);
+  return lineItems
+    .filter(item => !item?.catalogReference?.options.customTextFields.isProductSet)
+    .reduce((total, currentItem) => total + currentItem.quantity, 0);
 }
 
 export const setCookie = (key, value) => {
@@ -173,12 +175,14 @@ export const extractCategoryIds = (selectedCategoryData) => {
 }
 
 export const formatDescriptionLines = (items) => {
-  return items.map(item => {
-    const title = item.name?.translated || item.name?.original || null;
-    const value = item.colorInfo?.translated || item.colorInfo?.original || item.plainText?.translated || item.plainText?.original || item.colorInfo?.code || null;
-
-    return { title, value };
-  });
+  return items.reduce((acc, item) => {
+    const title = item.name?.translated || item.name?.original;
+    if (title && title !== "isProductSet" && title !== "productSetId") {
+      const value = item.colorInfo?.translated || item.colorInfo?.original || item.plainText?.translated || item.plainText?.original || item.colorInfo?.code;
+      acc.push({ title, value });
+    }
+    return acc;
+  }, []);
 }
 
 export const removeHTMLTags = (html) => {
@@ -200,7 +204,7 @@ export const buildMetadata = (title, description, noFollowTag) => {
 export const chunkArray = (array, chunkSize) => {
   const chunks = [];
   for (let i = 0; i < array.length; i += chunkSize) {
-      chunks.push(array.slice(i, i + chunkSize));
+    chunks.push(array.slice(i, i + chunkSize));
   }
   return chunks;
 };

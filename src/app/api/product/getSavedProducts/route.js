@@ -14,7 +14,7 @@ export const POST = async (req) => {
     const wixClient = await createWixClientApiStrategy();
     let locationFilterVariantData = await wixClient.items
       .queryDataItems({
-        dataCollectionId: "locationFilteredVariant",
+        dataCollectionId: "DemoProductData",
         includeReferencedItems: [
           "category",
           "product",

@@ -3,35 +3,23 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
-import {
-  calculateTotalCartQuantity,
-  extractSlugFromUrl,
-  formatDescriptionLines,
-  formatPrice,
-} from "@/Utils/Utils";
+import { calculateTotalCartQuantity } from "@/Utils/Utils";
 
-import {
-  getProductsCart,
-  removeProductFromCart,
-  updateProductsQuantityCart,
-} from "@/Services/CartApis";
+import { getProductsCart, removeProductFromCart, updateProductsQuantityCart } from "@/Services/CartApis";
 
 import AnimateLink from "../Common/AnimateLink";
-import useUserData from "@/Hooks/useUserData";
-import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
-import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import { CartItem, CartItemGroup } from "./CartItem";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [cartItemsList, setCartItemsList] = useState([]);
   const [cookies, setCookie] = useCookies([
     "authToken",
     "userData",
     "cartQuantity",
     "userTokens",
   ]);
-  const { permissions } = useUserData();
-  const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
   const handleQuantityChange = async (id, quantity, disabled) => {
     if (quantity < 10000 && quantity > 0) {
@@ -42,11 +30,11 @@ const CartPage = () => {
         return x;
       });
       setCartItems(updatedLineItems);
-      if (!disabled) updateProducts(id, quantity);
+      if (!disabled) updateProducts(id, quantity, updatedLineItems);
     }
   };
 
-  const updateProducts = async (id, quantity) => {
+  const updateProducts = async (id, quantity, updatedLineItems) => {
     try {
       const lineItems = [
         {
@@ -54,11 +42,9 @@ const CartPage = () => {
           quantity: quantity,
         },
       ];
-
-      const response = await updateProductsQuantityCart(lineItems);
-
-      const total = calculateTotalCartQuantity(response.cart.lineItems);
+      const total = calculateTotalCartQuantity(updatedLineItems || cartItems);
       setCookie("cartQuantity", total, { path: "/" });
+      await updateProductsQuantityCart(lineItems);
     } catch (error) {
       logError("Error while updating cart:", error);
     }
@@ -66,9 +52,7 @@ const CartPage = () => {
 
   const removeProduct = async (id) => {
     try {
-      setCartItems((prevCartItems) =>
-        prevCartItems.filter((item) => item._id !== id)
-      );
+      setCartItems((prevCartItems) => prevCartItems.filter((item) => item._id !== id));
       updatedWatched();
       const response = await removeProductFromCart([id]);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
@@ -80,11 +64,26 @@ const CartPage = () => {
     }
   };
 
+  const removeProductSet = async (ids) => {
+    try {
+      setCartItems((prevCartItems) => prevCartItems.filter((item) => !ids.includes(item._id)));
+      updatedWatched();
+      const response = await removeProductFromCart(ids);
+      const total = calculateTotalCartQuantity(response.cart.lineItems);
+
+      // setCartItems(response.cart.lineItems);
+      setCookie("cartQuantity", total, { path: "/" });
+    } catch (error) {
+      logError("Error while removing product", error);
+    }
+  };
+
   const fetchCart = async () => {
     try {
-      const data = await getProductsCart();
-      setCartItems(data);
-      const total = calculateTotalCartQuantity(data);
+      const response = await getProductsCart();
+      setCartItems(response);
+
+      const total = calculateTotalCartQuantity(response);
       setCookie("cartQuantity", total > 0 ? String(total) : "0", { path: "/" });
       setTimeout(markPageLoaded, 200);
     } catch (error) {
@@ -92,6 +91,25 @@ const CartPage = () => {
       logError("Error while fetching cart data:", error);
     }
   };
+
+  useEffect(() => {
+    if (!cartItems.length) return;
+    const productSets = cartItems.filter((x) => x.catalogReference.options.customTextFields.productSetId);
+    const item = cartItems.filter((x) => !x.catalogReference.options.customTextFields.productSetId);
+
+    const data = item.map((item) => {
+      const isProductSet = item.catalogReference.options.customTextFields.isProductSet;
+      if (!isProductSet) return item;
+      const productSetItems = productSets.filter((set) => set.catalogReference.options.customTextFields.productSetId === item.catalogReference.catalogItemId);
+      return {
+        ...item,
+        productSets: productSetItems
+      };
+    });
+
+    setCartItemsList(data);
+  }, [cartItems]);
+
 
   useEffect(() => {
     fetchCart();
@@ -116,145 +134,27 @@ const CartPage = () => {
             >
               <form action="" className="form-cart">
                 <ul className="list-cart list-cart-product min-h-100-sm" data-aos="d:loop">
-                  {cartItems && cartItems.map((cart, index) => {
-                    const {
-                      _id,
-                      quantity,
-                      productName,
-                      url,
-                      image,
-                      physicalProperties,
-                      descriptionLines,
-                      price,
-                    } = cart;
-
-                    const formattedDescription = formatDescriptionLines(descriptionLines);
-                    return (
-                      <li key={index} className="list-item">
-                        <input
-                          type="hidden"
-                          name="sku[]"
-                          defaultValue="MODCH09"
+                  {cartItemsList.length > 0 ? (
+                    cartItemsList.map((cart) =>
+                      cart.productSets && cart.productSets.length ? (
+                        <CartItemGroup
+                          key={cart._id}
+                          data={cart}
+                          handleQuantityChange={handleQuantityChange}
+                          updateProducts={updateProducts}
+                          removeProduct={removeProductSet}
                         />
-                        <div className="cart-product">
-                          <div className="container-img">
-                            <ImageWrapper key={_id} defaultDimensions={{ width: 120, height: 120 }} url={image} />
-                          </div>
-                          <div className="wrapper-product-info">
-                            <div className="container-top">
-                              <div className="container-product-name">
-                                <h2 className="product-name">
-                                  {productName.original}
-                                </h2>
-                                <AnimateLink
-                                  to={"/product" + extractSlugFromUrl(url)}
-                                  className="btn-view"
-                                >
-                                  <span>View</span>
-                                  <i className="icon-arrow-right"></i>
-                                </AnimateLink>
-                              </div>
-                              <button
-                                onClick={() => removeProduct(_id)}
-                                type="button"
-                                className="btn-cancel"
-                              >
-                                <i className="icon-close"></i>
-                              </button>
-                            </div>
-                            <div className="container-specs">
-                              <ul className="list-specs">
-                                <li className="sku">
-                                  <span className="specs-title">SKU</span>
-                                  <span className="specs-text">
-                                    {physicalProperties.sku}
-                                  </span>
-                                </li>
-                                {formattedDescription.map((item) => {
-                                  const { title, value } = item;
-                                  if (!value) return null;
-
-                                  const titleWordCount = title.split(" ").length;
-                                  const valueWordCount = value.split(" ").length;
-
-                                  return (
-                                    <li
-                                      className={`location ${titleWordCount >= 2 || valueWordCount > 4 ? "long-desc" : ""}`}
-                                    >
-                                      <span className="specs-title capitalize">
-                                        {title}
-                                      </span>
-                                      <span className="specs-text">
-                                        {value}
-                                        {title === "location" && (
-                                          <>
-                                            {" "}
-                                            <i className="icon-pin"></i>
-                                          </>
-                                        )}
-                                      </span>
-                                    </li>
-                                  );
-                                })}
-
-                                {SHOW_PRICES && (
-                                  <li className="price">
-                                    <span className="specs-title">Price</span>
-                                    <span className="specs-text">
-                                      {formatPrice(price, quantity)}
-                                    </span>
-                                  </li>
-                                )}
-                              </ul>
-                              <div className="quantity">
-                                <span className="fs--20 no-mobile">
-                                  Quantity
-                                </span>
-                                <div className="container-input container-input-quantity">
-                                  <button
-                                    onClick={() =>
-                                      handleQuantityChange(_id, quantity - 1)
-                                    }
-                                    type="button"
-                                    className="minus"
-                                  >
-                                    <i className="icon-minus"></i>
-                                  </button>
-                                  <input
-                                    type="number"
-                                    min="1"
-                                    value={quantity}
-                                    placeholder="1"
-                                    className="input-number"
-                                    onInput={(e) =>
-                                      handleQuantityChange(
-                                        _id,
-                                        e.target.value,
-                                        true
-                                      )
-                                    }
-                                    onBlur={(e) =>
-                                      updateProducts(_id, e.target.value)
-                                    }
-                                  />
-                                  <button
-                                    onClick={() =>
-                                      handleQuantityChange(_id, quantity + 1)
-                                    }
-                                    type="button"
-                                    className="plus"
-                                  >
-                                    <i className="icon-plus"></i>
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    );
-                  })}
-                  {cartItems.length === 0 && (
+                      ) : (
+                        <CartItem
+                          key={cart._id}
+                          data={cart}
+                          handleQuantityChange={handleQuantityChange}
+                          updateProducts={updateProducts}
+                          removeProduct={removeProduct}
+                        />
+                      )
+                    )
+                  ) : (
                     <h6
                       className="fs--40 blue-1 text-center split-words"
                       style={{ margin: "28vh auto" }}
@@ -265,7 +165,7 @@ const CartPage = () => {
                   )}
                 </ul>
                 <div className="container-btn mt-md-40 mt-phone-40">
-                  {cartItems.length > 0 && (
+                  {cartItemsList.length && (
                     <AnimateLink
                       to="/quote-request"
                       className="btn-1 btn-large btn-blue w-100 bt-submit"
