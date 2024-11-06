@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
@@ -10,11 +10,13 @@ import { getProductsCart, removeProductFromCart, updateProductsQuantityCart } fr
 import AnimateLink from "../Common/AnimateLink";
 import logError from "@/Utils/ServerActions";
 import { CartItem, CartItemGroup } from "./CartItem";
+import { debounce } from "lodash";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [cartItemsList, setCartItemsList] = useState([]);
-  const [cookies, setCookie] = useCookies([
+  const [trashList, setTrashList] = useState([]);
+  const [_cookies, setCookie] = useCookies([
     "authToken",
     "userData",
     "cartQuantity",
@@ -22,6 +24,7 @@ const CartPage = () => {
   ]);
 
   const handleQuantityChange = async (id, quantity, disabled) => {
+
     if (quantity < 10000 && quantity > 0) {
       const updatedLineItems = cartItems.map((x) => {
         if (id === x._id) {
@@ -35,48 +38,49 @@ const CartPage = () => {
   };
 
   const updateProducts = async (id, quantity, updatedLineItems) => {
-    try {
-      const lineItems = [
-        {
-          _id: id,
-          quantity: quantity,
-        },
-      ];
-      const total = calculateTotalCartQuantity(updatedLineItems || cartItems);
-      setCookie("cartQuantity", total, { path: "/" });
-      await updateProductsQuantityCart(lineItems);
-    } catch (error) {
-      logError("Error while updating cart:", error);
-    }
+    const total = calculateTotalCartQuantity(updatedLineItems || cartItems);
+    setCookie("cartQuantity", total, { path: "/" });
+
+    updateProductsQuantity([{ _id: id, quantity }]);
   };
 
-  const removeProduct = async (id) => {
-    try {
-      setCartItems((prevCartItems) => prevCartItems.filter((item) => item._id !== id));
-      updatedWatched();
-      const response = await removeProductFromCart([id]);
-      const total = calculateTotalCartQuantity(response.cart.lineItems);
+  const updateProductsQuantity = useCallback(
+    debounce(async (lineItems) => {
+      try {
+        await updateProductsQuantityCart(lineItems);
+      } catch (error) {
+        logError("Error while updating products quantity in cart:", error);
+      }
+    }, 2000),
+    []
+  );
 
-      // setCartItems(response.cart.lineItems);
-      setCookie("cartQuantity", total, { path: "/" });
-    } catch (error) {
-      logError("Error while removing product", error);
-    }
+  const removeProduct = async (ids) => {
+    const newTotal = cartItems.length - ids.length;
+    setCookie("cartQuantity", newTotal, { path: "/" });
+
+    setCartItems((prevCartItems) => prevCartItems.filter((item) => !ids.includes(item._id)));
+    updatedWatched();
+
+    setTrashList((prevTrashList) => prevTrashList.concat(ids.filter(id => !prevTrashList.includes(id))));
   };
 
-  const removeProductSet = async (ids) => {
-    try {
-      setCartItems((prevCartItems) => prevCartItems.filter((item) => !ids.includes(item._id)));
-      updatedWatched();
-      const response = await removeProductFromCart(ids);
-      const total = calculateTotalCartQuantity(response.cart.lineItems);
+  useEffect(() => {
+    if (!trashList.length) return;
+    const removeProductsDelayed = debounce(async () => {
+      try {
+        await removeProductFromCart(trashList);
+        setTrashList([]);
+      } catch (error) {
+        logError("Error while while removing products from cart:", error);
+      }
+    }, 1000);
 
-      // setCartItems(response.cart.lineItems);
-      setCookie("cartQuantity", total, { path: "/" });
-    } catch (error) {
-      logError("Error while removing product", error);
-    }
-  };
+    removeProductsDelayed(trashList);
+
+    return () => removeProductsDelayed.cancel();
+  }, [trashList])
+
 
   const fetchCart = async () => {
     try {
@@ -93,7 +97,10 @@ const CartPage = () => {
   };
 
   useEffect(() => {
-    if (!cartItems.length) return;
+    if (!cartItems.length) {
+      setCartItemsList([]);
+      return;
+    };
     const productSets = cartItems.filter((x) => x.catalogReference.options.customTextFields.productSetId);
     const item = cartItems.filter((x) => !x.catalogReference.options.customTextFields.productSetId);
 
@@ -142,7 +149,7 @@ const CartPage = () => {
                           data={cart}
                           handleQuantityChange={handleQuantityChange}
                           updateProducts={updateProducts}
-                          removeProduct={removeProductSet}
+                          removeProduct={removeProduct}
                         />
                       ) : (
                         <CartItem

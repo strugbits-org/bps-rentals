@@ -33,7 +33,7 @@ export const CartItem = ({ data, handleQuantityChange, updateProducts, removePro
                             </AnimateLink>
                         </div>
                         <button
-                            onClick={() => removeProduct(_id)}
+                            onClick={() => removeProduct([_id])}
                             type="button"
                             className="btn-cancel"
                         >

@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCookies } from "react-cookie";
-
+import "@/assets/style/product-set.css"
 import {
   markPageLoaded,
   pageLoadEnd,
@@ -142,9 +142,7 @@ const ProductCollectionPage = ({
     if (quantity < 10000 && quantity >= 1) {
       setProductsSets(prev => {
         const updatedProductsSet = prev.map((x) => {
-          if (id === x.product) {
-            x.quantity = Number(quantity);
-          }
+          if (id === x.variant) x.quantity = Number(quantity);
           return x;
         });
         return updatedProductsSet;
@@ -160,7 +158,7 @@ const ProductCollectionPage = ({
       return price * quantity;
     });
     const total = prices.reduce((acc, x) => acc + x, 0);
-    setTotalPrice(`$ ${total.toFixed(2)} (Total)`);
+    setTotalPrice(`$ ${total.toFixed(2)}`);
   }, [productsSets, products])
 
   const handleInputChange = (name, value) => {
@@ -394,117 +392,68 @@ const ProductCollectionPage = ({
                         </span>
                       </li>
                     )}
-
-                    {selectedProductDetails?.product?.additionalInfoSections?.map(
-                      ({ title, description }, index) => (
-                        <li className={`${title} ${title === "IMPORTANT" ? "long-desc" : ""}`} key={index}>
-                          <span className="specs-title">{title}</span>
-                          <span className="specs-text" dangerouslySetInnerHTML={{ __html: description }} />
-                        </li>
-                      )
-                    )}
-
                     {SHOW_PRICES && selectedProductDetails?.product?.formattedPrice && (
                       <li className="seat-height">
-                        <span className="specs-title">Price</span>
+                        <span className="specs-title">Price (TOTAL)</span>
                         <span className="specs-text">{totalPrice}</span>
                       </li>
                     )}
 
                   </ul>
-                  <ul className="list-cart list-cart-product">
-                    <ul className="list-cart list-cart-product">
-                      {productsSets.map(set => {
-                        if (!set) return null;
-                        const { quantity } = set;
-                        const product = products.find(product => product._id === set.product);
-                        const variant = product.variantData.find(variant => variant.sku === set.variant);
+                  <div className="product-set-table">
+                    <div className="product-set-item product-set-header fs--18">
+                      <span className="name">Product Name</span>
+                      <span className="size">Size</span>
+                      {SHOW_PRICES && <span className="price">Price</span>}
+                      <span className="quantity">Quantity</span>
+                    </div>
+                    {productsSets.map(set => {
+                      if (!set) return null;
+                      const { quantity } = set;
+                      const product = products.find(product => product._id === set.product);
+                      const variant = product.variantData.find(variant => variant.sku === set.variant);
 
-                        return (
-                          <li key={set.variant} className="list-item mb-30">
-                            <div className="cart-product cart-product-2 product-page">
-                              <div className="container-img">
-                                <ImageWrapper key={product.product._id} timeout={0} defaultDimensions={{ width: 120, height: 120 }} min_w={120} min_h={120} url={variant.variant.imageSrc} />
-                              </div>
-                              <div className="wrapper-product-info">
-                                <div className="container-top">
-                                  <div className="container-product-name">
-                                    <h2 className="product-name text-sm-custom ">{product.product.name} {variant.variant.color ? `| ${variant.variant.color}` : ""}</h2>
-                                  </div>
-                                </div>
-                                <div className="container-product-description">
-                                  <ul className={"sets-listing product-page"}>
-                                    <li className="fs--15">
-                                      <span className="specs-title">SKU</span>
-                                      <span className="specs-text">
-                                        {variant.sku}
-                                      </span>
-                                    </li>
-
-                                    {variant.variant?.size ? (
-                                      <li className="cs-size fs--15">
-                                        <span className="specs-title">Size</span>
-                                        <span className="specs-text">
-                                          {variant.variant.size}
-                                        </span>
-                                      </li>
-                                    ) : null}
-
-                                    {variant.variant?.weight ? (
-                                      <li className="cs-weight fs--15">
-                                        <span className="specs-title">Weight</span>
-                                        <span className="specs-text">
-                                          {variant.variant.weight}LBS
-                                        </span>
-                                      </li>
-                                    ) : null}
-
-                                    {variant.variant?.price && SHOW_PRICES ? (
-                                      <li className="cs-weight fs--15">
-                                        <span className="specs-title">Price</span>
-                                        <span className="specs-text">
-                                          {decryptField(variant.variant.price)}
-                                        </span>
-                                      </li>
-                                    ) : null}
-                                  </ul>
-                                  <div className="form-cart">
-                                    <div className="container-add-to-cart mt-tablet-20 mt-phone-25">
-                                      <div className="container-input container-input-quantity">
-                                        <button
-                                          onClick={() => handleQuantityChange(product._id, +quantity - 1)}
-                                          type="button"
-                                          className="minus"
-                                        >
-                                          <i className="icon-minus"></i>
-                                        </button>
-                                        <input
-                                          type="number"
-                                          min="1"
-                                          value={quantity}
-                                          placeholder="1"
-                                          className="input-number"
-                                          onInput={(e) => handleQuantityChange(product._id, e.target.value)}
-                                        />
-                                        <button
-                                          onClick={() => handleQuantityChange(product._id, +quantity + 1)}
-                                          type="button"
-                                          className="plus"
-                                        >
-                                          <i className="icon-plus"></i>
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                      return (
+                        <div key={set.variant} className="product-set-item fs--16">
+                          <AnimateLink
+                            to={`/product/${product.product.slug}`}
+                            target={"_blank"}
+                            className="name"
+                          >
+                            {product.product.name} {variant.variant.color ? `| ${variant.variant.color}` : ""}
+                          </AnimateLink>
+                          <span className="size">{variant.variant.size || "-"}</span>
+                          {variant.variant?.price && SHOW_PRICES && <span className="price">{decryptField(variant.variant.price) || "-"}</span>}
+                          <div className="quantity container-add-to-cart">
+                            <div className="container-input container-input-quantity">
+                              <button
+                                onClick={() => handleQuantityChange(set.variant, +quantity - 1)}
+                                type="button"
+                                className="minus"
+                              >
+                                <i className="icon-minus"></i>
+                              </button>
+                              <input
+                                type="number"
+                                min="1"
+                                value={quantity}
+                                placeholder="1"
+                                className="input-number fs--16"
+                                onInput={(e) => handleQuantityChange(set.variant, e.target.value)}
+                              />
+                              <button
+                                onClick={() => handleQuantityChange(set.variant, +quantity + 1)}
+                                type="button"
+                                className="plus"
+                              >
+                                <i className="icon-plus"></i>
+                              </button>
                             </div>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  </ul>
-
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
                   <div
                     className="container-add-to-cart mt-tablet-20 mt-phone-25"
                     data-aos="fadeIn .8s ease-in-out .2s, d:loop"

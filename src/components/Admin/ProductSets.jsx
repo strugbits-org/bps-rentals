@@ -27,8 +27,10 @@ export const ProductSets = ({ products, productSets }) => {
             setDataSets(prev => prev.filter(set => set.product._id !== id));
             const productData = await getProductForUpdate(id);
             productData.data.productSets = [];
+            const { product } = prevDataSets.find(set => set.product._id === id);
             await updateDataItem(productData);
             if (alert) toast.info("Product set removed successfully");
+            revalidatePage(`/product/${product.slug}`);
             revalidatePage("/admin/manage-product-sets");
         } catch (error) {
             logError("Error:", error);
@@ -45,7 +47,9 @@ export const ProductSets = ({ products, productSets }) => {
         } else {
             toast.info("Product set created successfully");
         }
+        const { product } = data;
         setDataSets(prev => [data, ...prev]);
+        revalidatePage(`/product/${product.slug}`);
         revalidatePage("/admin/manage-product-sets");
     }
 
@@ -58,7 +62,9 @@ export const ProductSets = ({ products, productSets }) => {
     const handleOnUpdate = (data) => {
         setDataSets(prev => prev.map(set => set?.product._id === data?.product._id ? data : set));
         setActiveSet(null);
+        const { product } = data;
         toast.info("Product set updated successfully");
+        revalidatePage(`/product/${product.slug}`);
         revalidatePage("/admin/manage-product-sets");
     }
 
