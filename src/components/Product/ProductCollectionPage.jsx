@@ -159,7 +159,7 @@ const ProductCollectionPage = ({
     });
     const total = prices.reduce((acc, x) => acc + x, 0);
     setTotalPrice(`$ ${total.toFixed(2)}`);
-  }, [productsSets, products])
+  }, [productsSets, products]);
 
   const handleInputChange = (name, value) => {
     setCustomTextFields((prevState) => ({

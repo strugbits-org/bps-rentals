@@ -22,6 +22,10 @@
     text-decoration: underline;
 }
 
+.product-set-header .name {
+    text-decoration: none;
+}
+
 .product-set-item .size {
     width: 25%;
 }
@@ -34,6 +38,15 @@
     width: 20%;
     margin: 0 !important;
     text-align: center;
+    position: static;
+}
+
+.cart-product .wrapper-product-info .container-specs .list-specs {
+    flex-grow: 1;
+}
+
+.cart-product {
+    align-items: flex-start;
 }
 
 .product-set-item .quantity .container-input-quantity {
@@ -61,6 +74,7 @@
     .product-set-item {
         font-size: 1.4rem;
     }
+
     .product-set-header {
         font-size: 1.6rem;
     }

@@ -895,6 +895,14 @@ ul.sets-listing li {
   width: 100%;
 }
 
+.set-product-group .container-top {
+  flex-wrap: wrap !important;
+}
+
+.cart-product .wrapper-product-info .container-top.no-separator:before{
+  display: none;
+}
+
 @media only screen and (max-width: 1025px) {
   .product-set-cart {
     flex-wrap: wrap;
@@ -949,7 +957,7 @@ ul.sets-listing li {
   flex-flow: column;
 }
 
-.cart-product-2:not(.main-product,.cart-product-2) {
+.cart-product-2:not(.main-product, .cart-product-2) {
   background: var(--white-1) !important;
   align-items: center;
 }
