@@ -208,6 +208,7 @@
 
 body[data-modal-state="active"][data-modal="modal-quotes-history"] .wrapper[data-scroll-container],
 body[data-modal-state="active"][data-modal="modal-product-2"] .wrapper[data-scroll-container],
+body[data-modal-state="active"][data-modal="modal-product-3"] .wrapper[data-scroll-container],
 body[data-modal-state="active"][data-modal="modal-create-product-set"] .wrapper[data-scroll-container],
 body[data-modal-state="active"][data-modal="modal-edit-product-set"] .wrapper[data-scroll-container],
 body[data-form-cart-state="success"] .wrapper[data-scroll-container],
@@ -217,6 +218,7 @@ body[data-form-cart-state="success"] .wrapper[data-scroll-container],
 
 body[data-modal-state="active"][data-modal="modal-quotes-history"] #header,
 body[data-modal-state="active"][data-modal="modal-product-2"] #header,
+body[data-modal-state="active"][data-modal="modal-product-3"] #header,
 body[data-modal-state="active"][data-modal="modal-create-product-set"] #header,
 body[data-modal-state="active"][data-modal="modal-edit-product-set"] #header,
 body[data-form-cart-state="success"] #header {
@@ -269,12 +271,12 @@ li.IMPORTANT.long-desc {
   min-width: 11rem;
 }
 
-.cart-product-2.product-page .container-add-to-cart {
+.container-add-to-cart-collection {
   justify-content: flex-start;
 }
 
 @media only screen and (min-width: 768px) {
-  .container-product-description.product-page .container-add-to-cart .btn-add-to-cart {
+  .container-add-to-cart-collection .btn-add-to-cart {
     min-width: unset;
     max-width: unset;
     width: 100%;
@@ -282,7 +284,7 @@ li.IMPORTANT.long-desc {
 }
 
 @media only screen and (max-width: 767.98px) {
-  .container-product-description.product-page .container-add-to-cart .btn-add-to-cart {
+  .container-add-to-cart-collection .btn-add-to-cart {
     max-width: unset;
   }
 }
@@ -351,6 +353,10 @@ li.IMPORTANT.long-desc {
   .position-static-lg {
     position: static !important;
   }
+}
+
+.min-h-20-vh {
+  min-height: 45vh !important;
 }
 
 @media only screen and (max-width: 1025px) {
@@ -2213,4 +2219,8 @@ h2.product-name.text-sm-custom {
   opacity: 0;
   position: absolute;
   pointer-events: none;
+}
+
+.text-center{
+  text-align: center;
 }

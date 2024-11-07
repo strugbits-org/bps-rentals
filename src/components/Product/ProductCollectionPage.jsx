@@ -151,8 +151,9 @@ const ProductCollectionPage = ({
 
   useEffect(() => {
     const prices = productsSets.map(({ product, variant, quantity }) => {
-      const productData = products.find(p => p._id === product);
+      const productData = products.find(p => p.product._id === product);
       const variantData = productData.variantData.find(v => v.sku === variant);
+      if (!variantData.variant.price) return 0;
       const price = Number(decryptField(variantData.variant.price).replace(/[^\d.-]/g, ''));
       return price * quantity;
     });
@@ -200,7 +201,7 @@ const ProductCollectionPage = ({
       productsSets.forEach((set) => {
         if (!set) return null;
         const { quantity } = set;
-        const product = products.find(product => product._id === set.product);
+        const product = products.find(product => product.product._id === set.product);
         const variant = product.variantData.find(variant => variant.sku === set.variant);
 
         lineItems.push({
@@ -391,7 +392,7 @@ const ProductCollectionPage = ({
                         </span>
                       </li>
                     )}
-                    {SHOW_PRICES && selectedProductDetails?.product?.formattedPrice && (
+                    {SHOW_PRICES && (
                       <li className="seat-height">
                         <span className="specs-title">Price (TOTAL)</span>
                         <span className="specs-text">{totalPrice}</span>
@@ -409,7 +410,7 @@ const ProductCollectionPage = ({
                     {productsSets.map(set => {
                       if (!set) return null;
                       const { quantity } = set;
-                      const product = products.find(product => product._id === set.product);
+                      const product = products.find(product => product.product._id === set.product);
                       const variant = product.variantData.find(variant => variant.sku === set.variant);
 
                       return (
@@ -422,7 +423,7 @@ const ProductCollectionPage = ({
                             {product.product.name} {variant.variant.color ? `| ${variant.variant.color}` : ""}
                           </AnimateLink>
                           <span className="size">{variant.variant.size || "-"}</span>
-                          {variant.variant?.price && SHOW_PRICES && <span className="price">{decryptField(variant.variant.price) || "-"}</span>}
+                          {SHOW_PRICES && <span className="price">{variant.variant.price ? decryptField(variant.variant.price) : "-"}</span>}
                           <div className="quantity container-add-to-cart">
                             <div className="container-input container-input-quantity">
                               <button
@@ -454,7 +455,7 @@ const ProductCollectionPage = ({
                     })}
                   </div>
                   <div
-                    className="container-add-to-cart mt-tablet-20 mt-phone-25"
+                    className="container-add-to-cart container-add-to-cart-collection mt-tablet-20 mt-phone-25"
                     data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                   >
                     {unavailable ? (
@@ -644,7 +645,7 @@ const ProductCollectionPage = ({
         <SnapShots data={selectedVariant.usecaseImages} />
       )}
 
-      {matchedProductsData.length > 0 && (
+      {matchedProductsData.length && (
         <MatchItWith
           matchedProductsData={matchedProductsData}
           savedProductsData={savedProductsData}

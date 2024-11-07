@@ -111,11 +111,9 @@ export default async function Page({ params }) {
     const pairedProductsIds = pairWithData.filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);
     const matchedProducts = products.filter(product => pairedProductsIds.includes(product.product._id));
 
-    const productSets = selectedProduct?.productSets || [];
-
     return (
       <Suspense>
-        {productSets && productSets.length ? (
+        {selectedProduct?.productSets ? (
           <ProductCollectionPage
             products={products}
             selectedProductDetails={selectedProduct}

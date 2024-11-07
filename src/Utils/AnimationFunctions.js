@@ -31,6 +31,16 @@ export const reloadCartModal = () => {
   }
 };
 
+export const initializeMatchSwiper = () => {
+  if (typeof window !== "undefined") {
+    setTimeout(() => {
+      const customEvent = new Event("initializeSwiper");
+      const elem = document.querySelector(".matchSwiperSlider");
+      if (elem) elem.dispatchEvent(customEvent);
+    }, 200);
+  }
+};
+
 export const splitWordsAnimation = () => {
   if (typeof window !== "undefined") {
     setTimeout(() => {

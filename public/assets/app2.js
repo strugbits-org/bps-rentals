@@ -9069,42 +9069,6 @@ var require_app2 = __commonJS({
     function main() {
       productContent();
       productLinkColor();
-      new Swiper("#match-slider .swiper-container", {
-        modules: [Navigation, Pagination],
-        slidesPerView: 1,
-        spaceBetween: 0,
-        slidesPerGroup: 1,
-        loop: false,
-        effect: "slide",
-        pagination: {
-          el: "#match-slider .swiper-pagination",
-          clickable: true,
-          dynamicBullets: true,
-        },
-        navigation: {
-          nextEl: "#match-slider .swiper-button-next",
-          prevEl: "#match-slider .swiper-button-prev",
-        },
-        loopFillGroupWithBlank: false,
-        centerInsufficientSlides: true,
-        grabCursor: false,
-        observer: true,
-        watchOverflow: true,
-        speed: 600,
-        preventClicksPropagation: false,
-        touchStartPreventDefault: false,
-        // Responsive breakpoints
-        breakpoints: {
-          767: {
-            slidesPerView: 1,
-            slidesPerGroup: 1,
-          },
-          1025: {
-            slidesPerView: "auto",
-            slidesPerGroup: 1,
-          },
-        },
-      });
       let readMore = document.querySelectorAll(".description");
       if (readMore) {
         readMore.forEach((element) => {
@@ -9830,6 +9794,45 @@ var require_app2 = __commonJS({
       productLinkColor();
       filterProducts();
       productContent();
+    });
+
+    document.querySelector(".matchSwiperSlider").addEventListener("initializeSwiper", () => {
+      new Swiper("#match-slider .swiper-container", {
+        modules: [Navigation, Pagination],
+        slidesPerView: 1,
+        spaceBetween: 0,
+        slidesPerGroup: 1,
+        loop: false,
+        effect: "slide",
+        pagination: {
+          el: "#match-slider .swiper-pagination",
+          clickable: true,
+          dynamicBullets: true,
+        },
+        navigation: {
+          nextEl: "#match-slider .swiper-button-next",
+          prevEl: "#match-slider .swiper-button-prev",
+        },
+        loopFillGroupWithBlank: false,
+        centerInsufficientSlides: true,
+        grabCursor: false,
+        observer: true,
+        watchOverflow: true,
+        speed: 600,
+        preventClicksPropagation: false,
+        touchStartPreventDefault: false,
+        // Responsive breakpoints
+        breakpoints: {
+          767: {
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+          },
+          1025: {
+            slidesPerView: "auto",
+            slidesPerGroup: 1,
+          },
+        },
+      });
     });
 
     setTimeout(() => {

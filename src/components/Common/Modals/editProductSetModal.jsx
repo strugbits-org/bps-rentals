@@ -17,7 +17,7 @@ const EditProductSetModal = ({ activeSet, products, setToggleEditSetModal, onUpd
 
   const productsOptions = useMemo(() =>
     products?.map(product => ({
-      value: product._id,
+      value: product.product._id,
       label: product.product.name,
     })),
     [products]
@@ -25,11 +25,11 @@ const EditProductSetModal = ({ activeSet, products, setToggleEditSetModal, onUpd
 
   const variantsOptions = useMemo(() => {
     const variants = [];
-    products.filter(product => product._id !== mainProduct?._id).forEach(product => {
+    products.filter(product => product.product._id !== mainProduct?.product?._id).forEach(product => {
       product.variantData.forEach(variant => {
         variants.push({
           value: variant.sku,
-          productId: product._id,
+          productId: product.product._id,
           sku: variant.sku,
           label: product.product.name + (variant.variant.color ? " | " + variant.variant.color : "") + " | " + variant.sku,
         });
@@ -43,8 +43,8 @@ const EditProductSetModal = ({ activeSet, products, setToggleEditSetModal, onUpd
   const handleSelectMainProduct = useCallback((e) => {
     setProductValue(e);
     const productId = e.value;
-    if (!mainProduct || mainProduct._id !== productId) {
-      setMainProduct(products.find(product => product._id === productId));
+    if (!mainProduct || mainProduct?.product?._id !== productId) {
+      setMainProduct(products.find(product => product.product._id === productId));
     }
   }, [mainProduct, products]);
 
@@ -103,9 +103,7 @@ const EditProductSetModal = ({ activeSet, products, setToggleEditSetModal, onUpd
     if (quantity < 10000 && quantity > 0) {
       setProductsSet(prev => {
         const updatedProductsSet = prev.map((x) => {
-          if (id === x.product) {
-            x.quantity = Number(quantity);
-          }
+          if (id === x.product) x.quantity = Number(quantity);
           return x;
         });
         return updatedProductsSet;
@@ -118,7 +116,7 @@ const EditProductSetModal = ({ activeSet, products, setToggleEditSetModal, onUpd
       setMainProduct(activeSet);
       setProductValue({
         label: activeSet.product.name,
-        value: activeSet._id
+        value: activeSet.product._id
       });
       setProductsSet(activeSet.productSets);
     }
@@ -200,7 +198,7 @@ const EditProductSetModal = ({ activeSet, products, setToggleEditSetModal, onUpd
               {productsSet.map(setProduct => {
                 if (!setProduct) return null;
                 const { quantity } = setProduct;
-                const product = products.find(product => product._id === setProduct.product);
+                const product = products.find(product => product.product._id === setProduct.product);
                 const variant = product.variantData.find(variant => variant.sku === setProduct.variant);
 
                 return (
@@ -214,7 +212,7 @@ const EditProductSetModal = ({ activeSet, products, setToggleEditSetModal, onUpd
                           <div className="container-product-name">
                             <h2 className="product-name text-sm-custom ">{product.product.name} {variant.variant.color ? `| ${variant.variant.color}` : ""} | {variant.sku}</h2>
                           </div>
-                          <button onClick={() => { removeSetProduct(product._id) }} type="button" className="btn-cancel btn-cancel-2">
+                          <button onClick={() => { removeSetProduct(product.product._id) }} type="button" className="btn-cancel btn-cancel-2">
                             <i className="icon-close"></i>
                           </button>
                         </div>
@@ -223,7 +221,7 @@ const EditProductSetModal = ({ activeSet, products, setToggleEditSetModal, onUpd
                             <div className="container-add-to-cart mt-tablet-20 mt-phone-25">
                               <div className="container-input container-input-quantity">
                                 <button
-                                  onClick={() => handleQuantityChange(product._id, +quantity - 1)}
+                                  onClick={() => handleQuantityChange(product.product._id, +quantity - 1)}
                                   type="button"
                                   className="minus"
                                 >
@@ -235,10 +233,10 @@ const EditProductSetModal = ({ activeSet, products, setToggleEditSetModal, onUpd
                                   value={quantity}
                                   placeholder="1"
                                   className="input-number"
-                                  onInput={(e) => handleQuantityChange(product._id, e.target.value)}
+                                  onInput={(e) => handleQuantityChange(product.product._id, e.target.value)}
                                 />
                                 <button
-                                  onClick={() => handleQuantityChange(product._id, +quantity + 1)}
+                                  onClick={() => handleQuantityChange(product.product._id, +quantity + 1)}
                                   type="button"
                                   className="plus"
                                 >

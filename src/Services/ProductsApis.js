@@ -97,6 +97,40 @@ export const getProductsByCategory = async (categories = [], adminPage = false) 
   }
 };
 
+export const fetchOnlyProductsByIds = async (products) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "DemoProductData",
+      includeReferencedItems: ["product"],
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+      hasSome: [
+        {
+          key: "product",
+          values: products,
+        },
+      ],
+      includeVariants: false,
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data.subCategoryData ? x.data : { subCategoryData: [], ...x.data });
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    logError("Error fetching products by ids:", error);
+    return [];
+  }
+};
+
 export const fetchProductsByIds = async (products) => {
   try {
     const response = await getDataFetchFunction({

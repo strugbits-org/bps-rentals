@@ -17,7 +17,7 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
 
   const productsOptions = useMemo(() =>
     products?.map(product => ({
-      value: product._id,
+      value: product.product._id,
       label: product.product.name,
     })),
     [products]
@@ -25,11 +25,11 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
 
   const variantsOptions = useMemo(() => {
     const variants = [];
-    products.filter(product => product._id !== mainProduct?._id).forEach(product => {
+    products.filter(product => product.product._id !== mainProduct?.product?._id).forEach(product => {
       product.variantData.forEach(variant => {
         variants.push({
           value: variant.sku,
-          productId: product._id,
+          productId: product.product._id,
           sku: variant.sku,
           label: product.product.name + (variant.variant.color ? " | " + variant.variant.color : "") + " | " + variant.sku,
         });
@@ -43,8 +43,8 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
   const handleSelectMainProduct = useCallback((e) => {
     setProductValue(e);
     const productId = e.value;
-    if (!mainProduct || mainProduct._id !== productId) {
-      setMainProduct(products.find(product => product._id === productId));
+    if (!mainProduct || mainProduct?.product?._id !== productId) {
+      setMainProduct(products.find(product => product.product._id === productId));
     }
   }, [mainProduct, products]);
 
@@ -97,13 +97,11 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
     });
   };
 
-  const handleQuantityChange = async (id, quantity) => {    
+  const handleQuantityChange = async (id, quantity) => {
     if (quantity < 10000 && quantity > 0) {
       setProductsSet(prev => {
         const updatedProductsSet = prev.map((x) => {
-          if (id === x.product) {
-            x.quantity = Number(quantity);
-          }
+          if (id === x.product) x.quantity = Number(quantity);
           return x;
         });
         return updatedProductsSet;
@@ -185,8 +183,8 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
             <ul className="list-cart list-cart-product list-set-products">
               {productsSet.map(setProduct => {
                 if (!setProduct) return null;
-                const { quantity } = setProduct;                
-                const product = products.find(product => product._id === setProduct.product);
+                const { quantity } = setProduct;
+                const product = products.find(product => product.product._id === setProduct.product);
                 const variant = product.variantData.find(variant => variant.sku === setProduct.variant);
 
                 return (
@@ -200,7 +198,7 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
                           <div className="container-product-name">
                             <h2 className="product-name text-sm-custom ">{product.product.name} {variant.variant.color ? `| ${variant.variant.color}` : ""} | {variant.sku}</h2>
                           </div>
-                          <button onClick={() => { removeSetProduct(product._id) }} type="button" className="btn-cancel btn-cancel-2">
+                          <button onClick={() => { removeSetProduct(product.product._id) }} type="button" className="btn-cancel btn-cancel-2">
                             <i className="icon-close"></i>
                           </button>
                         </div>
@@ -209,7 +207,7 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
                             <div className="container-add-to-cart mt-tablet-20 mt-phone-25">
                               <div className="container-input container-input-quantity">
                                 <button
-                                  onClick={() => handleQuantityChange(product._id, +quantity - 1)}
+                                  onClick={() => handleQuantityChange(product.product._id, +quantity - 1)}
                                   type="button"
                                   className="minus"
                                 >
@@ -221,10 +219,10 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
                                   value={quantity}
                                   placeholder="1"
                                   className="input-number"
-                                  onInput={(e) => handleQuantityChange(product._id, e.target.value)}
+                                  onInput={(e) => handleQuantityChange(product.product._id, e.target.value)}
                                 />
                                 <button
-                                  onClick={() => handleQuantityChange(product._id, +quantity + 1)}
+                                  onClick={() => handleQuantityChange(product.product._id, +quantity + 1)}
                                   type="button"
                                   className="plus"
                                 >

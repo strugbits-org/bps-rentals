@@ -132,7 +132,7 @@ export const ProductSets = ({ products, productSets }) => {
                                                             <ul className={"sets-listing"}>
                                                                 {item.productSets.map(set => {
                                                                     if (!set) return null;
-                                                                    const product = products.find(product => product._id === set.product);
+                                                                    const product = products.find(product => product.product._id === set.product);
                                                                     const variant = product.variantData.find(variant => variant.sku === set.variant);
                                                                     return (
                                                                         <li key={set.variant} className={"fs--15"}> {product.product.name} {variant.variant.color ? `| ${variant.variant.color}` : ""} | {variant.sku}</li>

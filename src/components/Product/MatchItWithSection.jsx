@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import ProductCard from "../Category/ProductCard";
 import CartModal from "../Common/Modals/CartModal";
 import logError from "@/Utils/ServerActions";
+import { initializeMatchSwiper } from "@/Utils/AnimationFunctions";
 
 const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsData, bestSeller }) => {
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
   const [selectedVariantData, setSelectedVariantData] = useState(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-  const [productFilteredVariantData, setProductFilteredVariantData] =
-    useState();
+  const [productFilteredVariantData, setProductFilteredVariantData] = useState();
 
   const getSelectedProductSnapShots = async (productData, activeVariant) => {
     setSelectedProductData(productData);
@@ -57,9 +57,7 @@ const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsD
     modalUrl,
   }) => {
     if (productSnapshots) {
-      const selectedVariantFilteredData = productSnapshots.find(
-        (variant) => variant.colorVariation === selectedVariantData.variantId
-      );
+      const selectedVariantFilteredData = productSnapshots.find((variant) => variant.colorVariation === selectedVariantData.variantId);
 
       if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
         const combinedVariantData = {
@@ -81,7 +79,14 @@ const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsD
         setSelectedVariantData(combinedVariantData);
       }
     }
+
+
   };
+
+  useEffect(() => {
+    initializeMatchSwiper();
+  }, [])
+  
   return (
     <>
       <CartModal
@@ -112,23 +117,20 @@ const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsD
               <div id="match-slider" className="mt-50" data-aos="d:loop">
                 <div className="swiper-container">
                   <div className="swiper-wrapper">
-                    {matchedProductsData &&
-                      matchedProductsData.map((data, index) => {
-                        return (
-                          <div key={index} className="swiper-slide">
-                            <ProductCard
-                              key={index}
-                              bestSeller={bestSeller}
-                              productData={data}
-                              getSelectedProductSnapShots={
-                                  getSelectedProductSnapShots
-                              }
-                              savedProductsData={savedProductsData}
-                              setSavedProductsData={setSavedProductsData}
-                            />
-                          </div>
-                        );
-                      })}
+                    {matchedProductsData.map((data, index) => {
+                      return (
+                        <div key={index} className="swiper-slide">
+                          <ProductCard
+                            key={index}
+                            bestSeller={bestSeller}
+                            productData={data}
+                            getSelectedProductSnapShots={getSelectedProductSnapShots}
+                            savedProductsData={savedProductsData}
+                            setSavedProductsData={setSavedProductsData}
+                          />
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
                 <div className="swiper-button-prev no-mobile">
