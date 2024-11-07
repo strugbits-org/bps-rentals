@@ -347,6 +347,10 @@ li.IMPORTANT.long-desc {
   .min-h-250-px {
     min-height: 250px !important;
   }
+
+  .position-static-lg {
+    position: static !important;
+  }
 }
 
 @media only screen and (max-width: 1025px) {
@@ -899,7 +903,7 @@ ul.sets-listing li {
   flex-wrap: wrap !important;
 }
 
-.cart-product .wrapper-product-info .container-top.no-separator:before{
+.cart-product .wrapper-product-info .container-top.no-separator:before {
   display: none;
 }
 

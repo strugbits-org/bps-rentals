@@ -77,56 +77,38 @@ export const CartItem = ({ data, handleQuantityChange, updateProducts, removePro
                                     </li>
                                 );
                             })}
-
-                            {SHOW_PRICES && (
-                                <li className="price">
-                                    <span className="specs-title">Price</span>
-                                    <span className="specs-text">
-                                        {formatPrice(price, quantity)}
-                                    </span>
-                                </li>
-                            )}
                         </ul>
-                        <div className="quantity">
-                            <span className="fs--20 no-mobile">
-                                Quantity
-                            </span>
-                            <div className="container-input container-input-quantity">
-                                <button
-                                    onClick={() =>
-                                        handleQuantityChange(_id, quantity - 1)
-                                    }
-                                    type="button"
-                                    className="minus"
-                                >
-                                    <i className="icon-minus"></i>
-                                </button>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    value={quantity}
-                                    placeholder="1"
-                                    className="input-number"
-                                    onInput={(e) =>
-                                        handleQuantityChange(
-                                            _id,
-                                            e.target.value,
-                                            true
-                                        )
-                                    }
-                                    onBlur={(e) =>
-                                        updateProducts(_id, e.target.value)
-                                    }
-                                />
-                                <button
-                                    onClick={() =>
-                                        handleQuantityChange(_id, quantity + 1)
-                                    }
-                                    type="button"
-                                    className="plus"
-                                >
-                                    <i className="icon-plus"></i>
-                                </button>
+                        <div>
+                            {SHOW_PRICES && <div class="fs--24 mb-10 text-right">{formatPrice(price, quantity)}</div>}
+                            <div className="quantity position-static-lg">
+                                <span className="fs--20 no-mobile">
+                                    Quantity
+                                </span>
+                                <div className="container-input container-input-quantity">
+                                    <button
+                                        onClick={() => handleQuantityChange(_id, quantity - 1)}
+                                        type="button"
+                                        className="minus"
+                                    >
+                                        <i className="icon-minus"></i>
+                                    </button>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={quantity}
+                                        placeholder="1"
+                                        className="input-number"
+                                        onInput={(e) => handleQuantityChange(_id, e.target.value, true)}
+                                        onBlur={(e) => updateProducts(_id, e.target.value)}
+                                    />
+                                    <button
+                                        onClick={() => handleQuantityChange(_id, quantity + 1)}
+                                        type="button"
+                                        className="plus"
+                                    >
+                                        <i className="icon-plus"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -144,6 +126,15 @@ export const CartItemGroup = ({ data, handleQuantityChange, updateProducts, remo
     const ids = [_id, ...productSets.map((item) => item._id)];
     const formattedDescription = formatDescriptionLines(descriptionLines);
     const location = formattedDescription.find(x => x.title === "location")?.value || "-";
+
+    const prices = productSets.map((set) => {
+        const { quantity, price } = set;
+        const formattedPrice = formatPrice(price, quantity);
+        const convertToNumber = Number(formattedPrice.replace(/[^\d.-]/g, ''));
+        return convertToNumber;
+    });
+    const total = prices.reduce((acc, x) => acc + x, 0);
+    const formattedPrice = `$ ${total.toFixed(2)}`;
 
     return (
         <li className="list-item">
@@ -195,11 +186,7 @@ export const CartItemGroup = ({ data, handleQuantityChange, updateProducts, remo
                                 </li>
                             </ul>
 
-                            {SHOW_PRICES && (
-                                <div className="fs--24">
-                                    $ 526.50
-                                </div>
-                            )}
+                            {SHOW_PRICES && <div className="fs--24">{formattedPrice}</div>}
                         </div>
                     </div>
                     <div className="product-set-table">
@@ -211,14 +198,14 @@ export const CartItemGroup = ({ data, handleQuantityChange, updateProducts, remo
                         </div>
                         {productSets.map(item => {
                             const { quantity } = item;
-                            const formattedDescription = formatDescriptionLines(item.descriptionLines);
-                            const color = formattedDescription.find(x => x.title === "Color")?.value || "-";
-                            const size = formattedDescription.find(x => x.title === "Size")?.value || "-";
+                            const formattedData = formatDescriptionLines(item.descriptionLines);
+                            const color = formattedData.find(x => x.title === "Color")?.value || "-";
+                            const size = formattedData.find(x => x.title === "Size")?.value || "-";
 
                             return (
                                 <div key={item._id} className="product-set-item fs--16">
                                     <AnimateLink
-                                        // to={`/product/${product.product.slug}`}
+                                        to={"/product" + extractSlugFromUrl(item.url)}
                                         target={"_blank"}
                                         className="name"
                                     >
@@ -241,7 +228,8 @@ export const CartItemGroup = ({ data, handleQuantityChange, updateProducts, remo
                                                 value={quantity}
                                                 placeholder="1"
                                                 className="input-number fs--16"
-                                                onInput={(e) => handleQuantityChange(item._id, e.target.value)}
+                                                onInput={(e) => handleQuantityChange(item._id, e.target.value, true)}
+                                                onBlur={(e) => updateProducts(item._id, e.target.value)}
                                             />
                                             <button
                                                 onClick={() => handleQuantityChange(item._id, +quantity + 1)}

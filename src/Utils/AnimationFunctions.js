@@ -25,7 +25,8 @@ export const reloadCartModal = () => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
       const customEvent = new Event("reloadModal");
-      document.querySelector(".addToCart").dispatchEvent(customEvent);
+      const elem = document.querySelector(".addToCart");
+      if (elem) elem.dispatchEvent(customEvent);
     }, 200);
   }
 };

@@ -60,7 +60,6 @@ const ProductCollectionPage = ({
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [buttonLabel, setButtonLabel] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
-  const [cartQuantity, setCartQuantity] = useState(1);
   const [customTextFields, setCustomTextFields] = useState({});
   const [productsSets, setProductsSets] = useState([]);
   const [totalPrice, setTotalPrice] = useState();
@@ -194,7 +193,7 @@ const ProductCollectionPage = ({
               variantId: variant_id,
             },
           },
-          quantity: cartQuantity,
+          quantity: 1,
         }
       ]
 
@@ -209,7 +208,7 @@ const ProductCollectionPage = ({
             appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
             catalogItemId: product.product._id,
             options: {
-              customTextFields: { location: product_location, Size: variant.size, productSetId: product_id },
+              customTextFields: { Size: variant.variant.size, productSetId: product_id },
               variantId: variant.variant._id,
             },
           },
