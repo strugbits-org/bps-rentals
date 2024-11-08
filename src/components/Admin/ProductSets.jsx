@@ -4,18 +4,16 @@ import useUserData from '@/Hooks/useUserData';
 import Error404Page from '../Error404Page';
 import { markPageLoaded } from '@/Utils/AnimationFunctions';
 import { ImageWrapper } from '../Common/ImageWrapper';
-import CreateProductSetModal from '../Common/Modals/CreateProductSetModal';
 import { PERMISSIONS } from '@/Utils/Schema/permissions';
 import logError from '@/Utils/ServerActions';
 import { getProductForUpdate, updateDataItem } from '@/Services/AdminApis';
 import { revalidatePage } from '@/Services/RevalidateService';
-import EditProductSetModal from '../Common/Modals/editProductSetModal';
 import { toast } from 'react-toastify';
+import ProductSetModal from '../Common/Modals/ProductSetModal';
 
-export const ProductSets = ({ products, productSets }) => {
+export const ProductSets = ({ products }) => {
 
     const [dataSets, setDataSets] = useState([]);
-    const [toggleCreateNewModal, setToggleCreateNewModal] = useState(false);
     const [toggleEditSetModal, setToggleEditSetModal] = useState(false);
     const [activeSet, setActiveSet] = useState();
     const { permissions } = useUserData();
@@ -24,13 +22,13 @@ export const ProductSets = ({ products, productSets }) => {
     const removeSet = async (id, alert = true) => {
         const prevDataSets = [...dataSets];
         try {
-            setDataSets(prev => prev.filter(set => set.product._id !== id));
+            setDataSets(prev => prev.filter(set => set.product !== id));
             const productData = await getProductForUpdate(id);
             productData.data.productSets = [];
-            const { product } = prevDataSets.find(set => set.product._id === id);
+            const { slug } = prevDataSets.find(set => set.product === id);
             await updateDataItem(productData);
             if (alert) toast.info("Product set removed successfully");
-            revalidatePage(`/product/${product.slug}`);
+            revalidatePage(`/product/${slug}`);
             revalidatePage("/admin/manage-product-sets");
         } catch (error) {
             logError("Error:", error);
@@ -40,35 +38,46 @@ export const ProductSets = ({ products, productSets }) => {
 
     const handleOnSave = (data) => {
         if (activeSet) {
-            setDataSets(prev => prev.filter(set => set?.product._id !== activeSet?.product._id));
-            removeSet(activeSet?.product._id, false);
+            setDataSets(prev => prev.filter(set => set.product !== activeSet?.product));
+            removeSet(activeSet.product, false);
             setActiveSet(null);
             toast.info("Product set updated successfully");
         } else {
             toast.info("Product set created successfully");
         }
-        const { product } = data;
+        const { slug } = data;
         setDataSets(prev => [data, ...prev]);
-        revalidatePage(`/product/${product.slug}`);
+        revalidatePage(`/product/${slug}`);
         revalidatePage("/admin/manage-product-sets");
     }
 
     const handleUpdateSet = (id) => {
-        const set = dataSets.find(set => set?.product._id === id);
+        const set = dataSets.find(set => set.product === id);
         setActiveSet(set);
         setToggleEditSetModal(true);
     }
 
     const handleOnUpdate = (data) => {
-        setDataSets(prev => prev.map(set => set?.product._id === data?.product._id ? data : set));
+        setDataSets(prev => prev.map(set => set.product === data.product ? data : set));
         setActiveSet(null);
-        const { product } = data;
+        const { slug } = data;
         toast.info("Product set updated successfully");
-        revalidatePage(`/product/${product.slug}`);
+        revalidatePage(`/product/${slug}`);
         revalidatePage("/admin/manage-product-sets");
     }
 
     useEffect(() => {
+        const productSets = products.filter(product => product.product && product.productSets && product.productSets.length).map(({ product, productSets }) => {
+            return {
+                value: product._id,
+                product: product._id,
+                slug: product.slug,
+                name: product.name,
+                image: product.mainMedia,
+                label: product.name,
+                productSets: productSets,
+            }
+        });
         setDataSets(productSets);
         markPageLoaded();
     }, [])
@@ -82,7 +91,7 @@ export const ProductSets = ({ products, productSets }) => {
                 <div className="wrapper-bottom d-flex-lg products-listing-admin">
                     <h1 className="fs--60 blue-1 split-words">PRODUCT SETS</h1>
                     <div className="d-flex-lg flex-mobile-center align-self-center ml-auto mt-10">
-                        <button onClick={() => { setToggleCreateNewModal(true) }} className="btn-3-blue btn-blue btn-small mr-10 order-mobile-1">
+                        <button onClick={() => { setToggleEditSetModal(true) }} className="btn-3-blue btn-blue btn-small mr-10 order-mobile-1">
                             <span>CREATE NEW SET</span>
                         </button>
                     </div>
@@ -94,21 +103,19 @@ export const ProductSets = ({ products, productSets }) => {
                         </div>
                     ) : (
                         <ul className="list-cart list-cart-product min-h-100-sm">
-                            {dataSets.map((item, index) => {
-                                const { product } = item;
-                                const { _id, name, mainMedia } = product;
+                            {dataSets.map(({ product, name, image, productSets }) => {
                                 return (
-                                    <li key={index} className="list-item mb-30">
+                                    <li key={product} className="list-item mb-30">
                                         <div className="cart-product cart-product-2" style={{ backgroundColor: "var(--white-1)" }}>
                                             <div className="container-img">
-                                                <ImageWrapper key={_id} defaultDimensions={{ width: 120, height: 120 }} timeout={0} min_w={120} min_h={120} url={mainMedia} />
+                                                <ImageWrapper key={product} defaultDimensions={{ width: 120, height: 120 }} timeout={0} min_w={120} min_h={120} url={image} />
                                             </div>
                                             <div className="wrapper-product-info">
                                                 <div className="container-top">
                                                     <div className="container-product-name">
                                                         <h2 className="product-name">{name}</h2>
                                                         <button
-                                                            onClick={() => { handleUpdateSet(_id) }}
+                                                            onClick={() => { handleUpdateSet(product) }}
                                                             className="btn-view"
                                                         >
                                                             <span>Edit</span>
@@ -116,26 +123,23 @@ export const ProductSets = ({ products, productSets }) => {
                                                         </button>
                                                     </div>
                                                     <button
-                                                        onClick={() => removeSet(_id)}
+                                                        onClick={() => removeSet(product)}
                                                         type="button"
                                                         className="btn-cancel"
                                                     >
                                                         <i className="icon-close"></i>
                                                     </button>
                                                 </div>
-                                                {item?.productSets.length ? (
+                                                {productSets.length ? (
                                                     <>
                                                         <h4 className={"fs--25 mb-10"}>
                                                             <span>SETS OF PRODUCTS</span>
                                                         </h4>
                                                         <div className="container-specs">
                                                             <ul className={"sets-listing"}>
-                                                                {item.productSets.map(set => {
-                                                                    if (!set) return null;
-                                                                    const product = products.find(product => product.product._id === set.product);
-                                                                    const variant = product.variantData.find(variant => variant.sku === set.variant);
+                                                                {productSets.map(({ name, color, variant }) => {
                                                                     return (
-                                                                        <li key={set.variant} className={"fs--15"}> {product.product.name} {variant.variant.color ? `| ${variant.variant.color}` : ""} | {variant.sku}</li>
+                                                                        <li key={variant} className={"fs--15"}> {name} {color ? `| ${color}` : ""} | {variant}</li>
                                                                     )
                                                                 })}
                                                             </ul>
@@ -151,8 +155,18 @@ export const ProductSets = ({ products, productSets }) => {
                     )}
                 </div>
             </div>
-            {toggleCreateNewModal && <CreateProductSetModal setToggleCreateNewModal={setToggleCreateNewModal} products={products.filter(product => !product?.productSets || !product.productSets.length)} onSave={handleOnSave} />}
-            {toggleEditSetModal && activeSet && <EditProductSetModal activeSet={activeSet} setToggleEditSetModal={setToggleEditSetModal} products={products.filter(product => !product?.productSets || !product.productSets.length)} onUpdate={handleOnUpdate} onSave={handleOnSave} />}
+
+            {toggleEditSetModal && (
+                <ProductSetModal
+                    activeSet={activeSet}
+                    setActiveSet={setActiveSet}
+                    setToggleEditSetModal={setToggleEditSetModal}
+                    products={products.filter(({ productSets }) => !productSets?.length)}
+                    onUpdate={handleOnUpdate}
+                    onSave={handleOnSave}
+                />
+            )}
+
         </>
     );
 };

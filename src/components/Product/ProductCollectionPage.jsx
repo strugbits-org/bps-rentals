@@ -25,13 +25,11 @@ import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
 import useUserData from "@/Hooks/useUserData";
-import { decryptField } from "@/Utils/Encrypt";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
 
 const ProductCollectionPage = ({
-  products,
   selectedProductDetails,
   matchedProductsData,
   categoriesData,
@@ -150,16 +148,10 @@ const ProductCollectionPage = ({
   };
 
   useEffect(() => {
-    const prices = productsSets.map(({ product, variant, quantity }) => {
-      const productData = products.find(p => p.product._id === product);
-      const variantData = productData.variantData.find(v => v.sku === variant);
-      if (!variantData.variant.price) return 0;
-      const price = Number(decryptField(variantData.variant.price).replace(/[^\d.-]/g, ''));
-      return price * quantity;
-    });
+    const prices = productsSets.map(({ price, quantity }) => Number(price.replace(/[^\d.-]/g, '')) * quantity);
     const total = prices.reduce((acc, x) => acc + x, 0);
     setTotalPrice(`$ ${total.toFixed(2)}`);
-  }, [productsSets, products]);
+  }, [productsSets]);
 
   const handleInputChange = (name, value) => {
     setCustomTextFields((prevState) => ({
@@ -198,19 +190,14 @@ const ProductCollectionPage = ({
         }
       ]
 
-      productsSets.forEach((set) => {
-        if (!set) return null;
-        const { quantity } = set;
-        const product = products.find(product => product.product._id === set.product);
-        const variant = product.variantData.find(variant => variant.sku === set.variant);
-
+      productsSets.forEach(({ id, product, size, quantity }) => {
         lineItems.push({
           catalogReference: {
             appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-            catalogItemId: product.product._id,
+            catalogItemId: product,
             options: {
-              customTextFields: { Size: variant.variant.size, productSetId: product_id },
-              variantId: variant.variant._id,
+              customTextFields: { location: product_location, Size: size, productSetId: product_id },
+              variantId: id,
             },
           },
           quantity: quantity,
@@ -407,27 +394,22 @@ const ProductCollectionPage = ({
                       {SHOW_PRICES && <span className="price">Price</span>}
                       <span className="quantity">Quantity</span>
                     </div>
-                    {productsSets.map(set => {
-                      if (!set) return null;
-                      const { quantity } = set;
-                      const product = products.find(product => product.product._id === set.product);
-                      const variant = product.variantData.find(variant => variant.sku === set.variant);
-
+                    {productsSets.map(({ name, variant, slug, color, price, size, quantity }) => {
                       return (
-                        <div key={set.variant} className="product-set-item fs--16">
+                        <div key={variant} className="product-set-item fs--16">
                           <AnimateLink
-                            to={`/product/${product.product.slug}`}
+                            to={`/product/${slug}`}
                             target={"_blank"}
                             className="name"
                           >
-                            {product.product.name} {variant.variant.color ? `| ${variant.variant.color}` : ""}
+                            {name} {color ? `| ${color}` : ""}
                           </AnimateLink>
-                          <span className="size">{variant.variant.size || "-"}</span>
-                          {SHOW_PRICES && <span className="price">{variant.variant.price ? decryptField(variant.variant.price) : "-"}</span>}
+                          <span className="size">{size || "-"}</span>
+                          {SHOW_PRICES && <span className="price">{price || "-"}</span>}
                           <div className="quantity container-add-to-cart">
                             <div className="container-input container-input-quantity">
                               <button
-                                onClick={() => handleQuantityChange(set.variant, +quantity - 1)}
+                                onClick={() => handleQuantityChange(variant, +quantity - 1)}
                                 type="button"
                                 className="minus"
                               >
@@ -439,10 +421,10 @@ const ProductCollectionPage = ({
                                 value={quantity}
                                 placeholder="1"
                                 className="input-number fs--16"
-                                onInput={(e) => handleQuantityChange(set.variant, e.target.value)}
+                                onInput={(e) => handleQuantityChange(variant, e.target.value)}
                               />
                               <button
-                                onClick={() => handleQuantityChange(set.variant, +quantity + 1)}
+                                onClick={() => handleQuantityChange(variant, +quantity + 1)}
                                 type="button"
                                 className="plus"
                               >

@@ -7,91 +7,116 @@ import { ImageWrapper } from "../ImageWrapper";
 import { getProductForUpdate, updateDataItem } from "@/Services/AdminApis";
 import { toast } from "react-toastify";
 import logError from "@/Utils/ServerActions";
+import { decryptField } from "@/Utils/Encrypt";
 
-const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) => {
+const ProductSetModal = ({ activeSet, setActiveSet, products, setToggleEditSetModal, onUpdate, onSave }) => {
   const [mainProduct, setMainProduct] = useState(null);
   const [productsSet, setProductsSet] = useState([]);
-  const [productValue, setProductValue] = useState(null);
   const [productSetValue, setProductSetValue] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const productsOptions = useMemo(() =>
-    products?.map(product => ({
-      value: product.product._id,
-      label: product.product.name,
-    })),
+  const productsOptions = useMemo(
+    () =>
+      products.map(({ product }) => ({
+        value: product._id,
+        product: product._id,
+        slug: product.slug,
+        name: product.name,
+        image: product.mainMedia,
+        label: product.name,
+      })),
     [products]
   );
 
   const variantsOptions = useMemo(() => {
-    const variants = [];
-    products.filter(product => product.product._id !== mainProduct?.product?._id).forEach(product => {
-      product.variantData.forEach(variant => {
-        variants.push({
-          value: variant.sku,
-          productId: product.product._id,
-          sku: variant.sku,
-          label: product.product.name + (variant.variant.color ? " | " + variant.variant.color : "") + " | " + variant.sku,
-        });
+    return products.flatMap(({ product, variantData }) =>
+      product._id !== mainProduct?.product
+        ? variantData
+          .filter(({ sku }) => sku)
+          .map(({ sku, variant }) => ({
+            value: sku,
+            productId: product._id,
+            name: product.name,
+            slug: product.slug,
+            size: variant.size,
+            id: variant._id,
+            price: variant.price,
+            color: variant.color,
+            image: variant.imageSrc,
+            label: `${product.name}${variant.color ? ` | ${variant.color}` : ""} | ${sku}`,
+          }))
+        : []
+    );
+  }, [products, mainProduct]);
+
+  const handleSelectSetProduct = useCallback(
+    (e) => {
+      setProductSetValue(e);
+
+      const data = {
+        product: e.productId,
+        variant: e.value,
+        name: e.name,
+        slug: e.slug,
+        id: e.id,
+        size: e.size,
+        color: e.color,
+        price: e.price ? decryptField(e.price) : "$0.00",
+        image: e.image,
+        quantity: 1,
+      };
+
+      setProductsSet((prev) => {
+        return prev.find((prod) => prod.variant === e.value) ? prev : [data, ...prev];
       });
-    });
-    return variants;
-  },
-    [products, mainProduct]
+    },
+    [setProductSetValue, setProductsSet]
   );
 
-  const handleSelectMainProduct = useCallback((e) => {
-    setProductValue(e);
-    const productId = e.value;
-    if (!mainProduct || mainProduct?.product?._id !== productId) {
-      setMainProduct(products.find(product => product.product._id === productId));
-    }
-  }, [mainProduct, products]);
 
-  const handleSelectSetProduct = useCallback((e) => {
-    setProductSetValue(e);
-    const data = {
-      product: e.productId,
-      variant: e.value,
-      quantity: 1,
-    }
-    setProductsSet(prev => prev.some(prod => prod.variant === e.value) ? prev : [data, ...prev]);
-  }, [productsSet, products]);
-
-
-  const createProductSet = async () => {
+  const updateProductSet = async () => {
     if (!mainProduct) {
       toast.warn("Please select a main product first.");
       return;
     }
-    if (!productsSet.length) {
+    if (productsSet.length === 0) {
       toast.warn("Please add at least one product to set.");
       return;
     }
+
     setLoading(true);
 
     try {
-      setMainProduct(prev => ({ ...prev, productSets: productsSet }));
-      const productData = await getProductForUpdate(mainProduct.product._id);
+      const updatedProductSet = { ...mainProduct, productSets: productsSet };
+      setMainProduct(updatedProductSet);
+
+      const productData = await getProductForUpdate(mainProduct.product);
+      if (!productData?.data) {
+        throw new Error("Failed to fetch product data.");
+      }
       productData.data.productSets = productsSet;
+
       await updateDataItem(productData);
-      onSave({ ...mainProduct, productSets: productsSet });
+
+      const isUpdatingMainProduct = activeSet?.product === mainProduct.product;
+      if (isUpdatingMainProduct) {
+        onUpdate(updatedProductSet);
+      } else {
+        onSave(updatedProductSet);
+      }
+
       closeThisModal();
     } catch (error) {
-      logError("error", error);
+      logError(`Failed to ${activeSet ? "update" : "create"} product set`, error);
+      toast.error("An error occurred while updating. Please try again.");
     } finally {
       setLoading(false);
     }
-  }
-
-  const handleRemoveMainProduct = () => {
-    setMainProduct(null);
-    setProductValue(null);
-  }
+  };
 
   const removeSetProduct = (id) => {
     setProductsSet(prev => {
-      const updatedData = prev.filter(prod => prod.product !== id);
+      const updatedData = prev.filter(prod => prod.variant !== id);
       if (!updatedData.length) setProductSetValue(null);
       return updatedData;
     });
@@ -101,7 +126,7 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
     if (quantity < 10000 && quantity > 0) {
       setProductsSet(prev => {
         const updatedProductsSet = prev.map((x) => {
-          if (id === x.product) x.quantity = Number(quantity);
+          if (id === x.variant) x.quantity = Number(quantity);
           return x;
         });
         return updatedProductsSet;
@@ -109,12 +134,20 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
     }
   };
 
+  const setInitialValues = async () => {
+    if (activeSet) {
+      setMainProduct(activeSet);
+      setProductsSet(activeSet.productSets);
+    }
+  }
+
   const closeThisModal = useCallback(() => {
-    closeModal("modal-create-product-set");
+    closeModal("modal-edit-product-set");
     setTimeout(() => {
-      setToggleCreateNewModal(false);
+      setToggleEditSetModal(false);
+      setActiveSet(null);
     }, 400);
-  }, [setToggleCreateNewModal]);
+  }, [setToggleEditSetModal]);
 
   const handleEscapeKey = useCallback((e) => {
     if (e.key === "Escape") closeThisModal();
@@ -126,21 +159,22 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
   }, [handleEscapeKey]);
 
   useEffect(() => {
-    openModal("modal-create-product-set");
+    setInitialValues();
+    openModal("modal-edit-product-set");
   }, []);
 
   return (
-    <ModalWrapper name="modal-create-product-set" onClose={closeThisModal}>
+    <ModalWrapper name="modal-edit-product-set" onClose={closeThisModal}>
       <div className="wrapper-section products-set-wrapper min-h-100-sm">
-        <h1 className="fs--60 blue-1">Create New Product Set</h1>
+        <h1 className="fs--60 blue-1">{activeSet ? "Update" : "Create"} Product Set</h1>
         <div className="row products-set-container products-set-container-top mt-lg-35 mt-tablet-20 mt-phone-15">
           <div className="col-lg-6">
             <CustomSelect
               options={productsOptions}
               label={"MAIN PRODUCT*"}
               placeholder="Select main product"
-              selectedValue={productValue}
-              onChange={handleSelectMainProduct}
+              selectedValue={mainProduct}
+              onChange={(e) => { setMainProduct(e) }}
             />
           </div>
           <div className="col-lg-6">
@@ -149,14 +183,14 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
                 <li className="list-item">
                   <div className="cart-product cart-product-2 main-product">
                     <div className="container-img">
-                      <ImageWrapper key={mainProduct.product._id} timeout={0} defaultDimensions={{ width: 120, height: 120 }} min_w={120} min_h={120} url={mainProduct.product.mainMedia} />
+                      <ImageWrapper key={mainProduct.product} timeout={0} defaultDimensions={{ width: 120, height: 120 }} min_w={120} min_h={120} url={mainProduct.image} />
                     </div>
                     <div className="wrapper-product-info">
                       <div className="container-top">
                         <div className="container-product-name">
-                          <h2 className="product-name">{mainProduct.product.name}</h2>
+                          <h2 className="product-name">{mainProduct.name}</h2>
                         </div>
-                        <button onClick={handleRemoveMainProduct} type="button" className="btn-cancel btn-cancel-2">
+                        <button onClick={() => { setMainProduct(null) }} type="button" className="btn-cancel btn-cancel-2">
                           <i className="icon-close"></i>
                         </button>
                       </div>
@@ -181,24 +215,22 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
           </div>
           <div className="col-lg-6">
             <ul className="list-cart list-cart-product list-set-products">
-              {productsSet.map(setProduct => {
-                if (!setProduct) return null;
-                const { quantity } = setProduct;
-                const product = products.find(product => product.product._id === setProduct.product);
-                const variant = product.variantData.find(variant => variant.sku === setProduct.variant);
+              {productsSet.map(set => {
+                if (!set) return null;
+                const { name, quantity, variant, product, color, image } = set;
 
                 return (
-                  <li key={setProduct.variant} className="list-item mb-10">
+                  <li key={variant} className="list-item mb-10">
                     <div className="cart-product cart-product-2">
                       <div className="container-img">
-                        <ImageWrapper key={product.product._id} timeout={0} defaultDimensions={{ width: 120, height: 120 }} min_w={120} min_h={120} url={variant.variant.imageSrc} />
+                        <ImageWrapper key={product} timeout={0} defaultDimensions={{ width: 120, height: 120 }} min_w={120} min_h={120} url={image} />
                       </div>
                       <div className="wrapper-product-info">
                         <div className="container-top">
                           <div className="container-product-name">
-                            <h2 className="product-name text-sm-custom ">{product.product.name} {variant.variant.color ? `| ${variant.variant.color}` : ""} | {variant.sku}</h2>
+                            <h2 className="product-name text-sm-custom ">{name} {color ? `| ${color}` : ""} | {variant}</h2>
                           </div>
-                          <button onClick={() => { removeSetProduct(product.product._id) }} type="button" className="btn-cancel btn-cancel-2">
+                          <button onClick={() => { removeSetProduct(variant) }} type="button" className="btn-cancel btn-cancel-2">
                             <i className="icon-close"></i>
                           </button>
                         </div>
@@ -207,7 +239,7 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
                             <div className="container-add-to-cart mt-tablet-20 mt-phone-25">
                               <div className="container-input container-input-quantity">
                                 <button
-                                  onClick={() => handleQuantityChange(product.product._id, +quantity - 1)}
+                                  onClick={() => handleQuantityChange(variant, +quantity - 1)}
                                   type="button"
                                   className="minus"
                                 >
@@ -219,10 +251,10 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
                                   value={quantity}
                                   placeholder="1"
                                   className="input-number"
-                                  onInput={(e) => handleQuantityChange(product.product._id, e.target.value)}
+                                  onInput={(e) => handleQuantityChange(variant, e.target.value)}
                                 />
                                 <button
-                                  onClick={() => handleQuantityChange(product.product._id, +quantity + 1)}
+                                  onClick={() => handleQuantityChange(variant, +quantity + 1)}
                                   type="button"
                                   className="plus"
                                 >
@@ -244,8 +276,8 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
           <button onClick={closeThisModal} className="btn-1 btn-border-blue btn-small mr-10" disabled={loading}>
             <span>Cancel</span>
           </button>
-          <button onClick={createProductSet} className={`btn-3-blue btn-blue btn-small order-mobile-1 ${loading ? "btn-disabled" : ""}`} disabled={loading}>
-            <span>{loading ? "Please Wait" : "Create"}</span>
+          <button onClick={updateProductSet} className={`btn-3-blue btn-blue btn-small order-mobile-1 ${loading ? "btn-disabled" : ""}`} disabled={loading}>
+            <span>{loading ? "Please Wait" : (activeSet ? "Update" : "Create")}</span>
           </button>
         </div>
       </div>
@@ -253,4 +285,4 @@ const CreateProductSetModal = ({ products, setToggleCreateNewModal, onSave }) =>
   );
 };
 
-export default CreateProductSetModal;
+export default ProductSetModal;

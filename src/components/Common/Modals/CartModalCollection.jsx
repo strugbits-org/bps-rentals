@@ -9,11 +9,9 @@ import { AddProductToCart } from "@/Services/CartApis";
 import { useCookies } from "react-cookie";
 import Modal from "./Modal";
 import useUserData from "@/Hooks/useUserData";
-import { decryptField } from "@/Utils/Encrypt";
 import { ImageWrapper } from "../ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
-import { fetchOnlyProductsByIds } from "@/Services/ProductsApis";
 import AnimateLink from "../AnimateLink";
 import "@/assets/style/product-set.css"
 
@@ -38,12 +36,10 @@ const CartModalCollection = ({
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [cookies, setCookie] = useCookies(["location"]);
-  const [cartQuantity, setCartQuantity] = useState(1);
   const [customTextFields, setCustomTextFields] = useState({});
   const [message, setMessage] = useState("");
   const [modalState, setModalState] = useState({ success: false, error: false });
   const [productsSets, setProductsSets] = useState([]);
-  const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState();
 
   const handleClose = () => {
@@ -52,16 +48,9 @@ const CartModalCollection = ({
       setSelectedVariantData(null);
       setProductSnapshots(null);
       setProductFilteredVariantData(null);
-      setCartQuantity(1);
     }, 1000);
   };
 
-  const setProductSetValues = async () => {
-    const productIds = productData.productSets.map((x) => x.product);
-    const response = await fetchOnlyProductsByIds(productIds);
-    setProducts(response);
-    setProductsSets(productData.productSets);
-  }
   useEffect(() => {
     reloadCartModal();
     resetSlideIndexModal();
@@ -74,7 +63,7 @@ const CartModalCollection = ({
         productData.subCategoryData.map((x) => x._id)
       );
       setIsBestSeller(isBestSellerProduct);
-      setProductSetValues();
+      setProductsSets(productData.productSets);
     }
   }, [productData]);
 
@@ -96,54 +85,6 @@ const CartModalCollection = ({
       ...prevState,
       [name]: value,
     }));
-  };
-
-  const _handleAddToCart = async () => {
-    if (unavailable) return;
-    setIsButtonDisabled(true);
-    try {
-      const product_id = productData.product._id;
-      const variant_id = selectedVariantData.variantId
-        .replace(product_id, "")
-        .substring(1);
-      const product_location = cookies?.location;
-
-      const customFields = Object.keys(customTextFields).reduce((acc, key) => {
-        acc[key] = customTextFields[key] + "\n";
-        return acc;
-      }, {});
-
-      const customFieldsSorted = { location: product_location, Size: selectedVariantData.size, ...customFields }
-
-      const cartData = {
-        lineItems: [
-          {
-            catalogReference: {
-              appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-              catalogItemId: product_id,
-              options: {
-                customTextFields: customFieldsSorted,
-                variantId: variant_id,
-              },
-            },
-            quantity: cartQuantity,
-          },
-        ],
-      };
-
-      const response = await AddProductToCart(cartData);
-      const total = calculateTotalCartQuantity(response.cart.lineItems);
-      setCookie("cartQuantity", total, { path: "/" });
-      handleClose();
-      setModalState({ success: true, error: false });
-      setMessage("Product Successfully Added to Cart!");
-    } catch (error) {
-      logError("Error:", error);
-      setMessage("Failed to Add Product to Cart");
-      setModalState({ success: false, error: true });
-    } finally {
-      setIsButtonDisabled(false);
-    }
   };
 
   const handleAddToCart = async (e) => {
@@ -176,19 +117,14 @@ const CartModalCollection = ({
         }
       ]
 
-      productsSets.forEach((set) => {
-        if (!set) return null;
-        const { quantity } = set;
-        const product = products.find(product => product.product._id === set.product);
-        const variant = product.variantData.find(variant => variant.sku === set.variant);
-
+      productsSets.forEach(({ id, product, size, quantity }) => {
         lineItems.push({
           catalogReference: {
             appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-            catalogItemId: product.product._id,
+            catalogItemId: product,
             options: {
-              customTextFields: { Size: variant.variant.size, productSetId: product_id },
-              variantId: variant.variant._id,
+              customTextFields: { location: product_location, Size: size, productSetId: product_id },
+              variantId: id,
             },
           },
           quantity: quantity,
@@ -197,7 +133,7 @@ const CartModalCollection = ({
 
       const data = {
         lineItems: lineItems,
-      };      
+      };
 
       const response = await AddProductToCart(data);
       const total = calculateTotalCartQuantity(response.cart.lineItems);
@@ -215,16 +151,10 @@ const CartModalCollection = ({
   };
 
   useEffect(() => {
-    const prices = productsSets.map(({ product, variant, quantity }) => {
-      const productData = products.find(p => p.product._id === product);
-      const variantData = productData.variantData.find(v => v.sku === variant);
-      if (!variantData.variant.price) return 0;
-      const price = Number(decryptField(variantData.variant.price).replace(/[^\d.-]/g, ''));
-      return price * quantity;
-    });
+    const prices = productsSets.map(({ price, quantity }) => Number(price.replace(/[^\d.-]/g, '')) * quantity);
     const total = prices.reduce((acc, x) => acc + x, 0);
     setTotalPrice(`$ ${total.toFixed(2)}`);
-  }, [productsSets, productData]);
+  }, [productsSets]);
 
   return (
     <div id="scripts">
@@ -393,27 +323,22 @@ const CartModalCollection = ({
                                 {SHOW_PRICES && <span className="price">Price</span>}
                                 <span className="quantity">Quantity</span>
                               </div>
-                              {productsSets.map(set => {
-                                if (!set) return null;
-                                const { quantity } = set;
-                                const product = products.find(product => product.product._id === set.product);
-                                const variant = product.variantData.find(variant => variant.sku === set.variant);
-
+                              {productsSets.map(({ variant, slug, quantity, color, size, name, price }) => {
                                 return (
-                                  <div key={set.variant} className="product-set-item fs--16">
+                                  <div key={variant} className="product-set-item fs--16">
                                     <AnimateLink
-                                      to={`/product/${product.product.slug}`}
+                                      to={`/product/${slug}`}
                                       target={"_blank"}
                                       className="name"
                                     >
-                                      {product.product.name} {variant.variant.color ? `| ${variant.variant.color}` : ""}
+                                      {name} {color ? `| ${color}` : ""}
                                     </AnimateLink>
-                                    <span className="size">{variant.variant.size || "-"}</span>
-                                    {SHOW_PRICES && <span className="price">{variant.variant.price ? decryptField(variant.variant.price) : "-"}</span>}
+                                    <span className="size">{size || "-"}</span>
+                                    {SHOW_PRICES && <span className="price">{price || "-"}</span>}
                                     <div className="quantity container-add-to-cart">
                                       <div className="container-input container-input-quantity">
                                         <button
-                                          onClick={() => handleQuantityChange(set.variant, +quantity - 1)}
+                                          onClick={() => handleQuantityChange(variant, +quantity - 1)}
                                           type="button"
                                           className="minus"
                                         >
@@ -425,10 +350,10 @@ const CartModalCollection = ({
                                           value={quantity}
                                           placeholder="1"
                                           className="input-number fs--16"
-                                          onInput={(e) => handleQuantityChange(set.variant, e.target.value)}
+                                          onInput={(e) => handleQuantityChange(variant, e.target.value)}
                                         />
                                         <button
-                                          onClick={() => handleQuantityChange(set.variant, +quantity + 1)}
+                                          onClick={() => handleQuantityChange(variant, +quantity + 1)}
                                           type="button"
                                           className="plus"
                                         >
@@ -439,40 +364,32 @@ const CartModalCollection = ({
                                   </div>
                                 )
                               })}
-                              {!productsSets.length ? (
-                                <div className="product-set-item fs--18 min-h-20-vh">
-                                  <span className="w-100 text-center">Loading sets ...</span>
-                                </div>
-                              ) : null}
                             </div>
 
-                            {productsSets.length ? (
-                              <div
-                                className="container-add-to-cart container-add-to-cart-collection mt-tablet-20 mt-phone-25"
-                              >
-                                {unavailable ? (
-                                  <button
-                                    disabled
-                                    className="btn-add-to-cart btn-disabled"
-                                    type="submit"
-                                  >
-                                    <span>Add to cart</span>
-                                    <i className="icon-arrow-right"></i>
-                                  </button>
-                                ) : (
-                                  <button
-                                    onClick={handleAddToCart}
-                                    className="btn-add-to-cart"
-                                    type="submit"
-                                    disabled={isButtonDisabled}
-                                  >
-                                    <span>{isButtonDisabled ? "Please wait..." : "Add to cart"}</span>
-                                    <i className="icon-arrow-right"></i>
-                                  </button>
-                                )}
-                              </div>
-                            ) : null}
-
+                            <div
+                              className="container-add-to-cart container-add-to-cart-collection mt-tablet-20 mt-phone-25"
+                            >
+                              {unavailable ? (
+                                <button
+                                  disabled
+                                  className="btn-add-to-cart btn-disabled"
+                                  type="submit"
+                                >
+                                  <span>Add to cart</span>
+                                  <i className="icon-arrow-right"></i>
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={handleAddToCart}
+                                  className="btn-add-to-cart"
+                                  type="submit"
+                                  disabled={isButtonDisabled}
+                                >
+                                  <span>{isButtonDisabled ? "Please wait..." : "Add to cart"}</span>
+                                  <i className="icon-arrow-right"></i>
+                                </button>
+                              )}
+                            </div>
 
                             {unavailable && (
                               <div className="unavailable-warning-wrapper font-2 mt-3-cs">

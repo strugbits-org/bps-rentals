@@ -28,11 +28,9 @@ export default async function Page() {
       getAllProductsForSets(),
     ]);
 
-    const productSets = productsData.filter(product => product.productSets && product.productSets.length);
-
     return (
       <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
-        <ProductSets products={productsData} productSets={productSets} />
+        <ProductSets products={productsData} />
       </Account>
     );
   } catch (error) {

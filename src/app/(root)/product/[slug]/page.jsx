@@ -113,9 +113,8 @@ export default async function Page({ params }) {
 
     return (
       <Suspense>
-        {selectedProduct?.productSets ? (
+        {selectedProduct?.productSets?.length ? (
           <ProductCollectionPage
-            products={products}
             selectedProductDetails={selectedProduct}
             matchedProductsData={matchedProducts}
             categoriesData={categoriesData}
