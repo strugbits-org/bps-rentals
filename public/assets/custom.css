@@ -890,13 +890,17 @@ li.IMPORTANT.long-desc {
 }
 
 
-ul.sets-listing li {
+ul.sets-listing li a {
   background: var(--white-2);
   padding: 8px 16px;
   border-radius: 6px;
   text-transform: uppercase;
-  /* word-spacing: 4px; */
   letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+ul.sets-listing li a:hover {
+  background: var(--blue-3);
 }
 
 .products-set-container.d-flex {
@@ -2223,6 +2227,10 @@ h2.product-name.text-sm-custom {
 
 .text-center {
   text-align: center;
+}
+
+.underline {
+  text-decoration: underline;
 }
 
 .list-item-cart:not(:last-child) {

@@ -51,7 +51,7 @@ export const getAllProductsForSets = async () => {
             increasedLimit: 700
         });
         if (response && response._items) {
-            return response._items.map((x) => x.data);
+            return response._items.filter(x => x.data.product?._id).map((x) => x.data);
         } else {
             throw new Error("Response does not contain _items");
         }

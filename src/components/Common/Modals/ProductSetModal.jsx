@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import logError from "@/Utils/ServerActions";
 import { decryptField } from "@/Utils/Encrypt";
 
-const ProductSetModal = ({ activeSet, setActiveSet, products, setToggleEditSetModal, onUpdate, onSave }) => {
+const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, onUpdate, onSave }) => {
   const [mainProduct, setMainProduct] = useState(null);
   const [productsSet, setProductsSet] = useState([]);
   const [productSetValue, setProductSetValue] = useState(null);
@@ -17,22 +17,23 @@ const ProductSetModal = ({ activeSet, setActiveSet, products, setToggleEditSetMo
 
   const productsOptions = useMemo(
     () =>
-      products.map(({ product }) => ({
+      options.map(({ subCategoryData = [], product }) => ({
         value: product._id,
         product: product._id,
         slug: product.slug,
         name: product.name,
         image: product.mainMedia,
         label: product.name,
+        categories: subCategoryData.map((cat) => cat["link-copy-of-category-name-2"]),
       })),
-    [products]
+    [options]
   );
 
   const variantsOptions = useMemo(() => {
-    return products.flatMap(({ product, variantData }) =>
+    return options.flatMap(({ product, variantData }) =>
       product._id !== mainProduct?.product
         ? variantData
-          .filter(({ sku }) => sku)
+          .filter(({ sku }) => sku && !productsSet.some((prod) => prod.variant === sku))
           .map(({ sku, variant }) => ({
             value: sku,
             productId: product._id,
@@ -47,7 +48,7 @@ const ProductSetModal = ({ activeSet, setActiveSet, products, setToggleEditSetMo
           }))
         : []
     );
-  }, [products, mainProduct]);
+  }, [options, mainProduct, productsSet]);
 
   const handleSelectSetProduct = useCallback(
     (e) => {
@@ -144,10 +145,10 @@ const ProductSetModal = ({ activeSet, setActiveSet, products, setToggleEditSetMo
   const closeThisModal = useCallback(() => {
     closeModal("modal-edit-product-set");
     setTimeout(() => {
-      setToggleEditSetModal(false);
+      setToggleSetModal(false);
       setActiveSet(null);
     }, 400);
-  }, [setToggleEditSetModal]);
+  }, [setToggleSetModal]);
 
   const handleEscapeKey = useCallback((e) => {
     if (e.key === "Escape") closeThisModal();
