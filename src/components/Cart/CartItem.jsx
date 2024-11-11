@@ -7,7 +7,7 @@ import AnimateLink from '../Common/AnimateLink';
 import "@/assets/style/product-set.css"
 
 
-export const CartItem = ({ data, handleQuantityChange, updateProducts, removeProduct }) => {
+export const CartItem = ({ data, isReadOnly, handleQuantityChange, updateProducts, removeProduct }) => {
     const { permissions } = useUserData();
     const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
@@ -15,7 +15,7 @@ export const CartItem = ({ data, handleQuantityChange, updateProducts, removePro
     const formattedDescription = formatDescriptionLines(descriptionLines);
 
     return (
-        <li className="list-item">
+        <li className="list-item list-item-cart">
             <div className="cart-product">
                 <div className="container-img">
                     <ImageWrapper key={_id} defaultDimensions={{ width: 120, height: 120 }} url={image} />
@@ -34,13 +34,15 @@ export const CartItem = ({ data, handleQuantityChange, updateProducts, removePro
                                 <i className="icon-arrow-right"></i>
                             </AnimateLink>
                         </div>
-                        <button
-                            onClick={() => removeProduct([_id])}
-                            type="button"
-                            className="btn-cancel"
-                        >
-                            <i className="icon-close"></i>
-                        </button>
+                        {!isReadOnly && (
+                            <button
+                                onClick={() => removeProduct([_id])}
+                                type="button"
+                                className="btn-cancel"
+                            >
+                                <i className="icon-close"></i>
+                            </button>
+                        )}
                     </div>
                     <div className="container-specs">
                         <ul className="list-specs">
@@ -84,31 +86,45 @@ export const CartItem = ({ data, handleQuantityChange, updateProducts, removePro
                                 <span className="fs--20 no-mobile">
                                     Quantity
                                 </span>
-                                <div className="container-input container-input-quantity">
-                                    <button
-                                        onClick={() => handleQuantityChange(_id, quantity - 1)}
-                                        type="button"
-                                        className="minus"
-                                    >
-                                        <i className="icon-minus"></i>
-                                    </button>
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        value={quantity}
-                                        placeholder="1"
-                                        className="input-number"
-                                        onInput={(e) => handleQuantityChange(_id, e.target.value, true)}
-                                        onBlur={(e) => updateProducts(_id, e.target.value)}
-                                    />
-                                    <button
-                                        onClick={() => handleQuantityChange(_id, quantity + 1)}
-                                        type="button"
-                                        className="plus"
-                                    >
-                                        <i className="icon-plus"></i>
-                                    </button>
-                                </div>
+                                {isReadOnly ? (
+                                    <div className="container-input container-input-quantity">
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            value={quantity}
+                                            placeholder="1"
+                                            className="input-number"
+                                            readOnly="true"
+                                            onChange={() => { }}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="container-input container-input-quantity">
+                                        <button
+                                            onClick={() => handleQuantityChange(_id, quantity - 1)}
+                                            type="button"
+                                            className="minus"
+                                        >
+                                            <i className="icon-minus"></i>
+                                        </button>
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            value={quantity}
+                                            placeholder="1"
+                                            className="input-number"
+                                            onInput={(e) => handleQuantityChange(_id, e.target.value, true)}
+                                            onBlur={(e) => updateProducts(_id, e.target.value)}
+                                        />
+                                        <button
+                                            onClick={() => handleQuantityChange(_id, quantity + 1)}
+                                            type="button"
+                                            className="plus"
+                                        >
+                                            <i className="icon-plus"></i>
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -118,7 +134,7 @@ export const CartItem = ({ data, handleQuantityChange, updateProducts, removePro
     )
 }
 
-export const CartItemGroup = ({ data, handleQuantityChange, updateProducts, removeProduct }) => {
+export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updateProducts, removeProduct }) => {
     const { permissions } = useUserData();
     const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
@@ -137,7 +153,7 @@ export const CartItemGroup = ({ data, handleQuantityChange, updateProducts, remo
     const formattedPrice = `$ ${total.toFixed(2)}`;
 
     return (
-        <li className="list-item">
+        <li className="list-item list-item-cart">
             <div className="cart-product set-product-group">
                 <div className="container-img no-mobile">
                     <ImageWrapper key={_id} defaultDimensions={{ width: 120, height: 120 }} url={image} />
@@ -159,15 +175,17 @@ export const CartItemGroup = ({ data, handleQuantityChange, updateProducts, remo
                                 <i className="icon-arrow-right"></i>
                             </AnimateLink>
                         </div>
-                        <div>
-                            <button
-                                onClick={() => removeProduct(ids)}
-                                type="button"
-                                className="btn-cancel"
-                            >
-                                <i className="icon-close"></i>
-                            </button>
-                        </div>
+                        {!isReadOnly && (
+                            <div>
+                                <button
+                                    onClick={() => removeProduct(ids)}
+                                    type="button"
+                                    className="btn-cancel"
+                                >
+                                    <i className="icon-close"></i>
+                                </button>
+                            </div>
+                        )}
                         <div className="container-specs w-100 mt-16">
                             <ul className="list-specs">
                                 <li className="sku">
@@ -194,7 +212,7 @@ export const CartItemGroup = ({ data, handleQuantityChange, updateProducts, remo
                             <span className="name">Product Name</span>
                             <span className="size">Size</span>
                             {SHOW_PRICES && <span className="price">Price</span>}
-                            <span className="quantity">Quantity</span>
+                            <span className={`quantity ${isReadOnly ? "read-only" : ""}`}>Quantity</span>
                         </div>
                         {productSets.map(item => {
                             const { quantity } = item;
@@ -213,33 +231,39 @@ export const CartItemGroup = ({ data, handleQuantityChange, updateProducts, remo
                                     </AnimateLink>
                                     <span className="size">{size}</span>
                                     {SHOW_PRICES && <span className="price">{item.price.formattedAmount || "-"}</span>}
-                                    <div className="quantity container-add-to-cart">
-                                        <div className="container-input container-input-quantity">
-                                            <button
-                                                onClick={() => handleQuantityChange(item._id, +quantity - 1)}
-                                                type="button"
-                                                className="minus"
-                                            >
-                                                <i className="icon-minus"></i>
-                                            </button>
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                value={quantity}
-                                                placeholder="1"
-                                                className="input-number fs--16"
-                                                onInput={(e) => handleQuantityChange(item._id, e.target.value, true)}
-                                                onBlur={(e) => updateProducts(item._id, e.target.value)}
-                                            />
-                                            <button
-                                                onClick={() => handleQuantityChange(item._id, +quantity + 1)}
-                                                type="button"
-                                                className="plus"
-                                            >
-                                                <i className="icon-plus"></i>
-                                            </button>
+                                    {isReadOnly ? (
+                                        <span className="quantity read-only">
+                                            {quantity}
+                                        </span>
+                                    ) : (
+                                        <div className="quantity container-add-to-cart">
+                                            <div className="container-input container-input-quantity">
+                                                <button
+                                                    onClick={() => handleQuantityChange(item._id, +quantity - 1)}
+                                                    type="button"
+                                                    className="minus"
+                                                >
+                                                    <i className="icon-minus"></i>
+                                                </button>
+                                                <input
+                                                    type="number"
+                                                    min="1"
+                                                    value={quantity}
+                                                    placeholder="1"
+                                                    className="input-number fs--16"
+                                                    onInput={(e) => handleQuantityChange(item._id, e.target.value, true)}
+                                                    onBlur={(e) => updateProducts(item._id, e.target.value)}
+                                                />
+                                                <button
+                                                    onClick={() => handleQuantityChange(item._id, +quantity + 1)}
+                                                    type="button"
+                                                    className="plus"
+                                                >
+                                                    <i className="icon-plus"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
                             )
                         })}

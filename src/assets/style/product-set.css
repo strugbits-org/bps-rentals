@@ -41,6 +41,10 @@
     position: static;
 }
 
+.product-set-item .quantity.read-only {
+    display: inline-block;
+}
+
 .cart-product .wrapper-product-info .container-specs .list-specs {
     flex-grow: 1;
 }

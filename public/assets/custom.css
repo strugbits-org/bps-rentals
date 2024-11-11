@@ -2221,6 +2221,10 @@ h2.product-name.text-sm-custom {
   pointer-events: none;
 }
 
-.text-center{
+.text-center {
   text-align: center;
+}
+
+.list-item-cart:not(:last-child) {
+  margin-bottom: 2.5rem;
 }
