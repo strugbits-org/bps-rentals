@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import handleAuthentication from "@/Utils/HandleAuthentication";
-import { createWixClient } from "@/Utils/CreateWixClient";
+import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 
 export const GET = async (req, context) => {
   try {
@@ -14,7 +14,7 @@ export const GET = async (req, context) => {
     const { params } = context;
     const id = params.id;
 
-    const wixClient = await createWixClient();
+    const wixClient = await createWixClientApiStrategy();
     const locationFilterVariantData = await wixClient.items
       .queryDataItems({
         dataCollectionId: "DemoProductData",

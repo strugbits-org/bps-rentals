@@ -27,11 +27,10 @@ export const ProductSets = ({ products }) => {
             setDataSets(prev => prev.filter(set => set.product !== id));
             const productData = await getProductForUpdate(id);
             productData.data.productSets = [];
-            const { slug } = prevDataSets.find(set => set.product === id);
+            const { slug, categories } = prevDataSets.find(set => set.product === id);
             await updateDataItem(productData);
             if (alert) toast.info("Product set removed successfully");
-            revalidatePage(`/product/${slug}`);
-            revalidatePage("/admin/manage-product-sets");
+            revalidateData(slug, categories);
         } catch (error) {
             logError("Error:", error);
             setDataSets(prevDataSets);
