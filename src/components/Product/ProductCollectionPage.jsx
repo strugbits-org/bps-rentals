@@ -627,7 +627,7 @@ const ProductCollectionPage = ({
         <SnapShots data={selectedVariant.usecaseImages} />
       )}
 
-      {matchedProductsData.length && (
+      {matchedProductsData.length > 0 && (
         <MatchItWith
           matchedProductsData={matchedProductsData}
           savedProductsData={savedProductsData}

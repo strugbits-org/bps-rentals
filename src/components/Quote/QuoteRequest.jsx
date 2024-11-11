@@ -58,11 +58,19 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
 
     const lineItems = cartItems.map((product, index) => {
       const newUrl = productImageURLForQuote(product.image);
+      const isProductSet = product.catalogReference.options.customTextFields?.isProductSet;
+      const productSetId = product.catalogReference.options.customTextFields?.productSetId;
+      const productSet = cartItems.find((item) => item.catalogReference.catalogItemId === productSetId);
+
+      let description = product.productName.original;
+      if (isProductSet) description = product.productName.original + " | PRODUCT SET";
+      if (productSet) description = product.productName.original + ` | SET OF ${productSet.productName.original}`;
+
       return {
         lineItId: product._id,
         id: String(index + 1),
         name: product.physicalProperties.sku,
-        description: product.productName.original,
+        description: description,
         quantity: product.quantity,
         location: product.catalogReference.options.customTextFields.location,
         price: Number(product.price.convertedAmount),
@@ -128,10 +136,10 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
       setModalState({ success: false, error: true });
     }
     setCartItems(cartData);
-    setTimeout(markPageLoaded, 200);
   };
 
   useEffect(() => {
+    setTimeout(markPageLoaded, 200);
     getCart();
   }, []);
 

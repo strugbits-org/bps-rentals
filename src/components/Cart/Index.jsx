@@ -172,7 +172,7 @@ const CartPage = () => {
                   )}
                 </ul>
                 <div className="container-btn mt-md-40 mt-phone-40">
-                  {cartItemsList.length && (
+                  {cartItemsList.length > 0 && (
                     <AnimateLink
                       to="/quote-request"
                       className="btn-1 btn-large btn-blue w-100 bt-submit"
