@@ -29,17 +29,13 @@ export const SaveProductButton = ({
       setProductSaved(isSaving);
       updateSavedProducts(productId, isSaving);
       if (isSaving) {
-        const res = await saveProduct(productId);
-        if (!res) {
-          setProductSaved(false);
-          updateSavedProducts(productId, false);
-        }
+        await saveProduct(productId);
+        setProductSaved(false);
+        updateSavedProducts(productId, false);
       } else {
-        const res = await unSaveProduct(productId);
-        if (!res) {
-          setProductSaved(true);
-          updateSavedProducts(productId, true);
-        }
+        await unSaveProduct(productId);
+        setProductSaved(true);
+        updateSavedProducts(productId, true);
       }
     } catch (error) {
       logError(

@@ -1,3 +1,4 @@
+import { decryptField } from "./Encrypt";
 import logError from "./ServerActions";
 
 export const parseArrayFromParams = (queryParams) => {
@@ -34,6 +35,13 @@ export const findLocation = (data) => {
 export const formatPrice = (price, quantity) => {
   const currencySymbol = price.formattedAmount.charAt(0);
   const totalPrice = price.amount * quantity;
+  const formattedPrice = totalPrice.toFixed(2);
+  return `${currencySymbol}${formattedPrice}`;
+}
+
+export const formatPriceEncrypted = (price, quantity) => {
+  const currencySymbol = decryptField(price.formattedAmount).charAt(0);
+  const totalPrice = decryptField(price.amount) * quantity;
   const formattedPrice = totalPrice.toFixed(2);
   return `${currencySymbol}${formattedPrice}`;
 }

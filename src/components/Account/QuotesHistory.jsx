@@ -15,7 +15,6 @@ import { calculateTotalCartQuantity, quoteDateFormatter } from "@/Utils/Utils";
 import { getAllQuotes } from "@/Services/QuoteApis";
 import { AddProductToCart } from "@/Services/CartApis";
 import { getCatalogIdBySku } from "@/Services/ProductsApis";
-import { revalidatePage } from "@/Services/RevalidateService";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
 
@@ -104,7 +103,6 @@ const QuotesHistory = () => {
 
   const fetchQuotes = async () => {
     try {
-      await revalidatePage("/api/quote/getAllQuotes")
       const data = await getAllQuotes();
       setQuotesData(data);
       setTimeout(markPageLoaded, 200);

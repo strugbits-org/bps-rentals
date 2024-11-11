@@ -1,10 +1,11 @@
-import { extractSlugFromUrl, formatDescriptionLines, formatPrice } from '@/Utils/Utils';
+import { extractSlugFromUrl, formatDescriptionLines, formatPriceEncrypted } from '@/Utils/Utils';
 import React from 'react'
 import { ImageWrapper } from '../Common/ImageWrapper';
 import { PERMISSIONS } from '@/Utils/Schema/permissions';
 import useUserData from '@/Hooks/useUserData';
 import AnimateLink from '../Common/AnimateLink';
 import "@/assets/style/product-set.css"
+import { decryptField } from '@/Utils/Encrypt';
 
 
 export const CartItem = ({ data, isReadOnly, handleQuantityChange, updateProducts, removeProduct }) => {
@@ -81,7 +82,7 @@ export const CartItem = ({ data, isReadOnly, handleQuantityChange, updateProduct
                             })}
                         </ul>
                         <div>
-                            {SHOW_PRICES && <div class="fs--24 mb-10 text-right">{formatPrice(price, quantity)}</div>}
+                            {SHOW_PRICES && <div class="fs--24 mb-10 text-right">{formatPriceEncrypted(price, quantity, true)}</div>}
                             <div className="quantity position-static-lg">
                                 <span className="fs--20 no-mobile">
                                     Quantity
@@ -145,7 +146,7 @@ export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updatePr
 
     const prices = productSets.map((set) => {
         const { quantity, price } = set;
-        const formattedPrice = formatPrice(price, quantity);
+        const formattedPrice = formatPriceEncrypted(price, quantity, true);
         const convertToNumber = Number(formattedPrice.replace(/[^\d.-]/g, ''));
         return convertToNumber;
     });
@@ -230,7 +231,7 @@ export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updatePr
                                         {item.productName.original} {color ? `| ${color}` : ""}
                                     </AnimateLink>
                                     <span className="size">{size}</span>
-                                    {SHOW_PRICES && <span className="price">{item.price.formattedAmount || "-"}</span>}
+                                    {SHOW_PRICES && <span className="price">{decryptField(item.price.formattedAmount) || "-"}</span>}
                                     {isReadOnly ? (
                                         <span className="quantity read-only">
                                             {quantity}

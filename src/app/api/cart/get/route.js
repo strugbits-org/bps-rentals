@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cartWixClient } from "@/Utils/CreateWixClient";
 import handleAuthentication from "@/Utils/HandleAuthentication";
+import { encryptPriceForCart } from "@/Utils/Encrypt";
 
 const addItemToCart = async (cartClient) => {
   return await cartClient.currentCart.addToCurrentCart({
@@ -21,7 +22,7 @@ const handleCartResponse = (cart, message = "Cart Successfully fetched", status 
 };
 
 const createNewCart = async (memberTokens) => {
-  try {    
+  try {
     const cartClient = await cartWixClient(memberTokens);
     const cart = await addItemToCart(cartClient);
     return handleCartResponse(cart.cart);
@@ -39,7 +40,13 @@ export const POST = async (req) => {
     }
 
     const cartClient = await cartWixClient(memberTokens);
-    const cart = await cartClient.currentCart.getCurrentCart();    
+    const cart = await cartClient.currentCart.getCurrentCart();
+    cart.lineItems.forEach((item) => {
+      encryptPriceForCart(item.price);
+      encryptPriceForCart(item.fullPrice);
+      encryptPriceForCart(item.priceBeforeDiscounts);
+    });
+
     return handleCartResponse(cart);
   } catch (error) {
     if (error?.details?.applicationError?.code === "OWNED_CART_NOT_FOUND") {

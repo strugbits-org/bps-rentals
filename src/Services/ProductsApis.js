@@ -593,16 +593,14 @@ export const saveProduct = async (id) => {
         Authorization: authToken,
       },
     });
-    // const jsonResponse = await response.json();
-    // if (jsonResponse.error) {
-    //   throw new Error(jsonResponse.error);
-    // }
+
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
     return data;
   } catch (error) {
+    logError("Error saving product:", error);
     throw new Error(error);
   }
 };
@@ -627,6 +625,7 @@ export const unSaveProduct = async (id) => {
     const data = await response.json();
     return data;
   } catch (error) {
+    logError("Error removing product:", error);
     throw new Error(error);
   }
 };
