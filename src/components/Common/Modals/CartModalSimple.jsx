@@ -33,11 +33,10 @@ const CartModalSimple = ({
   const { permissions } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
-
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
-  const [cookies, setCookie] = useCookies(["location"]);
+  const [cookies, setCookie] = useCookies(["location", "cartQuantity"]);
   const [cartQuantity, setCartQuantity] = useState(1);
   const [customTextFields, setCustomTextFields] = useState({});
   const [message, setMessage] = useState("");
@@ -117,9 +116,11 @@ const CartModalSimple = ({
         ],
       };
 
-      const response = await AddProductToCart(cartData);
-      const total = calculateTotalCartQuantity(response.cart.lineItems);
+      await AddProductToCart(cartData);
+      const newItems = calculateTotalCartQuantity(cartData.lineItems);
+      const total = cookies.cartQuantity ? cookies.cartQuantity + newItems : newItems;
       setCookie("cartQuantity", total, { path: "/" });
+
       handleClose();
       setModalState({ success: true, error: false });
       setMessage("Product Successfully Added to Cart!");
@@ -241,7 +242,7 @@ const CartModalSimple = ({
                                         <div className="wrapper-img">
                                           <div className="container-img">
                                             <img
-                                             alt="3d model"
+                                              alt="3d model"
                                               src="/images/3d.svg"
                                               className=" "
                                             />
@@ -327,13 +328,13 @@ const CartModalSimple = ({
                                   }
                                 )}
                               {selectedVariantData && SHOW_PRICES && selectedVariantData.price && (
-                                  <li className="seat-height">
-                                    <span className="specs-title">Price</span>
-                                    <span className="specs-text">
-                                      {decryptField(selectedVariantData.price)}
-                                    </span>
-                                  </li>
-                                )}
+                                <li className="seat-height">
+                                  <span className="specs-title">Price</span>
+                                  <span className="specs-text">
+                                    {decryptField(selectedVariantData.price)}
+                                  </span>
+                                </li>
+                              )}
                             </ul>
                             <ul
                               className="list-colors"
@@ -371,7 +372,7 @@ const CartModalSimple = ({
                                             />
                                             <div className="container-img">
                                               <img
-                                               alt="3d model"
+                                                alt="3d model"
                                                 src={
                                                   variantData.variant.imageSrc
                                                 }

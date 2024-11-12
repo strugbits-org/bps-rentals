@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { cartWixClient } from "@/Utils/CreateWixClient";
 import handleAuthentication from "@/Utils/HandleAuthentication";
-import { encryptPriceForCart } from "@/Utils/Encrypt";
+import { encryptPriceFields } from "@/Utils/Encrypt";
 
 const addItemToCart = async (cartClient) => {
   return await cartClient.currentCart.addToCurrentCart({
@@ -41,10 +41,18 @@ export const POST = async (req) => {
 
     const cartClient = await cartWixClient(memberTokens);
     const cart = await cartClient.currentCart.getCurrentCart();
+
+    const fieldsToEncrypt = [
+      'amount',
+      'convertedAmount',
+      'formattedAmount',
+      'formattedConvertedAmount'
+    ];
+
     cart.lineItems.forEach((item) => {
-      encryptPriceForCart(item.price);
-      encryptPriceForCart(item.fullPrice);
-      encryptPriceForCart(item.priceBeforeDiscounts);
+      ['price', 'fullPrice', 'priceBeforeDiscounts'].forEach((field) => {
+        encryptPriceFields(item[field], fieldsToEncrypt);
+      });
     });
 
     return handleCartResponse(cart);

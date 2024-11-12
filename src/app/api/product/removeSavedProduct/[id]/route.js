@@ -16,10 +16,7 @@ export const GET = async (req, context) => {
     const memberId = authenticatedUserData.memberId;
 
     const wixClient = await createWixClientApiStrategy();
-    const locationFilterVariantData = await wixClient.items
-      .queryDataItems({
-        dataCollectionId: "DemoProductData",
-      })
+    const locationFilterVariantData = await wixClient.items.queryDataItems({ dataCollectionId: "locationFilteredVariant", })
       .eq("product", id)
       .hasSome("members", [memberId])
       .find();
@@ -27,32 +24,25 @@ export const GET = async (req, context) => {
     let productData = locationFilterVariantData._items[0];
     let membersData = productData.data.members;
 
-    if (productData.length === 0) {
+    if (locationFilterVariantData._items.length === 0) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    const dataObject = {
-      ...productData.data,
-      members: membersData.filter((member) => member !== memberId),
-    };
-
-    const response = await wixClient.items.updateDataItem(productData._id, {
-      dataCollectionId: "DemoProductData",
+    await wixClient.items.updateDataItem(productData._id, {
+      dataCollectionId: "locationFilteredVariant",
       dataItem: {
         _id: productData._id,
-        data: dataObject,
+        data: {
+          ...productData.data,
+          members: membersData.filter((member) => member !== memberId),
+        },
       },
     });
 
-    response.dataItem.data.variantData = response.dataItem.data.variantData.map(
-      (val) => {
-        delete val.variant.discountedPrice;
-        delete val.variant.price;
-        return val;
-      }
+    return NextResponse.json(
+      { message: "Product removed Successfully" },
+      { status: 200 }
     );
-
-    return NextResponse.json(response, { status: 200 });
   } catch (error) {
     logError(error);
     return NextResponse.json({ error: error.message }, { status: 500 });

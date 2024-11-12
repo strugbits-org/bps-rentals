@@ -17,6 +17,7 @@ import { AddProductToCart } from "@/Services/CartApis";
 import { getCatalogIdBySku } from "@/Services/ProductsApis";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import { decryptField } from "@/Utils/Encrypt";
 
 const QuotesHistory = () => {
   const [cookies, setCookie] = useCookies(["cartQuantity"]);
@@ -79,15 +80,16 @@ const QuotesHistory = () => {
         }
       }
 
-      const productData = {
+      const cartData = {
         lineItems: products,
       };
 
-      const response = await AddProductToCart(productData);
-      const total = calculateTotalCartQuantity(response.cart.lineItems);
-      pageLoadStart({});
+      await AddProductToCart(cartData);
+      const newItems = calculateTotalCartQuantity(cartData.lineItems);
+      const total = cookies.cartQuantity ? cookies.cartQuantity + newItems : newItems;
+      setCookie("cartQuantity", total, { path: "/" });
 
-      setCookie("cartQuantity", total, { path: "/"});
+      pageLoadStart({});
       router.push("/cart");
     } catch (error) {
       logError("Error while adding products to cart:", error);
@@ -150,7 +152,7 @@ const QuotesHistory = () => {
             quotesData.slice(0, pageLimit).map((quote, index) => {
               const { data } = quote;
               const totalPrice = data.lineItems.reduce((total, item) => {
-                return total + Number(item.price) * item.quantity;
+                return total + Number(decryptField(item.price)) * item.quantity;
               }, 0);
 
               const issueDate = quoteDateFormatter(data.dates.issueDate);
@@ -167,7 +169,7 @@ const QuotesHistory = () => {
                       </div>
                     ) : totalPrice === 0 ? (
                       <div className="value">$ 0</div>
-                    ): (
+                    ) : (
                       <div className="value"></div>
                     )}
                     <div className="container-btn">

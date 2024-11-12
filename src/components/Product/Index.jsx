@@ -96,7 +96,7 @@ const ProductPostPage = ({
   useEffect(() => {
     const defaultVariantIndexFromParams = searchParams.get("variant");
     const variantIndex = selectedProductDetails.variantData.findIndex((x) => x.sku === (searchParams.has("variant") ? defaultVariantIndexFromParams : defaultVariant));
-    const defaultVariantIndex = variantIndex > -1 ? variantIndex : 0;    
+    const defaultVariantIndex = variantIndex > -1 ? variantIndex : 0;
 
     if (selectedProductDetails && productSnapshotData) {
       const selectedVariantData = selectedProductDetails.variantData[defaultVariantIndex].variant;
@@ -190,7 +190,7 @@ const ProductPostPage = ({
 
       const customFieldsSorted = { location: product_location, Size: selectedVariant.size, ...customFields }
 
-      const productData = {
+      const cartData = {
         lineItems: [
           {
             catalogReference: {
@@ -205,14 +205,15 @@ const ProductPostPage = ({
           },
         ],
       };
-      const response = await AddProductToCart(productData);
-      const total = calculateTotalCartQuantity(response.cart.lineItems);
-      setCookie("cartQuantity", total, { path: "/" });
-      pageLoadStart({});
 
-      if (response) {
-        router.push("/cart");
-      }
+      await AddProductToCart(cartData);
+
+      const newItems = calculateTotalCartQuantity(cartData.lineItems);
+      const total = cookies.cartQuantity ? cookies.cartQuantity + newItems : newItems;
+      setCookie("cartQuantity", total, { path: "/" });
+
+      pageLoadStart({});
+      router.push("/cart");
     } catch (error) {
       pageLoadEnd();
       logError("Error while adding item to cart:", error);

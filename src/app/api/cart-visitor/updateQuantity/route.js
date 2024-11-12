@@ -8,16 +8,13 @@ export const POST = async (req) => {
     const { cartId, lineItems } = body;
 
     const wixClient = await createWixClient();
-    const cart = await wixClient.cart.updateLineItemsQuantity(
+    await wixClient.cart.updateLineItemsQuantity(
       cartId,
       lineItems
     );
 
     return NextResponse.json(
-      {
-        message: "Cart updated Successfully",
-        cart: cart.cart,
-      },
+      { message: "Cart updated Successfully" },
       { status: 200 }
     );
   } catch (error) {

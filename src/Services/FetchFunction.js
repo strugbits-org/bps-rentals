@@ -1,6 +1,6 @@
 import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
-import { encryptPriceFields } from "@/Utils/Encrypt";
+import { encryptField, encryptPriceFields } from "@/Utils/Encrypt";
 import logError from "@/Utils/ServerActions";
 
 function delay(ms) {
@@ -86,7 +86,7 @@ const getDataFetchFunction = async (payload) => {
     }
 
     if (!encodePrice && !includeVariants) return data;
-    
+
     // Include variants if needed
     if (includeVariants) {
       const [productsVariantImagesData, productsVariantsData] = await Promise.all([
@@ -103,17 +103,32 @@ const getDataFetchFunction = async (payload) => {
       });
     }
 
+    const fieldsToEncrypt = [
+      'formattedDiscountedPrice',
+      'pricePerUnitData',
+      'pricePerUnit',
+      'formattedPricePerUnit',
+      'formattedPrice',
+      'price',
+      'discountedPrice',
+    ];
     // Encrypt specific fields if needed
-    const collectionsToEncrypt = ["Stores/Products", "DemoProductData", "RentalsNewArrivals", "DemoProductData"];
+    const collectionsToEncrypt = ["Stores/Products", "locationFilteredVariant", "RentalsNewArrivals", "locationFilteredVariant"];
     if (data._items.length > 0 && collectionsToEncrypt.includes(dataCollectionId) && encodePrice) {
       data._items = data._items.map(val => {
-        if (dataCollectionId === "DemoProductData" && val.data.variantData) {
+        if (dataCollectionId === "locationFilteredVariant" && val.data?.productSets?.length) {
+          val.data.productSets = val.data.productSets.map(set => {
+            set.price = encryptField(set.price);
+            return set;
+          });
+        }
+        if (dataCollectionId === "locationFilteredVariant" && val.data.variantData) {
           val.data.variantData = val.data.variantData.map(val2 => {
-            encryptPriceFields(val2.variant);
+            encryptPriceFields(val2.variant, fieldsToEncrypt);
             return val2;
           });
         }
-        encryptPriceFields(val.data.product);
+        encryptPriceFields(val.data.product, fieldsToEncrypt);
         return val;
       });
     }

@@ -14,15 +14,12 @@ export const POST = async (req) => {
     const { memberTokens, lineItemIds } = body;
 
     const cartClient = await cartWixClient(memberTokens);
-    const cart = await cartClient.currentCart.removeLineItemsFromCurrentCart(
+    await cartClient.currentCart.removeLineItemsFromCurrentCart(
       lineItemIds
     );
 
     return NextResponse.json(
-      {
-        message: "Cart item removed Successfully",
-        cart: cart.cart,
-      },
+      { message: "Cart item removed Successfully" },
       { status: 200 }
     );
   } catch (error) {

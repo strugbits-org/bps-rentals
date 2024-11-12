@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
 import handleAuthentication from "@/Utils/HandleAuthentication";
-import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import logError from "@/Utils/ServerActions";
-import { encryptPriceForCart } from "@/Utils/Encrypt";
+import { encryptField, encryptPriceFields } from "@/Utils/Encrypt";
+import getDataFetchFunction from "@/Services/FetchFunction";
 
 export const GET = async (req) => {
   try {
@@ -12,20 +12,32 @@ export const GET = async (req) => {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const wixClient = await createWixClientApiStrategy();
-    const data = await wixClient.items.queryDataItems({ dataCollectionId: "RequestQuote" }).eq("memberId", authenticatedUserData.memberId).find();
+    const data = await getDataFetchFunction({
+      "dataCollectionId": "RequestQuote",
+      "eq": [
+        {
+          key: "memberId",
+          value: authenticatedUserData.memberId
+        }
+      ],
+      "limit": "infinite",
+    })
 
-    const filteredData = data.items.map((item) => {
-      item.data.lineItems.forEach((item) => {
-        encryptPriceForCart(item.price);
-        encryptPriceForCart(item.fullPrice);
-        encryptPriceForCart(item.priceBeforeDiscounts);
+    const fieldsToEncrypt = [
+      'amount',
+      'convertedAmount',
+      'formattedAmount',
+      'formattedConvertedAmount'
+    ];
+
+    data.items.forEach((item) => {
+      item.data.lineItems.forEach((lineItem) => {
+        if (lineItem.price) lineItem.price = encryptField(lineItem.price.toString());
+        ['price', 'fullPrice', 'priceBeforeDiscounts'].forEach((field) => {
+          if (lineItem?.fullItem) encryptPriceFields(lineItem.fullItem[field], fieldsToEncrypt);
+        });
       });
-      return item;
     });
-
-    console.log("data", filteredData.items.map(x => x.data));
-
 
     return NextResponse.json(
       {

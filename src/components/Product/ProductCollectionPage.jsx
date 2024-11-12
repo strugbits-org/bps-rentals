@@ -28,6 +28,7 @@ import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import { decryptField } from "@/Utils/Encrypt";
 
 const ProductCollectionPage = ({
   selectedProductDetails,
@@ -148,7 +149,7 @@ const ProductCollectionPage = ({
   };
 
   useEffect(() => {
-    const prices = productsSets.map(({ price, quantity }) => Number(price.replace(/[^\d.-]/g, '')) * quantity);
+    const prices = productsSets.map(({ price, quantity }) => Number(decryptField(price).replace(/[^\d.-]/g, '')) * quantity);
     const total = prices.reduce((acc, x) => acc + x, 0);
     setTotalPrice(`$ ${total.toFixed(2)}`);
   }, [productsSets]);
@@ -204,16 +205,17 @@ const ProductCollectionPage = ({
         });
       });
 
-      const productData = {
+      const cartData = {
         lineItems: lineItems,
       };
 
-      const response = await AddProductToCart(productData);
-      const total = calculateTotalCartQuantity(response.cart.lineItems);
+      await AddProductToCart(cartData);
+      const newItems = calculateTotalCartQuantity(cartData.lineItems);
+      const total = cookies.cartQuantity ? cookies.cartQuantity + newItems : newItems;
       setCookie("cartQuantity", total, { path: "/" });
-      pageLoadStart({});
 
-      if (response) router.push("/cart");
+      pageLoadStart({});
+      router.push("/cart");
     } catch (error) {
       pageLoadEnd();
       logError("Error while adding item to cart:", error);
@@ -405,7 +407,7 @@ const ProductCollectionPage = ({
                             {name} {color ? `| ${color}` : ""}
                           </AnimateLink>
                           <span className="size">{size || "-"}</span>
-                          {SHOW_PRICES && <span className="price">{price || "-"}</span>}
+                          {SHOW_PRICES && <span className="price">{decryptField(price) || "-"}</span>}
                           <div className="quantity container-add-to-cart">
                             <div className="container-input container-input-quantity">
                               <button

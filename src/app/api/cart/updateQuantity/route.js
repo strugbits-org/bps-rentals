@@ -16,15 +16,10 @@ export const POST = async (req) => {
 
     const cartClient = await cartWixClient(memberTokens);
 
-    const cart = await cartClient.currentCart.updateCurrentCartLineItemQuantity(
-      lineItems
-    );
+    await cartClient.currentCart.updateCurrentCartLineItemQuantity(lineItems);
 
     return NextResponse.json(
-      {
-        message: "Cart updated Successfully",
-        cart: cart.cart,
-      },
+      { message: "Cart updated Successfully" },
       { status: 200 }
     );
   } catch (error) {

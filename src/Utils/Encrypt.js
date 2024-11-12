@@ -26,39 +26,13 @@ export const decryptField = (value) => {
     return value;
 };
 
-export const encryptPriceFields = (obj) => {
+export const encryptPriceFields = (obj, fieldsToEncrypt) => {
     if (!obj) return;
     const encryptIfExists = (field) => {
         if (obj[field]) {
             obj[field] = encryptField(obj[field].toString());
         }
     };
-    const fieldsToEncrypt = [
-        'formattedDiscountedPrice',
-        'pricePerUnitData',
-        'pricePerUnit',
-        'formattedPricePerUnit',
-        'formattedPrice',
-        'price',
-        'discountedPrice',
-    ];
-
-    fieldsToEncrypt.forEach(encryptIfExists);
-};
-
-export const encryptPriceForCart = (obj) => {
-    if (!obj) return;
-    const encryptIfExists = (field) => {
-        if (obj[field]) {
-            obj[field] = encryptField(obj[field].toString());
-        }
-    };
-    const fieldsToEncrypt = [
-        'amount',
-        'convertedAmount',
-        'formattedAmount',
-        'formattedConvertedAmount'
-    ];
 
     fieldsToEncrypt.forEach(encryptIfExists);
 };

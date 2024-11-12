@@ -18,9 +18,7 @@ export const SaveProductButton = ({
 
   useEffect(() => {
     if (savedProductsData?.length) {
-      setProductSaved(
-        savedProductsData.some((i) => i?.product?._id === productId)
-      );
+      setProductSaved(savedProductsData.some((i) => i?.product?._id === productId));
     }
   }, [memberId, savedProductsData]);
 
@@ -30,18 +28,15 @@ export const SaveProductButton = ({
       updateSavedProducts(productId, isSaving);
       if (isSaving) {
         await saveProduct(productId);
-        setProductSaved(false);
-        updateSavedProducts(productId, false);
-      } else {
-        await unSaveProduct(productId);
         setProductSaved(true);
         updateSavedProducts(productId, true);
+      } else {
+        await unSaveProduct(productId);
+        setProductSaved(false);
+        updateSavedProducts(productId, false);
       }
     } catch (error) {
-      logError(
-        `Error ${isSaving ? "saving" : "unsaving"} product:`,
-        error
-      );
+      logError(`Error ${isSaving ? "saving" : "unsaving"} product:`, error);
       setProductSaved(!isSaving);
       setError(isSaving ? "saving" : "unsaving");
       updateSavedProducts(productId, !isSaving);

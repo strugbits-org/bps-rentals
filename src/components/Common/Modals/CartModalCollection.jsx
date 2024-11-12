@@ -14,6 +14,7 @@ import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
 import AnimateLink from "../AnimateLink";
 import "@/assets/style/product-set.css"
+import { decryptField } from "@/Utils/Encrypt";
 
 const CartModalCollection = ({
   productData,
@@ -31,11 +32,10 @@ const CartModalCollection = ({
   const { permissions } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
-
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
-  const [cookies, setCookie] = useCookies(["location"]);
+  const [cookies, setCookie] = useCookies(["location", "cartQuantity"]);
   const [customTextFields, setCustomTextFields] = useState({});
   const [message, setMessage] = useState("");
   const [modalState, setModalState] = useState({ success: false, error: false });
@@ -131,12 +131,13 @@ const CartModalCollection = ({
         });
       });
 
-      const data = {
+      const cartData = {
         lineItems: lineItems,
       };
 
-      const response = await AddProductToCart(data);
-      const total = calculateTotalCartQuantity(response.cart.lineItems);
+      await AddProductToCart(cartData);
+      const newItems = calculateTotalCartQuantity(cartData.lineItems);
+      const total = cookies.cartQuantity ? cookies.cartQuantity + newItems : newItems;
       setCookie("cartQuantity", total, { path: "/" });
       handleClose();
       setModalState({ success: true, error: false });
@@ -151,7 +152,7 @@ const CartModalCollection = ({
   };
 
   useEffect(() => {
-    const prices = productsSets.map(({ price, quantity }) => Number(price.replace(/[^\d.-]/g, '')) * quantity);
+    const prices = productsSets.map(({ price, quantity }) => Number((decryptField(price)).replace(/[^\d.-]/g, '')) * quantity);
     const total = prices.reduce((acc, x) => acc + x, 0);
     setTotalPrice(`$ ${total.toFixed(2)}`);
   }, [productsSets]);
@@ -334,7 +335,7 @@ const CartModalCollection = ({
                                       {name} {color ? `| ${color}` : ""}
                                     </AnimateLink>
                                     <span className="size">{size || "-"}</span>
-                                    {SHOW_PRICES && <span className="price">{price || "-"}</span>}
+                                    {SHOW_PRICES && <span className="price">{decryptField(price) || "-"}</span>}
                                     <div className="quantity container-add-to-cart">
                                       <div className="container-input container-input-quantity">
                                         <button

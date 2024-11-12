@@ -109,7 +109,7 @@ export const ProductsListing = ({ selectedCategoryData, data, slug }) => {
             const chunkedItems = chunkArray(updatedProducts, 200);
             for (const chunk of chunkedItems) {
                 try {
-                    await bulkUpdateCollection("DemoProductData", chunk);
+                    await bulkUpdateCollection("locationFilteredVariant", chunk);
                 } catch (error) {
                     logError("Error updating chunk:", error);
                 }
