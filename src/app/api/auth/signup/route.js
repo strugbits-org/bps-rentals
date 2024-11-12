@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { cartWixClient, createWixClient } from "@/Utils/CreateWixClient";
 import { isValidEmail, isValidPassword } from "@/Utils/AuthApisUtils";
 import { extractPermissions } from "@/Utils/checkPermissions";
+import logError from "@/Utils/ServerActions";
 
 export const POST = async (req) => {
   try {
@@ -151,6 +152,7 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
+    logError("Error", error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 };
