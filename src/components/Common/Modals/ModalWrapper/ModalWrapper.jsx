@@ -1,4 +1,4 @@
-export const ModalWrapper = ({ children, name, no_wrapper = false }) => {
+export const ModalWrapper = ({ children, name, no_wrapper = false, onClose }) => {
 
     return (
         <modal-group name={name} data-cursor-style="default">
@@ -7,7 +7,7 @@ export const ModalWrapper = ({ children, name, no_wrapper = false }) => {
                     {no_wrapper ? (
                         <>
                             {children}
-                            <btn-modal-close data-cursor-style="off"></btn-modal-close>
+                            <btn-modal-close onClick={onClose} data-cursor-style="off"></btn-modal-close>
                         </>
                     ) : (
                         <section className="section-modal-contact">
@@ -18,7 +18,7 @@ export const ModalWrapper = ({ children, name, no_wrapper = false }) => {
                                             {children}
                                         </div>
 
-                                        <btn-modal-close data-cursor-style="default">
+                                        <btn-modal-close onClick={onClose} data-cursor-style="default">
                                             <i className="icon-close"></i>
                                             <i className="icon-arrow-left"></i>
                                             <span className="text-go-back no-desktop">Go back</span>

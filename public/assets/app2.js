@@ -8923,7 +8923,6 @@ var require_app2 = __commonJS({
     function main$2() {
       productLinkColor();
       productContent();
-      splitWords();
     }
     const pgMyAccountSavedProducts = new Page({
       pageName: pageName$2,
@@ -9070,42 +9069,6 @@ var require_app2 = __commonJS({
     function main() {
       productContent();
       productLinkColor();
-      new Swiper("#match-slider .swiper-container", {
-        modules: [Navigation, Pagination],
-        slidesPerView: 1,
-        spaceBetween: 0,
-        slidesPerGroup: 1,
-        loop: false,
-        effect: "slide",
-        pagination: {
-          el: "#match-slider .swiper-pagination",
-          clickable: true,
-          dynamicBullets: true,
-        },
-        navigation: {
-          nextEl: "#match-slider .swiper-button-next",
-          prevEl: "#match-slider .swiper-button-prev",
-        },
-        loopFillGroupWithBlank: false,
-        centerInsufficientSlides: true,
-        grabCursor: false,
-        observer: true,
-        watchOverflow: true,
-        speed: 600,
-        preventClicksPropagation: false,
-        touchStartPreventDefault: false,
-        // Responsive breakpoints
-        breakpoints: {
-          767: {
-            slidesPerView: 1,
-            slidesPerGroup: 1,
-          },
-          1025: {
-            slidesPerView: "auto",
-            slidesPerGroup: 1,
-          },
-        },
-      });
       let readMore = document.querySelectorAll(".description");
       if (readMore) {
         readMore.forEach((element) => {
@@ -9734,6 +9697,7 @@ var require_app2 = __commonJS({
       });
     });
     function whenContainerReady() {
+      document.body.classList.add("container-ready");
       setTimeout(() => {
         ScrollTrigger$1.refresh();
       }, 1e3);
@@ -9742,6 +9706,7 @@ var require_app2 = __commonJS({
           ? "home"
           : location.pathname.substring(1);
       const cleanPage = page.split("/")[0].trim();
+
       switch (cleanPage) {
         case "home":
           main$5();
@@ -9752,20 +9717,16 @@ var require_app2 = __commonJS({
         case "product":
           main();
           break;
-        case "my-account":
-          splitWords();
-        case "change-password":
-          splitWords();
         case "my-account-saved-products":
           main$2();
-          break;
-        case "my-account-quotes-history":
-          splitWords();
           break;
         default:
           break;
       }
 
+      if (cleanPage === "my-account-quotes-history" || cleanPage === "my-account-saved-products" || cleanPage === "my-account" || cleanPage === "change-password") {
+        splitWords();
+      }
       document.body.classList.remove("page-leave-active");
       Contato();
       observers();
@@ -9834,6 +9795,54 @@ var require_app2 = __commonJS({
       filterProducts();
       productContent();
     });
+
+    document.querySelector(".matchSwiperSlider").addEventListener("initializeSwiper", () => {
+      new Swiper("#match-slider .swiper-container", {
+        modules: [Navigation, Pagination],
+        slidesPerView: 1,
+        spaceBetween: 0,
+        slidesPerGroup: 1,
+        loop: false,
+        effect: "slide",
+        pagination: {
+          el: "#match-slider .swiper-pagination",
+          clickable: true,
+          dynamicBullets: true,
+        },
+        navigation: {
+          nextEl: "#match-slider .swiper-button-next",
+          prevEl: "#match-slider .swiper-button-prev",
+        },
+        loopFillGroupWithBlank: false,
+        centerInsufficientSlides: true,
+        grabCursor: false,
+        observer: true,
+        watchOverflow: true,
+        speed: 600,
+        preventClicksPropagation: false,
+        touchStartPreventDefault: false,
+        // Responsive breakpoints
+        breakpoints: {
+          767: {
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+          },
+          1025: {
+            slidesPerView: "auto",
+            slidesPerGroup: 1,
+          },
+        },
+      });
+    });
+
+    setTimeout(() => {
+      const containerLoaded = document.body.classList.contains("container-ready");
+      if (!containerLoaded) {
+        whenContainerReady();
+        updateWatched();
+      }
+    }, 1000);
+
   },
 });
 export default require_app2();

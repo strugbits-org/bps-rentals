@@ -97,6 +97,40 @@ export const getProductsByCategory = async (categories = [], adminPage = false) 
   }
 };
 
+export const fetchOnlyProductsByIds = async (products) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "locationFilteredVariant",
+      includeReferencedItems: ["product"],
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+      hasSome: [
+        {
+          key: "product",
+          values: products,
+        },
+      ],
+      includeVariants: false,
+    });
+    if (response && response._items) {
+      return response._items.map((x) => x.data.subCategoryData ? x.data : { subCategoryData: [], ...x.data });
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    logError("Error fetching products by ids:", error);
+    return [];
+  }
+};
+
 export const fetchProductsByIds = async (products) => {
   try {
     const response = await getDataFetchFunction({
@@ -559,16 +593,14 @@ export const saveProduct = async (id) => {
         Authorization: authToken,
       },
     });
-    // const jsonResponse = await response.json();
-    // if (jsonResponse.error) {
-    //   throw new Error(jsonResponse.error);
-    // }
+
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
     return data;
   } catch (error) {
+    logError("Error saving product:", error);
     throw new Error(error);
   }
 };
@@ -593,6 +625,7 @@ export const unSaveProduct = async (id) => {
     const data = await response.json();
     return data;
   } catch (error) {
+    logError("Error removing product:", error);
     throw new Error(error);
   }
 };

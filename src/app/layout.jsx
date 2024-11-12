@@ -2,6 +2,7 @@ import "./globals.css";
 import Wrapper from "@/components/Layout/Wrapper";
 import "../../public/assets/utils.css";
 import "../../public/assets/app.css";
+import 'react-toastify/dist/ReactToastify.css';
 import "../../public/assets/custom.css";
 import Loader from "@/components/Common/Loader";
 import CustomScripts from "@/Services/CustomScripts";
@@ -40,6 +41,7 @@ import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import RevalidateButton from "@/components/Common/RevalidateButton";
 import CustomBodyScripts from "@/Services/CustomBodyScripts";
+import { ToastContainer } from 'react-toastify';
 
 export const metadata = {
   title: "Rent Event Furnishings - Blueprint Studios",
@@ -101,6 +103,11 @@ export default async function RootLayout({ children }) {
         >
           <ExternalTriggers />
           <Loader />
+          <ToastContainer
+            position="top-center"
+            autoClose={1500}
+            hideProgressBar
+          />
           <Navbar
             locations={filterLocations}
             loginModalContent={loginModalContent}

@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCookies } from "react-cookie";
-
+import "@/assets/style/product-set.css"
 import {
   markPageLoaded,
   pageLoadEnd,
@@ -25,12 +25,12 @@ import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
 import useUserData from "@/Hooks/useUserData";
-import { decryptField } from "@/Utils/Encrypt";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import { decryptField } from "@/Utils/Encrypt";
 
-const ProductPostPage = ({
+const ProductCollectionPage = ({
   selectedProductDetails,
   matchedProductsData,
   categoriesData,
@@ -59,39 +59,14 @@ const ProductPostPage = ({
   const [isBestSeller, setIsBestSeller] = useState(false);
   const [buttonLabel, setButtonLabel] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
-  const [cartQuantity, setCartQuantity] = useState(1);
   const [customTextFields, setCustomTextFields] = useState({});
+  const [productsSets, setProductsSets] = useState([]);
+  const [totalPrice, setTotalPrice] = useState();
 
   const { permissions } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
   const SHOW_FIREPROOF_CERTIFICATES = permissions && permissions.includes(PERMISSIONS.SHOW_FIREPROOF_CERTIFICATES);
   const SHOW_DOCUMENTS = permissions && permissions.includes(PERMISSIONS.SHOW_DOCUMENTS);
-
-
-  const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
-    const selectedVariantFilteredData = productSnapshotData.find(
-      (variant) => variant.colorVariation === selectedVariantData.variantId
-    );
-    if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
-      const combinedVariantData = {
-        ...selectedVariantData,
-        ...selectedVariantFilteredData,
-        modalUrl: modalUrl,
-      };
-
-      setSelectedVariantIndex(index);
-      setSelectedVariant(combinedVariantData);
-    } else {
-      const combinedVariantData = {
-        ...selectedVariantData,
-        ...selectedVariantFilteredData,
-        modalUrl: modalUrl,
-        images: [{ src: selectedVariantData.imageSrc }],
-      };
-      setSelectedVariantIndex(index);
-      setSelectedVariant(combinedVariantData);
-    }
-  };
 
   useEffect(() => {
     const defaultVariantIndexFromParams = searchParams.get("variant");
@@ -154,15 +129,30 @@ const ProductPostPage = ({
 
       setProductFoundInCategories(categoriesFound);
     }
+    if (selectedProductDetails) {
+      setProductsSets(selectedProductDetails.productSets);
+    }
     setTimeout(markPageLoaded, 900);
   }, [selectedProductDetails]);
 
-  const handleQuantityChange = async (value) => {
-    if (value < 10000 && value > 0) {
-      setCartQuantity(value);
+  const handleQuantityChange = async (id, qty) => {
+    const quantity = Math.round(qty);
+    if (quantity < 10000 && quantity >= 1) {
+      setProductsSets(prev => {
+        const updatedProductsSet = prev.map((x) => {
+          if (id === x.variant) x.quantity = Number(quantity);
+          return x;
+        });
+        return updatedProductsSet;
+      });
     }
   };
 
+  useEffect(() => {
+    const prices = productsSets.map(({ price, quantity }) => Number(decryptField(price).replace(/[^\d.-]/g, '')) * quantity);
+    const total = prices.reduce((acc, x) => acc + x, 0);
+    setTotalPrice(`$ ${total.toFixed(2)}`);
+  }, [productsSets]);
 
   const handleInputChange = (name, value) => {
     setCustomTextFields((prevState) => ({
@@ -179,9 +169,7 @@ const ProductPostPage = ({
 
       const product_id = selectedProductDetails.product._id;
       const product_location = cookies?.location;
-      const variant_id = selectedVariant.variantId
-        .replace(product_id, "")
-        .substring(1);
+      const variant_id = selectedVariant.variantId.replace(product_id, "").substring(1);
 
       const customFields = Object.keys(customTextFields).reduce((acc, key) => {
         acc[key] = customTextFields[key] + "\n";
@@ -189,25 +177,39 @@ const ProductPostPage = ({
       }, {});
 
       const customFieldsSorted = { location: product_location, Size: selectedVariant.size, ...customFields }
+      const lineItems = [
+        {
+          catalogReference: {
+            appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
+            catalogItemId: product_id,
+            options: {
+              customTextFields: { ...customFieldsSorted, isProductSet: "true" },
+              variantId: variant_id,
+            },
+          },
+          quantity: 1,
+        }
+      ]
+
+      productsSets.forEach(({ id, product, size, quantity }) => {
+        lineItems.push({
+          catalogReference: {
+            appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
+            catalogItemId: product,
+            options: {
+              customTextFields: { location: product_location, Size: size, productSetId: product_id },
+              variantId: id,
+            },
+          },
+          quantity: quantity,
+        });
+      });
 
       const cartData = {
-        lineItems: [
-          {
-            catalogReference: {
-              appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
-              catalogItemId: product_id,
-              options: {
-                customTextFields: customFieldsSorted,
-                variantId: variant_id,
-              },
-            },
-            quantity: cartQuantity,
-          },
-        ],
+        lineItems: lineItems,
       };
 
       await AddProductToCart(cartData);
-
       const newItems = calculateTotalCartQuantity(cartData.lineItems);
       const total = cookies.cartQuantity ? cookies.cartQuantity + newItems : newItems;
       setCookie("cartQuantity", total, { path: "/" });
@@ -247,7 +249,6 @@ const ProductPostPage = ({
       updatedWatched(true);
     }
   }, [selectedVariant])
-
 
   return (
     <>
@@ -357,9 +358,8 @@ const ProductPostPage = ({
               </ul>
             </div>
             <div className="col-lg-3 column-2 mt-tablet-20 mt-phone-25">
-              <div className="container-product-description">
+              <div className="container-product-description product-page">
                 <form className="form-cart" onSubmit={handleAddToCart}>
-                  <input type="hidden" name="sku[]" defaultValue="MODCH09" />
                   <div className="wrapper-product-name">
                     <div className="container-product-name">
                       <h1
@@ -370,133 +370,78 @@ const ProductPostPage = ({
                       </h1>
                     </div>
                   </div>
-                  <ul className="list-specs mt-tablet-20 mt-phone-15 min-h-250-px"
+                  <ul className="list-specs mt-tablet-20 mt-phone-15"
                     data-aos="fadeIn .8s ease-in-out .2s, d:loop"
                   >
-                    {selectedVariant && selectedVariant.sku && (
+                    {selectedVariant?.sku && (
                       <li className="sku">
                         <span className="specs-title">SKU</span>
                         <span className="specs-text">
-                          {selectedVariant && selectedVariant.sku}
+                          {selectedVariant.sku}
                         </span>
                       </li>
                     )}
-
-                    {selectedVariant && selectedVariant.color && (
-                      <li className="color">
-                        <span className="specs-title">Color</span>
-                        <span className="specs-text">
-                          {selectedVariant && selectedVariant.color}
-                        </span>
+                    {SHOW_PRICES && (
+                      <li className="seat-height">
+                        <span className="specs-title">Price (TOTAL)</span>
+                        <span className="specs-text">{totalPrice}</span>
                       </li>
                     )}
 
-                    {selectedVariant?.weight ? (
-                      <li className="color cs-weight">
-                        <span className="specs-title">Weight</span>
-                        <span className="specs-text">
-                          {selectedVariant && selectedVariant.weight}LBS
-                        </span>
-                      </li>
-                    ) : null}
-
-                    {selectedProductDetails &&
-                      selectedProductDetails.product?.additionalInfoSections &&
-                      selectedProductDetails.product.additionalInfoSections.map(
-                        (sec, index) => {
-                          const { title, description } = sec;
-
-                          return (
-                            <li className={`${title} ${title === "IMPORTANT" ? "long-desc" : ""}`} key={index}>
-                              <span className="specs-title">{title}</span>
-                              <span
-                                className="specs-text"
-                                dangerouslySetInnerHTML={{
-                                  __html: description,
-                                }}
-                              ></span>
-                            </li>
-                          );
-                        }
-                      )}
-
-                    {selectedProductDetails && SHOW_PRICES &&
-                      selectedProductDetails.product.formattedPrice && (
-                        <li className="seat-height">
-                          <span className="specs-title">Price</span>
-                          <span className="specs-text">
-                            {decryptField(
-                              selectedProductDetails.product.formattedPrice
-                            )}
-                          </span>
-                        </li>
-                      )}
                   </ul>
-                  <ul
-                    className="list-colors"
-                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                  >
-                    {selectedProductDetails.variantData.map(
-                      (variantData, index) => {
-                        return (
-                          <li key={index} className="list-colors-item">
-                            <div
-                              className="container-input"
-                              data-set-color={variantData.variant.color}
-                              onClick={() =>
-                                handleImageChange({
-                                  index: index,
-                                  selectedVariantData: variantData.variant,
-                                  modalUrl: variantData.zipUrl,
-                                })
-                              }
-                            >
-                              <label>
-                                <input
-                                  type="radio"
-                                  name="colors"
-                                  value={variantData.variant.color}
-                                  checked={index === selectedVariantIndex}
-                                  readOnly
-                                />
-                                <div className="container-img">
-                                  <ImageWrapper timeout={0} key={variantData.variant.imageSrc} defaultDimensions={{ width: 50, height: 50 }} url={variantData.variant.imageSrc} type="product" />
-                                </div>
-                              </label>
-                            </div>
-                          </li>
-                        );
-                      }
-                    )}
-                  </ul>
-                  <div
-                    className="container-add-to-cart mt-tablet-20 mt-phone-25"
-                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
-                  >
-                    <div className="container-input container-input-quantity">
-                      <button
-                        onClick={() => handleQuantityChange(+cartQuantity - 1)}
-                        type="button"
-                        className="minus"
-                      >
-                        <i className="icon-minus"></i>
-                      </button>
-                      <input
-                        type="number"
-                        min="1"
-                        value={cartQuantity}
-                        placeholder="1"
-                        className="input-number"
-                        onInput={(e) => handleQuantityChange(e.target.value)}
-                      />
-                      <button
-                        onClick={() => handleQuantityChange(+cartQuantity + 1)}
-                        type="button"
-                        className="plus"
-                      >
-                        <i className="icon-plus"></i>
-                      </button>
+                  <div className="product-set-table">
+                    <div className="product-set-item product-set-header fs--18">
+                      <span className="name">Product Name</span>
+                      <span className="size">Size</span>
+                      {SHOW_PRICES && <span className="price">Price</span>}
+                      <span className="quantity">Quantity</span>
                     </div>
+                    {productsSets.map(({ name, variant, slug, color, price, size, quantity }) => {
+                      return (
+                        <div key={variant} className="product-set-item fs--16">
+                          <AnimateLink
+                            to={`/product/${slug}`}
+                            target={"_blank"}
+                            className="name"
+                          >
+                            {name} {color ? `| ${color}` : ""}
+                          </AnimateLink>
+                          <span className="size">{size || "-"}</span>
+                          {SHOW_PRICES && <span className="price">{decryptField(price) || "-"}</span>}
+                          <div className="quantity container-add-to-cart">
+                            <div className="container-input container-input-quantity">
+                              <button
+                                onClick={() => handleQuantityChange(variant, +quantity - 1)}
+                                type="button"
+                                className="minus"
+                              >
+                                <i className="icon-minus"></i>
+                              </button>
+                              <input
+                                type="number"
+                                min="1"
+                                value={quantity}
+                                placeholder="1"
+                                className="input-number fs--16"
+                                onInput={(e) => handleQuantityChange(variant, e.target.value)}
+                              />
+                              <button
+                                onClick={() => handleQuantityChange(variant, +quantity + 1)}
+                                type="button"
+                                className="plus"
+                              >
+                                <i className="icon-plus"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <div
+                    className="container-add-to-cart container-add-to-cart-collection mt-tablet-20 mt-phone-25"
+                    data-aos="fadeIn .8s ease-in-out .2s, d:loop"
+                  >
                     {unavailable ? (
                       <button
                         disabled
@@ -520,7 +465,7 @@ const ProductPostPage = ({
                   {unavailable && (
                     <div className="unavailable-warning-wrapper font-2 mt-3-cs">
                       <p className="unavailable-warning">
-                        Color Variant Not Available in Your Preferred Location.
+                        Not Available in Your Preferred Location.
                         Please &nbsp;
                       </p>
                       <btn-modal-open group="modal-contact">
@@ -529,9 +474,7 @@ const ProductPostPage = ({
                     </div>
                   )}
                   <AvailabilityCard
-                    selectedVariantData={
-                      selectedProductDetails.variantData[selectedVariantIndex]
-                    }
+                    selectedVariantData={selectedProductDetails.variantData[selectedVariantIndex]}
                     setUnavailable={setUnavailable}
                   />
 
@@ -549,6 +492,7 @@ const ProductPostPage = ({
                               {index === 0 && (<label>Customize product text</label>)}
                               <input
                                 name={`product_notes_${index}`}
+                                id={`product_notes_${index}`}
                                 type="text"
                                 placeholder={title}
                                 required={mandatory}
@@ -701,4 +645,4 @@ const ProductPostPage = ({
   );
 };
 
-export default ProductPostPage;
+export default ProductCollectionPage;

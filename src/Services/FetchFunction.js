@@ -1,7 +1,6 @@
 import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
-import { apiAuth } from "@/Utils/IsAuthenticated";
 import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
-import { encryptPriceFields } from "@/Utils/Encrypt";
+import { encryptField, encryptPriceFields } from "@/Utils/Encrypt";
 import logError from "@/Utils/ServerActions";
 
 function delay(ms) {
@@ -44,78 +43,9 @@ const getDataFetchFunction = async (payload) => {
       encodePrice = true,
       sortOrder,
       sortKey,
+      isNotEmpty,
       log
     } = payload;
-
-    // Validate collection ID
-    const authCollections = [
-      "InstagramFeed",
-      "Stores/Collections",
-      "RentalsQuotesDetailPage",
-      "PageSeoConfigurationRentals",
-      "RentalsHomeNewArrivals",
-      "SearchPages",
-      "Stores/Collections",
-      "RentalTeamsBanner",
-      "SearchSectionDetails",
-      "RentalsBanners",
-      "RentalsHomeHero",
-      "RentalsNewArrivals",
-      "BestSellers",
-      "RentalsHomeStudios",
-      "RentalsHomeHotTrends",
-      "HighlightsProducts",
-      "MarketSection",
-      "RentalsHomeDreamBig",
-      "Footer",
-      "HighlightsSocial",
-      "HighlightsTradeshow",
-      "HighlightsWedding",
-      "HighlightsCorporate",
-      "ContactDetails",
-      "SocialLinks",
-      "ContactUsContent",
-      "colorFilterCache",
-      "PeopleReviewSlider",
-      "RentalsHomeSectionDetails",
-      "FooterNavigationMenu",
-      "StudiosSection",
-      "RentalsLoginModal",
-      "FilterLocations",
-      "RentalsCreateAccountModal",
-      "RentalsResetPasswordModal",
-      "RentalsFooter",
-      "PortfolioCollection",
-      "SocialSectionDetails",
-      "BlogProductData",
-      "RentalsFooterLinks",
-      "RentalsSocialMediaLinks",
-      "RentalsAddresses",
-      "DreamBigSection",
-      "RentalsMyAccountPage",
-      "RentalsChangePasswordPage",
-      "BPSCatalogStructure",
-      "HeaderCategoryMenu",
-      "locationFilteredVariant",
-      "Stores/Products",
-      "BPSPairItWith",
-      "BPSProductImages",
-      "Stores/Variants",
-      "RentalsPrivacyPageContent",
-      "RentalsTermsPageContent",
-      "RentalsQuoteRequestPage",
-    ];
-
-    if (dataCollectionId && !authCollections.includes(dataCollectionId)) {
-      return { error: "Unauthorized", status: 401 };
-    }
-
-    // Authenticate
-    const apiKey = process.env.APIKEY;
-    const auth = await apiAuth(apiKey, dataCollectionId);
-    if (!auth) {
-      return { error: "Unauthorized", status: 401 };
-    }
 
     // Create Wix client
     const client = await createWixClientApiStrategy();
@@ -132,6 +62,7 @@ const getDataFetchFunction = async (payload) => {
     if (eq && eq.length > 0) eq.forEach(filter => dataQuery = dataQuery.eq(filter.key, filter.value));
     if (hasSome && hasSome.length > 0) hasSome.forEach(filter => dataQuery = dataQuery.hasSome(filter.key, filter.values));
     if (skip) dataQuery = dataQuery.skip(skip);
+    if (isNotEmpty) dataQuery = dataQuery.isNotEmpty(isNotEmpty);
     if (limit && limit !== "infinite") dataQuery = dataQuery.limit(limit);
     if (ne && ne.length > 0) ne.forEach(filter => dataQuery = dataQuery.ne(filter.key, filter.value));
     if (sortKey) dataQuery = sortOrder === "asc" ? dataQuery.ascending(sortKey) : sortOrder === "desc" ? dataQuery.descending(sortKey) : dataQuery.ascending(sortKey);
@@ -155,7 +86,7 @@ const getDataFetchFunction = async (payload) => {
     }
 
     if (!encodePrice && !includeVariants) return data;
-    
+
     // Include variants if needed
     if (includeVariants) {
       const [productsVariantImagesData, productsVariantsData] = await Promise.all([
@@ -172,17 +103,32 @@ const getDataFetchFunction = async (payload) => {
       });
     }
 
+    const fieldsToEncrypt = [
+      'formattedDiscountedPrice',
+      'pricePerUnitData',
+      'pricePerUnit',
+      'formattedPricePerUnit',
+      'formattedPrice',
+      'price',
+      'discountedPrice',
+    ];
     // Encrypt specific fields if needed
-    const collectionsToEncrypt = ["Stores/Products", "locationFilteredVariant", "RentalsNewArrivals"];
+    const collectionsToEncrypt = ["Stores/Products", "locationFilteredVariant", "RentalsNewArrivals", "locationFilteredVariant"];
     if (data._items.length > 0 && collectionsToEncrypt.includes(dataCollectionId) && encodePrice) {
       data._items = data._items.map(val => {
+        if (dataCollectionId === "locationFilteredVariant" && val.data?.productSets?.length) {
+          val.data.productSets = val.data.productSets.map(set => {
+            set.price = encryptField(set.price);
+            return set;
+          });
+        }
         if (dataCollectionId === "locationFilteredVariant" && val.data.variantData) {
           val.data.variantData = val.data.variantData.map(val2 => {
-            encryptPriceFields(val2.variant);
+            encryptPriceFields(val2.variant, fieldsToEncrypt);
             return val2;
           });
         }
-        encryptPriceFields(val.data.product);
+        encryptPriceFields(val.data.product, fieldsToEncrypt);
         return val;
       });
     }

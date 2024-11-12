@@ -6,7 +6,7 @@ const QuoteViewModal = ({ data, handleAddToCart }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const issueDate = quoteDateFormatter(data?.dates.issueDate);
 
-  const handleButtonClick = async () => {
+  const handleOrderAgain = async () => {
     if (isButtonDisabled) return;
     setIsButtonDisabled(true);
 
@@ -51,7 +51,7 @@ const QuoteViewModal = ({ data, handleAddToCart }) => {
                           </ul>
                           <div className="flex-center mt-lg-105 mt-tablet-55 mt-phone-35">
                             <button
-                              onClick={handleButtonClick}
+                              onClick={handleOrderAgain}
                               className="btn-1 btn-large btn-blue btn-request w-100 manual-modal-close"
                               disabled={isButtonDisabled}
                             >

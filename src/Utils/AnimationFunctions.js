@@ -6,7 +6,8 @@ export const initAnimations = () => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
       const customEvent = new Event("customInitScript");
-      document.querySelector(".initScript").dispatchEvent(customEvent);
+      const elem = document.querySelector(".initScript");      
+      if (elem) elem.dispatchEvent(customEvent);
     }, 400);
   }
 };
@@ -24,7 +25,18 @@ export const reloadCartModal = () => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
       const customEvent = new Event("reloadModal");
-      document.querySelector(".addToCart").dispatchEvent(customEvent);
+      const elem = document.querySelector(".addToCart");
+      if (elem) elem.dispatchEvent(customEvent);
+    }, 200);
+  }
+};
+
+export const initializeMatchSwiper = () => {
+  if (typeof window !== "undefined") {
+    setTimeout(() => {
+      const customEvent = new Event("initializeSwiper");
+      const elem = document.querySelector(".matchSwiperSlider");
+      if (elem) elem.dispatchEvent(customEvent);
     }, 200);
   }
 };
@@ -81,6 +93,20 @@ export const triggerParallax = () => {
     const customEvent = new Event("triggerParallax");
     const elem = document.querySelector(".parallaxTrigger");
     if (elem) elem.dispatchEvent(customEvent);
+  }
+}
+
+export const openModal = (name) => {
+  if (typeof window !== "undefined") {
+    const modal = document.querySelector(`modal-group[name=${name}]`);
+    if (modal && modal.open) modal.open();
+  }
+}
+
+export const closeModal = (name) => {
+  if (typeof window !== "undefined") {
+    const modal = document.querySelector(`modal-group[name=${name}]`);
+    if (modal && modal.close) modal.close();
   }
 }
 

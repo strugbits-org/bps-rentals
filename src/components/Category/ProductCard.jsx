@@ -147,7 +147,7 @@ const ProductCard = ({
       </div>
       <btn-modal-open
         onClick={() => getSelectedProductSnapShots(productData, activeVariant)}
-        group="modal-product-2"
+        group={`${productData?.productSets?.length ? "modal-product-3" : "modal-product-2"}`}
         class="modal-add-to-cart"
       >
         <span>Add to cart</span>

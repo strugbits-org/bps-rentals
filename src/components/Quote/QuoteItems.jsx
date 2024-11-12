@@ -1,113 +1,40 @@
-import {
-  extractSlugFromUrl,
-  formatDescriptionLines,
-  formatPrice,
-  locations,
-} from "@/Utils/Utils";
-import AnimateLink from "../Common/AnimateLink";
-import React from "react";
+import { locations } from "@/Utils/Utils";
+import React, { useState } from "react";
 import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import { CartItem, CartItemGroup } from "../Cart/CartItem";
+import { useEffect } from "react";
 
 const QuoteItems = ({ quoteData }) => {
   const { permissions } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
+  const [cartItems, setCartItems] = useState([]);
 
-  if (!quoteData || quoteData.length === 0) return null;
 
-  const renderFullItem = (cart, index) => {
-    const {
-      quantity,
-      productName,
-      url,
-      image,
-      physicalProperties,
-      descriptionLines,
-      price
-    } = cart.fullItem;
-    const formattedDescription = formatDescriptionLines(descriptionLines);
+  const renderFullItem = (cart) => {
+    const { fullItem } = cart;
 
     return (
-      <li key={index} className="list-item" style={{ margin: "8px 0" }}>
-        <input type="hidden" name="sku[]" defaultValue="MODCH09" />
-        <div className="cart-product">
-          <div className="container-img">
-            <ImageWrapper defaultDimensions={{ width: 120, height: 120 }} url={image} />
-          </div>
-          <div className="wrapper-product-info">
-            <div className="container-top">
-              <div className="container-product-name">
-                <h2 className="product-name">{productName.original}</h2>
-                <AnimateLink
-                  to={"/product" + extractSlugFromUrl(url)}
-                  className="btn-view"
-                >
-                  <span>View</span>
-                  <i className="icon-arrow-right"></i>
-                </AnimateLink>
-              </div>
-              <button type="button" className="btn-cancel hidden">
-                <i className="icon-close"></i>
-              </button>
-            </div>
-            <div className="container-specs">
-              <ul className="list-specs">
-                <li className="sku">
-                  <span className="specs-title">SKU</span>
-                  <span className="specs-text">
-                    {physicalProperties.sku}
-                  </span>
-                </li>
-                {formattedDescription.map((item) => {
-                  const { title, value } = item;
-                  if (!value) return null;
-
-                  const titleWordCount = title.split(" ").length;
-                  const valueWordCount = value.split(" ").length;
-                  return (
-                    <li className={`location ${titleWordCount >= 2 || valueWordCount > 4 ? "long-desc" : ""}`}>
-                      <span className="specs-title capitalize">
-                        {title}
-                      </span>
-                      <span className="specs-text">
-                        {value}
-                        {title === "location" && (<>{" "}<i className="icon-pin"></i></>)}
-                      </span>
-                    </li>
-                  )
-                })}
-                {SHOW_PRICES && (
-                  <li className="price">
-                    <span className="specs-title">Price</span>
-                    <span className="specs-text">
-                      {formatPrice(price, quantity)}
-                    </span>
-                  </li>
-                )}
-              </ul>
-              <div className="quantity">
-                <span className="fs--20 no-mobile">Quantity</span>
-                <div className="container-input container-input-quantity">
-                  <button type="button" className="minus" disabled hidden>
-                    <i className="icon-minus"></i>
-                  </button>
-                  <input
-                    type="number"
-                    min="1"
-                    value={quantity}
-                    placeholder="1"
-                    className="input-number"
-                  />
-                  <button type="button" className="plus" disabled hidden>
-                    <i className="icon-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </li>
+      fullItem.productSets && fullItem.productSets.length ? (
+        <CartItemGroup
+          key={fullItem._id}
+          data={fullItem}
+          isReadOnly={true}
+          handleQuantityChange={() => { }}
+          updateProducts={() => { }}
+          removeProduct={() => { }}
+        />
+      ) : (
+        <CartItem
+          key={fullItem._id}
+          data={fullItem}
+          isReadOnly={true}
+          handleQuantityChange={() => { }}
+          updateProducts={() => { }}
+          removeProduct={() => { }}
+        />
+      )
     );
   };
 
@@ -116,8 +43,7 @@ const QuoteItems = ({ quoteData }) => {
     const formattedPrice = `$ ${(price * quantity).toLocaleString()}`
 
     return (
-      <li key={index} className="list-item" style={{ margin: "8px 0" }}>
-        <input type="hidden" name="sku[]" defaultValue="MODCH09" />
+      <li key={index} className="list-item list-item-cart">
         <div className="cart-product">
           <div className="container-img">
             <ImageWrapper defaultDimensions={{ width: 120, height: 120 }} url={src} type="2" />
@@ -181,13 +107,49 @@ const QuoteItems = ({ quoteData }) => {
     );
   };
 
+  useEffect(() => {
+    if (!quoteData?.length) return;
+  
+    // Separate items with and without productSetId in a single loop for better efficiency
+    const productSets = [];
+    const items = [];
+    quoteData.forEach((item) => {
+      const customFields = item?.fullItem?.catalogReference?.options?.customTextFields;
+      if (customFields?.productSetId) {
+        productSets.push(item);
+      } else {
+        items.push(item);
+      }
+    });
+  
+    // Map items and attach corresponding productSets if `isProductSet` is true
+    const data = items.map((item) => {
+      const isProductSet = item?.fullItem?.catalogReference?.options?.customTextFields?.isProductSet;
+      if (!isProductSet) return item;
+  
+      // Find and attach associated product sets
+      const associatedSets = productSets
+        .filter((set) =>
+          set?.fullItem?.catalogReference?.options?.customTextFields?.productSetId ===
+          item?.fullItem?.catalogReference?.catalogItemId
+        )
+        .map((set) => set.fullItem);
+  
+      return {
+        ...item,
+        fullItem: { ...item.fullItem, productSets: associatedSets },
+      };
+    });
+  
+    setCartItems(data);
+  }, [quoteData]);
+  
+
+  if (!quoteData || !quoteData?.length) return;
+
   return (
     <React.Fragment>
-      {quoteData.map((cart, index) =>
-        cart.fullItem
-          ? renderFullItem(cart, index)
-          : renderSimpleItem(cart, index)
-      )}
+      {cartItems.map((cart, index) => cart.fullItem ? renderFullItem(cart, index) : renderSimpleItem(cart, index))}
     </React.Fragment>
   );
 };

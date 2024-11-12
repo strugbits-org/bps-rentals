@@ -14,6 +14,7 @@ import { getPageMetaData, getProductBlogsData, getProductPortfolioData } from "@
 import { buildMetadata, removeHTMLTags } from '@/Utils/Utils';
 import logError from '@/Utils/ServerActions';
 import { Suspense } from 'react';
+import ProductCollectionPage from '@/components/Product/ProductCollectionPage';
 
 export async function generateMetadata({ params }) {
   try {
@@ -112,14 +113,25 @@ export default async function Page({ params }) {
 
     return (
       <Suspense>
-        <ProductPostPage
-          selectedProductDetails={selectedProduct}
-          matchedProductsData={matchedProducts}
-          categoriesData={categoriesData}
-          blogsData={blogsData}
-          portfolioData={portfolioData}
-          bestSeller={bestSeller}
-        />
+        {selectedProduct?.productSets?.length ? (
+          <ProductCollectionPage
+            selectedProductDetails={selectedProduct}
+            matchedProductsData={matchedProducts}
+            categoriesData={categoriesData}
+            blogsData={blogsData}
+            portfolioData={portfolioData}
+            bestSeller={bestSeller}
+          />
+        ) : (
+          <ProductPostPage
+            selectedProductDetails={selectedProduct}
+            matchedProductsData={matchedProducts}
+            categoriesData={categoriesData}
+            blogsData={blogsData}
+            portfolioData={portfolioData}
+            bestSeller={bestSeller}
+          />
+        )}
       </Suspense>
     );
   } catch (error) {

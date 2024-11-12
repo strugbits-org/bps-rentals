@@ -14,7 +14,7 @@ export const encryptField = (value) => {
     return value;
 };
 
-export const decryptField = (value) => {    
+export const decryptField = (value) => {
     if (typeof value === 'string') {
         const [ivString, encryptedData] = value.split(':');
         const iv = Buffer.from(ivString, 'hex');
@@ -26,22 +26,13 @@ export const decryptField = (value) => {
     return value;
 };
 
-export const encryptPriceFields = (obj) => {
+export const encryptPriceFields = (obj, fieldsToEncrypt) => {
     if (!obj) return;
     const encryptIfExists = (field) => {
         if (obj[field]) {
             obj[field] = encryptField(obj[field].toString());
         }
     };
-    const fieldsToEncrypt = [
-        'formattedDiscountedPrice',
-        'pricePerUnitData',
-        'pricePerUnit',
-        'formattedPricePerUnit',
-        'formattedPrice',
-        'price',
-        'discountedPrice',
-    ];
 
     fieldsToEncrypt.forEach(encryptIfExists);
 };
