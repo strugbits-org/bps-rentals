@@ -2,6 +2,10 @@
 import logError from "@/Utils/ServerActions";
 import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import getDataFetchFunction from "./FetchFunction";
+import { getAuthToken } from "./GetAuthToken";
+import { decryptField, decryptPriceFields } from "@/Utils/Encrypt";
+
+const baseUrl = process.env.BASE_URL;
 
 export const updateDataItem = async (data) => {
     try {
@@ -35,7 +39,7 @@ export const bulkUpdateCollection = async (dataCollectionId, items) => {
 export const getAllProductsForSets = async () => {
     try {
         const response = await getDataFetchFunction({
-            dataCollectionId: "locationFilteredVariant",
+            dataCollectionId: "DemoProductData",
             includeReferencedItems: ["product"],
             ne: [
                 {
@@ -63,18 +67,47 @@ export const getAllProductsForSets = async () => {
 
 export const getProductForUpdate = async (id) => {
     try {
-        const response = await getDataFetchFunction({
-            dataCollectionId: "locationFilteredVariant",
-            eq: [
-                {
-                    key: "product",
-                    value: id
-                }
-            ],
-            encodePrice: false,
-            includeVariants: false,
+        const authToken = await getAuthToken();
+
+        const response = await fetch(`${baseUrl}/api/product/get/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: authToken,
+            },
+            cache: "no-store"
         });
-        if (response) return response._items[0];
+
+        const data = await response.json();
+
+        const fieldsToDecrypt = [
+            'formattedDiscountedPrice',
+            'pricePerUnitData',
+            'pricePerUnit',
+            'formattedPricePerUnit',
+            'formattedPrice',
+            'price',
+            'discountedPrice',
+        ];
+
+        data._items = data._items.map(val => {
+            if (val.data?.productSets?.length) {
+                val.data.productSets = val.data.productSets.map(set => {
+                    set.price = decryptField(set.price);
+                    return set;
+                });
+            }
+            if (val.data.variantData) {
+                val.data.variantData = val.data.variantData.map(val2 => {
+                    decryptPriceFields(val2.variant, fieldsToDecrypt);
+                    return val2;
+                });
+            }
+            decryptPriceFields(val.data.product, fieldsToDecrypt);
+            return val;
+        });
+
+        return data._items[0];
     } catch (error) {
         logError(`Error fetching product ${id}:`, error);
     }
