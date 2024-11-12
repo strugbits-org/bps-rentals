@@ -33,7 +33,7 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
     return options.flatMap(({ product, variantData }) =>
       product._id !== mainProduct?.product
         ? variantData
-          .filter(({ sku }) => sku && !productsSet.some((prod) => prod.variant === sku))
+          .filter(({ sku, variant }) => variant._id && sku && !productsSet.some((prod) => prod.variant === sku))
           .map(({ sku, variant }) => ({
             value: sku,
             productId: product._id,

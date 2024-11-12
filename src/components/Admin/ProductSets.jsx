@@ -11,6 +11,7 @@ import { revalidatePage } from '@/Services/RevalidateService';
 import { toast } from 'react-toastify';
 import ProductSetModal from '../Common/Modals/ProductSetModal';
 import AnimateLink from '../Common/AnimateLink';
+import { decryptField } from '@/Utils/Encrypt';
 
 export const ProductSets = ({ products }) => {
 
@@ -39,6 +40,7 @@ export const ProductSets = ({ products }) => {
 
     const handleEditeSet = (id) => {
         const set = dataSets.find(set => set.product === id);
+        set.productSets = set.productSets.map((x) => ({ ...x, price: decryptField(x.price) }));
         setActiveSet(set);
         setToggleSetModal(true);
     }
