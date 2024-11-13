@@ -65,6 +65,42 @@ export const getAllProductsForSets = async () => {
     }
 };
 
+export const getAllSetProducts = async (retries = 3, delay = 1000) => {
+    const retryDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+            const authToken = await getAuthToken();            
+            if (!authToken) return [];
+
+            const response = await fetch(`${baseUrl}/api/product/getProductsSets`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: authToken,
+                },
+                cache: "no-store",
+            });
+
+            const data = await response.json();
+            return data;
+
+        } catch (error) {
+            logError(`Error fetching products sets: Attempt ${attempt + 1} failed: ${error}`);
+
+            if (attempt < retries) {
+                logError(`Retrying in ${delay}ms...`);
+                await retryDelay(delay);
+                delay *= 2;
+            } else {
+                logError(`Attempt ${attempt} failed. No more retries left.`);
+                return [];
+            }
+        }
+    }
+};
+
+
 export const getProductForUpdate = async (id) => {
     try {
         const authToken = await getAuthToken();

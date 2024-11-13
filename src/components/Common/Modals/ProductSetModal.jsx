@@ -94,9 +94,6 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
       setMainProduct(updatedProductSet);
 
       const productData = await getProductForUpdate(mainProduct.product);
-      console.log("productData", productData);
-      
-      return;
       if (!productData?.data) {
         throw new Error("Failed to fetch product data.");
       }
