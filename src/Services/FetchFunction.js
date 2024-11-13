@@ -113,7 +113,7 @@ const getDataFetchFunction = async (payload) => {
       'discountedPrice',
     ];
     // Encrypt specific fields if needed
-    const collectionsToEncrypt = ["Stores/Products", "DemoProductData", "RentalsNewArrivals", "DemoProductData"];
+    const collectionsToEncrypt = ["Stores/Products", "DemoProductData", "RentalsNewArrivals"];
     if (data._items.length > 0 && collectionsToEncrypt.includes(dataCollectionId) && encodePrice) {
       data._items = data._items.map(val => {
         if (dataCollectionId === "DemoProductData" && val.data?.productSets?.length) {

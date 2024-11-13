@@ -70,7 +70,7 @@ export const getAllSetProducts = async (retries = 3, delay = 1000) => {
 
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
-            const authToken = await getAuthToken();            
+            const authToken = await getAuthToken();
             if (!authToken) return [];
 
             const response = await fetch(`${baseUrl}/api/product/getProductsSets`, {
@@ -103,47 +103,17 @@ export const getAllSetProducts = async (retries = 3, delay = 1000) => {
 
 export const getProductForUpdate = async (id) => {
     try {
-        const authToken = await getAuthToken();
-
-        const response = await fetch(`${baseUrl}/api/product/get/${id}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: authToken,
-            },
-            cache: "no-store"
+        const response = await getDataFetchFunction({
+            dataCollectionId: "DemoProductData",
+            eq: [
+                {
+                    key: "product",
+                    value: id
+                }
+            ],
+            includeVariants: false,
         });
-
-        const data = await response.json();
-
-        const fieldsToDecrypt = [
-            'formattedDiscountedPrice',
-            'pricePerUnitData',
-            'pricePerUnit',
-            'formattedPricePerUnit',
-            'formattedPrice',
-            'price',
-            'discountedPrice',
-        ];
-
-        data._items = data._items.map(val => {
-            if (val.data?.productSets?.length) {
-                val.data.productSets = val.data.productSets.map(set => {
-                    set.price = decryptField(set.price);
-                    return set;
-                });
-            }
-            if (val.data.variantData) {
-                val.data.variantData = val.data.variantData.map(val2 => {
-                    decryptPriceFields(val2.variant, fieldsToDecrypt);
-                    return val2;
-                });
-            }
-            decryptPriceFields(val.data.product, fieldsToDecrypt);
-            return val;
-        });
-
-        return data._items[0];
+        return response._items[0];
     } catch (error) {
         logError(`Error fetching product ${id}:`, error);
     }

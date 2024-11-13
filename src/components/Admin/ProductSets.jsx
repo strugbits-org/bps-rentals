@@ -11,7 +11,7 @@ import { revalidatePage } from '@/Services/RevalidateService';
 import { toast } from 'react-toastify';
 import ProductSetModal from '../Common/Modals/ProductSetModal';
 import AnimateLink from '../Common/AnimateLink';
-import { decryptField } from '@/Utils/Encrypt';
+import { decryptField, decryptProductData } from '@/Utils/Encrypt';
 
 export const ProductSets = ({ products }) => {
 
@@ -27,6 +27,8 @@ export const ProductSets = ({ products }) => {
         try {
             setDataSets(prev => prev.filter(set => set.product !== id));
             const productData = await getProductForUpdate(id);
+            decryptProductData(productData);
+
             productData.data.productSets = [];
             const { slug, categories } = prevDataSets.find(set => set.product === id);
             await updateDataItem(productData);

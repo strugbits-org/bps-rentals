@@ -56,10 +56,11 @@ const CartPage = () => {
   );
 
   const removeProduct = async (ids) => {
-    const newTotal = cartItems.length - ids.length;
-    setCookie("cartQuantity", newTotal, { path: "/" });
+    const newCartItems = cartItems.filter((item) => !ids.includes(item._id));
+    const total = calculateTotalCartQuantity(newCartItems);
+    setCookie("cartQuantity", total, { path: "/" });
 
-    setCartItems((prevCartItems) => prevCartItems.filter((item) => !ids.includes(item._id)));
+    setCartItems(newCartItems);
     updatedWatched();
 
     setTrashList((prevTrashList) => prevTrashList.concat(ids.filter(id => !prevTrashList.includes(id))));
