@@ -13,7 +13,7 @@ export const POST = async (req) => {
     }
 
     const response = await getDataFetchFunction({
-      dataCollectionId: "DemoProductData",
+      dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: ["product"],
       ne: [
         {

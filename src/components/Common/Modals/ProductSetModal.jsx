@@ -4,10 +4,10 @@ import { ModalWrapper } from "./ModalWrapper/ModalWrapper";
 import { CustomSelect } from "../CustomSelect";
 import { closeModal, openModal } from "@/Utils/AnimationFunctions";
 import { ImageWrapper } from "../ImageWrapper";
-import { getProductForUpdate, updateDataItem } from "@/Services/AdminApis";
+import {updateProductSetData } from "@/Services/AdminApis";
 import { toast } from "react-toastify";
 import logError from "@/Utils/ServerActions";
-import { decryptField, decryptProductData } from "@/Utils/Encrypt";
+import { decryptField } from "@/Utils/Encrypt";
 
 const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, onUpdate, onSave }) => {
   const [mainProduct, setMainProduct] = useState(null);
@@ -93,16 +93,12 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
       const updatedProductSet = { ...mainProduct, productSets: productsSet };
       setMainProduct(updatedProductSet);
 
-      const productData = await getProductForUpdate(mainProduct.product);
-      decryptProductData(productData);
+      const payload = {
+        id: mainProduct.product,
+        productSets: productsSet,
+      };
 
-      if (!productData?.data) {
-        throw new Error("Failed to fetch product data.");
-      }
-      productData.data.productSets = productsSet;
-
-      await updateDataItem(productData);
-
+      await updateProductSetData(payload);
       const isUpdatingMainProduct = activeSet?.product === mainProduct.product;
       if (isUpdatingMainProduct) {
         onUpdate(updatedProductSet);

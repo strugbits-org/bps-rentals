@@ -2,23 +2,29 @@
 import logError from "@/Utils/ServerActions";
 import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import getDataFetchFunction from "./FetchFunction";
-import { decryptField, decryptPriceFields } from "@/Utils/Encrypt";
 import { getAuthToken } from "./GetAuthToken";
 
 const baseUrl = process.env.BASE_URL;
 
-export const updateDataItem = async (data) => {
-    try {
-        const { dataCollectionId } = data;
-        const options = {
-            dataCollectionId,
-            dataItem: data,
-        }
-        const client = await createWixClientApiStrategy();
-        const response = await client.items.updateDataItem(data._id, options);
-        return response;
+export const updateProductSetData = async (payload) => {
+    try {        
+        const authToken = await getAuthToken();
+
+        const response = await fetch(`${baseUrl}/api/productSets/update`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: authToken,
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+
+        const data = await response.json();
+        return data;
     } catch (error) {
-        logError("Error updating products:", error);
+        throw new Error(error);
     }
 };
 
@@ -39,7 +45,7 @@ export const bulkUpdateCollection = async (dataCollectionId, items) => {
 export const getAllProductsForSets = async () => {
     try {
         const response = await getDataFetchFunction({
-            dataCollectionId: "DemoProductData",
+            dataCollectionId: "locationFilteredVariant",
             includeReferencedItems: ["product"],
             ne: [
                 {
@@ -97,24 +103,5 @@ export const getAllSetProducts = async (retries = 3, delay = 1000) => {
                 return [];
             }
         }
-    }
-};
-
-
-export const getProductForUpdate = async (id) => {
-    try {
-        const response = await getDataFetchFunction({
-            dataCollectionId: "DemoProductData",
-            eq: [
-                {
-                    key: "product",
-                    value: id
-                }
-            ],
-            includeVariants: false,
-        });
-        return response._items[0];
-    } catch (error) {
-        logError(`Error fetching product ${id}:`, error);
     }
 };

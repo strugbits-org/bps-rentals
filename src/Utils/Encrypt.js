@@ -46,38 +46,11 @@ export const encryptPriceFields = (obj, fieldsToEncrypt) => {
     fieldsToEncrypt.forEach(encryptIfExists);
 };
 
-export const decryptPriceFields = (obj, fieldsToEncrypt) => {
+export const decryptPriceFields = (obj, fieldsToDecrypt) => {
     if (!obj) return;
     const decryptIfExists = (field) => {
         if (obj[field]) obj[field] = decryptField(obj[field]);
     };
 
-    fieldsToEncrypt.forEach(decryptIfExists);
+    fieldsToDecrypt.forEach(decryptIfExists);
 };
-
-export const decryptProductData = (data) => {
-    const fieldsToDecrypt = [
-        'formattedDiscountedPrice',
-        'pricePerUnitData',
-        'pricePerUnit',
-        'formattedPricePerUnit',
-        'formattedPrice',
-        'price',
-        'discountedPrice',
-    ];
-
-    if (data.data?.productSets?.length) {
-        data.data.productSets = data.data.productSets.map(set => {
-            set.price = decryptField(set.price);
-            return set;
-        });
-    }
-    if (data.data.variantData) {
-        data.data.variantData = data.data.variantData.map(val2 => {
-            decryptPriceFields(val2.variant, fieldsToDecrypt);
-            return val2;
-        });
-    }
-    decryptPriceFields(data.data.product, fieldsToDecrypt);
-    return data;
-}
