@@ -16,7 +16,7 @@ async function retryAsyncOperation(operation, retries = 3, delayMs = 1000) {
       logError(`Error fetching query data items: Attempt ${attempt} failed: ${error}`);
       attempt++;
       if (attempt < retries) {
-        console.log(`Retrying in ${delayMs}ms...`);
+        logError(`Retrying in ${delayMs}ms...`);
         await delay(delayMs);
       } else {
         logError(`Attempt ${attempt} failed. No more retries left.`);

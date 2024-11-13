@@ -17,15 +17,17 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
 
   const productsOptions = useMemo(
     () =>
-      options.map(({ subCategoryData = [], product }) => ({
-        value: product._id,
-        product: product._id,
-        slug: product.slug,
-        name: product.name,
-        image: product.mainMedia,
-        label: product.name,
-        categories: subCategoryData.map((cat) => cat["link-copy-of-category-name-2"]),
-      })),
+      options
+        .filter(({ variantData }) => variantData.some((variant) => variant?.variant?._id))
+        .map(({ subCategoryData = [], product }) => ({
+          value: product._id,
+          product: product._id,
+          slug: product.slug,
+          name: product.name,
+          image: product.mainMedia,
+          label: product.name,
+          categories: subCategoryData.map((cat) => cat["link-copy-of-category-name-2"]),
+        })),
     [options]
   );
 

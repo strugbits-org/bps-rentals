@@ -6,7 +6,7 @@ import { markPageLoaded } from '@/Utils/AnimationFunctions';
 import { ImageWrapper } from '../Common/ImageWrapper';
 import { PERMISSIONS } from '@/Utils/Schema/permissions';
 import logError from '@/Utils/ServerActions';
-import { getProductForUpdate, updateDataItem } from '@/Services/AdminApis';
+import { getAllSetProducts, getProductForUpdate, updateDataItem } from '@/Services/AdminApis';
 import { revalidatePage } from '@/Services/RevalidateService';
 import { toast } from 'react-toastify';
 import ProductSetModal from '../Common/Modals/ProductSetModal';
@@ -30,8 +30,8 @@ export const ProductSets = ({ products }) => {
             productData.data.productSets = [];
             const { slug, categories } = prevDataSets.find(set => set.product === id);
             await updateDataItem(productData);
+            await revalidateData(slug, categories);
             if (alert) toast.info("Product set removed successfully");
-            revalidateData(slug, categories);
         } catch (error) {
             logError("Error:", error);
             setDataSets(prevDataSets);
@@ -45,15 +45,15 @@ export const ProductSets = ({ products }) => {
         setToggleSetModal(true);
     }
 
-    const handleOnUpdate = (data) => {
+    const handleOnUpdate = async (data) => {
         setDataSets(prev => prev.map(set => set.product === data.product ? data : set));
         setActiveSet(null);
         const { slug, categories } = data;
+        await revalidateData(slug, categories);
         toast.info("Product set updated successfully");
-        revalidateData(slug, categories);
     }
 
-    const handleOnSave = (data) => {
+    const handleOnSave = async (data) => {
         if (activeSet) {
             setDataSets(prev => prev.filter(set => set.product !== activeSet?.product));
             removeSet(activeSet.product, false);
@@ -64,17 +64,23 @@ export const ProductSets = ({ products }) => {
         }
         const { slug, categories } = data;
         setDataSets(prev => [data, ...prev]);
-        revalidateData(slug, categories);
+        await revalidateData(slug, categories);
     }
 
     const revalidateData = (slug, categories = []) => {
-        categories.forEach(slug => { revalidatePage(slug) });
-        revalidatePage(`/product/${slug}`);
-        revalidatePage("/admin/manage-product-sets");
+        return new Promise((resolve) => {
+            categories.forEach(slug => { revalidatePage(slug) });
+            revalidatePage(`/product/${slug}`);
+            setTimeout(() => {
+                resolve();
+            }, 400);
+        });
     }
 
-    useEffect(() => {
-        const productSets = products.filter(product => product.product && product.productSets && product.productSets.length).map(({ product, subCategoryData = [], productSets }) => {
+    const fetchSets = async () => {
+        const setsProducts = await getAllSetProducts();
+        markPageLoaded();
+        const productSets = setsProducts.map(({ product, subCategoryData = [], productSets }) => {
             return {
                 value: product._id,
                 product: product._id,
@@ -87,7 +93,10 @@ export const ProductSets = ({ products }) => {
             }
         });
         setDataSets(productSets);
-        markPageLoaded();
+    }
+
+    useEffect(() => {
+        fetchSets();
     }, [])
 
     useEffect(() => {
@@ -96,7 +105,6 @@ export const ProductSets = ({ products }) => {
         const options = activeProduct ? [activeProduct, ...filteredProducts] : filteredProducts;
         setOptions(options);
     }, [activeSet, products]);
-
 
     if (!ADMIN_PANEL_ACCESS) return <Error404Page inline={true} />
 

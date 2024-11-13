@@ -538,7 +538,7 @@ export const getSavedProductData = async (retries = 3, delay = 1000) => {
       logError(`Error fetching saved products: Attempt ${attempt + 1} failed: ${error}`);
 
       if (attempt < retries) {
-        console.log(`Retrying in ${delay}ms...`);
+        logError(`Retrying in ${delay}ms...`);
         await retryDelay(delay);
         delay *= 2;
       } else {

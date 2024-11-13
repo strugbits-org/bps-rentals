@@ -18,7 +18,7 @@ export default async function Page() {
       socialLinks,
       navigationMenu,
       teamsBanner,
-      productsData
+      products
     ] = await Promise.all([
       getFooterData(),
       getContactData(),
@@ -30,10 +30,12 @@ export default async function Page() {
 
     return (
       <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
-        <ProductSets products={productsData} />
+        <ProductSets products={products} />
       </Account>
     );
   } catch (error) {
     logError("Error fetching product management page(Product Sets) data:", error);
   }
 }
+
+export const dynamic = 'force-static';
