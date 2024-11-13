@@ -18,6 +18,7 @@ import { getCatalogIdBySku } from "@/Services/ProductsApis";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
 import { decryptField } from "@/Utils/Encrypt";
+import { revalidatePage } from "@/Services/RevalidateService";
 
 const QuotesHistory = () => {
   const [cookies, setCookie] = useCookies(["cartQuantity"]);
@@ -105,6 +106,7 @@ const QuotesHistory = () => {
 
   const fetchQuotes = async () => {
     try {
+      await revalidatePage("/api/quote/getAllQuotes")
       const data = await getAllQuotes();
       setQuotesData(data);
       setTimeout(markPageLoaded, 200);

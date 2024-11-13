@@ -56,8 +56,6 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
     e.preventDefault();
     if (isButtonDisabled) return;
     setIsButtonDisabled(true);
-
-    console.log("cartItems", cartItems);
     
     const lineItems = cartItems.map((product, index) => {
       const newUrl = productImageURLForQuote(product.image);
