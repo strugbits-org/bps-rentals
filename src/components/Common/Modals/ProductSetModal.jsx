@@ -17,15 +17,17 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
 
   const productsOptions = useMemo(
     () =>
-      options.map(({ subCategoryData = [], product }) => ({
-        value: product._id,
-        product: product._id,
-        slug: product.slug,
-        name: product.name,
-        image: product.mainMedia,
-        label: product.name,
-        categories: subCategoryData.map((cat) => cat["link-copy-of-category-name-2"]),
-      })),
+      options
+        .filter(({ variantData }) => variantData.some((variant) => variant?.variant?._id))
+        .map(({ subCategoryData = [], product }) => ({
+          value: product._id,
+          product: product._id,
+          slug: product.slug,
+          name: product.name,
+          image: product.mainMedia,
+          label: product.name,
+          categories: subCategoryData.map((cat) => cat["link-copy-of-category-name-2"]),
+        })),
     [options]
   );
 
@@ -33,7 +35,7 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
     return options.flatMap(({ product, variantData }) =>
       product._id !== mainProduct?.product
         ? variantData
-          .filter(({ sku }) => sku && !productsSet.some((prod) => prod.variant === sku))
+          .filter(({ sku, variant }) => variant._id && sku && !productsSet.some((prod) => prod.variant === sku))
           .map(({ sku, variant }) => ({
             value: sku,
             productId: product._id,

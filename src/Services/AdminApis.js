@@ -2,8 +2,8 @@
 import logError from "@/Utils/ServerActions";
 import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import getDataFetchFunction from "./FetchFunction";
-import { getAuthToken } from "./GetAuthToken";
 import { decryptField, decryptPriceFields } from "@/Utils/Encrypt";
+import { getAuthToken } from "./GetAuthToken";
 
 const baseUrl = process.env.BASE_URL;
 
