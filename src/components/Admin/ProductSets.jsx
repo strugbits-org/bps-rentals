@@ -6,7 +6,7 @@ import { markPageLoaded } from '@/Utils/AnimationFunctions';
 import { ImageWrapper } from '../Common/ImageWrapper';
 import { PERMISSIONS } from '@/Utils/Schema/permissions';
 import logError from '@/Utils/ServerActions';
-import { getAllSetProducts, getProductForUpdate, updateDataItem } from '@/Services/AdminApis';
+import { getAllSetProducts, updateProductSetData } from '@/Services/AdminApis';
 import { revalidatePage } from '@/Services/RevalidateService';
 import { toast } from 'react-toastify';
 import ProductSetModal from '../Common/Modals/ProductSetModal';
@@ -26,10 +26,12 @@ export const ProductSets = ({ products }) => {
         const prevDataSets = [...dataSets];
         try {
             setDataSets(prev => prev.filter(set => set.product !== id));
-            const productData = await getProductForUpdate(id);
-            productData.data.productSets = [];
             const { slug, categories } = prevDataSets.find(set => set.product === id);
-            await updateDataItem(productData);
+            const payload = {
+                id,
+                productSets: [],
+            };
+            await updateProductSetData(payload);
             await revalidateData(slug, categories);
             if (alert) toast.info("Product set removed successfully");
         } catch (error) {

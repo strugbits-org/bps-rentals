@@ -10,6 +10,7 @@ import QuoteConfirmedModal from "../Common/Modals/QuoteConfirmedModal";
 import Modal from "../Common/Modals/Modal";
 import useUserData from "@/Hooks/useUserData";
 import logError from "@/Utils/ServerActions";
+import { decryptPriceFields } from "@/Utils/Encrypt";
 
 const QuoteRequest = ({ quoteRequestPageContent }) => {
   const { firstName, lastName, email } = useUserData();
@@ -56,6 +57,8 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
     if (isButtonDisabled) return;
     setIsButtonDisabled(true);
 
+    console.log("cartItems", cartItems);
+    
     const lineItems = cartItems.map((product, index) => {
       const newUrl = productImageURLForQuote(product.image);
       const isProductSet = product.catalogReference.options.customTextFields?.isProductSet;
@@ -129,6 +132,19 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
 
   const getCart = async () => {
     const cartData = await getProductsCart();
+    const fieldsToDecrypt = [
+      'amount',
+      'convertedAmount',
+      'formattedAmount',
+      'formattedConvertedAmount'
+    ];
+
+    cartData.forEach((item) => {
+      ['price', 'fullPrice', 'priceBeforeDiscounts'].forEach((field) => {
+        decryptPriceFields(item[field], fieldsToDecrypt);
+      });
+    });
+
     if (!cartData.length) {
       setMessage("Your cart is currently empty. Please add items to continue");
       setModalButtonLabel("Continue Shopping");

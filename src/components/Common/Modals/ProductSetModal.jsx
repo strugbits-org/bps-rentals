@@ -4,7 +4,7 @@ import { ModalWrapper } from "./ModalWrapper/ModalWrapper";
 import { CustomSelect } from "../CustomSelect";
 import { closeModal, openModal } from "@/Utils/AnimationFunctions";
 import { ImageWrapper } from "../ImageWrapper";
-import { getProductForUpdate, updateDataItem } from "@/Services/AdminApis";
+import {updateProductSetData } from "@/Services/AdminApis";
 import { toast } from "react-toastify";
 import logError from "@/Utils/ServerActions";
 import { decryptField } from "@/Utils/Encrypt";
@@ -18,7 +18,7 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
   const productsOptions = useMemo(
     () =>
       options
-        .filter(({ variantData }) => variantData.some((variant) => variant?.variant?._id))
+        .filter(({ variantData, product }) => mainProduct?.product !== product._id && variantData.some((variant) => variant?.variant?._id))
         .map(({ subCategoryData = [], product }) => ({
           value: product._id,
           product: product._id,
@@ -28,7 +28,7 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
           label: product.name,
           categories: subCategoryData.map((cat) => cat["link-copy-of-category-name-2"]),
         })),
-    [options]
+    [options, mainProduct]
   );
 
   const variantsOptions = useMemo(() => {
@@ -93,14 +93,12 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
       const updatedProductSet = { ...mainProduct, productSets: productsSet };
       setMainProduct(updatedProductSet);
 
-      const productData = await getProductForUpdate(mainProduct.product);
-      if (!productData?.data) {
-        throw new Error("Failed to fetch product data.");
-      }
-      productData.data.productSets = productsSet;
+      const payload = {
+        id: mainProduct.product,
+        productSets: productsSet,
+      };
 
-      await updateDataItem(productData);
-
+      await updateProductSetData(payload);
       const isUpdatingMainProduct = activeSet?.product === mainProduct.product;
       if (isUpdatingMainProduct) {
         onUpdate(updatedProductSet);

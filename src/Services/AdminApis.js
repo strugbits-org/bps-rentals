@@ -6,18 +6,25 @@ import { getAuthToken } from "./GetAuthToken";
 
 const baseUrl = process.env.BASE_URL;
 
-export const updateDataItem = async (data) => {
-    try {
-        const { dataCollectionId } = data;
-        const options = {
-            dataCollectionId,
-            dataItem: data,
-        }
-        const client = await createWixClientApiStrategy();
-        const response = await client.items.updateDataItem(data._id, options);
-        return response;
+export const updateProductSetData = async (payload) => {
+    try {        
+        const authToken = await getAuthToken();
+
+        const response = await fetch(`${baseUrl}/api/productSets/update`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: authToken,
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+
+        const data = await response.json();
+        return data;
     } catch (error) {
-        logError("Error updating products:", error);
+        throw new Error(error);
     }
 };
 
@@ -51,8 +58,7 @@ export const getAllProductsForSets = async () => {
                 },
             ],
             limit: "infinite",
-            increasedLimit: 1000,
-            includeVariants: false,
+            increasedLimit: 700
         });
         if (response && response._items) {
             return response._items.filter(x => x.data.product?._id).map((x) => x.data);
@@ -70,7 +76,7 @@ export const getAllSetProducts = async (retries = 3, delay = 1000) => {
 
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
-            const authToken = await getAuthToken();            
+            const authToken = await getAuthToken();
             if (!authToken) return [];
 
             const response = await fetch(`${baseUrl}/api/product/getProductsSets`, {
@@ -97,24 +103,5 @@ export const getAllSetProducts = async (retries = 3, delay = 1000) => {
                 return [];
             }
         }
-    }
-};
-
-export const getProductForUpdate = async (id) => {
-    try {
-        const response = await getDataFetchFunction({
-            dataCollectionId: "locationFilteredVariant",
-            eq: [
-                {
-                    key: "product",
-                    value: id
-                }
-            ],
-            encodePrice: false,
-            includeVariants: false,
-        });
-        if (response) return response._items[0];
-    } catch (error) {
-        logError(`Error fetching product ${id}:`, error);
     }
 };
