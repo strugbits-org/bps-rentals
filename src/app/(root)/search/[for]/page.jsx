@@ -30,6 +30,8 @@ export async function generateMetadata() {
 
 export default async function Page({ params }) {
   const searchTerm = decodeURIComponent(params.for);
+  const searchFor = searchTerm.toLowerCase();
+
   try {
     const [
       homePageContent,
@@ -46,12 +48,12 @@ export default async function Page({ params }) {
       getMarketsData(),
       getAllColorsData(),
       fetchBestSellers(),
-      getAllProducts({ searchTerm }),
+      getAllProducts({ searchTerm: searchFor }),
     ]);
 
     return (
       <SearchPage
-        searchFor={searchTerm}
+        searchFor={searchFor}
         pageContent={homePageContent}
         bannersData={bannersData}
         locations={locations}

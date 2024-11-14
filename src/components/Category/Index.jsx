@@ -45,7 +45,7 @@ const CategoryPage = ({
   const [productFilteredVariantData, setProductFilteredVariantData] = useState();
 
   const [categoriesDropdown, setCategoriesDropdown] = useState(false);
-
+  const [productSetsFilter, setproductSetsFilter] = useState(false);
 
   const handleFilterChange = async ({ categories = [], colors = [] }) => {
     try {
@@ -68,6 +68,7 @@ const CategoryPage = ({
 
 
       const filteredProductsList = productsData.filter((product) => {
+        if (productSetsFilter && (!product?.productSets || product?.productSets?.length === 0)) return false;
         const hasCategory =
           selectedCategories.length > 0
             ? product.subCategoryData.some((subCat) =>
@@ -176,6 +177,10 @@ const CategoryPage = ({
     );
     if (enableFilterTrigger) handleFilterChange({});
   }, [cookies.location]);
+
+  useEffect(() => {
+    if (enableFilterTrigger) handleFilterChange({});
+  }, [productSetsFilter]);
 
   useEffect(() => {
     setShuffledBanners(shuffleArray([...bannersData]));
@@ -354,6 +359,15 @@ const CategoryPage = ({
                           />
                         )}
                         <FilterSection
+                          title="Products Sets"
+                          styleClass="container-list order-mobile-3"
+                          items={[{
+                            label: "Show Products Sets",
+                            checked: productSetsFilter
+                          }]}
+                          handleChange={() => { setproductSetsFilter(prev => !prev) }}
+                        />
+                        <FilterSection
                           title="Location"
                           styleClass="container-list order-mobile-2"
                           items={filterLocations}
@@ -412,7 +426,7 @@ const CategoryPage = ({
                       className="w-full fs--40 text-center split-words mt-90"
                       data-aos="d:loop"
                     >
-                      No Products Found
+                      No {productSetsFilter ? "Products Sets" : "Products"} Found
                     </h6>
                   )}
 
