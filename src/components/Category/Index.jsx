@@ -95,7 +95,14 @@ const CategoryPage = ({
           return hasLocation && hasColor && hasCategory;
         }
       });
-      setFilteredProducts(filteredProductsList);
+
+      const sortedProducts = [...filteredProductsList].sort((a, b) => {
+        const orderA = a?.orderNumber && a.orderNumber[slug] !== undefined ? a.orderNumber[slug] : 0;
+        const orderB = b?.orderNumber && b.orderNumber[slug] !== undefined ? b.orderNumber[slug] : 0;
+        return orderA - orderB;
+      });
+      
+      setFilteredProducts(sortedProducts);
       updatedWatched(true);
     } catch (error) {
       logError("Error fetching products:", error);
@@ -128,9 +135,7 @@ const CategoryPage = ({
       "00000000-000000-000000-000000000001";
 
     // set category filters
-    if (
-      selectedCategoryData &&
-      selectedCategoryData.level2Collections !== undefined
+    if (selectedCategoryData && selectedCategoryData.level2Collections !== undefined
     ) {
       const categories = selectedCategoryData.level2Collections
         .filter((x) => x._id)
@@ -158,6 +163,9 @@ const CategoryPage = ({
       const orderB = b?.orderNumber && b.orderNumber[slug] !== undefined ? b.orderNumber[slug] : 0;
       return orderA - orderB;
     });
+
+    console.log("sortedProducts", sortedProducts);
+    
     setFilteredProducts(sortedProducts);
 
     setTimeout(markPageLoaded, 500);

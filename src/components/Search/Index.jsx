@@ -75,7 +75,13 @@ const SearchPage = ({
                     return hasLocation && hasColor;
                 }
             });
-            setFilteredProducts(filteredProductsList);
+
+            const sortedProducts = [...filteredProductsList].sort((a, b) => {
+                const orderA = a?.orderNumber && a.orderNumber["all"] !== undefined ? a.orderNumber["all"] : 0;
+                const orderB = b?.orderNumber && b.orderNumber["all"] !== undefined ? b.orderNumber["all"] : 0;
+                return orderA - orderB;
+            });
+            setFilteredProducts(sortedProducts);
             updatedWatched(true);
         } catch (error) {
             logError("Error fetching products:", error);
