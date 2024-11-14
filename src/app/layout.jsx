@@ -42,6 +42,8 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import RevalidateButton from "@/components/Common/RevalidateButton";
 import CustomBodyScripts from "@/Services/CustomBodyScripts";
 import { ToastContainer } from 'react-toastify';
+import { getChatConfiguration } from "@/Services/Index";
+import Chat from "@/components/Common/Chat";
 
 export const metadata = {
   title: "Rent Event Furnishings - Blueprint Studios",
@@ -49,6 +51,9 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
+
+  const BASE_URL = process.env.BASE_URL;
+
   const [
     filterLocations,
     loginModalContent,
@@ -69,6 +74,7 @@ export default async function RootLayout({ children }) {
     instaFeed,
     searchSectionDetails,
     searchPagesData,
+    chatConfig
   ] = await Promise.all([
     getFilterLocations(),
     getLoginModalContent(),
@@ -89,6 +95,7 @@ export default async function RootLayout({ children }) {
     fetchInstaFeed(),
     getSearchSectionDetails(),
     fetchSearchPages(),
+    getChatConfiguration(BASE_URL)
   ]);
 
   return (
@@ -123,6 +130,7 @@ export default async function RootLayout({ children }) {
           />
           <CookiesConsent />
           <RevalidateButton />
+          <Chat config={chatConfig} />
           <SpeedInsights />
           <Wrapper>
             <main className={"min-h-100"}>
