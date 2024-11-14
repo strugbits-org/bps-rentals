@@ -73,8 +73,9 @@ export const ProductSets = ({ products }) => {
 
     const revalidateData = (slug, categories = []) => {
         return new Promise((resolve) => {
-            categories.forEach(slug => { revalidatePage(slug) });
             revalidatePage(`/product/${slug}`);
+            revalidatePage(`/search`);
+            categories.forEach(slug => { revalidatePage(slug) });
             setTimeout(() => {
                 resolve();
             }, 400);
