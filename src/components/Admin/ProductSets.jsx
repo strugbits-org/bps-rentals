@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import ProductSetModal from '../Common/Modals/ProductSetModal';
 import AnimateLink from '../Common/AnimateLink';
 import { decryptField } from '@/Utils/Encrypt';
+import ModalDialogue from '../Common/Modals/ModalDialogue';
 
 export const ProductSets = ({ products }) => {
 
@@ -20,6 +21,7 @@ export const ProductSets = ({ products }) => {
     const [toggleSetModal, setToggleSetModal] = useState(false);
     const [activeSet, setActiveSet] = useState();
     const { permissions } = useUserData();
+    const [removeSetId, setRemoveSetId] = useState();
     const ADMIN_PANEL_ACCESS = permissions && permissions.includes(PERMISSIONS.ADMIN_PANEL_ACCESS);
 
     const removeSet = async (id, alert = true) => {
@@ -97,6 +99,12 @@ export const ProductSets = ({ products }) => {
         setDataSets(productSets);
     }
 
+    const handleConfirmation = (success = false) => {
+        if (success) removeSet(removeSetId);
+        setRemoveSetId(null);
+        document.body.setAttribute("data-form-cart-state", "");
+    }
+
     useEffect(() => {
         fetchSets();
     }, [])
@@ -150,7 +158,7 @@ export const ProductSets = ({ products }) => {
                                                         </button>
                                                     </div>
                                                     <button
-                                                        onClick={() => removeSet(product)}
+                                                        onClick={() => setRemoveSetId(product)}
                                                         type="button"
                                                         className="btn-cancel"
                                                     >
@@ -193,6 +201,15 @@ export const ProductSets = ({ products }) => {
                     options={options}
                     onUpdate={handleOnUpdate}
                     onSave={handleOnSave}
+                />
+            )}
+
+            {removeSetId && (
+                <ModalDialogue
+                    message="Are you sure you want to delete this set?"
+                    buttonLabel="Delete"
+                    isDeleteConfirmation={true}
+                    handleConfirmation={handleConfirmation}
                 />
             )}
 
