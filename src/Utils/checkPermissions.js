@@ -6,6 +6,7 @@ export const extractPermissions = (badgeIds) => {
     if (!process.env.ADMIN_BADGE_ID || 
         !process.env.FIREPROOF_CERTIFICATES_BADGE_ID || 
         !process.env.SHOW_PRICE_BADGE_ID || 
+        !process.env.MANAGE_PRODUCTS_SET_BADGE_ID || 
         !process.env.SHOW_DOCUMENTS_BADGE_ID) {
         throw new Error("System Error: One or more required badge environment variables are missing.");
     }
@@ -14,6 +15,7 @@ export const extractPermissions = (badgeIds) => {
         [process.env.ADMIN_BADGE_ID]: PERMISSIONS.ADMIN_PANEL_ACCESS,
         [process.env.FIREPROOF_CERTIFICATES_BADGE_ID]: PERMISSIONS.SHOW_FIREPROOF_CERTIFICATES,
         [process.env.SHOW_PRICE_BADGE_ID]: PERMISSIONS.SHOW_PRICES,
+        [process.env.MANAGE_PRODUCTS_SET_BADGE_ID]: PERMISSIONS.MANAGE_PRODUCTS_SET,
         [process.env.SHOW_DOCUMENTS_BADGE_ID]: PERMISSIONS.SHOW_DOCUMENTS,
     };
 
