@@ -163,8 +163,6 @@ const CategoryPage = ({
       const orderB = b?.orderNumber && b.orderNumber[slug] !== undefined ? b.orderNumber[slug] : 0;
       return orderA - orderB;
     });
-
-    console.log("sortedProducts", sortedProducts);
     
     setFilteredProducts(sortedProducts);
 

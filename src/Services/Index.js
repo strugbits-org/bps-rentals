@@ -7,7 +7,7 @@ const BASE_URL = process.env.BASE_URL;
 
 
 export const postForm = async (name, payload) => {
-  try {    
+  try {
     const response = await fetch(`${BASE_URL}/api/post-form/${name}`, {
       method: 'POST',
       headers: {
@@ -70,5 +70,30 @@ export const getQuoteDetailPageContent = async () => {
     }
   } catch (error) {
     logError("Error fetching RentalsQuotesDetailPage data:", error);
+  }
+};
+
+export const getChatConfiguration = async (origin) => {
+  try {
+    const response = await getDataFetchFunction({
+      "dataCollectionId": "ChatbotConfiguration",
+      "eq": [
+        {
+          "key": "origin",
+          "value": origin,
+        },
+        {
+          "key": "enable",
+          "value": true,
+        }
+      ],
+    });
+    if (!response._items || !response._items[0]) {
+      throw new Error("No data found for ChatbotConfiguration");
+    }
+    return response._items[0].data;
+  } catch (error) {
+    logError("Error fetching RentalsQuotesDetailPage data:", error);
+    return {};
   }
 };

@@ -13,6 +13,7 @@ export const ExternalTriggers = () => {
             <span className="triggerSplitWordsAnimation"></span>
             <span className="parallaxTrigger"></span>
             <span className="matchSwiperSlider"></span>
+            <span className="activateChat"></span>
         </div>
     )
 }

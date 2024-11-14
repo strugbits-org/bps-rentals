@@ -96,6 +96,16 @@ export const triggerParallax = () => {
   }
 }
 
+export const enableChat = () => {
+  if (typeof window !== 'undefined') {
+    setTimeout(() => {
+      const customEvent = new Event("enableChat");
+      const chat = document.querySelector(".activateChat");
+      if (chat) chat.dispatchEvent(customEvent);
+    }, 200);
+  }
+};
+
 export const openModal = (name) => {
   if (typeof window !== "undefined") {
     const modal = document.querySelector(`modal-group[name=${name}]`);

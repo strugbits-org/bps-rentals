@@ -2253,3 +2253,7 @@ button.btn-border-blue.red {
 .feedback-quote-request-confirmed.dialogue button {
   min-width: 20rem;
 }
+
+.chat {
+  height: 60rem;
+}
