@@ -38,40 +38,40 @@ const links = [
     icon: mangeProductIcon,
     href: "https://illumeet.editorx.io/rentalx/account/manage-product",
     target: "_blank",
-    adminOnly: true,
+    adminAccess: "ADMIN_PANEL_ACCESS",
   },
   {
     name: "Manage Product Sets",
     icon: productSetIcon,
     href: "/admin/manage-product-sets",
-    adminOnly: true,
+    adminAccess: "MANAGE_PRODUCTS_SET",
   },
   {
     name: "Manage Blogs",
     icon: mangeBlogIcon,
     href: "https://illumeet.editorx.io/rentalx/account/reference-blogs",
     target: "_blank",
-    adminOnly: true,
+    adminAccess: "ADMIN_PANEL_ACCESS",
   },
   {
     name: "Manage Projects",
     icon: mangeProjectsIcon,
     href: "https://illumeet.editorx.io/rentalx/account/reference-projects",
     target: "_blank",
-    adminOnly: true,
+    adminAccess: "ADMIN_PANEL_ACCESS",
   },
   {
     name: "Manage Cache",
     icon: mangeCacheIcon,
     href: "https://illumeet.editorx.io/rentalx/account/manage-cache",
     target: "_blank",
-    adminOnly: true,
+    adminAccess: "ADMIN_PANEL_ACCESS",
   },
   {
     name: "Product Sorting by Category",
     icon: mangeSortIcon,
     href: "/admin/manage-products-sorting",
-    adminOnly: true,
+    adminAccess: "ADMIN_PANEL_ACCESS",
   }
 ];
 
@@ -87,7 +87,6 @@ const Account = ({ children, footerData, banner }) => {
   const pathname = usePathname();
   const router = useRouter();
   const { permissions } = useUserData();
-  const ADMIN_PANEL_ACCESS = permissions && permissions.includes(PERMISSIONS.ADMIN_PANEL_ACCESS);  
 
   const [cookies, setCookie, removeCookie] = useCookies([
     "authToken",
@@ -130,8 +129,9 @@ const Account = ({ children, footerData, banner }) => {
           </h2>
           <ul className="list-menu-my-account mt-lg-65 mt-tablet-30 min-h-45-vh">
             {links.map((data, index) => {
-              const { name, href, icon, adminOnly, target } = data;
-              if (!ADMIN_PANEL_ACCESS && adminOnly) return;
+              const { name, href, icon, adminAccess, target } = data;
+              const ADMIN_ACCESS = permissions && permissions.includes(PERMISSIONS[adminAccess]);
+              if (!ADMIN_ACCESS && adminAccess) return;
               return (
                 <li
                   key={index}
@@ -139,7 +139,7 @@ const Account = ({ children, footerData, banner }) => {
                   className="list-item"
                 >
                   <AnimateLink key={index} to={href} target={target} className="link-account">
-                    {!adminOnly ? (
+                    {!adminAccess ? (
                       <i className={icon}></i>
                     ) : (
                       <div className="svg-custom">

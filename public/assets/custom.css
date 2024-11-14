@@ -2236,3 +2236,20 @@ h2.product-name.text-sm-custom {
 .list-item-cart:not(:last-child) {
   margin-bottom: 2.5rem;
 }
+
+.feedback-quote-request-confirmed.dialogue .content .container-btn {
+  flex-direction: row;
+  gap: 1rem;
+}
+
+button.btn-border-blue.red {
+  color: var(--red-1);
+}
+
+.btn-border-blue.red:after {
+  border-color: var(--red-1);
+}
+
+.feedback-quote-request-confirmed.dialogue button {
+  min-width: 20rem;
+}

@@ -40,7 +40,7 @@ export const getAllQuotes = async () => {
   try {
     const authToken = await getAuthToken();
     const response = await fetch(`${baseUrl}/api/quote/getAllQuotes`, {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         authorization: authToken,

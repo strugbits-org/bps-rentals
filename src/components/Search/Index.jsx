@@ -39,8 +39,9 @@ const SearchPage = ({
     const [productSnapshots, setProductSnapshots] = useState();
     const [selectedVariantData, setSelectedVariantData] = useState(null);
     const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-    const [productFilteredVariantData, setProductFilteredVariantData] =
-        useState();
+    const [productFilteredVariantData, setProductFilteredVariantData] = useState();
+    const [productSetsFilter, setproductSetsFilter] = useState(false);
+
 
     const handleFilterChange = async ({ colors = [] }) => {
         try {
@@ -52,6 +53,8 @@ const SearchPage = ({
             const selectedLocation = cookies.location;
 
             const filteredProductsList = productsData.filter((product) => {
+                if (productSetsFilter && (!product?.productSets || product?.productSets?.length === 0)) return false;
+
                 let hasVariants, hasColor, hasLocation;
                 if (selectedColors.length !== 0) {
                     const variantFilter = selectedColors.map(x => `${cookies.location}-${x}`);
@@ -95,7 +98,6 @@ const SearchPage = ({
 
     const setInitialValues = async () => {
         const categoryId = "00000000-000000-000000-000000000001";
-
         // set filter colors
         if (colorsData) {
             const filteredColor = colorsData.find((x) => x.category === categoryId);
@@ -109,11 +111,11 @@ const SearchPage = ({
 
         const products = productsData.filter((product) => product.location.some((x) => x === cookies.location));
         setFilteredProducts(products);
+        setTimeout(markPageLoaded, 500);
 
         const savedProducts = await getSavedProductData();
         setSavedProductsData(savedProducts);
 
-        setTimeout(markPageLoaded, 500);
         setTimeout(setEnableFilterTrigger(true), 500);
     };
     useEffect(() => {
@@ -126,6 +128,10 @@ const SearchPage = ({
         );
         if (enableFilterTrigger) handleFilterChange({});
     }, [cookies.location]);
+
+    useEffect(() => {
+        if (enableFilterTrigger) handleFilterChange({});
+    }, [productSetsFilter]);
 
     useEffect(() => {
         setShuffledBanners(shuffleArray([...bannersData]));
@@ -255,6 +261,15 @@ const SearchPage = ({
                                                 data-aos
                                             >
                                                 <FilterSection
+                                                    title="Products Sets"
+                                                    styleClass="container-list order-mobile-3"
+                                                    items={[{
+                                                        label: "Show Products Sets",
+                                                        checked: productSetsFilter
+                                                    }]}
+                                                    handleChange={() => { setproductSetsFilter(prev => !prev) }}
+                                                />
+                                                <FilterSection
                                                     title="Location"
                                                     styleClass="container-list order-mobile-2"
                                                     items={filterLocations}
@@ -312,7 +327,7 @@ const SearchPage = ({
                                         className="fs--40 text-center split-words mt-90"
                                         data-aos="d:loop"
                                     >
-                                        No Products Found
+                                        No {productSetsFilter ? "Products Sets" : "Products"} Found
                                     </h6>
                                 )}
                                 {pageLimit < filteredProducts.length && (

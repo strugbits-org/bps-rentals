@@ -5,7 +5,7 @@ import logError from "@/Utils/ServerActions";
 import { encryptField, encryptPriceFields } from "@/Utils/Encrypt";
 import getDataFetchFunction from "@/Services/FetchFunction";
 
-export const GET = async (req) => {
+export const POST = async (req) => {
   try {
     const authenticatedUserData = await handleAuthentication(req);
     if (!authenticatedUserData) {
