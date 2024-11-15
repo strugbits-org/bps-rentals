@@ -11,6 +11,7 @@ import Modal from "../Common/Modals/Modal";
 import useUserData from "@/Hooks/useUserData";
 import logError from "@/Utils/ServerActions";
 import { decryptPriceFields } from "@/Utils/Encrypt";
+import { useCookies } from "react-cookie";
 
 const QuoteRequest = ({ quoteRequestPageContent }) => {
   const { firstName, lastName, email } = useUserData();
@@ -19,6 +20,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
   const [message, setMessage] = useState("");
   const [modalButtonLabel, setModalButtonLabel] = useState("Try Again!");
   const [modalButtonRedirection, setModalButtonRedirection] = useState();
+  const [_cookies, setCookie] = useCookies(["cartQuantity"]);
   const [modalState, setModalState] = useState({
     success: false,
     error: false,
@@ -56,7 +58,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
     e.preventDefault();
     if (isButtonDisabled) return;
     setIsButtonDisabled(true);
-    
+
     const lineItems = cartItems.map((product, index) => {
       const newUrl = productImageURLForQuote(product.image);
       const isProductSet = product.catalogReference.options.customTextFields?.isProductSet;
@@ -97,6 +99,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
         setMessage(response.message);
         return;
       }
+      setCookie("cartQuantity", 0, { path: "/" });
       setModalState({ success: true, error: false });
 
       setFormData({

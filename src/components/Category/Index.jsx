@@ -101,9 +101,9 @@ const CategoryPage = ({
         const orderB = b?.orderNumber && b.orderNumber[slug] !== undefined ? b.orderNumber[slug] : 0;
         return orderA - orderB;
       });
-      
+
       setFilteredProducts(sortedProducts);
-      updatedWatched(true);
+      updatedWatched(true, true);
     } catch (error) {
       logError("Error fetching products:", error);
     }
@@ -163,7 +163,7 @@ const CategoryPage = ({
       const orderB = b?.orderNumber && b.orderNumber[slug] !== undefined ? b.orderNumber[slug] : 0;
       return orderA - orderB;
     });
-    
+
     setFilteredProducts(sortedProducts);
 
     setTimeout(markPageLoaded, 500);
@@ -432,7 +432,7 @@ const CategoryPage = ({
                       className="w-full fs--40 text-center split-words mt-90"
                       data-aos="d:loop"
                     >
-                      No {productSetsFilter ? "Products Sets" : "Products"} Found
+                      No Products Found
                     </h6>
                   )}
 

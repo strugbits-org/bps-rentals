@@ -82,7 +82,7 @@ const SearchPage = ({
                 return orderA - orderB;
             });
             setFilteredProducts(sortedProducts);
-            updatedWatched(true);
+            updatedWatched(true, true);
         } catch (error) {
             logError("Error fetching products:", error);
         }
@@ -115,8 +115,13 @@ const SearchPage = ({
             }
         }
 
-        const products = productsData.filter((product) => product.location.some((x) => x === cookies.location));
-        setFilteredProducts(products);
+        const sortedProducts = [...productsData].filter((product) => product.location.some((x) => x === cookies.location)).sort((a, b) => {
+            const orderA = a?.orderNumber && a.orderNumber["all"] !== undefined ? a.orderNumber["all"] : 0;
+            const orderB = b?.orderNumber && b.orderNumber["all"] !== undefined ? b.orderNumber["all"] : 0;
+            return orderA - orderB;
+        });
+
+        setFilteredProducts(sortedProducts);
         setTimeout(markPageLoaded, 500);
 
         const savedProducts = await getSavedProductData();
@@ -333,7 +338,7 @@ const SearchPage = ({
                                         className="fs--40 text-center split-words mt-90"
                                         data-aos="d:loop"
                                     >
-                                        No {productSetsFilter ? "Products Sets" : "Products"} Found
+                                        No Products Found
                                     </h6>
                                 )}
                                 {pageLimit < filteredProducts.length && (

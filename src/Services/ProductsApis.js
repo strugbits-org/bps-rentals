@@ -222,6 +222,7 @@ export const searchProducts = async (term, location) => {
           values: location,
         }
       ],
+      includeVariants: false,
       contains: ["search", term],
       limit: 3,
     });
