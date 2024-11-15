@@ -7,7 +7,7 @@ import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
 export const updateProductSetData = async (payload) => {
-    try {        
+    try {
         const authToken = await getAuthToken();
 
         const response = await fetch(`${baseUrl}/api/productSets/update`, {
@@ -30,15 +30,23 @@ export const updateProductSetData = async (payload) => {
 
 export const bulkUpdateCollection = async (dataCollectionId, items) => {
     try {
-        const options = {
-            dataCollectionId,
-            dataItems: items,
-        }
-        const client = await createWixClientApiStrategy();
-        const response = await client.items.bulkUpdateDataItems(options);
-        return response;
+        const authToken = await getAuthToken();
+
+        const response = await fetch(`${baseUrl}/api/product/bulkUpdate`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: authToken,
+            },
+            body: JSON.stringify({ dataCollectionId, items }),
+        });
+
+        if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+
+        const data = await response.json();
+        return data;
     } catch (error) {
-        logError("Error updating sorted items/products:", error);
+        throw new Error(error);
     }
 };
 

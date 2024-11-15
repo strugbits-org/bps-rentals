@@ -20,7 +20,6 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
         },
       ],
       includeVariants: adminPage ? false : true,
-      encodePrice: adminPage ? false : true,
       limit: "infinite",
       increasedLimit: 700,
     };
@@ -79,7 +78,6 @@ export const getProductsByCategory = async (categories = [], adminPage = false) 
         }
       ],
       includeVariants: adminPage ? false : true,
-      encodePrice: adminPage ? false : true,
       limit: "infinite",
       increasedLimit: 700,
     };
