@@ -6,6 +6,7 @@ import { PERMISSIONS } from "@/Utils/Schema/permissions";
 import logError from "@/Utils/ServerActions";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDetectClickOutside } from "react-detect-click-outside";
 
 const RevalidateButton = () => {
     const path = usePathname();
@@ -21,6 +22,14 @@ const RevalidateButton = () => {
         failedRoutes: [],
         reloading: false,
     });
+
+    const buttonRef = useDetectClickOutside({
+        onTriggered: () => {
+            const button = buttonRef.current;
+            if (button) button.classList.remove("active");
+        }
+    });
+
     useEffect(() => {
         if (!ADMIN_PANEL_ACCESS) return;
         enableRevalidate();
@@ -68,7 +77,7 @@ const RevalidateButton = () => {
                 window.location.reload();
             }, 2000);
         } catch (error) {
-            logError("Something went wrong during revalidation: ",error);
+            logError("Something went wrong during revalidation: ", error);
             setRevalidationState((prevState) => ({
                 ...prevState,
                 [setStateKey]: false,
@@ -80,7 +89,7 @@ const RevalidateButton = () => {
     const { isRevalidatingPage, isRevalidatingSite, pageRevalidated, siteRevalidated, failedRoutes, errorMessage, reloading } = revalidationState;
 
     return (
-        <div className="revalidate-button" data-cursor-style="off">
+        <div ref={buttonRef} className="revalidate-button" data-cursor-style="off">
             <button className="btn-revalidate-button">
                 <div className="btn-wrapper">
                     <span>INVALIDATE</span>

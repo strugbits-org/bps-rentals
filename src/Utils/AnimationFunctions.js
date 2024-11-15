@@ -70,10 +70,9 @@ export const resetSlideIndex = () => {
   }
 };
 
-export const updatedWatched = (refreshScroll = false) => {
+export const updatedWatched = (refreshScroll = false, disableWordsAnimation = false) => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
-
       const customEvent = new Event("customUpdateWatch");
       const elem = document.querySelector(".updateWatched");
       if (elem) elem.dispatchEvent(customEvent);
@@ -82,7 +81,7 @@ export const updatedWatched = (refreshScroll = false) => {
         const scrollRefreshEvent = new Event("refreshScroll");
         document.querySelector(".scrollRefresh").dispatchEvent(scrollRefreshEvent);
         triggerParallax();
-        splitWordsAnimation();
+        if(!disableWordsAnimation) splitWordsAnimation();
       }
     }, 200);
   }

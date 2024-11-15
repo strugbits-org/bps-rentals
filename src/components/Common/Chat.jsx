@@ -6,6 +6,7 @@ import image3 from "@/assets/svg/btn-chat-3.svg"
 import { useEffect, useState } from 'react';
 import parse from 'html-react-parser';
 import { enableChat } from '@/Utils/AnimationFunctions'
+import { useDetectClickOutside } from 'react-detect-click-outside'
 
 const Chat = ({ config }) => {
   const [chatConfig, setChatConfig] = useState();
@@ -17,10 +18,17 @@ const Chat = ({ config }) => {
     }
   }, []);
 
+  const chatRef = useDetectClickOutside({
+    onTriggered: () => {
+      const chat = chatRef.current;
+      if (chat) chat.classList.remove("active");
+    }
+  });
+
   if (!chatConfig?.widget) return;
 
   return (
-    <div className="chat" data-cursor-style="off">
+    <div ref={chatRef} className="chat" data-cursor-style="off">
       <button className="btn-chat">
         <div className="btn-wrapper">
           <span>Hello?</span>
