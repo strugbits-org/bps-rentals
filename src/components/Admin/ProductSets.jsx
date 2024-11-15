@@ -22,7 +22,7 @@ export const ProductSets = ({ products }) => {
     const [activeSet, setActiveSet] = useState();
     const { permissions } = useUserData();
     const [removeSetId, setRemoveSetId] = useState();
-    const ADMIN_PANEL_ACCESS = permissions && permissions.includes(PERMISSIONS.ADMIN_PANEL_ACCESS);
+    const ADMIN_PANEL_ACCESS = permissions && permissions.includes(PERMISSIONS.MANAGE_PRODUCTS_SET);
 
     const removeSet = async (id, alert = true) => {
         const prevDataSets = [...dataSets];
