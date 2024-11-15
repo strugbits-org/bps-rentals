@@ -1,4 +1,4 @@
-import { decryptField } from "./Encrypt";
+import { decryptField, decryptPriceFields, encryptField } from "./Encrypt";
 import logError from "./ServerActions";
 
 export const parseArrayFromParams = (queryParams) => {
@@ -216,3 +216,33 @@ export const chunkArray = (array, chunkSize) => {
   }
   return chunks;
 };
+
+export const decryptProductPrices = (data) => {
+  const fieldsToDecrypt = [
+    'formattedDiscountedPrice',
+    'pricePerUnitData',
+    'pricePerUnit',
+    'formattedPricePerUnit',
+    'formattedPrice',
+    'price',
+    'discountedPrice',
+  ];
+  if (data.length > 0) {
+    data = data.map(val => {
+      if (val.data?.productSets?.length) {
+        val.data.productSets = val.data.productSets.map(set => {
+          set.price = encryptField(set.price);
+          return set;
+        });
+      }
+      if (val.data.variantData) {
+        val.data.variantData = val.data.variantData.map(val2 => {
+          decryptPriceFields(val2.variant, fieldsToDecrypt);
+          return val2;
+        });
+      }
+      decryptPriceFields(val.data.product, fieldsToDecrypt);
+      return val;
+    });
+  }
+}
