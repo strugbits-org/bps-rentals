@@ -42,7 +42,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import RevalidateButton from "@/components/Common/RevalidateButton";
 import CustomBodyScripts from "@/Services/CustomBodyScripts";
 import { ToastContainer } from 'react-toastify';
-import { getChatConfiguration } from "@/Services/Index";
+import { getChatConfiguration, getChatTriggerEvents } from "@/Services/Index";
 import Chat from "@/components/Common/Chat";
 
 export const metadata = {
@@ -74,7 +74,8 @@ export default async function RootLayout({ children }) {
     instaFeed,
     searchSectionDetails,
     searchPagesData,
-    chatConfig
+    chatConfig,
+    chatTriggerEvents
   ] = await Promise.all([
     getFilterLocations(),
     getLoginModalContent(),
@@ -95,7 +96,8 @@ export default async function RootLayout({ children }) {
     fetchInstaFeed(),
     getSearchSectionDetails(),
     fetchSearchPages(),
-    getChatConfiguration(BASE_URL)
+    getChatConfiguration(BASE_URL),
+    getChatTriggerEvents()
   ]);
 
   return (
@@ -130,7 +132,7 @@ export default async function RootLayout({ children }) {
           />
           <CookiesConsent />
           <RevalidateButton />
-          <Chat config={chatConfig} />
+          <Chat config={chatConfig} triggerEvents={chatTriggerEvents} />
           <SpeedInsights />
           <Wrapper>
             <main className={"min-h-100"}>

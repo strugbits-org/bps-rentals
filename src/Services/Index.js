@@ -97,3 +97,16 @@ export const getChatConfiguration = async (origin) => {
     return {};
   }
 };
+
+export const getChatTriggerEvents = async () => {
+  try {
+    const response = await getDataFetchFunction({ "dataCollectionId": "ChatWidgetTriggerRentals" });
+        
+    if (!response._items || !response._items) {
+      throw new Error("No data found for ChatWidgetTrigger");
+    }
+    return response._items.map((x) => x.data);
+  } catch (error) {
+    logError("Error getting chat trigger events", error);
+  }
+};

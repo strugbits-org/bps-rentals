@@ -19,6 +19,13 @@ export const CustomButton = ({ data, customClasses = "", attributes, target, sho
     const openMarketModal = () => {
         if (data.action === "modal-market") {
             document.querySelector("[data-set-submenu='market']")?.click();
+        } else if (data.action === "chat-box") {
+            const chat = document.querySelector(".chat");
+            if (chat) {
+                setTimeout(() => {
+                    chat.classList.add("active");
+                }, 200);
+            }
         }
     }
     return actionType === "modal" ? (
