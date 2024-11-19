@@ -21,7 +21,7 @@ export const CustomButton = ({ data, customClasses = "", attributes, target, sho
             document.querySelector("[data-set-submenu='market']")?.click();
         } else if (data.action === "chat-box") {
             const chat = document.querySelector(".chat");
-            if (chat) {
+            if (chat && !chat.classList.contains("active")) {
                 setTimeout(() => {
                     chat.classList.add("active");
                 }, 200);
