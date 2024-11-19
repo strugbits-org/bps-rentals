@@ -1,6 +1,5 @@
 "use server";
 import logError from "@/Utils/ServerActions";
-import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 

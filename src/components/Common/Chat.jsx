@@ -109,7 +109,7 @@ const Chat = ({ config, triggerEvents }) => {
       clearTimeout(loadTimeoutRef.current);
       clearTimeout(inactivityTimeoutRef.current);
     };
-  }, [path, triggerEvents, activateChat, setupInactivityTrigger, setupScrollTrigger]);
+  }, []);
 
   if (!chatConfig?.widget) return;
 
