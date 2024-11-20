@@ -7,7 +7,7 @@ import {
 } from "@/Services/ProductsApis";
 import { useCookies } from "react-cookie";
 import CartModal from "../Common/Modals/CartModal";
-import { compareArray, shuffleArray } from "@/Utils/Utils";
+import { compareArray, scoreBasedBanners } from "@/Utils/Utils";
 import ProductCard from "../Category/ProductCard";
 import { Banner } from "../Category/Banner";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
@@ -23,6 +23,7 @@ const SearchPage = ({
     productsData,
     bestSeller
 }) => {
+    let bannerIndex = -1;
     const pageSize = 18;
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [pageLimit, setPageLimit] = useState(pageSize);
@@ -32,7 +33,7 @@ const SearchPage = ({
     const [filterLocations, setFilterLocations] = useState([]);
     const [enableFilterTrigger, setEnableFilterTrigger] = useState(false);
 
-    const [shuffledBanners, setShuffledBanners] = useState([]);
+    const [sortedBanners, setSortedBanners] = useState([]);
 
     const [savedProductsData, setSavedProductsData] = useState([]);
     const [selectedProductData, setSelectedProductData] = useState(null);
@@ -145,7 +146,8 @@ const SearchPage = ({
     }, [productSetsFilter]);
 
     useEffect(() => {
-        setShuffledBanners(shuffleArray([...bannersData]));
+        const banners = scoreBasedBanners({ bannersData, random: 3 });
+        setSortedBanners(banners);
     }, [bannersData]);
 
     useEffect(() => {
@@ -304,6 +306,9 @@ const SearchPage = ({
                             <div className="product-list-wrapper container-wrapper-list">
                                 <ul className="product-list grid-lg-33 grid-tablet-50 grid-list">
                                     {filteredProducts.slice(0, pageLimit).map((data, index) => {
+                                        const shouldInsertBanner = (index + 1) % 6 === 0 && sortedBanners.length > 0;
+                                        if (shouldInsertBanner) bannerIndex = (bannerIndex + 1) % sortedBanners.length;
+
                                         return (
                                             <React.Fragment key={index}>
                                                 <li
@@ -325,9 +330,7 @@ const SearchPage = ({
                                                         setSavedProductsData={setSavedProductsData}
                                                     />
                                                 </li>
-                                                {(index + 1) % 6 === 0 && (
-                                                    <Banner key={`banner-${index}`} data={shuffledBanners[Math.floor((index + 1) / 6) % shuffledBanners.length]} />
-                                                )}
+                                                {shouldInsertBanner && <Banner data={sortedBanners[bannerIndex]} />}
                                             </React.Fragment>
                                         );
                                     })}

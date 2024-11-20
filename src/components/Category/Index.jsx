@@ -10,7 +10,7 @@ import {
 import { useCookies } from "react-cookie";
 import CartModal from "../Common/Modals/CartModal";
 import { Banner } from "./Banner";
-import { compareArray, extractCategoryIds, shuffleArray } from "@/Utils/Utils";
+import { compareArray, extractCategoryIds, scoreBasedBanners } from "@/Utils/Utils";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
 import logError from "@/Utils/ServerActions";
 
@@ -26,6 +26,8 @@ const CategoryPage = ({
   productsData,
 }) => {
   const pageSize = 18;
+  let bannerIndex = -1;
+
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [pageLimit, setPageLimit] = useState(pageSize);
   const [cookies, setCookie] = useCookies(["location"]);
@@ -35,7 +37,7 @@ const CategoryPage = ({
   const [filterLocations, setFilterLocations] = useState([]);
   const [enableFilterTrigger, setEnableFilterTrigger] = useState(false);
 
-  const [shuffledBanners, setShuffledBanners] = useState([]);
+  const [sortedBanners, setSortedBanners] = useState([]);
 
   const [savedProductsData, setSavedProductsData] = useState([]);
   const [selectedProductData, setSelectedProductData] = useState(null);
@@ -189,8 +191,12 @@ const CategoryPage = ({
   }, [productSetsFilter]);
 
   useEffect(() => {
-    setShuffledBanners(shuffleArray([...bannersData]));
-  }, [bannersData]);
+    const slugField = "link-copy-of-category-name-2";
+    const currentCategory = selectedCategoryData?.parentCollection?.[slugField] || selectedCategoryData?.[slugField] || "";
+    const banners = scoreBasedBanners({ bannersData, currentCategory });
+
+    setSortedBanners(banners);
+  }, [bannersData, selectedCategoryData]);
 
   useEffect(() => {
     setInitialValues();
@@ -397,6 +403,9 @@ const CategoryPage = ({
               <div className="product-list-wrapper container-wrapper-list">
                 <ul className="product-list grid-lg-33 grid-tablet-50 grid-list min-h-100">
                   {filteredProducts.slice(0, pageLimit).map((data, index) => {
+                    const shouldInsertBanner = (index + 1) % 6 === 0 && sortedBanners.length > 0;
+                    if (shouldInsertBanner) bannerIndex = (bannerIndex + 1) % sortedBanners.length;
+
                     return (
                       <React.Fragment key={index}>
                         <li
@@ -418,12 +427,7 @@ const CategoryPage = ({
                             setSavedProductsData={setSavedProductsData}
                           />
                         </li>
-                        {/* Insert a banner every 6th product in the list */}
-                        {/* on every reload banners order should be random */}
-                        {/* if banners are not enough, they will be repeated */}
-                        {(index + 1) % 6 === 0 && (
-                          <Banner key={`banner-${index}`} data={shuffledBanners[Math.floor((index + 1) / 6) % shuffledBanners.length]} />
-                        )}
+                        {shouldInsertBanner && <Banner data={sortedBanners[bannerIndex]} />}
                       </React.Fragment>
                     );
                   })}
