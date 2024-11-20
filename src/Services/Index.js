@@ -29,6 +29,8 @@ export const getRentalsBanners = async () => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "RentalsBanners",
+      includeReferencedItems: ["categories"],
+      limit: "infinite",
     });
     if (response && response._items) {
       return response._items.map((x) => x.data);
@@ -93,7 +95,7 @@ export const getChatConfiguration = async (origin) => {
     }
     return response._items[0].data;
   } catch (error) {
-    logError("Error fetching RentalsQuotesDetailPage data:", error);
+    logError("Error fetching ChatbotConfiguration data:", error);
     return {};
   }
 };
@@ -101,7 +103,7 @@ export const getChatConfiguration = async (origin) => {
 export const getChatTriggerEvents = async () => {
   try {
     const response = await getDataFetchFunction({ "dataCollectionId": "ChatWidgetTriggerRentals" });
-        
+
     if (!response._items || !response._items) {
       throw new Error("No data found for ChatWidgetTrigger");
     }
