@@ -14,6 +14,7 @@ import mangeProductIcon from "@/assets/menu-icons/product.svg"
 import mangeProjectsIcon from "@/assets/menu-icons/project.svg"
 import mangeSortIcon from "@/assets/menu-icons/sort.svg"
 import productSetIcon from "@/assets/menu-icons/product-set.svg"
+import guideIcon from "@/assets/menu-icons/guide-icon.svg"
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
 
 const links = [
@@ -72,7 +73,19 @@ const links = [
     icon: mangeSortIcon,
     href: "/admin/manage-products-sorting",
     adminAccess: "ADMIN_PANEL_ACCESS",
-  }
+  },
+  {
+    name: "Content Management Instructions - Rentals",
+    icon: guideIcon,
+    href: "/admin/rentals-guide",
+    adminAccess: "ADMIN_PANEL_ACCESS",
+  },
+  {
+    name: "Content Management Instructions - Corporate",
+    icon: guideIcon,
+    href: "/admin/corporate-guide",
+    adminAccess: "ADMIN_PANEL_ACCESS",
+  },
 ];
 
 const accountSections = {
@@ -88,7 +101,7 @@ const Account = ({ children, footerData, banner }) => {
   const router = useRouter();
   const { permissions } = useUserData();
 
-  const [cookies, setCookie, removeCookie] = useCookies([
+  const [cookies, _setCookie, removeCookie] = useCookies([
     "authToken",
     "userData",
     "userTokens",

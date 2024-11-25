@@ -2257,3 +2257,17 @@ button.btn-border-blue.red {
 .chat {
   height: 60rem;
 }
+
+.editor .code {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #dbdbdb;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  .editor.instructions-page h2 {
+    font-size: 3.2rem;
+  }
+}
