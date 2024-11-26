@@ -1,10 +1,10 @@
 import React from 'react'
 import AnimateLink from '../Common/AnimateLink'
 
-export const GeneralInstructions = ({ DASHBOARD_URL, CMS_URL }) => {
+export const HomepageInstructions = ({ DASHBOARD_URL, CMS_URL }) => {
     return (
         <>
-            <h2 className="black-1">General Instructions</h2>
+            <h2 className="black-1">Homepage Instructions</h2>
 
             {/* CHATBOT */}
             <h3>Chatbot Configuration</h3>

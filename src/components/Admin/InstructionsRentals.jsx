@@ -5,6 +5,7 @@ import useUserData from '@/Hooks/useUserData';
 import Error404Page from '../Error404Page';
 import { PERMISSIONS } from '@/Utils/Schema/permissions';
 import { GeneralInstructions } from '../Guide/GeneralInstructions';
+import { CommonCollectionsInstructions } from '../Guide/CommonCollectionsInstructions';
 
 export const InstructionsRentals = ({ data }) => {
     const { permissions } = useUserData();
@@ -27,6 +28,7 @@ export const InstructionsRentals = ({ data }) => {
 
                 {/* GENERAL INSTRUCTIONS */}
                 <GeneralInstructions DASHBOARD_URL={DASHBOARD_URL} CMS_URL={CMS_URL} />
+                <CommonCollectionsInstructions DASHBOARD_URL={DASHBOARD_URL} CMS_URL={CMS_URL} />
             </div>
         </div>
 
