@@ -40,7 +40,7 @@ export const HomepageInstructions = ({ DASHBOARD_URL }) => {
                     </p>
                 </li>
                 <li>
-                    <p className='black-1'><span className="blue-1">Global Sections:</span> Refer to the common collections/sections guide for instructions
+                    <p className='black-1'><span className="blue-1">Shared Sections:</span> Refer to the common collections/sections guide for instructions.
                     </p>
                     <ul>
                         <li>
@@ -66,6 +66,9 @@ export const HomepageInstructions = ({ DASHBOARD_URL }) => {
                     </ul>
                 </li>
             </ul>
+            <p className='black-1'>
+                <span className='blue-1'>Important!</span> Use the <AnimateLink target="_blank" to={`${CMS_URL}/RentalsHomeSectionDetails`} className="blue-1"> Home & Market (Section Details)</AnimateLink> collection to manage the titles and descriptions for all the sections mentioned above.
+            </p>
         </>
     )
 }

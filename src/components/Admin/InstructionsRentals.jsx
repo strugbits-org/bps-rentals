@@ -8,6 +8,7 @@ import { GeneralInstructions } from '../Guide/GeneralInstructions';
 import { CommonCollectionsInstructions } from '../Guide/CommonCollectionsInstructions';
 import { HomepageInstructions } from '../Guide/HomepageInstructions';
 import { MarketsInstructions } from '../Guide/MarketsInstructions';
+import { ProductListingInstructions } from '../Guide/ProductListingInstructions';
 
 export const InstructionsRentals = ({ data }) => {
     const { permissions } = useUserData();
@@ -32,6 +33,7 @@ export const InstructionsRentals = ({ data }) => {
                 <CommonCollectionsInstructions DASHBOARD_URL={DASHBOARD_URL} />
                 <HomepageInstructions DASHBOARD_URL={DASHBOARD_URL} />
                 <MarketsInstructions DASHBOARD_URL={DASHBOARD_URL} />
+                <ProductListingInstructions DASHBOARD_URL={DASHBOARD_URL} />
             </div>
         </div>
 

@@ -133,7 +133,7 @@ export const GeneralInstructions = ({ DASHBOARD_URL }) => {
             </p>
 
             {/* Dynamic Fields */}
-            <h3>Dynamic Fields</h3>
+            <h3 class="black-1">Dynamic Fields</h3>
 
             <p class="black-1"> <span className='blue-1'>Action or Button Action:</span> can be used to trigger actions such as opening an internal link, an external link, or triggering a modal (contact the development team for assistance with modals).</p>
         </>

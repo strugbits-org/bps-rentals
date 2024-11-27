@@ -2258,7 +2258,7 @@ button.btn-border-blue.red {
   height: 60rem;
 }
 
-.editor .code {
+.editor.instructions-page .code {
   padding: 2px 6px;
   border-radius: 4px;
   background: #dbdbdb;
