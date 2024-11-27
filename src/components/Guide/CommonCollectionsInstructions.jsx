@@ -1,7 +1,9 @@
 import React from 'react'
 import AnimateLink from '../Common/AnimateLink'
 
-export const CommonCollectionsInstructions = ({ DASHBOARD_URL, CMS_URL }) => {
+export const CommonCollectionsInstructions = ({ DASHBOARD_URL }) => {
+    const CMS_URL = `${DASHBOARD_URL}/database/data`;
+
     return (
         <>
             <h2 className="black-1">Common Sections/Collections</h2>
@@ -114,6 +116,9 @@ export const CommonCollectionsInstructions = ({ DASHBOARD_URL, CMS_URL }) => {
 
             <p className="black-1"><span class="blue-1">Note:</span> Blogs and Instagram posts are automatically synced with Instagram and the blog, so manual updates may not be possible.</p>
 
+            {/* DREAM BIG SECTION */}
+            <h3>Dream Big Section:</h3>
+            <p className="black-1">Use the <AnimateLink target="_blank" to={`${CMS_URL}/DreamBigSection`} className="blue-1">Dream Big Section</AnimateLink> collection to update the content in the section.</p>
 
             {/* FOOTER */}
             <h3>Footer:</h3>
