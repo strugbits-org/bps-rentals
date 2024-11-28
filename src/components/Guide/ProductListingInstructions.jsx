@@ -6,7 +6,7 @@ export const ProductListingInstructions = ({ DASHBOARD_URL }) => {
 
     return (
         <>
-            <h2 className="black-1">Product Listing or Category Page</h2>
+            <h2 className="black-1">Category Page or Product Listing</h2>
             {/* Product Listing Content Collections */}
             <p className="black-1">Manage your product listing page content using the following collections:</p>
             <ul>

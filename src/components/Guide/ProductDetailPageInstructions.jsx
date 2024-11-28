@@ -6,9 +6,8 @@ export const ProductDetailPageInstructions = ({ DASHBOARD_URL }) => {
 
     return (
         <>
-            <h2 className="black-1">Product Detail Page</h2>
-            {/* Product Listing Content Collections */}
-            <p className="black-1">Manage your product content using the following collections:</p>
+            <h2 className="black-1">Product Details Page</h2>
+            <p className="black-1">Manage your product details page content using the following collections:</p>
             <ul>
                 <li>
                     <p className="black-1">
@@ -33,6 +32,9 @@ export const ProductDetailPageInstructions = ({ DASHBOARD_URL }) => {
                     </ul>
                 </li>
             </ul>
+            <h2 className="black-1">Product Management</h2>
+            <p className="black-1">These are the tools you can use to manage your product page content.</p>
+
         </>
 
     )
