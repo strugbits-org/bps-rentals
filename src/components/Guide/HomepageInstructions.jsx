@@ -1,7 +1,7 @@
 import React from 'react'
 import AnimateLink from '../Common/AnimateLink'
 
-export const HomepageInstructions = ({ DASHBOARD_URL }) => {
+export const HomepageInstructions = ({ setTabIndex, DASHBOARD_URL }) => {
     const CMS_URL = `${DASHBOARD_URL}/database/data`;
 
     return (
@@ -45,22 +45,30 @@ export const HomepageInstructions = ({ DASHBOARD_URL }) => {
                     <ul>
                         <li>
                             <p className="black-1">
-                                <AnimateLink target="_blank" to={`${CMS_URL}/RentalsMarkets`} className="blue-1">Markets Section</AnimateLink>
+                                <AnimateLink className="blue-1">
+                                    <span onClick={() => { setTabIndex(1) }}>Markets Section</span>
+                                </AnimateLink>
                             </p>
                         </li>
                         <li>
                             <p className="black-1">
-                                <AnimateLink target="_blank" to={`${CMS_URL}/StudiosSection`} className="blue-1">Studios Section</AnimateLink>
+                                <AnimateLink className="blue-1">
+                                    <span onClick={() => { setTabIndex(1) }}>Studios Section</span>
+                                </AnimateLink>
                             </p>
                         </li>
                         <li>
                             <p className="black-1">
-                                <AnimateLink target="_blank" to={`${CMS_URL}/DreamBigSection`} className="blue-1">Dream Big Section</AnimateLink>
+                                <AnimateLink className="blue-1">
+                                    <span onClick={() => { setTabIndex(1) }}> Dream Big Section </span>
+                                </AnimateLink>
                             </p>
                         </li>
                         <li>
                             <p className="black-1">
-                                <AnimateLink target="_blank" to={`${CMS_URL}/SocialSectionDetails`} className="blue-1">Let's Get Social Section</AnimateLink>
+                                <AnimateLink className="blue-1">
+                                    <span onClick={() => { setTabIndex(1) }}>Let's Get Social Section</span>
+                                </AnimateLink>
                             </p>
                         </li>
                     </ul>
