@@ -8,11 +8,15 @@ const Wrapper = ({ children }) => {
   const path = pathname.trim() === "/" ? "home" : pathname.substring(1);
   let cleanPath = path.split("/")[0].trim();
   if (cleanPath === "quote-detail") cleanPath = "quote-request";
-  if (cleanPath === "admin") cleanPath = "my-account-saved-products";
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       document.body.dataset.pg = `pg-${cleanPath}`;
+      if (cleanPath === "admin") {
+        document.body.setAttribute("pg-admin", path);
+      } else {
+        document.body.removeAttribute("pg-admin");
+      };
     }
   }, [cleanPath]);
   return (

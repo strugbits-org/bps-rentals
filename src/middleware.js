@@ -11,8 +11,8 @@ export function middleware(req) {
     "/my-account-quotes-history",
     "/my-account-saved-products",
   ];
-  if (privateRoutes.includes(pathname) && !authToken) {
-      return NextResponse.redirect(new URL("/", req.url));
+  if ((privateRoutes.includes(pathname) || pathname.startsWith("/admin")) && !authToken) {
+    return NextResponse.redirect(new URL("/", req.url));
   }
   return NextResponse.next();
 }

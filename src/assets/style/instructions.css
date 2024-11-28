@@ -1,0 +1,44 @@
+.instructions-page .code {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #dbdbdb;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+@media only screen and (min-width: 1025.1px) {
+    .instructions-page h2 {
+        font-size: 3.2rem;
+    }
+}
+
+.instructions-page ul.tab-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    gap: 0.5rem;
+    border-bottom: 1.5px solid;
+    background: var(--white-2);
+    padding: 0;
+}
+
+.instructions-page .tab-list li {
+    background: var(--white-1);
+    padding: 8px 24px;
+    color: var(--blue-1);
+    cursor: pointer;
+    margin: 0;
+}
+
+.instructions-page .tab-list li.react-tabs__tab--selected {
+    color: var(--white-1);
+    background: var(--blue-1);
+}
+
+[pg-admin="admin/rentals-guide"] .my-account-intro .column-form {
+    padding-top: 0 !important;
+}
+
+body:not(.page-enter-active):not(.page-leave-active)[pg-admin="admin/rentals-guide"] .menu {
+    background: var(--white-2);
+}
