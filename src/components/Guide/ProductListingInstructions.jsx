@@ -57,7 +57,7 @@ export const ProductListingInstructions = ({ DASHBOARD_URL }) => {
                 </li>
                 <li>
                     <p className='black-1'>
-                        <span className="blue-1">Shared Sections:</span> Some sections are shared across pages. For details, refer to the common collections/sections guide.
+                        <span className="blue-1">Shared Sections:</span> These sections are shared across pages. For details, refer to the common collections/sections guide.
                     </p>
                     <ul>
                         <li>

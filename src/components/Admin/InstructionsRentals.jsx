@@ -71,7 +71,7 @@ export const InstructionsRentals = ({ data }) => {
                         <ProductListingInstructions DASHBOARD_URL={DASHBOARD_URL} />
                     </TabPanel>
                     <TabPanel>
-                        <ProductDetailPageInstructions DASHBOARD_URL={DASHBOARD_URL} />
+                        <ProductDetailPageInstructions setTabIndex={setTabIndex} DASHBOARD_URL={DASHBOARD_URL} />
                     </TabPanel>
                 </Tabs>
 
