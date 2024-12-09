@@ -9,7 +9,7 @@ import { CommonCollectionsInstructions } from '../Guide/CommonCollectionsInstruc
 import { HomepageInstructions } from '../Guide/HomepageInstructions';
 import { MarketsInstructions } from '../Guide/MarketsInstructions';
 import { ProductListingInstructions } from '../Guide/ProductListingInstructions';
-// import { ProductDetailPageInstructions } from '../Guide/ProductDetailPageInstructions';
+import { ProductDetailPageInstructions } from '../Guide/ProductDetailPageInstructions';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import "@/assets/style/instructions.css";
 
@@ -47,11 +47,11 @@ export const InstructionsRentals = ({ data }) => {
                     >
                         <TabList className="tab-list">
                             <Tab>General</Tab>
-                            <Tab>Common Collections</Tab>
+                            <Tab>Common</Tab>
                             <Tab>Homepage</Tab>
                             <Tab>Markets</Tab>
-                            <Tab>Product Listing</Tab>
-                            {/* <Tab>Product Detail Page</Tab> */}
+                            <Tab>Category Page</Tab>
+                            <Tab>Product Page</Tab>
                         </TabList>
                     </div>
 
@@ -70,9 +70,9 @@ export const InstructionsRentals = ({ data }) => {
                     <TabPanel>
                         <ProductListingInstructions DASHBOARD_URL={DASHBOARD_URL} />
                     </TabPanel>
-                    {/* <TabPanel>
-                        <ProductDetailPageInstructions DASHBOARD_URL={DASHBOARD_URL} />
-                    </TabPanel> */}
+                    <TabPanel>
+                        <ProductDetailPageInstructions setTabIndex={setTabIndex} DASHBOARD_URL={DASHBOARD_URL} />
+                    </TabPanel>
                 </Tabs>
 
             </div>

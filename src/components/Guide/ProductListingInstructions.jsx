@@ -6,7 +6,7 @@ export const ProductListingInstructions = ({ DASHBOARD_URL }) => {
 
     return (
         <>
-            <h2 className="black-1">Product Listing or Category Page</h2>
+            <h2 className="black-1">Category Page or Product Listing</h2>
             {/* Product Listing Content Collections */}
             <p className="black-1">Manage your product listing page content using the following collections:</p>
             <ul>
@@ -57,7 +57,7 @@ export const ProductListingInstructions = ({ DASHBOARD_URL }) => {
                 </li>
                 <li>
                     <p className='black-1'>
-                        <span className="blue-1">Shared Sections:</span> Some sections are shared across pages. For details, refer to the common collections/sections guide.
+                        <span className="blue-1">Shared Sections:</span> These sections are shared across pages. For details, refer to the common collections/sections guide.
                     </p>
                     <ul>
                         <li>

@@ -80,12 +80,12 @@ const links = [
     href: "/admin/rentals-guide",
     adminAccess: "ADMIN_PANEL_ACCESS",
   },
-  {
-    name: "Content Management Instructions - Corporate",
-    icon: guideIcon,
-    href: "/admin/corporate-guide",
-    adminAccess: "ADMIN_PANEL_ACCESS",
-  },
+  // {
+  //   name: "Content Management Instructions - Corporate",
+  //   icon: guideIcon,
+  //   href: "/admin/corporate-guide",
+  //   adminAccess: "ADMIN_PANEL_ACCESS",
+  // },
 ];
 
 const accountSections = {
