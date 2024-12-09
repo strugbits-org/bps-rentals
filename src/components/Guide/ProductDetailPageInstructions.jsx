@@ -83,13 +83,13 @@ export const ProductDetailPageInstructions = ({ setTabIndex, DASHBOARD_URL }) =>
             </p>
 
 
-            <h2 className="black-1">Product Set</h2>
+            {/* <h2 className="black-1">Product Set</h2>
             <p className="black-1">You can manage product sets using the <AnimateLink target="_blank" to={"/admin/manage-product-sets"} className="blue-1">Manage Product Sets</AnimateLink> page.</p>
             <ul>
                 <li>
                     <p className="black-1"><span className="blue-1">Create a Product Set:</span> Click on the "Create Product Set" button then a modal will appear wher you can select the main product and then add additional products to the set. Make sure to click "Save" after adding products to the set.</p>
                 </li>
-            </ul>
+            </ul> */}
 
         </>
 
