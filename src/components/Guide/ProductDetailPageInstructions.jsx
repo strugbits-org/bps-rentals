@@ -83,13 +83,28 @@ export const ProductDetailPageInstructions = ({ setTabIndex, DASHBOARD_URL }) =>
             </p>
 
 
-            {/* <h2 className="black-1">Product Set</h2>
-            <p className="black-1">You can manage product sets using the <AnimateLink target="_blank" to={"/admin/manage-product-sets"} className="blue-1">Manage Product Sets</AnimateLink> page.</p>
+            <h2 className="black-1">Product Set</h2>
+
+            <p className="black-1">
+                Manage product sets through the <AnimateLink target="_blank" to={"/admin/manage-product-sets"} className="blue-1">Manage Product Sets</AnimateLink> page.
+            </p>
+
             <ul>
                 <li>
-                    <p className="black-1"><span className="blue-1">Create a Product Set:</span> Click on the "Create Product Set" button then a modal will appear wher you can select the main product and then add additional products to the set. Make sure to click "Save" after adding products to the set.</p>
+                    <p className="black-1">
+                        <span className="blue-1">Create a Product Set:</span> Click the <span className="blue-1">Create New Set</span> button on the <AnimateLink target="_blank" to={"/admin/manage-product-sets"} className="blue-1">Manage Product Sets</AnimateLink> page to open a modal. In the modal, select the main product, add additional products to include in the set, and specify the quantity for each item. Ensure to click "Save" after adding products to finalize the product set.
+                    </p>
                 </li>
-            </ul> */}
+                <li>
+                    <p className="black-1">
+                        <span className="blue-1">Update a Product Set:</span> Click the <span className="blue-1">Edit</span> button on the Product Set card to open a modal for the product set you wish to update. Modify the main product, set items, or their quantities as needed. Don't forget to save your changes to apply updates.
+                    </p>
+                </li>
+            </ul>
+
+            <p className="black-1">
+                <span className="blue-1">Note:</span> You can delete a product set directly from the <AnimateLink target="_blank" to={"/admin/manage-product-sets"} className="blue-1">Manage Product Sets</AnimateLink> page by clicking the "Delete" icon on the product set card.
+            </p>
 
         </>
 

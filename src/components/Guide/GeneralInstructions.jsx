@@ -135,7 +135,42 @@ export const GeneralInstructions = ({ DASHBOARD_URL }) => {
             {/* Dynamic Fields */}
             <h3 class="black-1">Dynamic Fields</h3>
 
-            <p class="black-1"> <span className='blue-1'>Action or Button Action:</span> can be used to trigger actions such as opening an internal link, an external link, or triggering a modal (contact the development team for assistance with modals).</p>
+            <p class="black-1">
+                <span className="blue-1">Action or Button Action:</span> These fields can trigger various actions such as navigating to an internal or external link, or opening a modal.
+            </p>
+
+            <p class="black-1">Examples of Actions:</p>
+
+            <ul>
+                <li>
+                    <p class="black-1">
+                        <span class="blue-1">Internal Link:</span> Navigates the user to a page within the site. These links start with "/", e.g., <span className="blue-1">/about</span>.
+                    </p>
+                </li>
+                <li>
+                    <p class="black-1">
+                        <span class="blue-1">External Link:</span> Redirects the user to an external website. These links start with "http://" or "https://", e.g., <span className="blue-1">https://blueprintstudios.com</span>.
+                    </p>
+                </li>
+                <li>
+                    <p class="black-1">
+                        <span class="blue-1">Modals:</span> Triggers a specific modal popup. Available modal types include:
+                    </p>
+                    <ul>
+                        <li>
+                            <p class="black-1">
+                                <span class="blue-1">Contact Modal:</span> Use <span className="code">modal-contact</span> to trigger contact form modal.
+                            </p>
+                        </li>
+                        <li>
+                            <p class="black-1">
+                                <span class="blue-1">Market Modal:</span> Use <span className="code">modal-market</span> to trigger the markets menu from the header.
+                            </p>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
         </>
     )
 }
