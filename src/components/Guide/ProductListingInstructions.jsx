@@ -1,7 +1,7 @@
 import React from 'react'
 import AnimateLink from '../Common/AnimateLink'
 
-export const ProductListingInstructions = ({ DASHBOARD_URL }) => {
+export const ProductListingInstructions = ({ setTabIndex, DASHBOARD_URL }) => {
     const CMS_URL = `${DASHBOARD_URL}/database/data`;
 
     return (
@@ -36,7 +36,7 @@ export const ProductListingInstructions = ({ DASHBOARD_URL }) => {
                                     <li><span className='code'>Tagline:</span> Add a supporting tagline or subtitle.</li>
                                     <li><span className='code'>Background Image:</span> Upload an image for the banner's background.</li>
                                     <li><span className='code'>Button Label:</span> Specify the text for the call-to-action button.</li>
-                                    <li><span className='code'>Button Action:</span> Define the link or action triggered by the button.</li>
+                                    <li><span className="code">Button Action:</span> Define the link or action triggered by the button such as navigating to an internal or external link, or opening a modal. For more information, refer to the <span className="blue-1">Dynamic Fields</span> section in the <AnimateLink className="blue-1"><span onClick={() => { setTabIndex(0) }}> General Instructions Tab </span></AnimateLink>.</li>
                                     <li><span className='code'>Show Arrow (button):</span> Toggle to show or hide an arrow icon on the button.</li>
                                     <li><span className='code'>Type:</span> Select the banner design type ("1" or "2").</li>
                                 </ul>

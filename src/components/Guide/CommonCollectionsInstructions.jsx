@@ -1,7 +1,7 @@
 import React from 'react'
 import AnimateLink from '../Common/AnimateLink'
 
-export const CommonCollectionsInstructions = ({ DASHBOARD_URL }) => {
+export const CommonCollectionsInstructions = ({ setTabIndex, DASHBOARD_URL }) => {
     const CMS_URL = `${DASHBOARD_URL}/database/data`;
 
     return (
@@ -132,6 +132,13 @@ export const CommonCollectionsInstructions = ({ DASHBOARD_URL }) => {
                 <li>
                     <p class="black-1">
                         <span class="blue-1">Action:</span> Choose the action to perform when the menu item is clicked, such as opening an internal link, an external link, or triggering a modal (contact the development team for assistance with modals).
+                    </p>
+                </li>
+                <li>
+                    <p class="black-1">
+                        <span className="blue-1">Action or Button Action:</span> Define the link or action triggered by the button such as navigating to an internal or external link, or opening a modal. For more information, refer to the <span className="blue-1">Dynamic Fields</span> section in the <AnimateLink className="blue-1">
+                            <span onClick={() => { setTabIndex(0) }}> General Instructions Tab </span>
+                        </AnimateLink>.
                     </p>
                 </li>
                 <li>

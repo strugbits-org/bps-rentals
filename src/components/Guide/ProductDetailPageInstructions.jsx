@@ -2,7 +2,6 @@ import React from 'react'
 import AnimateLink from '../Common/AnimateLink'
 
 export const ProductDetailPageInstructions = ({ setTabIndex, DASHBOARD_URL }) => {
-    const CMS_URL = `${DASHBOARD_URL}/database/data`;
 
     return (
         <>

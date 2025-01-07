@@ -59,7 +59,7 @@ export const InstructionsRentals = ({ data }) => {
                         <GeneralInstructions DASHBOARD_URL={DASHBOARD_URL} />
                     </TabPanel>
                     <TabPanel>
-                        <CommonCollectionsInstructions DASHBOARD_URL={DASHBOARD_URL} />
+                        <CommonCollectionsInstructions setTabIndex={setTabIndex} DASHBOARD_URL={DASHBOARD_URL} />
                     </TabPanel>
                     <TabPanel>
                         <HomepageInstructions setTabIndex={setTabIndex} DASHBOARD_URL={DASHBOARD_URL} />
@@ -68,7 +68,7 @@ export const InstructionsRentals = ({ data }) => {
                         <MarketsInstructions setTabIndex={setTabIndex} DASHBOARD_URL={DASHBOARD_URL} />
                     </TabPanel>
                     <TabPanel>
-                        <ProductListingInstructions DASHBOARD_URL={DASHBOARD_URL} />
+                        <ProductListingInstructions setTabIndex={setTabIndex} DASHBOARD_URL={DASHBOARD_URL} />
                     </TabPanel>
                     <TabPanel>
                         <ProductDetailPageInstructions setTabIndex={setTabIndex} DASHBOARD_URL={DASHBOARD_URL} />
