@@ -72,7 +72,7 @@ export const GeneralInstructions = ({ DASHBOARD_URL }) => {
 
             {/* SEO SETTINGS */}
             <h3>SEO Settings</h3>
-            <p className="black-1">You can manage your page SEO settings in the <AnimateLink target="_blank" to={`${CMS_URL}/PageSeoConfigurationRentals`} className="blue-1">Page SEO Configuration Rentals</AnimateLink> collection.</p>
+            <p className="black-1">You can manage your page SEO settings in the <AnimateLink target="_blank" to={`${CMS_URL}/PageSeoConfiguration`} className="blue-1">Page SEO Configuration</AnimateLink> collection.</p>
             <p className="black-1">Usage:</p>
             <ul>
                 <li>
@@ -86,51 +86,6 @@ export const GeneralInstructions = ({ DASHBOARD_URL }) => {
                     </p>
                 </li>
             </ul>
-
-            {/* Invalidate Cache */}
-            <h3>Invalidate Cache</h3>
-            <p className="black-1">After you made changes to your site, you can invalidate the cache using the <span className='blue-1'>Invalidate Cache</span> button on the bottom right of the page(only for admins).</p>
-
-            {/* Badge Management */}
-            <h3>Badge Management</h3>
-
-            <p class="black-1">
-                You can assign badges to users from the WIX <AnimateLink target="_blank" to={`${DASHBOARD_URL}/badge-definitions`} className="blue-1">Manage Member Roles</AnimateLink> page, and these badges will be implemented on your site for authorization purposes.
-            </p>
-
-            <p class="black-1">Badges and Their Conditions:</p>
-
-            <ul>
-                <li>
-                    <p class="black-1">
-                        <span class="blue-1">Admin Menu:</span> This badge grants members access to the admin panel and the ability to invalidate the cache.
-                    </p>
-                </li>
-                <li>
-                    <p class="black-1">
-                        <span class="blue-1">FireproofCertificate:</span> This badge grants access to view fireproof certificates for products.
-                    </p>
-                </li>
-                <li>
-                    <p class="black-1">
-                        <span class="blue-1">Product Price:</span> Members with this badge can view price details.
-                    </p>
-                </li>
-                <li>
-                    <p class="black-1">
-                        <span class="blue-1">Documents:</span> This badge allows users to view documents for products.
-                    </p>
-                </li>
-                <li>
-                    <p class="black-1">
-                        <span class="blue-1">Manage Product Sets:</span> Members with this badge can create/edit/delete the product set on the website.
-                    </p>
-                </li>
-            </ul>
-
-            <p class="black-1">
-                Assigning these badges will give users the corresponding permissions, enabling them to perform specific actions based on the badge assigned.
-            </p>
 
             {/* Dynamic Fields */}
             <h3 class="black-1">Dynamic Fields</h3>
@@ -154,25 +109,8 @@ export const GeneralInstructions = ({ DASHBOARD_URL }) => {
                 </li>
                 <li>
                     <p class="black-1">
-                        <span class="blue-1">Modals:</span> Triggers a specific modal popup. Available modal types include:
+                        <span class="blue-1">Contact Modals:</span> Triggers contact modal popup. Use <span className="code">modal-contact</span> to open the modal.
                     </p>
-                    <ul>
-                        <li>
-                            <p class="black-1">
-                                <span class="blue-1">Contact Modal:</span> Use <span className="code">modal-contact</span> to trigger contact form modal.
-                            </p>
-                        </li>
-                        <li>
-                            <p class="black-1">
-                                <span class="blue-1">Market Modal:</span> Use <span className="code">modal-market</span> to trigger the markets menu from the header.
-                            </p>
-                        </li>
-                        <li>
-                            <p class="black-1">
-                                <span class="blue-1">Chatbot:</span> Use <span className="code">chat-box</span> to trigger the chat box modal.
-                            </p>
-                        </li>
-                    </ul>
                 </li>
             </ul>
 

@@ -1,12 +1,12 @@
 import Account from "@/components/Account/Index";
-import { CategoriesListing } from "@/components/Admin/CategoriesListing";
+import { InstructionsCorporate } from "@/components/Admin/InstructionsCorporate";
 import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
 import { fetchAllCategoriesCollections } from "@/Services/ProductsApis";
 import { getRentalsTeamsBanner } from "@/Services/SectionsApis";
 import logError from "@/Utils/ServerActions";
 
 export const metadata = {
-  title: "Admin | Manage Products | Sorting",
+  title: "Instructions - Corporate",
   robots: "noindex,nofollow"
 }
 
@@ -30,10 +30,10 @@ export default async function Page() {
 
     return (
       <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
-        <CategoriesListing data={collectionsData} />
+        <InstructionsCorporate data={collectionsData} />
       </Account>
     );
   } catch (error) {
-    logError("Error fetching product management page(categories listing) data:", error);
+    logError("Error fetching corporate guide page:", error);
   }
 }

@@ -34,6 +34,6 @@ export default async function Page() {
       </Account>
     );
   } catch (error) {
-    logError("Error fetching product management page(categories listing) data:", error);
+    logError("Error fetching rentals guide page:", error);
   }
 }
