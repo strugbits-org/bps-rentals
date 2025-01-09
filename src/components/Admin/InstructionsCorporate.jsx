@@ -49,7 +49,7 @@ export const InstructionsCorporate = ({ data }) => {
                             <Tab>General</Tab>
                             <Tab>Common</Tab>
                             <Tab>Homepage</Tab>
-                            {/* <Tab>Markets</Tab> */}
+                            <Tab>Markets</Tab>
                             {/* <Tab>Category Page</Tab> */}
                             {/* <Tab>Product Page</Tab> */}
                         </TabList>
@@ -64,9 +64,9 @@ export const InstructionsCorporate = ({ data }) => {
                     <TabPanel>
                         <HomepageInstructions setTabIndex={setTabIndex} DASHBOARD_URL={DASHBOARD_URL} />
                     </TabPanel>
-                    {/* <TabPanel>
+                    <TabPanel>
                         <MarketsInstructions setTabIndex={setTabIndex} DASHBOARD_URL={DASHBOARD_URL} />
-                    </TabPanel> */}
+                    </TabPanel>
                     {/* <TabPanel>
                         <ProductListingInstructions setTabIndex={setTabIndex} DASHBOARD_URL={DASHBOARD_URL} />
                     </TabPanel> */}

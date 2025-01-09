@@ -8,8 +8,8 @@ export const CommonCollectionsInstructions = ({ setTabIndex, DASHBOARD_URL }) =>
         <>
             <h2 className="black-1">Common Sections/Collections</h2>
 
-            {/* Section Titles and Descrptions */}
-            <h3>Section Titles and Descrptions:</h3>
+            {/* Section Titles and Descriptions */}
+            <h3>Section Titles and Descriptions:</h3>
 
             <p className="black-1">You can use the <AnimateLink target="_blank" to={`${CMS_URL}/RentalsHomeSectionDetails`} className="blue-1">Home & Market (Section Details)</AnimateLink> collection to manage section titles and descriptions.</p>
 

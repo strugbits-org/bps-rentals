@@ -11,9 +11,35 @@ export const MarketsInstructions = ({ setTabIndex, DASHBOARD_URL }) => {
             <p className="black-1">Manage your market page content using the following collections:</p>
             <ul>
                 <li>
+                    <p className="black-1"> <span className="blue-1">Section Titles and Descriptions:</span> You can use the <AnimateLink target="_blank" to={`${CMS_URL}/MarketsPostPageSectionDetails`} className="blue-1">Markets Post Page Section Details</AnimateLink> collection to manage section titles and descriptions.</p>
+                </li>
+                <li>
                     <p className="black-1">
-                        <span className="blue-1">Hero Section:</span> Use the <AnimateLink className="blue-1" target="_blank" to={`${CMS_URL}/RentalsMarkets`}> Rentals Markets </AnimateLink> collection to update the selected market matching the slug for the hero section content.
+                        <span className="blue-1">First 2 Sections:</span> Use the <AnimateLink className="blue-1" target="_blank" to={`${CMS_URL}/MarketSection`}> MarketSection </AnimateLink> collection to update the selected market matching the slug for the first 2 section content.
                     </p>
+                    <p className='black-1'>Content Fields:</p>
+                    <ul>
+                        <li>
+                            <p className="black-1">
+                                <span className="blue-1">Card Name:</span> Specify the name/title of the for the market.
+                            </p>
+                        </li>
+                        <li>
+                            <p className="black-1">
+                                <span className="blue-1">Description:</span> Add a description/sub-heading for the market.
+                            </p>
+                        </li>
+                        <li>
+                            <p className="black-1">
+                                <span className="blue-1">Product Fields:</span> Customize the following fields for each product:
+                            </p>
+                            <ul>
+                                <li><span className="code">Image:</span> Add the product's image.</li>
+                                <li><span className="code">Product URL:</span> Specify the product's URL.</li>
+                                <li><span className="code">New Tag:</span> Enable this option to display a "New" badge for the product.</li>
+                            </ul>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <p className="black-1">

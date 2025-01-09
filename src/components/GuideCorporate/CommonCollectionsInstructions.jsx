@@ -8,10 +8,10 @@ export const CommonCollectionsInstructions = ({ setTabIndex, DASHBOARD_URL }) =>
         <>
             <h2 className="black-1">Common Sections/Collections</h2>
 
-            {/* Section Titles and Descrptions */}
-            <h3>Section Titles and Descrptions:</h3>
+            {/* Section Titles and Descriptions */}
+            <h3>Section Titles and Descriptions:</h3>
 
-            <p className="black-1">You can use the <AnimateLink target="_blank" to={`${CMS_URL}/HomeSectionDetails`} className="blue-1">Home & Market (Section Details)</AnimateLink> collection to manage section titles and descriptions.</p>
+            <p className="black-1">You can use the <AnimateLink target="_blank" to={`${CMS_URL}/HomeSectionDetails`} className="blue-1">Home (Section Details)</AnimateLink> collection to manage section titles and descriptions.</p>
 
             {/* SEARCH SECTION DETAILS */}
             <h3>Search Section Details:</h3>
@@ -46,6 +46,17 @@ export const CommonCollectionsInstructions = ({ setTabIndex, DASHBOARD_URL }) =>
             <p className="black-1">You can use the <AnimateLink target="_blank" to={`${CMS_URL}/MarketSection`} className="blue-1">MarketSection</AnimateLink> collection to manage markets data.</p>
             <p className='black-1'>Usage:</p>
             <ul>
+                <li>
+                    <p className="black-1">
+                        <span className="blue-1">Card Name:</span> Specify the name/title of the for the market.
+                    </p>
+                </li>
+                <li>
+                    <p className="black-1">
+                        <span className="blue-1">Description:</span> Add a description/sub-heading for the market.
+                    </p>
+                </li>
+                
                 <li>
                     <p class="black-1">
                         <span class="blue-1">Menu Item:</span> Check this box to add the market to the header menu.
