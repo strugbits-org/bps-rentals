@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
 import { signInUser } from "@/Services/AuthApis";
 import Disclaimer from "./Disclaimer";
+import logError from "@/Utils/ServerActions";
 
 const Login = ({
   loginModalContent,
@@ -14,7 +15,7 @@ const Login = ({
   setModalState,
 }) => {
   const router = useRouter();
-  const [cookies, setCookie, removeCookie] = useCookies(["authToken", "userData"]);
+  const [_cookies, setCookie, removeCookie] = useCookies(["authToken", "userData"]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,44 +34,40 @@ const Login = ({
         email: formData.email,
         password: formData.password,
       });
-      if (response && response.error) {
-        setMessage(response.message);
-        setModalState({ success: false, error: true });
-        return;
+      if (response?.error) {
+        throw new Error(response.message);
       }
-
-      if (response) {
-        const authToken = response.jwtToken;
-        const userData = JSON.stringify(response.member);
-        const userTokens = JSON.stringify(response.userTokens);
-        setCookie("authToken", authToken, {
-          path: "/",
-          expires: new Date("2099-01-01"),
+      const authToken = response.jwtToken;
+      const userData = JSON.stringify(response.member);
+      const userTokens = JSON.stringify(response.userTokens);
+      setCookie("authToken", authToken, {
+        path: "/",
+        expires: new Date("2099-01-01"),
+      });
+      setCookie("userData", userData, {
+        path: "/",
+        expires: new Date("2099-01-01"),
+      });
+      setCookie("userTokens", userTokens, {
+        path: "/",
+        expires: new Date("2099-01-01"),
+      });
+      removeCookie("cartId", { path: "/" });
+      if (authToken) {
+        pageLoadStart({});
+        submenuLogin.classList.remove("active");
+        button.classList.remove("active");
+        router.push("/my-account");
+        setFormData({
+          email: "",
+          password: "",
         });
-        setCookie("userData", userData, {
-          path: "/",
-          expires: new Date("2099-01-01"),
-        });
-        setCookie("userTokens", userTokens, {
-          path: "/",
-          expires: new Date("2099-01-01"),
-        });
-        removeCookie("cartId", { path: "/" });
-        if (authToken) {
-          pageLoadStart({});
-          submenuLogin.classList.remove("active");
-          button.classList.remove("active");
-          router.push("/my-account");
-          setFormData({
-            email: "",
-            password: "",
-          });
-        }
       }
     } catch (error) {
-      setMessage("Error during login:", error);
+      setMessage("Error during login, please try again.");
       setModalState({ success: false, error: true });
       submenuLogin.classList.add("active");
+      logError("Error during login:", error);
     } finally {
       setIsButtonDisabled(false);
     }

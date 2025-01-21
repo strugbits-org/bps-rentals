@@ -1,11 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { signUpUser } from "@/Services/AuthApis";
 import Disclaimer from "./Disclaimer";
 import { useRouter } from "next/navigation";
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
 import { useCookies } from "react-cookie";
+import logError from "@/Utils/ServerActions";
 
 const CreateAccount = ({
   createAccountModalContent,
@@ -57,17 +58,19 @@ const CreateAccount = ({
         return;
       }
 
-      if (!response.error) {
-        setModalState({ success: true, error: false });
-
-        setFormData({
-          first_name: "",
-          last_name: "",
-          email: "",
-          phone: "",
-          password: "",
-        });
+      if (response?.error) {
+        throw new Error(response.message);
       }
+
+      setModalState({ success: true, error: false });
+      setFormData({
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
+        password: "",
+      });
+
       const authToken = response.jwtToken;
       const newUserData = JSON.stringify(response.member);
       const userTokens = JSON.stringify(response.userTokens);
@@ -94,14 +97,15 @@ const CreateAccount = ({
 
       return response;
     } catch (error) {
-      setMessage("Something Went Wrong");
+      setMessage("Error creating account, please try again.");
       setModalState({ success: false, error: true });
+      logError("Error creating account", error);
     } finally {
       setTimeout(() => {
         setMessage("");
         setModalState({ success: false, error: false });
         setSubmittingForm(false);
-      }, 1500);
+      }, 4000);
     }
   };
 

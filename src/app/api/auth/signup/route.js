@@ -117,7 +117,7 @@ export const POST = async (req) => {
       loginEmail: email,
       firstName: firstName,
       lastName: lastName,
-      mainPhone: [phone],
+      mainPhone: phone,
       permissions: permissions
     };
 
