@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 
-import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
-import { isValidEmail } from "@/Utils/AuthApisUtils";
+import { authWixClient, createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import logError from "@/Utils/ServerActions";
+
+const fetchMemberData = async (client, collectionId, field, value) =>
+  client.items
+    .queryDataItems({ dataCollectionId: collectionId })
+    .eq(field, value)
+    .find();
 
 export const POST = async (req) => {
   const body = await req.json();
@@ -10,30 +15,26 @@ export const POST = async (req) => {
 
   try {
     const wixClient = await createWixClientApiStrategy();
+    const authClient = await authWixClient();
 
-    const invalidEmail = isValidEmail(email);
-    if (!invalidEmail) {
-      return NextResponse.json(
-        {
-          message: "Enter a valid email address",
-        },
-        { status: 404 }
-      );
-    }
 
-    const memberData = await wixClient.items
-      .queryDataItems({
-        dataCollectionId: "membersPassword",
-      })
-      .eq("userEmail", email)
-      .find();
+    const [privateMemberResult, memberResult] = await Promise.allSettled([
+      fetchMemberData(authClient, "Members/PrivateMembersData", "loginEmail", email),
+      fetchMemberData(wixClient, "membersPassword", "userEmail", email),
+    ]);
 
-    if (memberData._items.length === 0) {
+    const privateMemberData = privateMemberResult.status === "fulfilled" ? privateMemberResult.value : null;
+    const memberData = memberResult.status === "fulfilled" ? memberResult.value : null;
+
+    if (!privateMemberData?._items?.length || !memberData?._items?.length) {
       return NextResponse.json(
         { message: "Account with this email does not exist" },
         { status: 404 }
       );
     }
+
+    const selectedMemberData = memberData._items[0].data;
+    const fullMemberData = privateMemberData._items[0].data;
 
     const currentDate = new Date();
     const twoHoursLater = new Date(currentDate.getTime() + 2 * 60 * 60 * 1000);
@@ -46,8 +47,6 @@ export const POST = async (req) => {
       minute: "numeric",
       hour12: true,
     });
-
-    const selectedMemberData = memberData._items[0].data;
 
     const userData = {
       ...memberData.items[0].data,
@@ -71,9 +70,9 @@ export const POST = async (req) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        memberId: memberData._items[0].data.memberId,
+        memberId: fullMemberData._id,
         variables: {
-          name: memberData._items[0].data.firstName,
+          name: fullMemberData.firstName,
           link: resetUrl,
         },
       }),
