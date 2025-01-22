@@ -12,6 +12,7 @@ import BestSellersHome from "./BestSellersHome";
 import { getSavedProductData } from "@/Services/ProductsApis";
 import CartModal from "../Common/Modals/CartModal";
 import logError from "@/Utils/ServerActions";
+import ClientsSection from "../Common/Sections/ClientsSection";
 
 const HomePage = ({
   heroSectionContent,
@@ -23,7 +24,8 @@ const HomePage = ({
   dreamBigSectionContent,
   studiosData,
   marketsData,
-  bestSellers
+  bestSellers,
+  clientsGallery
 }) => {
   const [savedProductsData, setSavedProductsData] = useState([]);
   const [selectedProductData, setSelectedProductData] = useState(null);
@@ -136,6 +138,7 @@ const HomePage = ({
       <Markets pageContent={homeSectionDetails} marketsData={marketsData} />
       <Studios content={homeSectionDetails} studiosData={studiosData} />
       <DreamBig content={dreamBigSectionContent} />
+      <ClientsSection data={clientsGallery} />
       <CartModal
         productData={selectedProductData}
         setProductData={setSelectedProductData}
