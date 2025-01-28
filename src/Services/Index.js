@@ -95,7 +95,7 @@ export const getChatConfiguration = async (origin) => {
     }
     return response._items[0].data;
   } catch (error) {
-    logError("Error fetching ChatbotConfiguration data:", error);
+    // logError("Error fetching ChatbotConfiguration data:", error);
     return {};
   }
 };
