@@ -71,12 +71,7 @@ const Navbar = ({
   const getCartTotalQuantity = async () => {
     try {
       const response = await getProductsCart();
-      const total = response ? calculateTotalCartQuantity(response) : "0";
-      if (total !== cookies.cartQuantity) {
-        setCookie("cartQuantity", total, { path: "/" });
-      }
-    } catch (error) {
-      if(error.message === "Token has expired") {
+      if (response === "Token has expired") {
         removeCookie("authToken", { path: "/" });
         removeCookie("userData", { path: "/" });
         removeCookie("userTokens", { path: "/" });
@@ -84,7 +79,13 @@ const Navbar = ({
         setTimeout(() => {
           router.push("/");
         }, 500);
-      };
+        return;
+      }
+      const total = response ? calculateTotalCartQuantity(response) : "0";
+      if (total !== cookies.cartQuantity) {
+        setCookie("cartQuantity", total, { path: "/" });
+      }
+    } catch (error) {
       logError("Failed to fetch cart data:", error);
     }
   };
