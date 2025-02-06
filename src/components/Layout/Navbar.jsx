@@ -31,7 +31,7 @@ const Navbar = ({
   portfoliosData,
   searchPagesData,
 }) => {
-  const [cookies, setCookie] = useCookies(["authToken", "cartQuantity"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["authToken", "cartQuantity", "userData", "userTokens"]);
   const router = useRouter();
   const path = usePathname();
 
@@ -76,6 +76,15 @@ const Navbar = ({
         setCookie("cartQuantity", total, { path: "/" });
       }
     } catch (error) {
+      if(error.message === "Token has expired") {
+        removeCookie("authToken", { path: "/" });
+        removeCookie("userData", { path: "/" });
+        removeCookie("userTokens", { path: "/" });
+        removeCookie("cartQuantity", { path: "/" });
+        setTimeout(() => {
+          router.push("/");
+        }, 500);
+      };
       logError("Failed to fetch cart data:", error);
     }
   };

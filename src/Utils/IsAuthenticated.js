@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-
 import { authWixClient, createWixClient } from "./CreateWixClient";
 import logError from "./ServerActions";
 import { extractPermissions } from "./checkPermissions";
@@ -11,7 +10,17 @@ export const isAuthenticated = async (token) => {
       throw new Error("Unauthorized: No token provided");
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err.name === "TokenExpiredError") {
+        throw new Error("Token has expired");
+      } else {
+        console.error("JWT verification failed:", err.message);
+      }
+    }
 
     const authClient = await authWixClient();
     const wixClient = await createWixClient();
@@ -52,6 +61,9 @@ export const isAuthenticated = async (token) => {
     return loggedInUserData;
   } catch (error) {
     logError(error);
+    if (error.message === "Token has expired") {
+      throw new Error(error.message);      
+    }
     throw new Error(`Unauthorized: ${error.message}`);
   }
 };

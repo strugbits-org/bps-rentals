@@ -36,6 +36,9 @@ export const getProductsCart = async (retries = 3, delay = 1000) => {
 
     } catch (error) {
       logError(`Error fetching cart: Attempt ${attempt} failed: ${error}`);
+      if (error.message === "Token has expired") {
+        throw new Error(error.message);
+      }
 
       if (attempt < retries) {
         logError(`Retrying in ${delay}ms...`);
