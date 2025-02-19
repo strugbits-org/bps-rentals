@@ -2,6 +2,7 @@
 
 import logError from "@/Utils/ServerActions";
 import getDataFetchFunction from "./FetchFunction";
+import { encryptField } from "@/Utils/Encrypt";
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -95,7 +96,7 @@ export const getChatConfiguration = async (origin) => {
     }
     return response._items[0].data;
   } catch (error) {
-    // logError("Error fetching ChatbotConfiguration data:", error);
+    logError("Error fetching ChatbotConfiguration data:", error);
     return {};
   }
 };
@@ -110,5 +111,33 @@ export const getChatTriggerEvents = async () => {
     return response._items.map((x) => x.data);
   } catch (error) {
     logError("Error getting chat trigger events", error);
+  }
+};
+
+export const getMemberPricingTier = async (badgeIds) => {
+  try {
+    const response = await getDataFetchFunction({
+      "dataCollectionId": "BadgesPricingTiers",
+      "includeReferencedItems": ["badges"],
+      "sortKey": "order",
+    });
+
+    if (!response._items || !response._items) {
+      throw new Error("No data found for BadgesPricingTiers");
+    }
+
+    const badgesData = response._items.map((x) => x.data);
+
+    if (!badgesData.length) return null;
+
+    for (const tier of badgesData) {
+      if (tier.badges.some(badge => badgeIds.includes(badge._id))) {
+        return encryptField(tier.title);
+      }
+    }
+
+    return null;
+  } catch (error) {
+    logError("Error getting badges pricing tiers", error);
   }
 };

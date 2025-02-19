@@ -113,20 +113,27 @@ const getDataFetchFunction = async (payload) => {
       'discountedPrice',
     ];
     // Encrypt specific fields if needed
-    const collectionsToEncrypt = ["Stores/Products", "locationFilteredVariant", "RentalsNewArrivals"];
+    const collectionsToEncrypt = ["Stores/Products", "DemoProductData", "RentalsNewArrivals"];
     if (data._items.length > 0 && collectionsToEncrypt.includes(dataCollectionId) && encodePrice) {
       data._items = data._items.map(val => {
-        if (dataCollectionId === "locationFilteredVariant" && val.data?.productSets?.length) {
-          val.data.productSets = val.data.productSets.map(set => {
-            set.price = encryptField(set.price);
-            return set;
-          });
-        }
-        if (dataCollectionId === "locationFilteredVariant" && val.data.variantData) {
-          val.data.variantData = val.data.variantData.map(val2 => {
-            encryptPriceFields(val2.variant, fieldsToEncrypt);
-            return val2;
-          });
+        if (dataCollectionId === "DemoProductData") {
+          if (val.data?.productSets?.length) {
+            val.data.productSets = val.data.productSets.map(set => {
+              set.price = encryptField(set.price);
+              return set;
+            });
+          }
+          if (val.data.variantData) {
+            val.data.variantData = val.data.variantData.map(val2 => {
+              encryptPriceFields(val2.variant, fieldsToEncrypt);
+              return val2;
+            });
+          }
+          if (val.data.pricingTiers) {
+            val.data.pricingTiers.forEach(val2 => {
+              encryptPriceFields(val2, fieldsToEncrypt);
+            })
+          }
         }
         encryptPriceFields(val.data.product, fieldsToEncrypt);
         return val;

@@ -293,3 +293,25 @@ export const decryptProductPrices = (data) => {
     });
   }
 }
+export const findPriceForTier = (fullProductData, tier) => {
+  try {
+    if (
+      fullProductData &&
+      fullProductData.pricingTiers &&
+      Array.isArray(fullProductData.pricingTiers) &&
+      tier
+    ) {
+      const priceData = fullProductData.pricingTiers.find(
+        (tierItem) => tierItem.name === tier
+      );
+
+      if (priceData?.formattedPrice) {
+        return decryptField(priceData.formattedPrice);
+      }
+    }
+  } catch (error) {
+    // console.error("Error fetching price:", error);
+  }
+
+  return decryptField(fullProductData?.product?.formattedPrice);
+};

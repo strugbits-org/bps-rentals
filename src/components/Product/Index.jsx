@@ -10,7 +10,7 @@ import {
   resetSlideIndex,
   updatedWatched,
 } from "@/Utils/AnimationFunctions";
-import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, compareArray, findPriceForTier } from "@/Utils/Utils";
 
 import { getSavedProductData } from "@/Services/ProductsApis";
 import { AddProductToCart } from "@/Services/CartApis";
@@ -62,7 +62,7 @@ const ProductPostPage = ({
   const [cartQuantity, setCartQuantity] = useState(1);
   const [customTextFields, setCustomTextFields] = useState({});
 
-  const { permissions } = useUserData();
+  const { permissions, pricingTier } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
   const SHOW_FIREPROOF_CERTIFICATES = permissions && permissions.includes(PERMISSIONS.SHOW_FIREPROOF_CERTIFICATES);
   const SHOW_DOCUMENTS = permissions && permissions.includes(PERMISSIONS.SHOW_DOCUMENTS);
@@ -75,7 +75,7 @@ const ProductPostPage = ({
     if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
       const combinedVariantData = {
         ...selectedVariantData,
-        ...selectedVariantFilteredData,
+        ...selectedVariantFilteredData, 
         modalUrl: modalUrl,
       };
 
@@ -155,6 +155,8 @@ const ProductPostPage = ({
       setProductFoundInCategories(categoriesFound);
     }
     setTimeout(markPageLoaded, 900);
+    console.log("selectedProductDetails", selectedProductDetails);
+    
   }, [selectedProductDetails]);
 
   const handleQuantityChange = async (value) => {
@@ -366,7 +368,7 @@ const ProductPostPage = ({
                         className="fs--60 fs-phone-30 product-name"
                         data-aos="d:loop"
                       >
-                        {selectedProductDetails.product.name}
+                        {selectedProductDetails.product.name} {pricingTier}
                       </h1>
                     </div>
                   </div>
@@ -425,9 +427,7 @@ const ProductPostPage = ({
                         <li className="seat-height">
                           <span className="specs-title">Price</span>
                           <span className="specs-text">
-                            {decryptField(
-                              selectedProductDetails.product.formattedPrice
-                            )}
+                            {findPriceForTier(selectedProductDetails, pricingTier)}
                           </span>
                         </li>
                       )}

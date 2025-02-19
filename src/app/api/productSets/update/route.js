@@ -15,7 +15,7 @@ export const POST = async (req) => {
     const body = await req.json();
 
     const { id, productSets } = body;
-    const productData = await client.items.queryDataItems({ dataCollectionId: "locationFilteredVariant" }).eq("product", id).find();
+    const productData = await client.items.queryDataItems({ dataCollectionId: "DemoProductData" }).eq("product", id).find();
 
     if (productData._items.length === 0) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });

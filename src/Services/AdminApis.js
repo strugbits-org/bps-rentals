@@ -52,7 +52,7 @@ export const bulkUpdateCollection = async (dataCollectionId, items) => {
 export const getAllProductsForSets = async () => {
     try {
         const response = await getDataFetchFunction({
-            dataCollectionId: "locationFilteredVariant",
+            dataCollectionId: "DemoProductData",
             includeReferencedItems: ["product"],
             ne: [
                 {
