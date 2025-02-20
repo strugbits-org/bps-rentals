@@ -120,6 +120,12 @@ const getDataFetchFunction = async (payload) => {
           if (val.data?.productSets?.length) {
             val.data.productSets = val.data.productSets.map(set => {
               set.price = encryptField(set.price);
+              if (set.pricingTiers?.length) {
+                set.pricingTiers.forEach(val2 => {
+                  encryptPriceFields(val2, fieldsToEncrypt);
+                })
+              }
+                
               return set;
             });
           }

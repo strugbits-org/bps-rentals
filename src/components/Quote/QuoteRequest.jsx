@@ -10,17 +10,19 @@ import QuoteConfirmedModal from "../Common/Modals/QuoteConfirmedModal";
 import Modal from "../Common/Modals/Modal";
 import useUserData from "@/Hooks/useUserData";
 import logError from "@/Utils/ServerActions";
-import { decryptPriceFields } from "@/Utils/Encrypt";
+import { decryptField, decryptPriceFields } from "@/Utils/Encrypt";
 import { useCookies } from "react-cookie";
+import { getCartPricingTiersData } from "@/Services/ProductsApis";
 
 const QuoteRequest = ({ quoteRequestPageContent }) => {
   const { firstName, lastName, email } = useUserData();
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [cartItems, setCartItems] = useState();
   const [message, setMessage] = useState("");
   const [modalButtonLabel, setModalButtonLabel] = useState("Try Again!");
   const [modalButtonRedirection, setModalButtonRedirection] = useState();
   const [_cookies, setCookie] = useCookies(["cartQuantity"]);
+  const { pricingTier } = useUserData();
   const [modalState, setModalState] = useState({
     success: false,
     error: false,
@@ -69,6 +71,25 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
       if (isProductSet) description = product.productName.original + " | PRODUCT SET";
       if (productSet) description = product.productName.original + ` | SET OF ${productSet.productName.original}`;
 
+      const findPriceForTier = (product) => {
+        try {    
+          if (
+            product?.pricingTiers &&
+            Array.isArray(product.pricingTiers) &&
+            pricingTier
+          ) {
+            const priceData = product.pricingTiers.find(tierItem => tierItem.name === pricingTier);
+            if (priceData?.price) {
+              return priceData?.price;
+            }
+          }
+        } catch (error) {
+          // console.error("Error fetching price:", error);
+        }
+      
+        return Number(product?.price?.convertedAmount);
+      };
+
       return {
         lineItId: product._id,
         id: String(index + 1),
@@ -76,12 +97,13 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
         description: description,
         quantity: product.quantity,
         location: product.catalogReference.options.customTextFields.location,
-        price: Number(product.price.convertedAmount),
+        price: findPriceForTier(product),
         src: newUrl,
         productUrl: product.url,
         fullItem: product,
       };
     });
+
 
     try {
       if (lineItems.length === 0) {
@@ -89,6 +111,8 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
         setModalState({ success: false, error: true });
         return;
       }
+      console.log("lineItems", lineItems);
+      return;
 
       const response = await createPriceQuote({
         lineItems,
@@ -131,28 +155,51 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
     }
   };
 
+  const handleEmptyCart = () => {
+    setMessage("Your cart is currently empty. Please add items to continue");
+    setModalButtonLabel("Continue Shopping");
+    setModalButtonRedirection("/category/new");
+    setModalState({ success: false, error: true });
+  };  
+
   const getCart = async () => {
-    const cartData = await getProductsCart();
-    const fieldsToDecrypt = [
-      'amount',
-      'convertedAmount',
-      'formattedAmount',
-      'formattedConvertedAmount'
-    ];
-
-    cartData.forEach((item) => {
-      ['price', 'fullPrice', 'priceBeforeDiscounts'].forEach((field) => {
-        decryptPriceFields(item[field], fieldsToDecrypt);
+    try {
+      const response = await getProductsCart();
+      if (!response.length) {
+        handleEmptyCart();
+        return;
+      }
+  
+      const cartItemsIds = response.map(product => product.catalogReference.catalogItemId);
+      const pricingTiersData = await getCartPricingTiersData(cartItemsIds);
+  
+      const pricingTiersMap = new Map(pricingTiersData.map(tier => [tier._id, tier.pricingTiers]));
+  
+      const decryptPricingTiers = (tiers) => {
+        return tiers?.map(tier => ({
+          ...tier,
+          price: tier.price ? decryptField(tier.price) : undefined,
+          formattedPrice: tier.formattedPrice ? decryptField(tier.formattedPrice) : undefined
+        }));
+      };
+  
+      const decryptItemPrices = (item, fields) => {
+        fields.forEach(field => {
+          if (item[field]) decryptPriceFields(item[field], ['amount', 'convertedAmount', 'formattedAmount', 'formattedConvertedAmount']);
+        });
+      };
+  
+      const cartData = response.map(item => {
+        const pricingTiers = pricingTiersMap.get(item.catalogReference.catalogItemId) || [];
+        decryptItemPrices(item, ['price', 'fullPrice', 'priceBeforeDiscounts']);
+        return { ...item, pricingTiers: decryptPricingTiers(pricingTiers) };
       });
-    });
 
-    if (!cartData.length) {
-      setMessage("Your cart is currently empty. Please add items to continue");
-      setModalButtonLabel("Continue Shopping");
-      setModalButtonRedirection("/category/new");
-      setModalState({ success: false, error: true });
+      setCartItems(cartData);
+      setIsButtonDisabled(false);
+    } catch (error) {
+      console.error("Error fetching cart:", error);
     }
-    setCartItems(cartData);
   };
 
   useEffect(() => {
@@ -487,7 +534,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
                         <span className="submit-text">
                           {quoteRequestPageContent && !isButtonDisabled
                             ? quoteRequestPageContent.submitButtonLabel
-                            : "Submitting..."}
+                            : "Please wait..."}
                         </span>
                         <i className="icon-arrow-right"></i>
                       </button>

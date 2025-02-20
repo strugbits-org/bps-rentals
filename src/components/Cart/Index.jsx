@@ -11,6 +11,7 @@ import AnimateLink from "../Common/AnimateLink";
 import logError from "@/Utils/ServerActions";
 import { CartItem, CartItemGroup } from "./CartItem";
 import { debounce } from "lodash";
+import { getCartPricingTiersData } from "@/Services/ProductsApis";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -86,7 +87,15 @@ const CartPage = () => {
   const fetchCart = async () => {
     try {
       const response = await getProductsCart();
-      setCartItems(response);
+      const cartItemsIds = response.map((product) => product.catalogReference.catalogItemId);
+      const pricingTiersData = await getCartPricingTiersData(cartItemsIds);
+
+      const cartData = response.map((item) => {
+        const pricingTier = pricingTiersData.find((tier) => tier._id === item.catalogReference.catalogItemId);
+        return { ...item, pricingTiers : pricingTier.pricingTiers };
+      });
+      
+      setCartItems(cartData);
 
       const total = calculateTotalCartQuantity(response);
       setCookie("cartQuantity", total > 0 ? String(total) : "0", { path: "/" });

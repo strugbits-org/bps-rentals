@@ -32,7 +32,7 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
   );
 
   const variantsOptions = useMemo(() => {
-    return options.flatMap(({ product, variantData }) =>
+    return options.flatMap(({ product, variantData, pricingTiers }) =>
       product._id !== mainProduct?.product
         ? variantData
           .filter(({ sku, variant }) => variant._id && sku && !productsSet.some((prod) => prod.variant === sku))
@@ -43,7 +43,8 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
             slug: product.slug,
             size: variant.size,
             id: variant._id,
-            price: variant.price,
+            price: product.price,
+            pricingTiers: pricingTiers || [],
             color: variant.color,
             image: variant.imageSrc,
             label: `${product.name}${variant.color ? ` | ${variant.color}` : ""} | ${sku}`,
@@ -56,6 +57,12 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
     (e) => {
       setProductSetValue(e);
 
+      const decryptedPringTiers = e.pricingTiers.map((tier) => ({
+        ...tier,
+        price: decryptField(tier.price),
+        formattedPrice: decryptField(tier.formattedPrice),
+      }));
+
       const data = {
         product: e.productId,
         variant: e.value,
@@ -65,6 +72,7 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
         size: e.size,
         color: e.color,
         price: e.price ? decryptField(e.price) : "$0.00",
+        pricingTiers: decryptedPringTiers,
         image: e.image,
         quantity: 1,
       };

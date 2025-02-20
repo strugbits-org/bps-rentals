@@ -293,8 +293,32 @@ export const decryptProductPrices = (data) => {
     });
   }
 }
-export const findPriceForTier = (fullProductData, tier) => {
-  try {
+
+export const findPriceForTier = (fullProductData, tier, type = "product") => {
+  try {    
+    if (
+      fullProductData &&
+      fullProductData.pricingTiers &&
+      Array.isArray(fullProductData.pricingTiers) &&
+      tier
+    ) {
+      const priceData = fullProductData.pricingTiers.find(
+        (tierItem) => tierItem.name === tier
+      );      
+
+      if (priceData?.formattedPrice) {
+        return decryptField(type === "product" ? priceData?.formattedPrice : type === "cartProduct" ? priceData : priceData?.price);
+      }
+    }
+  } catch (error) {
+    // console.error("Error fetching price:", error);
+  }
+
+  return decryptField(type === "product" ? fullProductData?.product?.formattedPrice : fullProductData?.price);
+};
+
+export const findPriceTierForCartSet = (fullProductData, tier) => {
+  try {    
     if (
       fullProductData &&
       fullProductData.pricingTiers &&
@@ -306,12 +330,21 @@ export const findPriceForTier = (fullProductData, tier) => {
       );
 
       if (priceData?.formattedPrice) {
-        return decryptField(priceData.formattedPrice);
+        return decryptField(priceData?.formattedPrice);
       }
     }
   } catch (error) {
     // console.error("Error fetching price:", error);
   }
 
-  return decryptField(fullProductData?.product?.formattedPrice);
+  return decryptField(fullProductData?.price?.formattedAmount);
 };
+
+export const findPriceForTierWithQuantity = (fullProductData, tier, quantity) => {  
+  const price = findPriceForTier(fullProductData, tier, "cartProduct");  
+  const currencySymbol = decryptField(price.formattedPrice).charAt(0);
+  
+  const totalPrice = decryptField(price.price) * quantity;
+  const formattedPrice = totalPrice.toFixed(2);
+  return `${currencySymbol}${formattedPrice}`;
+}

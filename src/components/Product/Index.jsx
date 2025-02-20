@@ -25,7 +25,6 @@ import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
 import useUserData from "@/Hooks/useUserData";
-import { decryptField } from "@/Utils/Encrypt";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
@@ -155,8 +154,6 @@ const ProductPostPage = ({
       setProductFoundInCategories(categoriesFound);
     }
     setTimeout(markPageLoaded, 900);
-    console.log("selectedProductDetails", selectedProductDetails);
-    
   }, [selectedProductDetails]);
 
   const handleQuantityChange = async (value) => {
@@ -368,7 +365,7 @@ const ProductPostPage = ({
                         className="fs--60 fs-phone-30 product-name"
                         data-aos="d:loop"
                       >
-                        {selectedProductDetails.product.name} {pricingTier}
+                        {selectedProductDetails.product.name}
                       </h1>
                     </div>
                   </div>

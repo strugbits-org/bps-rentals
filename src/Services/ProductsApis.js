@@ -624,3 +624,24 @@ export const getCatalogIdBySku = async (productSku) => {
     return [];
   }
 };
+
+export const getCartPricingTiersData = async (product) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "DemoProductData",
+      hasSome: [{ key: "product", values: product }],
+    });
+
+    if (!response?._items) {
+      throw new Error("Response does not contain _items");
+    }
+
+    return response._items.map(({ data }) => ({
+      _id : data.product,
+      pricingTiers: Array.isArray(data?.pricingTiers) ? data.pricingTiers : [],
+    }));
+  } catch (error) {
+    logError("Error fetching products pricing tiers data:", error);
+    return [];
+  }
+};

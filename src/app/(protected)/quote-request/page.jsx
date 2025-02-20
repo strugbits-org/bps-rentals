@@ -8,15 +8,15 @@ export async function generateMetadata() {
   try {
     const metaData = await getPageMetaData("quote-request");
     const { title, noFollowTag } = metaData;
-    
-const metadata = {
+
+    const metadata = {
       title,
     };
 
     if (process.env.NEXT_PUBLIC_ENVIRONMENT === "PRODUCTION" && noFollowTag) {
       metadata.robots = "noindex,nofollow";
     }
-    
+
     return metadata;
   } catch (error) {
     logError("Error in metadata(Quote Request page):", error);
