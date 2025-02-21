@@ -7,7 +7,7 @@ const baseUrl = process.env.BASE_URL;
 export const getAllProducts = async ({ categories = [], searchTerm, adminPage = false }) => {
   try {
     const payload = {
-      dataCollectionId: "locationFilteredVariant",
+      dataCollectionId: "DemoProductData",
       includeReferencedItems: ["product"],
       ne: [
         {
@@ -59,7 +59,7 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
 export const getProductsByCategory = async (categories = [], adminPage = false) => {
   try {
     const payload = {
-      dataCollectionId: "locationFilteredVariant",
+      dataCollectionId: "DemoProductData",
       includeReferencedItems: ["product"],
       ne: [
         {
@@ -98,7 +98,7 @@ export const getProductsByCategory = async (categories = [], adminPage = false) 
 export const fetchProductsByIds = async (products) => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "locationFilteredVariant",
+      dataCollectionId: "DemoProductData",
       includeReferencedItems: [
         "product"
       ],
@@ -136,7 +136,7 @@ export const fetchProductsByIds = async (products) => {
 export const fetchAllProducts = async (slug) => {
   try {
     const payload = {
-      dataCollectionId: "locationFilteredVariant",
+      dataCollectionId: "DemoProductData",
       includeReferencedItems: ["product"],
       limit: "infinite",
       increasedLimit: 700,
@@ -164,7 +164,7 @@ export const fetchAllProducts = async (slug) => {
 export const fetchAllProductsPaths = async () => {
   try {
     const payload = {
-      dataCollectionId: "locationFilteredVariant",
+      dataCollectionId: "DemoProductData",
       includeReferencedItems: ["product"],
       limit: "infinite",
       increasedLimit: 700,
@@ -202,7 +202,7 @@ export const fetchAllProductsPaths = async () => {
 export const searchProducts = async (term, location) => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "locationFilteredVariant",
+      dataCollectionId: "DemoProductData",
       includeReferencedItems: ["product"],
       ne: [
         {
@@ -290,7 +290,7 @@ export const getAllProductVariants = async () => {
 export const getBestSellerProducts = async (bestSeller, limit) => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "locationFilteredVariant",
+      dataCollectionId: "DemoProductData",
       includeReferencedItems: ["product"],
       ne: [
         {
@@ -621,6 +621,27 @@ export const getCatalogIdBySku = async (productSku) => {
     }
   } catch (error) {
     logError("Error fetching product variants:", error);
+    return [];
+  }
+};
+
+export const getCartPricingTiersData = async (product) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "DemoProductData",
+      hasSome: [{ key: "product", values: product }],
+    });
+
+    if (!response?._items) {
+      throw new Error("Response does not contain _items");
+    }
+
+    return response._items.map(({ data }) => ({
+      _id : data.product,
+      pricingTiers: Array.isArray(data?.pricingTiers) ? data.pricingTiers : [],
+    }));
+  } catch (error) {
+    logError("Error fetching products pricing tiers data:", error);
     return [];
   }
 };

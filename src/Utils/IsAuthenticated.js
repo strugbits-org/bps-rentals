@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { authWixClient, createWixClient } from "./CreateWixClient";
 import logError from "./ServerActions";
 import { extractPermissions } from "./checkPermissions";
+import { getMemberPricingTier } from "@/Services/Index";
 
 export const isAuthenticated = async (token) => {
   try {
@@ -44,6 +45,7 @@ export const isAuthenticated = async (token) => {
 
     const badgeIds = memberBadges?.memberBadgeIds?.[0]?.badgeIds || [];
     const permissions = extractPermissions(badgeIds);
+    const pricingTier = await getMemberPricingTier(badgeIds);    
 
     const loggedInUserData = {
       ...memberData._items[0].data,
@@ -51,7 +53,8 @@ export const isAuthenticated = async (token) => {
       firstName: privateMemberData._items[0].data.firstName,
       lastName: privateMemberData._items[0].data.lastName,
       phone: privateMemberData._items[0].data.mainPhone,
-      permissions: permissions
+      permissions: permissions,
+      pricingTier: pricingTier
     };
 
     if (memberData._items.length === 0) {

@@ -34,6 +34,7 @@ const Login = ({
         email: formData.email,
         password: formData.password,
       });
+      
       if (response?.error) {
         throw new Error(response.message);
       }
@@ -64,7 +65,7 @@ const Login = ({
         });
       }
     } catch (error) {
-      setMessage("Error during login, please try again.");
+      setMessage(error.message || "Error during login, please try again.");
       setModalState({ success: false, error: true });
       submenuLogin.classList.add("active");
       logError("Error during login:", error);

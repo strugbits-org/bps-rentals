@@ -10,7 +10,7 @@ import {
   resetSlideIndex,
   updatedWatched,
 } from "@/Utils/AnimationFunctions";
-import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, compareArray, findPriceForTier } from "@/Utils/Utils";
 
 import { getSavedProductData } from "@/Services/ProductsApis";
 import { AddProductToCart } from "@/Services/CartApis";
@@ -25,7 +25,6 @@ import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
 import useUserData from "@/Hooks/useUserData";
-import { decryptField } from "@/Utils/Encrypt";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
@@ -62,7 +61,7 @@ const ProductPostPage = ({
   const [cartQuantity, setCartQuantity] = useState(1);
   const [customTextFields, setCustomTextFields] = useState({});
 
-  const { permissions } = useUserData();
+  const { permissions, pricingTier } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
   const SHOW_FIREPROOF_CERTIFICATES = permissions && permissions.includes(PERMISSIONS.SHOW_FIREPROOF_CERTIFICATES);
   const SHOW_DOCUMENTS = permissions && permissions.includes(PERMISSIONS.SHOW_DOCUMENTS);
@@ -75,7 +74,7 @@ const ProductPostPage = ({
     if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
       const combinedVariantData = {
         ...selectedVariantData,
-        ...selectedVariantFilteredData,
+        ...selectedVariantFilteredData, 
         modalUrl: modalUrl,
       };
 
@@ -425,9 +424,7 @@ const ProductPostPage = ({
                         <li className="seat-height">
                           <span className="specs-title">Price</span>
                           <span className="specs-text">
-                            {decryptField(
-                              selectedProductDetails.product.formattedPrice
-                            )}
+                            {findPriceForTier(selectedProductDetails, pricingTier)}
                           </span>
                         </li>
                       )}

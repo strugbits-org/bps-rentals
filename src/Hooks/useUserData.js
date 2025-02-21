@@ -16,7 +16,7 @@ function useUserData() {
         logError("Error parsing user data from cookie", error);
       }
     }
-  }, [cookies]);
+  }, [cookies]);  
 
   return {
     signedUserData,
@@ -25,7 +25,8 @@ function useUserData() {
     lastName: signedUserData?.lastName,
     memberId: signedUserData?.memberId,
     phone: signedUserData?.mainPhone,
-    permissions: signedUserData?.permissions?.map(x => decryptField(x)) || []
+    permissions: signedUserData?.permissions?.map(x => decryptField(x)) || [],
+    pricingTier: decryptField(signedUserData?.pricingTier),
   };
 }
 

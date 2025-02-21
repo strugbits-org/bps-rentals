@@ -10,7 +10,7 @@ import {
   resetSlideIndex,
   updatedWatched,
 } from "@/Utils/AnimationFunctions";
-import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, compareArray, findPriceForTier } from "@/Utils/Utils";
 
 import { getSavedProductData } from "@/Services/ProductsApis";
 import { AddProductToCart } from "@/Services/CartApis";
@@ -28,7 +28,6 @@ import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
-import { decryptField } from "@/Utils/Encrypt";
 
 const ProductCollectionPage = ({
   selectedProductDetails,
@@ -63,7 +62,7 @@ const ProductCollectionPage = ({
   const [productsSets, setProductsSets] = useState([]);
   const [totalPrice, setTotalPrice] = useState();
 
-  const { permissions } = useUserData();
+  const { permissions, pricingTier } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
   const SHOW_FIREPROOF_CERTIFICATES = permissions && permissions.includes(PERMISSIONS.SHOW_FIREPROOF_CERTIFICATES);
   const SHOW_DOCUMENTS = permissions && permissions.includes(PERMISSIONS.SHOW_DOCUMENTS);
@@ -149,7 +148,7 @@ const ProductCollectionPage = ({
   };
 
   useEffect(() => {
-    const prices = productsSets.map(({ price, quantity }) => Number(decryptField(price).replace(/[^\d.-]/g, '')) * quantity);
+    const prices = productsSets.map(set => Number((findPriceForTier(set, pricingTier, "set")).replace(/[^\d.-]/g, '')) * set.quantity);
     const total = prices.reduce((acc, x) => acc + x, 0);
     setTotalPrice(`$ ${total.toFixed(2)}`);
   }, [productsSets]);
@@ -396,7 +395,9 @@ const ProductCollectionPage = ({
                       {SHOW_PRICES && <span className="price">Price</span>}
                       <span className="quantity">Quantity</span>
                     </div>
-                    {productsSets.map(({ name, variant, slug, color, price, size, quantity }) => {
+                    {productsSets.map((set) => {
+                      const { name, variant, slug, color, size, quantity } = set;
+                      
                       return (
                         <div key={variant} className="product-set-item fs--16">
                           <AnimateLink
@@ -407,7 +408,7 @@ const ProductCollectionPage = ({
                             {name} {color ? `| ${color}` : ""}
                           </AnimateLink>
                           <span className="size">{size || "-"}</span>
-                          {SHOW_PRICES && <span className="price">{decryptField(price) || "-"}</span>}
+                          {SHOW_PRICES && <span className="price">{findPriceForTier(set, pricingTier, "set")}</span>}
                           <div className="quantity container-add-to-cart">
                             <div className="container-input container-input-quantity">
                               <button

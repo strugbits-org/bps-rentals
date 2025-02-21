@@ -32,20 +32,6 @@ export const findLocation = (data) => {
     .map((x) => x.plainText.original);
 };
 
-export const formatPrice = (price, quantity) => {
-  const currencySymbol = price.formattedAmount.charAt(0);
-  const totalPrice = price.amount * quantity;
-  const formattedPrice = totalPrice.toFixed(2);
-  return `${currencySymbol}${formattedPrice}`;
-}
-
-export const formatPriceEncrypted = (price, quantity) => {
-  const currencySymbol = decryptField(price.formattedAmount).charAt(0);
-  const totalPrice = decryptField(price.amount) * quantity;
-  const formattedPrice = totalPrice.toFixed(2);
-  return `${currencySymbol}${formattedPrice}`;
-}
-
 export const extractSlugFromUrl = (url) => {
   const regex = /\/([^\/]+)\/?$/;
   const match = regex.exec(url);
@@ -292,4 +278,73 @@ export const decryptProductPrices = (data) => {
       return val;
     });
   }
+}
+
+export const formatPrice = (price, quantity) => {
+  const currencySymbol = price.formattedAmount.charAt(0);
+  const totalPrice = price.amount * quantity;
+  const formattedPrice = totalPrice.toFixed(2);
+  return `${currencySymbol}${formattedPrice}`;
+}
+
+export const formatPriceEncrypted = (price, quantity) => {
+  const currencySymbol = decryptField(price.formattedAmount).charAt(0);
+  const totalPrice = decryptField(price.amount) * quantity;
+  const formattedPrice = totalPrice.toFixed(2);
+  return `${currencySymbol}${formattedPrice}`;
+}
+
+export const findPriceForTier = (fullProductData, tier, type = "product") => {
+  try {
+    if (
+      fullProductData &&
+      fullProductData.pricingTiers &&
+      Array.isArray(fullProductData.pricingTiers) &&
+      tier
+    ) {
+      const priceData = fullProductData.pricingTiers.find(
+        (tierItem) => tierItem.name === tier
+      );
+
+      if (priceData?.formattedPrice) {
+        return decryptField(type === "product" ? priceData?.formattedPrice : type === "cartProduct" ? priceData : priceData?.price);
+      }
+    }
+  } catch (error) {
+    // console.error("Error fetching price:", error);
+  }
+
+  return decryptField(type === "product" ? fullProductData?.product?.formattedPrice : fullProductData?.price);
+};
+
+export const findPriceTierForCartSet = (fullProductData, tier) => {
+  try {
+    if (
+      fullProductData &&
+      fullProductData.pricingTiers &&
+      Array.isArray(fullProductData.pricingTiers) &&
+      tier
+    ) {
+      const priceData = fullProductData.pricingTiers.find(
+        (tierItem) => tierItem.name === tier
+      );
+
+      if (priceData?.formattedPrice) {
+        return decryptField(priceData?.formattedPrice);
+      }
+    }
+  } catch (error) {
+    // console.error("Error fetching price:", error);
+  }
+
+  return decryptField(fullProductData?.price?.formattedAmount);
+};
+
+export const findPriceForTierWithQuantity = (fullProductData, tier, quantity) => {
+  const price = findPriceForTier(fullProductData, tier, "cartProduct");
+  const currencySymbol = decryptField(price?.formattedPrice || price?.formattedAmount).charAt(0);
+  const totalPrice = decryptField(price?.price || price.convertedAmount) * quantity;
+
+  const formattedPrice = totalPrice.toFixed(2);
+  return `${currencySymbol}${formattedPrice}`;
 }

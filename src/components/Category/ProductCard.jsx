@@ -1,8 +1,7 @@
 import AnimateLink from "../Common/AnimateLink";
 import React, { useEffect, useState } from "react";
 import { SaveProductButton } from "../Common/SaveProductButton";
-import { compareArray } from "@/Utils/Utils";
-import { decryptField } from "@/Utils/Encrypt";
+import { compareArray, findPriceForTier } from "@/Utils/Utils";
 import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
@@ -25,7 +24,7 @@ const ProductCard = ({
   const [filteredVariants, setFilteredVariants] = useState(variantData);
   const [activeVariant, setActiveVariant] = useState(defaultVariantData);
   const [isBestSeller, setIsBestSeller] = useState(false);
-  const { permissions } = useUserData();
+  const { permissions, pricingTier } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
 
@@ -99,7 +98,7 @@ const ProductCard = ({
                 })}
               </div>
               <div className="dimensions"><span>{activeVariant.location.toString()} <i className="icon-pin"></i></span></div>
-              <div className="dimensions">{product && SHOW_PRICES && (<span>{decryptField(product.formattedPrice)}</span>)}</div>
+              <div className="dimensions">{product && SHOW_PRICES && (<span>{findPriceForTier(productData, pricingTier)}</span>)}</div>
             </div>
           )}
         </div>

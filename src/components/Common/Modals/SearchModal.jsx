@@ -28,7 +28,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [filteredPortfolios, setFilteredPortfolios] = useState([]);
   const [filteredPages, setFilteredPages] = useState([]);
-  const [cookies, setCookie] = useCookies(["location"]);
+  const [cookies, _setCookie] = useCookies(["location"]);
 
   const handleSearchFilter = (value) => {
     const term = value !== undefined ? value : searchTerm;

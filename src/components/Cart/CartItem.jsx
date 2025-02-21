@@ -1,18 +1,17 @@
-import { extractSlugFromUrl, formatDescriptionLines, formatPriceEncrypted } from '@/Utils/Utils';
-import React from 'react'
+"use client";
+import { extractSlugFromUrl, findPriceForTierWithQuantity, findPriceTierForCartSet, formatDescriptionLines, formatPriceEncrypted } from '@/Utils/Utils';
+import React, { useEffect, useState } from 'react'
 import { ImageWrapper } from '../Common/ImageWrapper';
 import { PERMISSIONS } from '@/Utils/Schema/permissions';
 import useUserData from '@/Hooks/useUserData';
 import AnimateLink from '../Common/AnimateLink';
 import "@/assets/style/product-set.css"
-import { decryptField } from '@/Utils/Encrypt';
-
 
 export const CartItem = ({ data, isReadOnly, handleQuantityChange, updateProducts, removeProduct }) => {
-    const { permissions } = useUserData();
+    const { permissions, pricingTier } = useUserData();
     const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
-    const { _id, quantity, productName, url, image, physicalProperties, descriptionLines, price } = data;
+    const { _id, quantity, productName, url, image, physicalProperties, descriptionLines } = data;
     const formattedDescription = formatDescriptionLines(descriptionLines);
 
     return (
@@ -82,7 +81,7 @@ export const CartItem = ({ data, isReadOnly, handleQuantityChange, updateProduct
                             })}
                         </ul>
                         <div>
-                            {SHOW_PRICES && <div class="fs--24 mb-10 text-right">{formatPriceEncrypted(price, quantity, true)}</div>}
+                            {SHOW_PRICES && <div class="fs--24 mb-10 text-right">{findPriceForTierWithQuantity(data, pricingTier, quantity)}</div>}
                             <div className="quantity position-static-lg">
                                 <span className="fs--20 no-mobile">
                                     Quantity
@@ -136,22 +135,27 @@ export const CartItem = ({ data, isReadOnly, handleQuantityChange, updateProduct
 }
 
 export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updateProducts, removeProduct }) => {
-    const { permissions } = useUserData();
+    const { permissions, pricingTier } = useUserData();
     const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
+    const [totalPrice, setTotalPrice] = useState();
 
     const { _id, productName, url, image, productSets, descriptionLines, physicalProperties } = data;
     const ids = [_id, ...productSets.map((item) => item._id)];
     const formattedDescription = formatDescriptionLines(descriptionLines);
     const location = formattedDescription.find(x => x.title === "location")?.value || "-";
-
-    const prices = productSets.map((set) => {
-        const { quantity, price } = set;
-        const formattedPrice = formatPriceEncrypted(price, quantity, true);
-        const convertToNumber = Number(formattedPrice.replace(/[^\d.-]/g, ''));
-        return convertToNumber;
-    });
-    const total = prices.reduce((acc, x) => acc + x, 0);
-    const formattedPrice = `$ ${total.toFixed(2)}`;
+    
+    useEffect(() => {
+        const prices = productSets.map((set) => {
+            const { quantity, price } = set;
+            const formattedPrice = pricingTier && set?.pricingTiers?.length > 0 ? findPriceForTierWithQuantity(set, pricingTier, quantity) : formatPriceEncrypted(price, quantity);
+            const convertToNumber = Number(formattedPrice.replace(/[^\d.-]/g, ''));
+            return convertToNumber;
+        });
+        const total = prices.reduce((acc, x) => acc + x, 0);
+        const formattedPrice = `$ ${total.toFixed(2)}`;
+        
+        setTotalPrice(formattedPrice);
+    }, [productSets, pricingTier]);
 
     return (
         <li className="list-item list-item-cart">
@@ -205,7 +209,7 @@ export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updatePr
                                 </li>
                             </ul>
 
-                            {SHOW_PRICES && <div className="fs--24">{formattedPrice}</div>}
+                            {SHOW_PRICES && <div className="fs--24">{totalPrice}</div>}
                         </div>
                     </div>
                     <div className="product-set-table">
@@ -231,7 +235,7 @@ export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updatePr
                                         {item.productName.original} {color ? `| ${color}` : ""}
                                     </AnimateLink>
                                     <span className="size">{size}</span>
-                                    {SHOW_PRICES && <span className="price">{decryptField(item.price.formattedAmount) || "-"}</span>}
+                                    {SHOW_PRICES && <span className="price">{findPriceTierForCartSet(item, pricingTier) || "-"}</span>}
                                     {isReadOnly ? (
                                         <span className="quantity read-only">
                                             {quantity}

@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 
 export const AvailabilityCard = ({ selectedVariantData, setUnavailable }) => {
     const [message, setMessage] = useState();
-    const [cookies, setCookie] = useCookies(["location"]);
+    const [cookies, _setCookie] = useCookies(["location"]);
 
     const { location } = selectedVariantData;
     useEffect(() => {
