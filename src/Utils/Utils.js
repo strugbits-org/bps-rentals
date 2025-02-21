@@ -32,20 +32,6 @@ export const findLocation = (data) => {
     .map((x) => x.plainText.original);
 };
 
-export const formatPrice = (price, quantity) => {
-  const currencySymbol = price.formattedAmount.charAt(0);
-  const totalPrice = price.amount * quantity;
-  const formattedPrice = totalPrice.toFixed(2);
-  return `${currencySymbol}${formattedPrice}`;
-}
-
-export const formatPriceEncrypted = (price, quantity) => {
-  const currencySymbol = decryptField(price.formattedAmount).charAt(0);
-  const totalPrice = decryptField(price.amount) * quantity;
-  const formattedPrice = totalPrice.toFixed(2);
-  return `${currencySymbol}${formattedPrice}`;
-}
-
 export const extractSlugFromUrl = (url) => {
   const regex = /\/([^\/]+)\/?$/;
   const match = regex.exec(url);
@@ -294,8 +280,22 @@ export const decryptProductPrices = (data) => {
   }
 }
 
+export const formatPrice = (price, quantity) => {
+  const currencySymbol = price.formattedAmount.charAt(0);
+  const totalPrice = price.amount * quantity;
+  const formattedPrice = totalPrice.toFixed(2);
+  return `${currencySymbol}${formattedPrice}`;
+}
+
+export const formatPriceEncrypted = (price, quantity) => {
+  const currencySymbol = decryptField(price.formattedAmount).charAt(0);
+  const totalPrice = decryptField(price.amount) * quantity;
+  const formattedPrice = totalPrice.toFixed(2);
+  return `${currencySymbol}${formattedPrice}`;
+}
+
 export const findPriceForTier = (fullProductData, tier, type = "product") => {
-  try {    
+  try {
     if (
       fullProductData &&
       fullProductData.pricingTiers &&
@@ -304,7 +304,7 @@ export const findPriceForTier = (fullProductData, tier, type = "product") => {
     ) {
       const priceData = fullProductData.pricingTiers.find(
         (tierItem) => tierItem.name === tier
-      );      
+      );
 
       if (priceData?.formattedPrice) {
         return decryptField(type === "product" ? priceData?.formattedPrice : type === "cartProduct" ? priceData : priceData?.price);
@@ -318,7 +318,7 @@ export const findPriceForTier = (fullProductData, tier, type = "product") => {
 };
 
 export const findPriceTierForCartSet = (fullProductData, tier) => {
-  try {    
+  try {
     if (
       fullProductData &&
       fullProductData.pricingTiers &&
@@ -340,11 +340,11 @@ export const findPriceTierForCartSet = (fullProductData, tier) => {
   return decryptField(fullProductData?.price?.formattedAmount);
 };
 
-export const findPriceForTierWithQuantity = (fullProductData, tier, quantity) => {  
-  const price = findPriceForTier(fullProductData, tier, "cartProduct");  
-  const currencySymbol = decryptField(price.formattedPrice).charAt(0);
-  
-  const totalPrice = decryptField(price.price) * quantity;
+export const findPriceForTierWithQuantity = (fullProductData, tier, quantity) => {
+  const price = findPriceForTier(fullProductData, tier, "cartProduct");
+  const currencySymbol = decryptField(price?.formattedPrice || price?.formattedAmount).charAt(0);
+  const totalPrice = decryptField(price?.price || price.convertedAmount) * quantity;
+
   const formattedPrice = totalPrice.toFixed(2);
   return `${currencySymbol}${formattedPrice}`;
 }

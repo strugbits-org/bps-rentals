@@ -80,7 +80,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
           ) {
             const priceData = product.pricingTiers.find(tierItem => tierItem.name === pricingTier);
             if (priceData?.price) {
-              return priceData?.price;
+              return Number(priceData?.price);
             }
           }
         } catch (error) {
@@ -93,7 +93,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
       return {
         lineItId: product._id,
         id: String(index + 1),
-        name: product.physicalProperties.sku,
+        name: product.physicalProperties.sku || "-",
         description: description,
         quantity: product.quantity,
         location: product.catalogReference.options.customTextFields.location,
@@ -111,8 +111,6 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
         setModalState({ success: false, error: true });
         return;
       }
-      console.log("lineItems", lineItems);
-      return;
 
       const response = await createPriceQuote({
         lineItems,

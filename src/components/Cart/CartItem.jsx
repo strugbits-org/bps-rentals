@@ -147,7 +147,7 @@ export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updatePr
     useEffect(() => {
         const prices = productSets.map((set) => {
             const { quantity, price } = set;
-            const formattedPrice = pricingTier && set?.pricingTiers?.length ? findPriceForTierWithQuantity(set, pricingTier, quantity) : formatPriceEncrypted(price, quantity);
+            const formattedPrice = pricingTier && set?.pricingTiers?.length > 0 ? findPriceForTierWithQuantity(set, pricingTier, quantity) : formatPriceEncrypted(price, quantity);
             const convertToNumber = Number(formattedPrice.replace(/[^\d.-]/g, ''));
             return convertToNumber;
         });
