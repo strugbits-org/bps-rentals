@@ -15,7 +15,7 @@ export const GET = async (req, context) => {
     const id = params.id;
 
     const wixClient = await createWixClientApiStrategy();
-    const locationFilterVariantData = await wixClient.items.queryDataItems({ dataCollectionId: "DemoProductData" })
+    const locationFilterVariantData = await wixClient.items.queryDataItems({ dataCollectionId: "locationFilteredVariant" })
       .eq("product", id)
       .find();
 
@@ -30,7 +30,7 @@ export const GET = async (req, context) => {
     await wixClient.items.updateDataItem(
       productData._id,
       {
-        dataCollectionId: "DemoProductData",
+        dataCollectionId: "locationFilteredVariant",
         dataItem: {
           _id: productData._id,
           data: {

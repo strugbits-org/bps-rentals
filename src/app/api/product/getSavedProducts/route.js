@@ -13,7 +13,7 @@ export const POST = async (req) => {
     }
 
     const data = await getDataFetchFunction({
-      "dataCollectionId": "DemoProductData",
+      "dataCollectionId": "locationFilteredVariant",
       "includeReferencedItems": [
         "category",
         "product",
