@@ -220,8 +220,8 @@ export const searchProducts = async (term, location) => {
           values: location,
         }
       ],
+      search: ["search", term],
       includeVariants: false,
-      contains: ["search", term],
       limit: 3,
     });
 
