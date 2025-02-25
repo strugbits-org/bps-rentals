@@ -42,9 +42,13 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
     }
 
     if (categories.length === 0 && searchTerm) {
-      return products.filter(product =>
-        searchTerm === "" || (product.search && product.search.toLowerCase().includes(searchTerm))
-      );
+      const term = searchTerm.trim().toLowerCase();
+      if (!term) return products;
+    
+      const words = term.split(/\s+/).filter(Boolean);
+      const searchRegex = new RegExp(words.map(word => `(?=.*${word})`).join(""), "i");
+    
+      return products.filter(product => searchRegex.test(product.search?.toLowerCase() || ""));
     }
 
     return products.filter(product =>
