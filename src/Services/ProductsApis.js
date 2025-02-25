@@ -214,41 +214,46 @@ export const fetchAllProductsPaths = async () => {
     logError("Error fetching all products:", error);
   }
 };
+
 export const searchProducts = async (term, location) => {
   try {
-    const response = await getDataFetchFunction({
+    const baseFilters = {
       dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: ["product"],
       ne: [
-        {
-          key: "hidden",
-          value: true,
-        },
-        {
-          key: "isF1Exclusive",
-          value: true,
-        },
+        { key: "hidden", value: true },
+        { key: "isF1Exclusive", value: true }
       ],
-      hasSome: [
-        {
-          key: "location",
-          values: location,
-        }
-      ],
-      search: ["search", term],
+      hasSome: [{ key: "location", values: location }],
       includeVariants: false,
       limit: 3,
-    });
+    };
 
-    if (!response || !response._items) {
-      throw new Error("Response does not contain _items", response);
+    const fetchProducts = async (searchKey, limit, excludeIds = []) => {
+      const response = await getDataFetchFunction({
+        ...baseFilters,
+        search: [searchKey, term],
+        limit,
+        ne: [...baseFilters.ne, ...excludeIds.map(id => ({ key: "product", value: id }))],
+      });
+      return response?._items?.map(x => x.data) || [];
+    };
+
+    let items = await fetchProducts("title", 3);
+
+    if (items.length < 3) {
+      const excludeIds = items.map(({ product }) => product?._id);
+      const additionalItems = await fetchProducts("search", 3 - items.length, excludeIds);
+      items = items.concat(additionalItems);
     }
-    return response._items.map(x => x.data);
+
+    return items;
   } catch (error) {
     logError("Error searching products:", error);
     return [];
   }
 };
+
 export const getAllColorsData = async () => {
   try {
     const response = await getDataFetchFunction({
