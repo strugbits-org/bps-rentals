@@ -44,11 +44,22 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
     if (categories.length === 0 && searchTerm) {
       const term = searchTerm.trim().toLowerCase();
       if (!term) return products;
-    
+
       const words = term.split(/\s+/).filter(Boolean);
       const searchRegex = new RegExp(words.map(word => `(?=.*${word})`).join(""), "i");
-    
-      return products.filter(product => searchRegex.test(product.search?.toLowerCase() || ""));
+
+      const productsData = products.filter(product => searchRegex.test(product.search?.toLowerCase() || ""));
+      productsData.sort((a, b) => {
+        const aTitle = a.search?.toLowerCase().split(",", 1)[0] || "";
+        const bTitle = b.search?.toLowerCase().split(",", 1)[0] || "";
+
+        const aTitleMatch = searchRegex.test(aTitle);
+        const bTitleMatch = searchRegex.test(bTitle);
+
+        return bTitleMatch - aTitleMatch;
+      });
+      
+      return productsData;
     }
 
     return products.filter(product =>
@@ -641,7 +652,7 @@ export const getCartPricingTiersData = async (product) => {
     }
 
     return response._items.map(({ data }) => ({
-      _id : data.product,
+      _id: data.product,
       pricingTiers: Array.isArray(data?.pricingTiers) ? data.pricingTiers : [],
     }));
   } catch (error) {
