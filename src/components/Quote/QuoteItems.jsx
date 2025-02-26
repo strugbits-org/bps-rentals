@@ -6,7 +6,7 @@ import { PERMISSIONS } from "@/Utils/Schema/permissions";
 import { CartItem, CartItemGroup } from "../Cart/CartItem";
 import { useEffect } from "react";
 
-const QuoteItems = ({ quoteData }) => {
+const QuoteItems = ({ quoteData, status }) => {
   const { permissions } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
   const [cartItems, setCartItems] = useState([]);
@@ -21,6 +21,7 @@ const QuoteItems = ({ quoteData }) => {
           key={fullItem._id}
           data={fullItem}
           isReadOnly={true}
+          status={status}
           handleQuantityChange={() => { }}
           updateProducts={() => { }}
           removeProduct={() => { }}
@@ -30,6 +31,8 @@ const QuoteItems = ({ quoteData }) => {
           key={fullItem._id}
           data={fullItem}
           isReadOnly={true}
+          cartData={cart}
+          status={status}
           handleQuantityChange={() => { }}
           updateProducts={() => { }}
           removeProduct={() => { }}
@@ -109,7 +112,7 @@ const QuoteItems = ({ quoteData }) => {
 
   useEffect(() => {
     if (!quoteData?.length) return;
-  
+
     // Separate items with and without productSetId in a single loop for better efficiency
     const productSets = [];
     const items = [];
@@ -121,29 +124,29 @@ const QuoteItems = ({ quoteData }) => {
         items.push(item);
       }
     });
-  
+
     // Map items and attach corresponding productSets if `isProductSet` is true
     const data = items.map((item) => {
       const isProductSet = item?.fullItem?.catalogReference?.options?.customTextFields?.isProductSet;
       if (!isProductSet) return item;
-  
+
       // Find and attach associated product sets
       const associatedSets = productSets
         .filter((set) =>
           set?.fullItem?.catalogReference?.options?.customTextFields?.productSetId ===
           item?.fullItem?.catalogReference?.catalogItemId
         )
-        .map((set) => set.fullItem);
-  
+        .map((set) => { return { ...set.fullItem, quotePrice: set.price } });
+
       return {
         ...item,
         fullItem: { ...item.fullItem, productSets: associatedSets },
       };
     });
-  
+
     setCartItems(data);
   }, [quoteData]);
-  
+
 
   if (!quoteData || !quoteData?.length) return;
 
