@@ -229,24 +229,26 @@ export const searchProducts = async (term, location) => {
       limit: 3,
     };
 
-    const fetchProducts = async (searchKey, limit, excludeIds = []) => {
+    const fetchProducts = async (searchKey, limit, excludeIds = [], searchPrefix = " ") => {
       const response = await getDataFetchFunction({
         ...baseFilters,
         search: [searchKey, term],
         limit,
+        searchPrefix,
         ne: [...baseFilters.ne, ...excludeIds.map(id => ({ key: "product", value: id }))],
       });
-      return response?._items?.map(x => x.data) || [];
+      return response._items?.filter(item => typeof item.data.product !== "string").map(item => item.data) || [];
     };
 
     let items = await fetchProducts("title", 3);
+    if (items.length === 3) return items;
 
-    if (items.length < 3) {
-      const excludeIds = items.map(({ product }) => product?._id);
-      const additionalItems = await fetchProducts("search", 3 - items.length, excludeIds);
-      items = items.concat(additionalItems);
-    }
+    let excludeIds = items.map(({ product }) => product?._id);
+    items = items.concat(await fetchProducts("title", 3 - items.length, excludeIds, ""));
+    if (items.length === 3) return items;
 
+    excludeIds = items.map(({ product }) => product?._id);
+    items = items.concat(await fetchProducts("search", 3 - items.length, excludeIds, ""));
     return items;
   } catch (error) {
     logError("Error searching products:", error);

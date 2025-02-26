@@ -45,6 +45,7 @@ const getDataFetchFunction = async (payload) => {
       sortKey,
       isNotEmpty,
       search,
+      searchPrefix,
       log
     } = payload;
 
@@ -70,9 +71,9 @@ const getDataFetchFunction = async (payload) => {
 
     if (search?.length === 2) {
       const words = search[1].split(/\s+/).filter(Boolean);
-      dataQuery = dataQuery.contains(search[0], words[0] || "");
+      dataQuery = dataQuery.contains(search[0], searchPrefix ? searchPrefix + words[0] : words[0] || "");
       for (let i = 1; i < words.length; i++) {
-        dataQuery = dataQuery.and(dataQuery.contains(search[0], words[i]));
+        dataQuery = dataQuery.and(dataQuery.contains(search[0], searchPrefix ? searchPrefix + words[i] : words[i] || ""));
       }
     };
 
@@ -134,7 +135,7 @@ const getDataFetchFunction = async (payload) => {
                   encryptPriceFields(val2, fieldsToEncrypt);
                 })
               }
-                
+
               return set;
             });
           }
