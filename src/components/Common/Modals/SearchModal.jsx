@@ -31,32 +31,31 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const [cookies, _setCookie] = useCookies(["location"]);
 
   const handleSearchFilter = (value) => {
-    const term = value !== undefined ? value : searchTerm;
-    const filteredPagesData = searchPagesData.filter(page => {
-      const matchedTerm = term === "" || (page.content && page.content.toLowerCase().includes(term));
-      return matchedTerm;
-    });
-    setFilteredPages(filteredPagesData);
-
-    const filteredPortfoliosData = portfolios.filter(portfolio => {
-      const matchedTerm = term === "" || (portfolio.titleAndDescription && portfolio.titleAndDescription.toLowerCase().includes(term));
-      return matchedTerm;
-    });
-    setPortfoliosResult(filteredPortfoliosData);
-
-    const filteredBlogsData = blogs.filter(blog => {
-      const matchedTerm = term === "" || (blog.titleAndDescription && blog.titleAndDescription.toLowerCase().includes(term));
-      return matchedTerm;
-    });
-    setBlogsResult(filteredBlogsData);
-  }
+    const term = (value ?? searchTerm).trim().toLowerCase();
+    if (!term) {
+      setFilteredPages(searchPagesData);
+      setPortfoliosResult(portfolios);
+      setBlogsResult(blogs);
+      return;
+    }
+  
+    const words = term.split(/\s+/).filter(Boolean);
+    const searchRegex = new RegExp(words.map(word => `(?=.*${word})`).join(""), "i");
+  
+    const filterByTerm = (data, key) => 
+      data.filter(item => searchRegex.test(item[key]?.toLowerCase() || ""));
+  
+    setFilteredPages(filterByTerm(searchPagesData, "content"));
+    setPortfoliosResult(filterByTerm(portfolios, "titleAndDescription"));
+    setBlogsResult(filterByTerm(blogs, "titleAndDescription"));
+  };
+  
 
   const handleInputChange = (e) => {
     const value = e.target.value.toLowerCase();
     setSelectedStudios([]);
     setSelectedMarkets([]);
     setSearchTerm(value);
-    handleSearchFilter(value);
   };
   const handleStudioFilter = (studio) => {
     if (selectedStudios.includes(studio)) {
@@ -101,7 +100,10 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
 
   useEffect(() => {
     if (searchActive) {
-      const delayedSearch = debounce(() => { handleProductsFilter(searchTerm) }, 500);
+      const delayedSearch = debounce(() => {
+        handleSearchFilter(searchTerm);
+        handleProductsFilter(searchTerm)
+       }, 500);
       delayedSearch();
       return () => delayedSearch.cancel();
     }

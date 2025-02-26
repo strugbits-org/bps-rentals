@@ -42,9 +42,24 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
     }
 
     if (categories.length === 0 && searchTerm) {
-      return products.filter(product =>
-        searchTerm === "" || (product.search && product.search.toLowerCase().includes(searchTerm))
-      );
+      const term = searchTerm.trim().toLowerCase();
+      if (!term) return products;
+
+      const words = term.split(/\s+/).filter(Boolean);
+      const searchRegex = new RegExp(words.map(word => `(?=.*${word})`).join(""), "i");
+
+      const productsData = products.filter(product => searchRegex.test(product.search?.toLowerCase() || ""));
+      productsData.sort((a, b) => {
+        const aTitle = a.search?.toLowerCase().split(",", 1)[0] || "";
+        const bTitle = b.search?.toLowerCase().split(",", 1)[0] || "";
+
+        const aTitleMatch = searchRegex.test(aTitle);
+        const bTitleMatch = searchRegex.test(bTitle);
+
+        return bTitleMatch - aTitleMatch;
+      });
+      
+      return productsData;
     }
 
     return products.filter(product =>
@@ -199,41 +214,48 @@ export const fetchAllProductsPaths = async () => {
     logError("Error fetching all products:", error);
   }
 };
+
 export const searchProducts = async (term, location) => {
   try {
-    const response = await getDataFetchFunction({
+    const baseFilters = {
       dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: ["product"],
       ne: [
-        {
-          key: "hidden",
-          value: true,
-        },
-        {
-          key: "isF1Exclusive",
-          value: true,
-        },
+        { key: "hidden", value: true },
+        { key: "isF1Exclusive", value: true }
       ],
-      hasSome: [
-        {
-          key: "location",
-          values: location,
-        }
-      ],
+      hasSome: [{ key: "location", values: location }],
       includeVariants: false,
-      contains: ["search", term],
       limit: 3,
-    });
+    };
 
-    if (!response || !response._items) {
-      throw new Error("Response does not contain _items", response);
-    }
-    return response._items.map(x => x.data);
+    const fetchProducts = async (searchKey, limit, excludeIds = [], searchPrefix = " ") => {
+      const response = await getDataFetchFunction({
+        ...baseFilters,
+        search: [searchKey, term],
+        limit,
+        searchPrefix,
+        ne: [...baseFilters.ne, ...excludeIds.map(id => ({ key: "product", value: id }))],
+      });
+      return response._items?.filter(item => typeof item.data.product !== "string").map(item => item.data) || [];
+    };
+
+    let items = await fetchProducts("title", 3);
+    if (items.length === 3) return items;
+
+    let excludeIds = items.map(({ product }) => product?._id);
+    items = items.concat(await fetchProducts("title", 3 - items.length, excludeIds, ""));
+    if (items.length === 3) return items;
+
+    excludeIds = items.map(({ product }) => product?._id);
+    items = items.concat(await fetchProducts("search", 3 - items.length, excludeIds, ""));
+    return items;
   } catch (error) {
     logError("Error searching products:", error);
     return [];
   }
 };
+
 export const getAllColorsData = async () => {
   try {
     const response = await getDataFetchFunction({
@@ -637,7 +659,7 @@ export const getCartPricingTiersData = async (product) => {
     }
 
     return response._items.map(({ data }) => ({
-      _id : data.product,
+      _id: data.product,
       pricingTiers: Array.isArray(data?.pricingTiers) ? data.pricingTiers : [],
     }));
   } catch (error) {

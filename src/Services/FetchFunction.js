@@ -44,6 +44,8 @@ const getDataFetchFunction = async (payload) => {
       sortOrder,
       sortKey,
       isNotEmpty,
+      search,
+      searchPrefix,
       log
     } = payload;
 
@@ -66,6 +68,14 @@ const getDataFetchFunction = async (payload) => {
     if (limit && limit !== "infinite") dataQuery = dataQuery.limit(limit);
     if (ne && ne.length > 0) ne.forEach(filter => dataQuery = dataQuery.ne(filter.key, filter.value));
     if (sortKey) dataQuery = sortOrder === "asc" ? dataQuery.ascending(sortKey) : sortOrder === "desc" ? dataQuery.descending(sortKey) : dataQuery.ascending(sortKey);
+
+    if (search?.length === 2) {
+      const words = search[1].split(/\s+/).filter(Boolean);
+      dataQuery = dataQuery.contains(search[0], searchPrefix ? searchPrefix + words[0] : words[0] || "");
+      for (let i = 1; i < words.length; i++) {
+        dataQuery = dataQuery.and(dataQuery.contains(search[0], searchPrefix ? searchPrefix + words[i] : words[i] || ""));
+      }
+    };
 
     // Increase limit if "infinite"
     if (limit === "infinite") {
@@ -125,7 +135,7 @@ const getDataFetchFunction = async (payload) => {
                   encryptPriceFields(val2, fieldsToEncrypt);
                 })
               }
-                
+
               return set;
             });
           }

@@ -77,12 +77,7 @@ const SearchPage = ({
                 }
             });
 
-            const sortedProducts = [...filteredProductsList].sort((a, b) => {
-                const orderA = a?.orderNumber && a.orderNumber["all"] !== undefined ? a.orderNumber["all"] : 0;
-                const orderB = b?.orderNumber && b.orderNumber["all"] !== undefined ? b.orderNumber["all"] : 0;
-                return orderA - orderB;
-            });
-            setFilteredProducts(sortedProducts);
+            setFilteredProducts(filteredProductsList);
             updatedWatched(true, true);
         } catch (error) {
             logError("Error fetching products:", error);
@@ -99,6 +94,7 @@ const SearchPage = ({
         setFilterColors(updatedColors);
         handleFilterChange({ colors: updatedColors });
     };
+
     const handleLocationChange = (data) => {
         setCookie("location", data.value, { path: "/" });
     };
@@ -115,14 +111,9 @@ const SearchPage = ({
                 setFilterColors(colors);
             }
         }
+        const initialProducts = productsData.filter((product) => product.location.some((x) => x === cookies.location));
 
-        const sortedProducts = [...productsData].filter((product) => product.location.some((x) => x === cookies.location)).sort((a, b) => {
-            const orderA = a?.orderNumber && a.orderNumber["all"] !== undefined ? a.orderNumber["all"] : 0;
-            const orderB = b?.orderNumber && b.orderNumber["all"] !== undefined ? b.orderNumber["all"] : 0;
-            return orderA - orderB;
-        });
-
-        setFilteredProducts(sortedProducts);
+        setFilteredProducts(initialProducts);
         setTimeout(markPageLoaded, 500);
 
         const savedProducts = await getSavedProductData();
