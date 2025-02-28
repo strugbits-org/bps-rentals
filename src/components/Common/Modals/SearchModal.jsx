@@ -7,6 +7,7 @@ import { searchProducts } from "@/Services/ProductsApis";
 import debounce from 'lodash/debounce';
 import { updatedWatched } from "@/Utils/AnimationFunctions";
 import { ImageWrapper } from "../ImageWrapper";
+import { usePathname } from "next/navigation";
 
 const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, searchPagesData }) => {
 
@@ -29,6 +30,8 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const [filteredPortfolios, setFilteredPortfolios] = useState([]);
   const [filteredPages, setFilteredPages] = useState([]);
   const [cookies, _setCookie] = useCookies(["location"]);
+  const pathname = usePathname();
+
 
   const handleSearchFilter = (value) => {
     const term = (value ?? searchTerm).trim().toLowerCase();
@@ -197,7 +200,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                           {searchSectionDetails?.rentalTitle} <span>{` "${searchTerm}"`}</span>
                         </h2>
                         <AnimateLink
-                          to={`/search/${searchTerm}`}
+                          to={pathname !== "/search" ? `/search/${searchTerm}` : ``}
                           data-menu-close
                           className="btn-border-blue"
                         >
