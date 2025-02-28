@@ -290,7 +290,7 @@ export const searchProducts = async (term, location) => {
     if (items.length === 3) return items;
 
     excludeIds = items.map(({ product }) => product?._id);
-    items = items.concat(await fetchProducts("title", 3 - items.length, excludeIds, "", "correctionEnabled"));
+    items = items.concat(await fetchProducts("title", 3 - items.length, excludeIds, " ", "correctionEnabled"));
     if (items.length === 3) return items;
 
     excludeIds = items.map(({ product }) => product?._id);
