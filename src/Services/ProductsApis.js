@@ -2,7 +2,62 @@
 import logError from "@/Utils/ServerActions";
 import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
+import Fuse from "fuse.js";
 const baseUrl = process.env.BASE_URL;
+
+const correctSearchTerm = async (searchTerm) => {
+  const productKeywordsData = await getDataFetchFunction({ "dataCollectionId": "ProductKeywords" });
+  const keywords = productKeywordsData._items[0]?.data?.keywords || [];
+
+  const fuse = new Fuse(keywords, { threshold: 0.4 });
+  const result = fuse.search(searchTerm);
+  return result.length ? result[0].item : searchTerm;
+};
+
+const searchProductsData = async (searchTerm, products) => {
+  if (!searchTerm || !products?.length) return [];
+
+  const phraseMatchRegex = new RegExp(`\\b${searchTerm.trim().toLowerCase()}\\b`, "i");
+  const words = searchTerm.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const exactMatchRegex = new RegExp(`\\b(${words.join("|")})\\b`, "i");
+  const containsRegex = new RegExp(words.map(word => `(?=.*${word})`).join(""), "i");
+  
+  const correctedWords = await Promise.all(words.map(correctSearchTerm));
+  const exactMatchRegexCorrected = new RegExp(`\\b(${correctedWords.join("|")})\\b`, "i");
+
+  const phraseMatches = [];
+  const exactMatches = [];
+  const containsMatches = [];
+  const containsMatchesCorrected = [];
+  const fullSearchMatches = [];
+
+  for (const product of products) {
+    if (!product.search || !product.title) continue;
+    
+    const searchField = product.search.toLowerCase();
+    const titleField = product.title.toLowerCase();
+
+    switch (true) {
+      case phraseMatchRegex.test(titleField): 
+        phraseMatches.push(product);
+        break;
+      case exactMatchRegex.test(titleField): 
+        exactMatches.push(product);
+        break;
+      case containsRegex.test(titleField): 
+        containsMatches.push(product);
+        break;
+      case exactMatchRegexCorrected.test(titleField): 
+        containsMatchesCorrected.push(product);
+        break;
+      case containsRegex.test(searchField): 
+        fullSearchMatches.push(product);
+        break;
+    }
+  }
+
+  return [...phraseMatches, ...exactMatches, ...containsMatches, ...containsMatchesCorrected, ...fullSearchMatches];
+};
 
 export const getAllProducts = async ({ categories = [], searchTerm, adminPage = false }) => {
   try {
@@ -45,21 +100,7 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
       const term = searchTerm.trim().toLowerCase();
       if (!term) return products;
 
-      const words = term.split(/\s+/).filter(Boolean);
-      const searchRegex = new RegExp(words.map(word => `(?=.*${word})`).join(""), "i");
-
-      const productsData = products.filter(product => searchRegex.test(product.search?.toLowerCase() || ""));
-      productsData.sort((a, b) => {
-        const aTitle = a.search?.toLowerCase().split(",", 1)[0] || "";
-        const bTitle = b.search?.toLowerCase().split(",", 1)[0] || "";
-
-        const aTitleMatch = searchRegex.test(aTitle);
-        const bTitleMatch = searchRegex.test(bTitle);
-
-        return bTitleMatch - aTitleMatch;
-      });
-      
-      return productsData;
+      return searchProductsData(term, products);
     }
 
     return products.filter(product =>
@@ -229,13 +270,14 @@ export const searchProducts = async (term, location) => {
       limit: 3,
     };
 
-    const fetchProducts = async (searchKey, limit, excludeIds = [], searchPrefix = " ") => {
+    const fetchProducts = async (searchKey, limit, excludeIds = [], searchPrefix = " ", correctionEnabled = null) => {
       const response = await getDataFetchFunction({
         ...baseFilters,
         search: [searchKey, term],
         limit,
         searchPrefix,
         ne: [...baseFilters.ne, ...excludeIds.map(id => ({ key: "product", value: id }))],
+        correctionEnabled
       });
       return response._items?.filter(item => typeof item.data.product !== "string").map(item => item.data) || [];
     };
@@ -245,6 +287,10 @@ export const searchProducts = async (term, location) => {
 
     let excludeIds = items.map(({ product }) => product?._id);
     items = items.concat(await fetchProducts("title", 3 - items.length, excludeIds, ""));
+    if (items.length === 3) return items;
+
+    excludeIds = items.map(({ product }) => product?._id);
+    items = items.concat(await fetchProducts("title", 3 - items.length, excludeIds, "", "correctionEnabled"));
     if (items.length === 3) return items;
 
     excludeIds = items.map(({ product }) => product?._id);
