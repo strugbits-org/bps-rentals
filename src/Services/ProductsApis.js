@@ -279,6 +279,9 @@ export const fetchAllProductsPaths = async () => {
 
 export const searchProducts = async (term, location) => {
   try {
+    const isFullSearch = !location;
+    const pageLimit = isFullSearch ? 1000 : 3;
+    
     const baseFilters = {
       dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: ["product"],
@@ -286,11 +289,13 @@ export const searchProducts = async (term, location) => {
         { key: "hidden", value: true },
         { key: "isF1Exclusive", value: true }
       ],
-      hasSome: [{ key: "location", values: location }],
       includeVariants: false,
-      limit: 3,
+      includeVariants: isFullSearch ? true : false,
+      limit: pageLimit,
     };
-
+    
+    if (location) baseFilters.hasSome = [{ key: "location", values: location }];
+    
     let items = [];
 
     const response = await getDataFetchFunction({
@@ -300,7 +305,7 @@ export const searchProducts = async (term, location) => {
 
     const data = response._items?.filter(item => typeof item.data.product !== "string").map(item => item.data) || [];
     items = items.concat(data);
-    if (items.length >= 3) return items;
+    if (items.length >= pageLimit) return items;
 
     const fetchProducts = async ({ searchKey, limit, excludeIds = [], searchPrefix = " ", correctionEnabled = false, searchType = "and" }) => {
       const response = await getDataFetchFunction({
@@ -331,10 +336,10 @@ export const searchProducts = async (term, location) => {
 
     // Execute strategies in sequence until we have 3 items
     for (const strategy of searchStrategies) {
-      if (items.length >= 3) break;
+      if (items.length >= pageLimit) break;
 
       const excludeIds = items.map(({ product }) => product?._id);
-      const newLimit = 3 - items.length;
+      const newLimit = pageLimit - items.length;
       const newItems = await fetchProducts({
         ...strategy,
         limit: newLimit,
@@ -343,7 +348,7 @@ export const searchProducts = async (term, location) => {
 
       items = items.concat(newItems);
 
-      if (items.length >= 3) break;
+      if (items.length >= pageLimit) break;
     }
 
     return items;
