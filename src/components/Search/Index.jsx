@@ -2,9 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
 import Markets from "../Common/Sections/MarketSection";
-import {
-    getSavedProductData,
-} from "@/Services/ProductsApis";
+import { getSavedProductData } from "@/Services/ProductsApis";
 import { useCookies } from "react-cookie";
 import CartModal from "../Common/Modals/CartModal";
 import { compareArray, scoreBasedBanners } from "@/Utils/Utils";
@@ -12,19 +10,22 @@ import ProductCard from "../Category/ProductCard";
 import { Banner } from "../Category/Banner";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
 import logError from "@/Utils/ServerActions";
+import { useSearchParams } from "next/navigation";
+import { searchProductsData } from "@/Services/SearchApis";
 
 const SearchPage = ({
-    searchFor,
     pageContent,
     bannersData,
     locations,
     marketsData,
     colorsData,
-    productsData,
-    bestSeller
+    fullProductsData,
+    bestSeller,
+    productKeywords
 }) => {
     let bannerIndex = -1;
     const pageSize = 18;
+    const [searchTerm, setSearchTerm] = useState("");
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [pageLimit, setPageLimit] = useState(pageSize);
     const [cookies, setCookie] = useCookies(["location"]);
@@ -42,7 +43,9 @@ const SearchPage = ({
     const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
     const [productFilteredVariantData, setProductFilteredVariantData] = useState();
     const [productSetsFilter, setproductSetsFilter] = useState(false);
+    const [productsData, setProductsData] = useState([]);
 
+    const searchParams = useSearchParams();
 
     const handleFilterChange = async ({ colors = [] }) => {
         try {
@@ -111,7 +114,12 @@ const SearchPage = ({
                 setFilterColors(colors);
             }
         }
-        const initialProducts = productsData.filter((product) => product.location.some((x) => x === cookies.location));
+        const searchTerm = searchParams.get("query");
+        if (searchTerm) setSearchTerm(searchTerm);
+        const filteredData = await searchProductsData(searchTerm, fullProductsData, productKeywords);
+        setProductsData(filteredData);
+
+        const initialProducts = filteredData.filter((product) => product.location.some((x) => x === cookies.location));
 
         setFilteredProducts(initialProducts);
         setTimeout(markPageLoaded, 500);
@@ -143,7 +151,7 @@ const SearchPage = ({
 
     useEffect(() => {
         setInitialValues();
-    }, []);
+    }, [fullProductsData]);
 
     const getSelectedProductSnapShots = async (productData, activeVariant) => {
         setSelectedProductData(productData);
@@ -245,7 +253,7 @@ const SearchPage = ({
                                 className="d-block section-category-title fs--60 fw-600 pb-lg-50 pb-tablet-20 pb-phone-30 split-words"
                                 data-aos
                             >
-                                Search Results for: {searchFor}
+                                Search Results for: {searchTerm}
                             </h1>
                         </div>
                         <div className="col-lg-2 col-tablet-6 z-7">
