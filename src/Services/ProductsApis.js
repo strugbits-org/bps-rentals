@@ -17,46 +17,67 @@ const correctSearchTerm = async (searchTerm) => {
 const searchProductsData = async (searchTerm, products) => {
   if (!searchTerm || !products?.length) return [];
 
-  const phraseMatchRegex = new RegExp(`\\b${searchTerm.trim().toLowerCase()}\\b`, "i");
-  const words = searchTerm.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  const exactMatchRegex = new RegExp(`\\b(${words.join("|")})\\b`, "i");
-  const containsRegex = new RegExp(words.map(word => `(?=.*${word})`).join(""), "i");
-  
-  const correctedWords = await Promise.all(words.map(correctSearchTerm));
-  const exactMatchRegexCorrected = new RegExp(`\\b(${correctedWords.join("|")})\\b`, "i");
+  const normalizeText = (text) => text.trim().toLowerCase();
 
-  const phraseMatches = [];
-  const exactMatches = [];
-  const containsMatches = [];
-  const containsMatchesCorrected = [];
-  const fullSearchMatches = [];
+  const words = normalizeText(searchTerm).split(/\s+/).filter(Boolean);
+  if (!words.length) return [];
+
+  // Regex definitions for exact, partial, and phrase matching
+  const startsWithRegex = new RegExp(`^${searchTerm}`, "i");
+  const phraseMatchRegex = new RegExp(`\\b${searchTerm}\\b`, "i");
+  const exactMatchAllWordsRegex = new RegExp(words.map(word => `(?=.*\\b${word}\\b)`).join(""), "i");
+  const exactWordMatchRegex = new RegExp(`\\b(${words.join("|")})\\b`, "i");
+  const containsAllWordsRegex = new RegExp(words.map(word => `(?=.*${word})`).join(""), "i");
+  const containsAnyRegex = new RegExp(words.join("|"), "i");
+
+  // Spell-checking or corrections
+  const correctedWords = await Promise.all(words.map(correctSearchTerm));
+  const correctedExactMatchAllWordsRegex = new RegExp(correctedWords.map(word => `(?=.*\\b${word}\\b)`).join(""), "i");
+  const correctedExactWordMatchRegex = new RegExp(`\\b(${correctedWords.join("|")})\\b`, "i");
+  const correctedContainsAllWordsRegex = new RegExp(correctedWords.map(word => `(?=.*${word})`).join(""), "i");
+  const correctedContainsAnyRegex = new RegExp(correctedWords.join("|"), "i");
+
+  const matches = {
+    startsWith: new Set(),
+    phrase: new Set(),
+    exactAllWords: new Set(),
+    exactWord: new Set(),
+    containsAllWords: new Set(),
+    containsAny: new Set(),
+  };
 
   for (const product of products) {
     if (!product.search || !product.title) continue;
-    
-    const searchField = product.search.toLowerCase();
-    const titleField = product.title.toLowerCase();
 
-    switch (true) {
-      case phraseMatchRegex.test(titleField): 
-        phraseMatches.push(product);
-        break;
-      case exactMatchRegex.test(titleField): 
-        exactMatches.push(product);
-        break;
-      case containsRegex.test(titleField): 
-        containsMatches.push(product);
-        break;
-      case exactMatchRegexCorrected.test(titleField): 
-        containsMatchesCorrected.push(product);
-        break;
-      case containsRegex.test(searchField): 
-        fullSearchMatches.push(product);
-        break;
-    }
+    const titleField = normalizeText(product.title);
+    const searchField = normalizeText(product.search);
+
+    // Matching logic
+    if (startsWithRegex.test(titleField)) matches.startsWith.add(product);
+    else if (phraseMatchRegex.test(titleField)) matches.phrase.add(product);
+    else if (exactMatchAllWordsRegex.test(titleField)) matches.exactAllWords.add(product);
+    else if (exactWordMatchRegex.test(titleField)) matches.exactWord.add(product);
+    else if (containsAllWordsRegex.test(titleField)) matches.containsAllWords.add(product);
+    else if (containsAnyRegex.test(titleField)) matches.containsAny.add(product);
+
+    // Corrected term matching
+    else if (correctedExactMatchAllWordsRegex.test(titleField)) matches.exactAllWords.add(product);
+    else if (correctedExactWordMatchRegex.test(titleField)) matches.exactWord.add(product);
+    else if (correctedContainsAllWordsRegex.test(titleField)) matches.containsAllWords.add(product);
+    else if (correctedContainsAnyRegex.test(titleField)) matches.containsAny.add(product);
+    else if (correctedContainsAllWordsRegex.test(searchField)) matches.containsAllWords.add(product);
+    else if (correctedContainsAnyRegex.test(searchField)) matches.containsAny.add(product);
   }
 
-  return [...phraseMatches, ...exactMatches, ...containsMatches, ...containsMatchesCorrected, ...fullSearchMatches];
+  // Prioritized order of results (avoiding duplicates)
+  return [
+    ...matches.startsWith,
+    ...matches.phrase,
+    ...matches.exactAllWords,
+    ...matches.exactWord,
+    ...matches.containsAllWords,
+    ...matches.containsAny,
+  ];
 };
 
 export const getAllProducts = async ({ categories = [], searchTerm, adminPage = false }) => {
@@ -270,31 +291,61 @@ export const searchProducts = async (term, location) => {
       limit: 3,
     };
 
-    const fetchProducts = async (searchKey, limit, excludeIds = [], searchPrefix = " ", correctionEnabled = null) => {
+    let items = [];
+
+    const response = await getDataFetchFunction({
+      ...baseFilters,
+      startsWith: [{ key: "title", value: term }]
+    });
+
+    const data = response._items?.filter(item => typeof item.data.product !== "string").map(item => item.data) || [];
+    items = items.concat(data);
+    if (items.length >= 3) return items;
+
+    const fetchProducts = async ({ searchKey, limit, excludeIds = [], searchPrefix = " ", correctionEnabled = false, searchType = "and" }) => {
       const response = await getDataFetchFunction({
         ...baseFilters,
         search: [searchKey, term],
         limit,
         searchPrefix,
         ne: [...baseFilters.ne, ...excludeIds.map(id => ({ key: "product", value: id }))],
-        correctionEnabled
+        correctionEnabled,
+        searchType
       });
       return response._items?.filter(item => typeof item.data.product !== "string").map(item => item.data) || [];
     };
 
-    let items = await fetchProducts("title", 3);
-    if (items.length === 3) return items;
+    // Define search strategies in order of preference
+    const searchStrategies = [
+      { searchKey: "title", searchPrefix: " ", correctionEnabled: false, searchType: "and" },
+      { searchKey: "title", searchPrefix: "", correctionEnabled: false, searchType: "and" },
+      { searchKey: "title", searchPrefix: " ", correctionEnabled: false, searchType: "or" },
+      { searchKey: "title", searchPrefix: "", correctionEnabled: false, searchType: "or" },
+      { searchKey: "title", searchPrefix: " ", correctionEnabled: true, searchType: "and" },
+      { searchKey: "title", searchPrefix: "", correctionEnabled: true, searchType: "and" },
+      { searchKey: "title", searchPrefix: " ", correctionEnabled: true, searchType: "or" },
+      { searchKey: "title", searchPrefix: "", correctionEnabled: true, searchType: "or" },
+      { searchKey: "search", searchPrefix: "", correctionEnabled: false, searchType: "and" },
+      { searchKey: "search", searchPrefix: "", correctionEnabled: false, searchType: "or" }
+    ];
 
-    let excludeIds = items.map(({ product }) => product?._id);
-    items = items.concat(await fetchProducts("title", 3 - items.length, excludeIds, ""));
-    if (items.length === 3) return items;
+    // Execute strategies in sequence until we have 3 items
+    for (const strategy of searchStrategies) {
+      if (items.length >= 3) break;
 
-    excludeIds = items.map(({ product }) => product?._id);
-    items = items.concat(await fetchProducts("title", 3 - items.length, excludeIds, " ", "correctionEnabled"));
-    if (items.length === 3) return items;
+      const excludeIds = items.map(({ product }) => product?._id);
+      const newLimit = 3 - items.length;
+      const newItems = await fetchProducts({
+        ...strategy,
+        limit: newLimit,
+        excludeIds
+      });
 
-    excludeIds = items.map(({ product }) => product?._id);
-    items = items.concat(await fetchProducts("search", 3 - items.length, excludeIds, ""));
+      items = items.concat(newItems);
+
+      if (items.length >= 3) break;
+    }
+
     return items;
   } catch (error) {
     logError("Error searching products:", error);

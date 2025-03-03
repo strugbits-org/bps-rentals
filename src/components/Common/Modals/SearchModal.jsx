@@ -202,7 +202,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                         <AnimateLink
                           to={pathname !== "/search" ? `/search/${searchTerm}` : ``}
                           data-menu-close
-                          className="btn-border-blue"
+                          className={`btn-border-blue ${filteredProducts.length < 3 ? "hidden" : ""}`}
                         >
                           <span>See more</span>
                           <i className="icon-arrow-right"></i>
