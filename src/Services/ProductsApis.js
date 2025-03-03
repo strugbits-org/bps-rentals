@@ -289,7 +289,6 @@ export const searchProducts = async (term, location) => {
         { key: "hidden", value: true },
         { key: "isF1Exclusive", value: true }
       ],
-      includeVariants: false,
       includeVariants: isFullSearch ? true : false,
       limit: pageLimit,
     };
