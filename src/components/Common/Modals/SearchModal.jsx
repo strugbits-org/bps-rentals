@@ -8,6 +8,7 @@ import debounce from 'lodash/debounce';
 import { updatedWatched } from "@/Utils/AnimationFunctions";
 import { ImageWrapper } from "../ImageWrapper";
 import { usePathname } from "next/navigation";
+import logError from "@/Utils/ServerActions";
 
 const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, searchPagesData }) => {
 
@@ -29,6 +30,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [filteredPortfolios, setFilteredPortfolios] = useState([]);
   const [filteredPages, setFilteredPages] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(false);
   const [cookies, _setCookie] = useCookies(["location"]);
   const pathname = usePathname();
 
@@ -41,18 +43,18 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
       setBlogsResult(blogs);
       return;
     }
-  
+
     const words = term.split(/\s+/).filter(Boolean);
     const searchRegex = new RegExp(words.map(word => `(?=.*${word})`).join(""), "i");
-  
-    const filterByTerm = (data, key) => 
+
+    const filterByTerm = (data, key) =>
       data.filter(item => searchRegex.test(item[key]?.toLowerCase() || ""));
-  
+
     setFilteredPages(filterByTerm(searchPagesData, "content"));
     setPortfoliosResult(filterByTerm(portfolios, "titleAndDescription"));
     setBlogsResult(filterByTerm(blogs, "titleAndDescription"));
   };
-  
+
 
   const handleInputChange = (e) => {
     const value = e.target.value.toLowerCase();
@@ -96,9 +98,16 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   }, [BlogsResult, portfoliosResult]);
 
   const handleProductsFilter = async (term = "") => {
-    const filteredProductsData = await searchProducts(term, cookies.location);
-    setFilteredProducts(filteredProductsData);
-    updatedWatched();
+    try {
+      setProductsLoading(true);
+      const filteredProductsData = await searchProducts(term, cookies.location);
+      setFilteredProducts(filteredProductsData);
+      updatedWatched();
+    } catch (error) {
+      logError("Error fetching products:", error);
+    } finally {
+      setProductsLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -106,7 +115,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
       const delayedSearch = debounce(() => {
         handleSearchFilter(searchTerm);
         handleProductsFilter(searchTerm)
-       }, 500);
+      }, 500);
       delayedSearch();
       return () => delayedSearch.cancel();
     }
@@ -200,9 +209,9 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                           {searchSectionDetails?.rentalTitle} <span>{` "${searchTerm}"`}</span>
                         </h2>
                         <AnimateLink
-                          to={pathname !== "/search" ? `/search/${searchTerm}` : ``}
+                          to={pathname !== "/search" ? `/search?query=${searchTerm}` : ``}
                           data-menu-close
-                          className={`btn-border-blue ${filteredProducts.length < 3 ? "hidden" : ""}`}
+                          className={`btn-border-blue ${filteredProducts.length < 3 || productsLoading ? "hidden" : ""}`}
                         >
                           <span>See more</span>
                           <i className="icon-arrow-right"></i>
@@ -214,7 +223,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                             className="swiper-wrapper list-result-rental list-slider-phone grid-md-33"
                             data-aos
                           >
-                            {filteredProducts.map((data, index) => {
+                            {!productsLoading && filteredProducts.map((data, index) => {
                               const { product, variantData, defaultVariant } = data;
                               const { variant, sku } = variantData.find(x => x.sku === defaultVariant) || variantData[0];
 
@@ -273,6 +282,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                               );
                             })}
                           </div>
+                          {productsLoading && <h6 style={{ width: "100%" }} className="mt-3-cs fs--30">Searching results for "{searchTerm}"</h6>}
                         </div>
                       </div>
                     </div>
