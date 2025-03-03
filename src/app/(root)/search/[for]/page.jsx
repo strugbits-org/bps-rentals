@@ -4,7 +4,7 @@ import { getFilterLocations } from "@/Services/NavbarApis";
 import {
   fetchBestSellers,
   getAllColorsData,
-  getAllProducts,
+  searchProducts,
 } from "@/Services/ProductsApis";
 import { getHomeSectionDetails, getMarketsData, getPageMetaData } from "@/Services/SectionsApis";
 import logError from "@/Utils/ServerActions";
@@ -48,7 +48,7 @@ export default async function Page({ params }) {
       getMarketsData(),
       getAllColorsData(),
       fetchBestSellers(),
-      getAllProducts({ searchTerm: searchFor }),
+      searchProducts(searchTerm),
     ]);
 
     return (
