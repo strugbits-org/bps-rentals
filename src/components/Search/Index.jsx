@@ -149,6 +149,10 @@ const SearchPage = ({
         setSortedBanners(banners);
     }, [bannersData]);
 
+    useEffect(() => {        
+        if (searchTerm) setSearchTerm(searchTerm);
+    }, [searchParams]);
+
     useEffect(() => {
         setInitialValues();
     }, [fullProductsData]);
@@ -250,8 +254,7 @@ const SearchPage = ({
                     <div className="row pos-relative">
                         <div className="col-12">
                             <h1
-                                className="d-block section-category-title fs--60 fw-600 pb-lg-50 pb-tablet-20 pb-phone-30 split-words"
-                                data-aos
+                                className="d-block section-category-title fs--60 fw-600 pb-lg-50 pb-tablet-20 pb-phone-30"
                             >
                                 Search Results for: {searchTerm}
                             </h1>
@@ -337,8 +340,7 @@ const SearchPage = ({
                                 </ul>
                                 {filteredProducts.length === 0 && (
                                     <h6
-                                        className="fs--40 text-center split-words mt-90"
-                                        data-aos="d:loop"
+                                        className="fs--40 text-center mt-90"
                                     >
                                         No Products Found
                                     </h6>
