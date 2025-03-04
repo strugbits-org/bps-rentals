@@ -54,32 +54,19 @@ export const searchProductsData = async (searchTerm, products, keywords) => {
     else if (containsAllWordsRegex.test(titleField)) matches.containsAllWords.add(product);
     else if (containsAnyRegex.test(titleField)) matches.containsAny.add(product);
 
-    else if (containsAllWordsRegex.test(searchField)) matches.searchContainsAllWords.add(product);
-    else if (containsAnyRegex.test(searchField)) matches.searchContainsAny.add(product);
-
     // Corrected term matching
     else if (correctedExactMatchAllWordsRegex.test(titleField)) matches.exactAllWordsCorrected.add(product);
     else if (correctedExactWordMatchRegex.test(titleField)) matches.exactWordCorrected.add(product);
     else if (correctedContainsAllWordsRegex.test(titleField)) matches.containsAllWordsCorrected.add(product);
     else if (correctedContainsAnyRegex.test(titleField)) matches.containsAnyCorrected.add(product);
-
-    else if (correctedContainsAllWordsRegex.test(searchField)) matches.searchContainsAllWords.add(product);
-    else if (correctedContainsAnyRegex.test(searchField)) matches.searchContainsAny.add(product);
+    
+    else if (containsAllWordsRegex.test(searchField)) matches.searchContainsAllWords.add(product);
+    else if (containsAnyRegex.test(searchField)) matches.searchContainsAny.add(product);
 
   }
 
-  // Prioritized order of results (avoiding duplicates)
-  return [
-    ...matches.startsWith,
-    ...matches.exactAllWords,
-    ...matches.exactWord,
-    ...matches.containsAllWords,
-    ...matches.containsAny,
-    ...matches.exactAllWordsCorrected,
-    ...matches.exactWordCorrected,
-    ...matches.containsAllWordsCorrected,
-    ...matches.containsAnyCorrected,
-    ...matches.searchContainsAllWords,
-    ...matches.searchContainsAny,
-  ];
+  return Object.keys(matches).flatMap(key => 
+    [...matches[key]].sort((a, b) => a.title.localeCompare(b.title))
+  );
+  
 };

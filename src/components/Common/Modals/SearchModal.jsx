@@ -214,7 +214,8 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                     </ul>
                   </div>
                   <div className="column-results">
-                    <div className={`result-rental ${filteredProducts.length === 0 ? "hidden" : ""}`}>
+                    {productsLoading && <><div className="loader-small"></div><br /><br /></>}
+                    <div className={`result-rental ${productsLoading || filteredProducts.length === 0 ? "hidden" : ""}`}>
                       <div className="container-title-results">
                         <h2 className="title-results split-chars" data-aos>
                           {searchSectionDetails?.rentalTitle} <span>{` "${searchTerm}"`}</span>
@@ -243,7 +244,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                             className="swiper-wrapper list-result-rental list-slider-phone grid-md-33"
                             data-aos
                           >
-                            {!productsLoading && filteredProducts.map((data, index) => {
+                            {filteredProducts.map((data, index) => {
                               const { product, variantData, defaultVariant } = data;
                               const { variant, sku } = variantData.find(x => x.sku === defaultVariant) || variantData[0];
 
@@ -302,7 +303,6 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                               );
                             })}
                           </div>
-                          {productsLoading && <h6 style={{ width: "100%" }} className="mt-3-cs fs--30">Searching results for "{searchTerm}"</h6>}
                         </div>
                       </div>
                     </div>
@@ -361,7 +361,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                         </div>
                       </div>
                     </div>
-                    {filteredProducts.length === 0 && filteredPortfolios.length === 0 && <h6 style={{ width: "100%" }} className="ml-4 mt-3-cs fs--40">No products or projects were found for {searchTerm}</h6>}
+                    {!productsLoading && filteredProducts.length === 0 && filteredPortfolios.length === 0 && <h6 style={{ width: "100%" }} className="ml-4 mt-3-cs fs--40">No products or projects were found for {searchTerm}</h6>}
                   </div>
                   <div className="result-our-markets">
                     <div className="container-title-results">
