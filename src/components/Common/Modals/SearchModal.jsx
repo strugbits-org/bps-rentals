@@ -5,10 +5,11 @@ import { filterSearchData, formatDate } from "@/Utils/Utils";
 import { useCookies } from "react-cookie";
 import { searchProducts } from "@/Services/ProductsApis";
 import debounce from 'lodash/debounce';
-import { updatedWatched } from "@/Utils/AnimationFunctions";
+import { pageLoadEnd, pageLoadStart, updatedWatched } from "@/Utils/AnimationFunctions";
 import { ImageWrapper } from "../ImageWrapper";
 import { usePathname } from "next/navigation";
 import logError from "@/Utils/ServerActions";
+import { useRouter } from "next/navigation";
 
 const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, searchPagesData }) => {
 
@@ -33,6 +34,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const [productsLoading, setProductsLoading] = useState(false);
   const [cookies, _setCookie] = useCookies(["location"]);
   const pathname = usePathname();
+  const router = useRouter();
 
 
   const handleSearchFilter = (value) => {
@@ -130,6 +132,15 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
     e.preventDefault();
   };
 
+  const handleSeeAll = () => {
+    const params = new URLSearchParams({ query: searchTerm });
+    router.push(`/search?${params}`);
+    pageLoadStart({});
+    setTimeout(() => {
+      pageLoadEnd();
+    }, 2200);
+  }
+
   return (
     <section className="menu-search" data-get-submenu="search">
       <div className="container-fluid">
@@ -208,14 +219,23 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                         <h2 className="title-results split-chars" data-aos>
                           {searchSectionDetails?.rentalTitle} <span>{` "${searchTerm}"`}</span>
                         </h2>
-                        <AnimateLink
-                          to={pathname !== "/search" ? `/search?query=${searchTerm}` : ``}
-                          data-menu-close
-                          className={`btn-border-blue ${filteredProducts.length < 3 || productsLoading ? "hidden" : ""}`}
-                        >
-                          <span>See more</span>
-                          <i className="icon-arrow-right"></i>
-                        </AnimateLink>
+                        {pathname === "/search" ?
+                          <button
+                            onClick={handleSeeAll}
+                            data-menu-close
+                            className={`btn-border-blue ${filteredProducts.length < 3 || productsLoading ? "hidden" : ""}`}
+                          >
+                            <span>See more</span>
+                            <i className="icon-arrow-right"></i>
+                          </button> : <AnimateLink
+                            to={pathname !== "/search" ? `/search?query=${searchTerm}` : ``}
+                            data-menu-close
+                            className={`btn-border-blue ${filteredProducts.length < 3 || productsLoading ? "hidden" : ""}`}
+                          >
+                            <span>See more</span>
+                            <i className="icon-arrow-right"></i>
+                          </AnimateLink>}
+
                       </div>
                       <div className="slider-content-phone">
                         <div className="swiper-container">
