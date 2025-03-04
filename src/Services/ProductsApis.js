@@ -225,6 +225,8 @@ export const searchProducts = async (term, location) => {
       ],
       includeVariants: isFullSearch ? true : false,
       limit: pageLimit,
+      sortOrder: "asc",
+      sortKey: "title"
     };
 
     if (location) baseFilters.hasSome = [{ key: "location", values: location }];
