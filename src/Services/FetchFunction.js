@@ -87,14 +87,15 @@ const getDataFetchFunction = async (payload) => {
         const productKeywords = productKeywordsData._items[0]?.data?.keywords || [];
         words = await Promise.all(words.map(word => correctSearchTerm(word, productKeywords)));
       }
+      let newQuery = words.slice(1).reduce((query, word) =>
+        query.contains(search[0], searchPrefix ? searchPrefix + word : word || ""),
+        dataQuery
+      );
+
       dataQuery = dataQuery.contains(search[0], searchPrefix ? searchPrefix + words[0] : words[0] || "");
-      for (let i = 1; i < words.length; i++) {
-        if (searchType === "or") {
-          dataQuery = dataQuery.or(dataQuery.contains(search[0], searchPrefix ? searchPrefix + words[i] : words[i] || ""));
-        } else{
-          dataQuery = dataQuery.and(dataQuery.contains(search[0], searchPrefix ? searchPrefix + words[i] : words[i] || ""));
-        }
-      }
+      if (words.length > 1) {
+        dataQuery = searchType === "or" ? dataQuery.or(newQuery) : dataQuery.and(newQuery);
+      } 
     };
 
     // Increase limit if "infinite"
