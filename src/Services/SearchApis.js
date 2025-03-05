@@ -10,8 +10,8 @@ export const searchProductsData = async (searchTerm, products, keywords) => {
 
   // Regex definitions for exact, partial, and phrase matching
   const startsWithRegex = new RegExp(`^${searchTerm}`, "i");
-  const exactMatchAllWordsRegex = new RegExp(words.map(word => `(?=.*(^|\\s)${word}\\b)`).join(""), "i");
-  const exactWordMatchRegex = new RegExp(`(\\s)(${words.join("|")})\\b`, "i");
+  const exactMatchAllWordsRegex = new RegExp(words.map(word => `(?=.*(^|\\s)${word})`).join(""), "i");
+  const exactWordMatchRegex = new RegExp(`(\\s)(${words.join("|")})`, "i");
   const containsAllWordsRegex = new RegExp(words.map(word => `(?=.*${word})`).join(""), "i");
   const containsAnyRegex = new RegExp(words.join("|"), "i");
 
@@ -22,7 +22,7 @@ export const searchProductsData = async (searchTerm, products, keywords) => {
     return result.length ? result[0].item : searchTerm;
   };
   const correctedWords = await Promise.all(words.map(correctSearchTerm));
-  const correctedExactMatchAllWordsRegex = new RegExp(correctedWords.map(word => `(?=.*(^|\\s)${word}\\b)`).join(""), "i");
+  const correctedExactMatchAllWordsRegex = new RegExp(correctedWords.map(word => `(?=.*(^|\\s)${word})`).join(""), "i");
   const correctedExactWordMatchRegex = new RegExp(`(\\s)(${correctedWords.join("|")})\\b`, "i");
   const correctedContainsAllWordsRegex = new RegExp(correctedWords.map(word => `(?=.*${word})`).join(""), "i");
   const correctedContainsAnyRegex = new RegExp(correctedWords.join("|"), "i");
@@ -66,7 +66,7 @@ export const searchProductsData = async (searchTerm, products, keywords) => {
   }
 
   return Object.keys(matches).flatMap(key => 
-    [...matches[key]].sort((a, b) => a.title.localeCompare(b.title))
+    [...matches[key]].sort((a, b) => a._id.localeCompare(b._id))
   );
   
 };
