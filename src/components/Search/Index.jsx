@@ -308,7 +308,7 @@ const SearchPage = ({
                             <div className="product-list-wrapper container-wrapper-list">
                                 <ul className="product-list grid-lg-33 grid-tablet-50 grid-list">
                                     {filteredProducts.slice(0, pageLimit).map((data, index) => {
-                                        const shouldInsertBanner = (index + 1) % 6 === 0 && sortedBanners.length > 0;
+                                        const shouldInsertBanner = (index + 1) % 12 === 0 && sortedBanners.length > 0;
                                         if (shouldInsertBanner) bannerIndex = (bannerIndex + 1) % sortedBanners.length;
 
                                         return (
