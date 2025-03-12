@@ -13,6 +13,7 @@ import { Banner } from "./Banner";
 import { compareArray, extractCategoryIds, scoreBasedBanners } from "@/Utils/Utils";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
 import logError from "@/Utils/ServerActions";
+import { useQueryParam, StringParam, withDefault, BooleanParam } from 'use-query-params';
 
 const CategoryPage = ({
   slug,
@@ -47,13 +48,18 @@ const CategoryPage = ({
   const [productFilteredVariantData, setProductFilteredVariantData] = useState();
 
   const [categoriesDropdown, setCategoriesDropdown] = useState(false);
-  const [productSetsFilter, setproductSetsFilter] = useState(false);
+  // const [productSetsFilter, setproductSetsFilter] = useState(false);
+
+  const [productSetsFilter, setproductSetsFilter] = useQueryParam('showSets', withDefault(BooleanParam, 0));
 
   const handleFilterChange = async ({ categories = [], colors = [] }) => {
     try {
       const checkedCategories = categories.length !== 0
         ? categories.filter((x) => x.checked).map((x) => x._id)
         : filterCategories.filter((x) => x.checked).map((x) => x._id);
+
+        console.log("checkedCategories", checkedCategories);
+        
 
       const categoryIds = extractCategoryIds(selectedCategoryData);
 
@@ -125,7 +131,7 @@ const CategoryPage = ({
   const handleCategoryChange = (data) => {
     const updatedCategories = filterCategories.map((item) =>
       item._id === data._id ? { ...item, checked: !item.checked } : item
-    );
+    );    
     setFilterCategories(updatedCategories);
     handleFilterChange({ categories: updatedCategories });
   };
@@ -160,7 +166,11 @@ const CategoryPage = ({
       }
     }
 
-    const sortedProducts = [...productsData].filter((product) => product.location.some((x) => x === cookies.location)).sort((a, b) => {
+    const filteredProducts = productsData.filter((product) => {
+      if (productSetsFilter && (!product?.productSets || product?.productSets?.length === 0)) return false;
+      return product.location.some((x) => x === cookies.location);
+    });
+    const sortedProducts = filteredProducts.sort((a, b) => {
       const orderA = a?.orderNumber && a.orderNumber[slug] !== undefined ? a.orderNumber[slug] : 0;
       const orderB = b?.orderNumber && b.orderNumber[slug] !== undefined ? b.orderNumber[slug] : 0;
       return orderA - orderB;
@@ -278,6 +288,10 @@ const CategoryPage = ({
     updatedWatched(true);
   }
 
+  function onNameInputChange(event) {
+    setName(event.target.value);
+  }
+
   return (
     <>
       <CartModal
@@ -307,6 +321,9 @@ const CategoryPage = ({
                   {selectedCategoryData.parentCollection
                     ? selectedCategoryData.parentCollection.name
                     : selectedCategoryData.name}
+
+                  <input onBlur={onNameInputChange} type="text" />
+
                 </h1>
               )}
             </div>
