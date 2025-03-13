@@ -148,9 +148,9 @@ export const loadPinterest = () => {
   }
 };
 
-export const markPageLoaded = (watched = true) => {
+export const markPageLoaded = (watched = true, disableScroll = false) => {
   if (typeof window !== "undefined") {
-    setTimeout(() => window.scrollTo({ top: 0 }), 200);
+    if(!disableScroll) setTimeout(() => window.scrollTo({ top: 0 }), 200);
     initAnimations();
     if (watched) updatedWatched(true);
     setTimeout(loadPinterest, 1000);

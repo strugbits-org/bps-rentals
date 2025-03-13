@@ -14,7 +14,8 @@ const ProductCard = ({
   setSavedProductsData,
   lastActiveColor,
   filteredProducts = [],
-  bestSeller = []
+  bestSeller = [],
+  onProductRedirect
 }) => {
   const { product, variantData, defaultVariant } = productData;
   const categories = productData?.subCategoryData || [];
@@ -77,7 +78,7 @@ const ProductCard = ({
           </button>
         </div>
       )}
-      <AnimateLink to={`/product/${product.slug}?variant=${activeVariant.sku}`} className="link">
+      <AnimateLink to={`/product/${product.slug}?variant=${activeVariant.sku}`} onProductRedirect={onProductRedirect} className="link">
         <div className="container-top">
           <h2 className="product-title">{product.name}</h2>
           {!isSavedProduct && (
