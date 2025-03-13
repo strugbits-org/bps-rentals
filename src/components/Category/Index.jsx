@@ -13,7 +13,6 @@ import { Banner } from "./Banner";
 import { compareArray, extractCategoryIds, scoreBasedBanners } from "@/Utils/Utils";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
 import logError from "@/Utils/ServerActions";
-import { useQueryParam, StringParam, withDefault, BooleanParam } from 'use-query-params';
 
 const CategoryPage = ({
   slug,
@@ -31,7 +30,7 @@ const CategoryPage = ({
 
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [pageLimit, setPageLimit] = useState(pageSize);
-  const [cookies, setCookie] = useCookies(["location"]);
+  const [cookies, setCookie] = useCookies(["location", "filterColors", "filterCategories", "showProductSets"]);
   const [filterCategories, setFilterCategories] = useState([]);
   const [filterColors, setFilterColors] = useState([]);
   const [lastActiveColor, setLastActiveColor] = useState();
@@ -48,18 +47,13 @@ const CategoryPage = ({
   const [productFilteredVariantData, setProductFilteredVariantData] = useState();
 
   const [categoriesDropdown, setCategoriesDropdown] = useState(false);
-  // const [productSetsFilter, setproductSetsFilter] = useState(false);
-
-  const [productSetsFilter, setproductSetsFilter] = useQueryParam('showSets', withDefault(BooleanParam, 0));
+  const [productSetsFilter, setProductSetsFilter] = useState(false);
 
   const handleFilterChange = async ({ categories = [], colors = [] }) => {
     try {
       const checkedCategories = categories.length !== 0
         ? categories.filter((x) => x.checked).map((x) => x._id)
         : filterCategories.filter((x) => x.checked).map((x) => x._id);
-
-        console.log("checkedCategories", checkedCategories);
-        
 
       const categoryIds = extractCategoryIds(selectedCategoryData);
 
@@ -124,6 +118,7 @@ const CategoryPage = ({
     );
     setFilterColors(updatedColors);
     handleFilterChange({ colors: updatedColors });
+    setCookie("filterColors", updatedColors, { path: "/" });
   };
   const handleLocationChange = (data) => {
     setCookie("location", data.value, { path: "/" });
@@ -131,10 +126,16 @@ const CategoryPage = ({
   const handleCategoryChange = (data) => {
     const updatedCategories = filterCategories.map((item) =>
       item._id === data._id ? { ...item, checked: !item.checked } : item
-    );    
+    );
     setFilterCategories(updatedCategories);
     handleFilterChange({ categories: updatedCategories });
+    const categoriesFilters = updatedCategories.filter((x) => x.checked).map((x) => { return { _id: x._id, checked: x.checked, name: x.name } });
+    setCookie("filterCategories", categoriesFilters, { path: "/" });
   };
+  useEffect(() => {
+    if (enableFilterTrigger) handleFilterChange({});
+    setCookie("showProductSets", productSetsFilter, { path: "/" });
+  }, [productSetsFilter]);
 
   const setInitialValues = async () => {
     const categoryId =
@@ -142,10 +143,11 @@ const CategoryPage = ({
       selectedCategoryData?._id ||
       "00000000-000000-000000-000000000001";
 
+    let categories = [];
     // set category filters
     if (selectedCategoryData && selectedCategoryData.level2Collections !== undefined
     ) {
-      const categories = selectedCategoryData.level2Collections
+      categories = selectedCategoryData.level2Collections
         .filter((x) => x._id)
         .map((x) => ({
           ...x,
@@ -166,17 +168,23 @@ const CategoryPage = ({
       }
     }
 
-    const filteredProducts = productsData.filter((product) => {
-      if (productSetsFilter && (!product?.productSets || product?.productSets?.length === 0)) return false;
-      return product.location.some((x) => x === cookies.location);
-    });
-    const sortedProducts = filteredProducts.sort((a, b) => {
-      const orderA = a?.orderNumber && a.orderNumber[slug] !== undefined ? a.orderNumber[slug] : 0;
-      const orderB = b?.orderNumber && b.orderNumber[slug] !== undefined ? b.orderNumber[slug] : 0;
-      return orderA - orderB;
-    });
+    if ((cookies?.filterColors?.length !== 0 || cookies?.filterCategories?.length !== 0 || cookies?.showProductSets) && cookies?.loadPrevState) {
+      setFilterCategories(categories.map((x) => { return { ...x, checked: cookies.filterCategories.some((y) => y._id === x._id) } }));
+      setFilterColors(cookies.filterColors);
+      setProductSetsFilter(cookies.showProductSets);
+      handleFilterChange({ colors: cookies.filterColors, categories: cookies.filterCategories });
+    } else {
+      const filteredProducts = productsData.filter((product) => {
+        return product.location.some((x) => x === cookies.location);
+      });
+      const sortedProducts = filteredProducts.sort((a, b) => {
+        const orderA = a?.orderNumber && a.orderNumber[slug] !== undefined ? a.orderNumber[slug] : 0;
+        const orderB = b?.orderNumber && b.orderNumber[slug] !== undefined ? b.orderNumber[slug] : 0;
+        return orderA - orderB;
+      });
 
-    setFilteredProducts(sortedProducts);
+      setFilteredProducts(sortedProducts);
+    }
 
     setTimeout(markPageLoaded, 500);
     setTimeout(setEnableFilterTrigger(true), 500);
@@ -195,10 +203,6 @@ const CategoryPage = ({
     );
     if (enableFilterTrigger) handleFilterChange({});
   }, [cookies.location]);
-
-  useEffect(() => {
-    if (enableFilterTrigger) handleFilterChange({});
-  }, [productSetsFilter]);
 
   useEffect(() => {
     const slugField = "link-copy-of-category-name-2";
@@ -288,10 +292,6 @@ const CategoryPage = ({
     updatedWatched(true);
   }
 
-  function onNameInputChange(event) {
-    setName(event.target.value);
-  }
-
   return (
     <>
       <CartModal
@@ -321,9 +321,6 @@ const CategoryPage = ({
                   {selectedCategoryData.parentCollection
                     ? selectedCategoryData.parentCollection.name
                     : selectedCategoryData.name}
-
-                  <input onBlur={onNameInputChange} type="text" />
-
                 </h1>
               )}
             </div>
@@ -394,7 +391,7 @@ const CategoryPage = ({
                             label: "Show Products Sets",
                             checked: productSetsFilter
                           }]}
-                          handleChange={() => { setproductSetsFilter(prev => !prev) }}
+                          handleChange={() => { setProductSetsFilter(prev => !prev) }}
                         />
                         <FilterSection
                           title="Location"

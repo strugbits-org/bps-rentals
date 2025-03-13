@@ -1,8 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import NextAdapterApp from 'next-query-params/app';
-import { QueryParamProvider } from 'use-query-params';
 
 const Wrapper = ({ children }) => {
   const pathname = usePathname();
@@ -20,9 +18,7 @@ const Wrapper = ({ children }) => {
   return (
     <div id="main-transition">
       <div id={`pg-${cleanPath}`} className="wrapper" data-scroll-container>
-        <QueryParamProvider adapter={NextAdapterApp}>
           {children}
-        </QueryParamProvider>
       </div>
     </div>
   );
