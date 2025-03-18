@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
 import Markets from "../Common/Sections/MarketSection";
 import Studios from "../Common/Sections/StudiosSection";
@@ -32,13 +32,14 @@ const MarketPage = ({
 
   const pageSize = 6;
   const [pageLimit, setPageLimit] = useState(pageSize);
-  const [cookies, setCookie] = useCookies(["scrollPosition", "pageSize", "loadPrevState", "marketSlug"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["marketScrollPosition", "marketPageSize", "marketLoadPrevState", "marketSlug"]);
   const [savedProductsData, setSavedProductsData] = useState([]);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
   const [selectedVariantData, setSelectedVariantData] = useState(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [productFilteredVariantData, setProductFilteredVariantData] = useState();
+  const sliderRef = useRef(null);
 
   const getSelectedProductSnapShots = async (productData, activeVariant) => {
     setSelectedProductData(productData);
@@ -125,29 +126,51 @@ const MarketPage = ({
     updatedWatched(true);
   }
 
-  const savePageState = () => {
+  const savePageState = (slideIndex) => {
+    if (slideIndex) {
+      setCookie("marketSlideIndex", slideIndex, { path: "/" });
+    }
+
     const scrollPosition = window.scrollY;
-    setCookie("scrollPosition", scrollPosition, { path: "/market" });
-    setCookie("pageSize", pageLimit, { path: "/market" });
-    setCookie("marketSlug", slug, { path: "/market" });
-    setCookie("loadPrevState", true, { path: "/market" });
+    setCookie("marketScrollPosition", scrollPosition, { path: "/" });
+    setCookie("marketPageSize", pageLimit, { path: "/" });
+    setCookie("marketSlug", slug, { path: "/" });
+    setCookie("marketLoadPrevState", true, { path: "/" });
   }
 
+  const clearPageState = () => {
+    removeCookie("marketScrollPosition", { path: "/" });
+    removeCookie("marketPageSize", { path: "/" });
+    removeCookie("marketLoadPrevState", { path: "/" });
+    removeCookie("marketSlideIndex", { path: "/" });
+    removeCookie("marketSlug", { path: "/" });
+  };
+
   useEffect(() => {
-    if (cookies.loadPrevState && cookies.marketSlug === slug) {
-      if (cookies.pageSize) setPageLimit(cookies.pageSize);
+    if (cookies.marketLoadPrevState && cookies.marketSlug === slug) {
+      if (cookies.marketPageSize) setPageLimit(cookies.marketPageSize);
       setTimeout(() => {
-        if (cookies.scrollPosition) window.scrollTo(0, cookies.scrollPosition);
+        if (cookies.marketScrollPosition) window.scrollTo(0, cookies.marketScrollPosition);
+        if (cookies.marketSlideIndex) {
+          setTimeout(() => {
+            const swiper = sliderRef.current.swiper;
+            if (swiper) {
+              swiper.updateSlides();
+              swiper.slideTo(cookies.marketSlideIndex);
+            }
+          }, 2e3);
+        }
         setTimeout(() => {
           markPageLoaded(true, false);
+          clearPageState();
         }, 500);
       }, 500);
     } else {
       setTimeout(() => {
         markPageLoaded();
+        clearPageState();
       }, 500);
     }
-    setCookie("loadPrevState", false, { path: "/market" });
     fetchSavedProducts();
   }, [])
 
@@ -171,7 +194,7 @@ const MarketPage = ({
       <MarketIntroSection data={marketSection} />
       <MarketBestSeller products={bestSellerProducts} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} pageLimit={pageLimit} handleAutoSeeMore={handleAutoSeeMore} savePageState={savePageState} />
       <NewArrival content={newArrivalSectionContent} />
-      <Highlights pageContent={homeSectionDetails} data={highlightsSectionData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} />
+      <Highlights pageContent={homeSectionDetails} data={highlightsSectionData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} savePageState={savePageState} sliderRef={sliderRef} />
       <MarketSlider content={homeSectionDetails} marketSliderData={marketSliderData} />
       <PeopleReviewSlider data={peopleReviewSliderData} homeSectionDetails={homeSectionDetails} />
       <Markets marketsData={marketsData} />

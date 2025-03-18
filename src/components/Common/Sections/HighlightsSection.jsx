@@ -1,17 +1,9 @@
 import AnimateLink from "../AnimateLink";
 import ProductCard from "@/components/Category/ProductCard";
 import { ImageWrapper } from "../ImageWrapper";
-import { useEffect, useRef } from "react";
 
-const Highlights = ({ pageContent, data, savedProductsData, setSavedProductsData, getSelectedProductSnapShots }) => {
+const Highlights = ({ pageContent, data, savedProductsData, setSavedProductsData, getSelectedProductSnapShots, savePageState, sliderRef }) => {
   if (data.length === 0) return;
-
-  const slider = useRef(null);
-
-  useEffect(() => {
-    console.log("Highlights data:", data);
-    console.log("slider:", slider.current);
-  }, []);
 
   return (
     <section className="section-highlights">
@@ -25,20 +17,21 @@ const Highlights = ({ pageContent, data, savedProductsData, setSavedProductsData
               {pageContent && pageContent.highlightsSectionTitle}
             </h2>
             <div className="slider-highlights mt-lg-95 mt-tablet-55 mt-phone-35">
-              <div className="swiper-container">
-                <div ref={slider} className="swiper-wrapper abcd">
+              <div ref={sliderRef} className="swiper-container">
+                <div className="swiper-wrapper">
                   {data && data.map((item, index) => {
                     return (
                       <div key={index} className="swiper-slide">
                         <div className="highlight-content">
                           <ProductCard
+                            onProductRedirect={() => savePageState(index)}
                             key={index}
                             productData={item}
                             getSelectedProductSnapShots={getSelectedProductSnapShots}
                             savedProductsData={savedProductsData}
                             setSavedProductsData={setSavedProductsData}
                           />
-                          <AnimateLink to={`product/${item.product.slug}`} className="link-highlight">
+                          <AnimateLink to={`/product/${item.product.slug}`} className="link-highlight">
                             <div className="container-img bg-blue-1">
                               <ImageWrapper key={item.featureImage} defaultDimensions={{ width: 699, height: 385 }} url={item.featureImage} attributes={{ "data-aos": "scaleOut .8s ease-out-cubic 0s, d:loop" }} />
                             </div>

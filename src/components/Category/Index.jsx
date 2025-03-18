@@ -30,7 +30,7 @@ const CategoryPage = ({
 
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [pageLimit, setPageLimit] = useState(pageSize);
-  const [cookies, setCookie] = useCookies(["location", "filterColors", "filterCategories", "showProductSets", "scrollPosition", "pageSize", "loadPrevState", "lastActiveColor", "categorySlug"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["location", "filterColors", "filterCategories", "showProductSets", "scrollPosition", "pageSize", "loadPrevState", "lastActiveColor", "categorySlug"]);
   const [filterCategories, setFilterCategories] = useState([]);
   const [filterColors, setFilterColors] = useState([]);
   const [lastActiveColor, setLastActiveColor] = useState();
@@ -118,7 +118,7 @@ const CategoryPage = ({
     );
     setFilterColors(updatedColors);
     handleFilterChange({ colors: updatedColors });
-    setCookie("filterColors", updatedColors, { path: "/category" });
+    setCookie("filterColors", updatedColors, { path: "/" });
   };
   const handleLocationChange = (data) => {
     setCookie("location", data.value, { path: "/" });
@@ -130,11 +130,11 @@ const CategoryPage = ({
     setFilterCategories(updatedCategories);
     handleFilterChange({ categories: updatedCategories });
     const categoriesFilters = updatedCategories.filter((x) => x.checked).map((x) => { return { _id: x._id, checked: x.checked, name: x.name } });
-    setCookie("filterCategories", categoriesFilters, { path: "/category" });
+    setCookie("filterCategories", categoriesFilters, { path: "/" });
   };
   useEffect(() => {
     if (enableFilterTrigger) handleFilterChange({});
-    setCookie("showProductSets", productSetsFilter, { path: "/category" });
+    setCookie("showProductSets", productSetsFilter, { path: "/" });
   }, [productSetsFilter]);
 
   const setInitialValues = async () => {
@@ -168,6 +168,9 @@ const CategoryPage = ({
       }
     }
 
+    console.log("cookies", cookies);
+    
+
     if ((cookies?.filterColors?.length !== 0 || cookies?.filterCategories?.length !== 0 || cookies?.showProductSets) && cookies?.loadPrevState && cookies?.categorySlug) {
       if (cookies.filterCategories) setFilterCategories(categories.map((x) => { return { ...x, checked: cookies.filterCategories.some((y) => y._id === x._id) } }));
       if (cookies.filterColors) setFilterColors(cookies.filterColors);
@@ -197,16 +200,17 @@ const CategoryPage = ({
         setTimeout(() => {
           markPageLoaded(true, false);
           setEnableFilterTrigger(true);
+          clearPageState();
         }, 500);
       }, 500);
     } else {
       setTimeout(() => {
         markPageLoaded(true);
         setEnableFilterTrigger(true);
+        clearPageState();
       }, 500);
     }
 
-    setCookie("loadPrevState", false, { path: "/category" });
     const savedProducts = await getSavedProductData();
     setSavedProductsData(savedProducts);
 
@@ -312,12 +316,23 @@ const CategoryPage = ({
 
   const savePageState = () => {
     const scrollPosition = window.scrollY;
-    setCookie("scrollPosition", scrollPosition, { path: "/category" });
-    setCookie("pageSize", pageLimit, { path: "/category" });
-    setCookie("lastActiveColor", lastActiveColor, { path: "/category" });
-    setCookie("categorySlug", slug, { path: "/category" });
-    setCookie("loadPrevState", true, { path: "/category" });
+    setCookie("scrollPosition", scrollPosition, { path: "/" });
+    setCookie("pageSize", pageLimit, { path: "/" });
+    setCookie("lastActiveColor", lastActiveColor, { path: "/" });
+    setCookie("categorySlug", slug, { path: "/" });
+    setCookie("loadPrevState", true, { path: "/" });
   }
+
+  const clearPageState = () => {
+    removeCookie("filterColors", { path: "/" });
+    removeCookie("filterCategories", { path: "/" });
+    removeCookie("showProductSets", { path: "/" });
+    removeCookie("scrollPosition", { path: "/" });
+    removeCookie("pageSize", { path: "/" });
+    removeCookie("loadPrevState", { path: "/" });
+    removeCookie("lastActiveColor", { path: "/" });
+    removeCookie("categorySlug", { path: "/" });
+};
 
   return (
     <>
