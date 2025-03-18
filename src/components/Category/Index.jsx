@@ -30,7 +30,7 @@ const CategoryPage = ({
 
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [pageLimit, setPageLimit] = useState(pageSize);
-  const [cookies, setCookie] = useCookies(["location", "filterColors", "filterCategories", "showProductSets", "scrollPosition", "pageSize", "loadPrevState"]);
+  const [cookies, setCookie] = useCookies(["location", "filterColors", "filterCategories", "showProductSets", "scrollPosition", "pageSize", "loadPrevState", "lastActiveColor", "categorySlug"]);
   const [filterCategories, setFilterCategories] = useState([]);
   const [filterColors, setFilterColors] = useState([]);
   const [lastActiveColor, setLastActiveColor] = useState();
@@ -91,9 +91,9 @@ const CategoryPage = ({
               ? product.colors.some((color) => selectedColors.includes(color))
               : true;
 
-          hasLocation = selectedLocation
-            ? product.location.includes(selectedLocation)
-            : true;
+          const productHasLocation = product.location.includes(selectedLocation);
+          const variantHasLocation = productHasLocation ? product.variantData.some(variant => variant.location.includes(selectedLocation)) : false;
+          hasLocation = productHasLocation && variantHasLocation;
           return hasLocation && hasColor && hasCategory;
         }
       });
@@ -118,7 +118,7 @@ const CategoryPage = ({
     );
     setFilterColors(updatedColors);
     handleFilterChange({ colors: updatedColors });
-    setCookie("filterColors", updatedColors, { path: "/" });
+    setCookie("filterColors", updatedColors, { path: "/category" });
   };
   const handleLocationChange = (data) => {
     setCookie("location", data.value, { path: "/" });
@@ -130,11 +130,11 @@ const CategoryPage = ({
     setFilterCategories(updatedCategories);
     handleFilterChange({ categories: updatedCategories });
     const categoriesFilters = updatedCategories.filter((x) => x.checked).map((x) => { return { _id: x._id, checked: x.checked, name: x.name } });
-    setCookie("filterCategories", categoriesFilters, { path: "/" });
+    setCookie("filterCategories", categoriesFilters, { path: "/category" });
   };
   useEffect(() => {
     if (enableFilterTrigger) handleFilterChange({});
-    setCookie("showProductSets", productSetsFilter, { path: "/" });
+    setCookie("showProductSets", productSetsFilter, { path: "/category" });
   }, [productSetsFilter]);
 
   const setInitialValues = async () => {
@@ -168,15 +168,19 @@ const CategoryPage = ({
       }
     }
 
-    if ((cookies?.filterColors?.length !== 0 || cookies?.filterCategories?.length !== 0 || cookies?.showProductSets) && cookies?.loadPrevState) {
+    if ((cookies?.filterColors?.length !== 0 || cookies?.filterCategories?.length !== 0 || cookies?.showProductSets) && cookies?.loadPrevState && cookies?.categorySlug) {
       if (cookies.filterCategories) setFilterCategories(categories.map((x) => { return { ...x, checked: cookies.filterCategories.some((y) => y._id === x._id) } }));
       if (cookies.filterColors) setFilterColors(cookies.filterColors);
       if (cookies.showProductSets) setProductSetsFilter(cookies.showProductSets);
-      handleFilterChange({ colors: cookies.filterColors, categories: cookies.filterCategories });
+      if (cookies.lastActiveColor) setLastActiveColor(cookies.lastActiveColor);
+      handleFilterChange({ colors: cookies.filterColors || [], categories: cookies.filterCategories || [] });
     } else {
       const filteredProducts = productsData.filter((product) => {
-        return product.location.some((x) => x === cookies.location);
+        const productHasLocation = product.location.includes(cookies.location);
+        const variantHasLocation = productHasLocation ? product.variantData.some(variant => variant.location.includes(cookies.location)) : false;
+        return productHasLocation && variantHasLocation;
       });
+
       const sortedProducts = filteredProducts.sort((a, b) => {
         const orderA = a?.orderNumber && a.orderNumber[slug] !== undefined ? a.orderNumber[slug] : 0;
         const orderB = b?.orderNumber && b.orderNumber[slug] !== undefined ? b.orderNumber[slug] : 0;
@@ -186,16 +190,23 @@ const CategoryPage = ({
       setFilteredProducts(sortedProducts);
     }
 
-    if (cookies?.loadPrevState) {
+    if (cookies?.loadPrevState && cookies?.categorySlug === slug) {
       if (cookies.pageSize) setPageLimit(cookies.pageSize);
       setTimeout(() => {
         if (cookies.scrollPosition) window.scrollTo(0, cookies.scrollPosition);
+        setTimeout(() => {
+          markPageLoaded(true, false);
+          setEnableFilterTrigger(true);
+        }, 500);
+      }, 500);
+    } else {
+      setTimeout(() => {
+        markPageLoaded(true);
+        setEnableFilterTrigger(true);
       }, 500);
     }
 
-    setTimeout(markPageLoaded(true, true), cookies.loadPrevState ? 1000 : 500);
-    setTimeout(setEnableFilterTrigger(true), cookies.loadPrevState ? 1000 : 500);
-
+    setCookie("loadPrevState", false, { path: "/category" });
     const savedProducts = await getSavedProductData();
     setSavedProductsData(savedProducts);
 
@@ -299,13 +310,13 @@ const CategoryPage = ({
     updatedWatched(true);
   }
 
-  const savePageState = (e) => {
+  const savePageState = () => {
     const scrollPosition = window.scrollY;
-    console.log("scrollPosition", scrollPosition);
-
-    setCookie("scrollPosition", scrollPosition, { path: "/" });
-    setCookie("pageSize", pageLimit, { path: "/" });
-    setCookie("loadPrevState", true, { path: "/" });
+    setCookie("scrollPosition", scrollPosition, { path: "/category" });
+    setCookie("pageSize", pageLimit, { path: "/category" });
+    setCookie("lastActiveColor", lastActiveColor, { path: "/category" });
+    setCookie("categorySlug", slug, { path: "/category" });
+    setCookie("loadPrevState", true, { path: "/category" });
   }
 
   return (

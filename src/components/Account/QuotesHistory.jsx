@@ -89,7 +89,7 @@ const QuotesHistory = () => {
       const total = cookies.cartQuantity ? cookies.cartQuantity + newItems : newItems;
       setCookie("cartQuantity", total, { path: "/" });
 
-      pageLoadStart({});
+      pageLoadStart();
       router.push("/cart");
     } catch (error) {
       logError("Error while adding products to cart:", error);

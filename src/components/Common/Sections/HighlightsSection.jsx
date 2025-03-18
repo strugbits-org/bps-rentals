@@ -1,9 +1,18 @@
 import AnimateLink from "../AnimateLink";
 import ProductCard from "@/components/Category/ProductCard";
 import { ImageWrapper } from "../ImageWrapper";
+import { useEffect, useRef } from "react";
 
 const Highlights = ({ pageContent, data, savedProductsData, setSavedProductsData, getSelectedProductSnapShots }) => {
   if (data.length === 0) return;
+
+  const slider = useRef(null);
+
+  useEffect(() => {
+    console.log("Highlights data:", data);
+    console.log("slider:", slider.current);
+  }, []);
+
   return (
     <section className="section-highlights">
       <div className="container-fluid">
@@ -17,7 +26,7 @@ const Highlights = ({ pageContent, data, savedProductsData, setSavedProductsData
             </h2>
             <div className="slider-highlights mt-lg-95 mt-tablet-55 mt-phone-35">
               <div className="swiper-container">
-                <div className="swiper-wrapper">
+                <div ref={slider} className="swiper-wrapper abcd">
                   {data && data.map((item, index) => {
                     return (
                       <div key={index} className="swiper-slide">

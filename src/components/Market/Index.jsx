@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { markPageLoaded } from "@/Utils/AnimationFunctions";
+import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
 import Markets from "../Common/Sections/MarketSection";
 import Studios from "../Common/Sections/StudiosSection";
 import DreamBig from "../Common/Sections/DreamBigSection";
@@ -13,8 +13,10 @@ import { MarketSlider } from "./MarketSlider";
 import { getSavedProductData } from "@/Services/ProductsApis";
 import CartModal from "../Common/Modals/CartModal";
 import logError from "@/Utils/ServerActions";
+import { useCookies } from "react-cookie";
 
 const MarketPage = ({
+  slug,
   marketSection,
   newArrivalSectionContent,
   homeSectionDetails,
@@ -28,13 +30,15 @@ const MarketPage = ({
   bestSellers
 }) => {
 
+  const pageSize = 6;
+  const [pageLimit, setPageLimit] = useState(pageSize);
+  const [cookies, setCookie] = useCookies(["scrollPosition", "pageSize", "loadPrevState", "marketSlug"]);
   const [savedProductsData, setSavedProductsData] = useState([]);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
   const [selectedVariantData, setSelectedVariantData] = useState(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-  const [productFilteredVariantData, setProductFilteredVariantData] =
-    useState();
+  const [productFilteredVariantData, setProductFilteredVariantData] = useState();
 
   const getSelectedProductSnapShots = async (productData, activeVariant) => {
     setSelectedProductData(productData);
@@ -114,10 +118,36 @@ const MarketPage = ({
     } catch (error) {
       logError("Error while fetching Saved Product", error);
     }
+  };
+
+  const handleAutoSeeMore = () => {
+    setPageLimit((prev) => prev + pageSize);
+    updatedWatched(true);
+  }
+
+  const savePageState = () => {
+    const scrollPosition = window.scrollY;
+    setCookie("scrollPosition", scrollPosition, { path: "/market" });
+    setCookie("pageSize", pageLimit, { path: "/market" });
+    setCookie("marketSlug", slug, { path: "/market" });
+    setCookie("loadPrevState", true, { path: "/market" });
   }
 
   useEffect(() => {
-    setTimeout(markPageLoaded, 200);
+    if (cookies.loadPrevState && cookies.marketSlug === slug) {
+      if (cookies.pageSize) setPageLimit(cookies.pageSize);
+      setTimeout(() => {
+        if (cookies.scrollPosition) window.scrollTo(0, cookies.scrollPosition);
+        setTimeout(() => {
+          markPageLoaded(true, false);
+        }, 500);
+      }, 500);
+    } else {
+      setTimeout(() => {
+        markPageLoaded();
+      }, 500);
+    }
+    setCookie("loadPrevState", false, { path: "/market" });
     fetchSavedProducts();
   }, [])
 
@@ -139,7 +169,7 @@ const MarketPage = ({
         setSavedProductsData={setSavedProductsData}
       />
       <MarketIntroSection data={marketSection} />
-      <MarketBestSeller products={bestSellerProducts}  savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} />
+      <MarketBestSeller products={bestSellerProducts} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} pageLimit={pageLimit} handleAutoSeeMore={handleAutoSeeMore} savePageState={savePageState} />
       <NewArrival content={newArrivalSectionContent} />
       <Highlights pageContent={homeSectionDetails} data={highlightsSectionData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} />
       <MarketSlider content={homeSectionDetails} marketSliderData={marketSliderData} />

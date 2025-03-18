@@ -47,7 +47,7 @@ const Navbar = ({
   const checkUser = () => {
     const submenuLogin = document.querySelector(".submenu-login");
     if (loggedIn && loggedIn !== "undefined") {
-      pageLoadStart({});
+      pageLoadStart();
       if (path === "/my-account") {
         setTimeout(() => {
           pageLoadEnd();

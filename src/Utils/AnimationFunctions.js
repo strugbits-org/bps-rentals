@@ -2,11 +2,11 @@
 
 import logError from "./ServerActions";
 
-export const initAnimations = () => {
+export const initAnimations = (scrollToTop = true) => {
   if (typeof window !== "undefined") {
     setTimeout(() => {
-      const customEvent = new Event("customInitScript");
-      const elem = document.querySelector(".initScript");      
+      const customEvent = new Event(scrollToTop ? "customInitScript" : "customInitScriptWithNoScroll");
+      const elem = document.querySelector(".initScript");
       if (elem) elem.dispatchEvent(customEvent);
     }, 400);
   }
@@ -81,7 +81,7 @@ export const updatedWatched = (refreshScroll = false, disableWordsAnimation = fa
         const scrollRefreshEvent = new Event("refreshScroll");
         document.querySelector(".scrollRefresh").dispatchEvent(scrollRefreshEvent);
         triggerParallax();
-        if(!disableWordsAnimation) splitWordsAnimation();
+        if (!disableWordsAnimation) splitWordsAnimation();
       }
     }, 200);
   }
@@ -148,15 +148,15 @@ export const loadPinterest = () => {
   }
 };
 
-export const markPageLoaded = (watched = true, disableScroll = false) => {
+export const markPageLoaded = (watched = true, scrollToTop = true) => {
   if (typeof window !== "undefined") {
-    if(!disableScroll) setTimeout(() => window.scrollTo({ top: 0 }), 200);
-    initAnimations();
+    if (scrollToTop) setTimeout(() => window.scrollTo({ top: 0 }), 200);
+    initAnimations(scrollToTop);
     if (watched) updatedWatched(true);
     setTimeout(loadPinterest, 1000);
     const isFirstLoadDone = document.body.classList.contains("first-load-done");
     if (isFirstLoadDone) {
-      pageLoadEnd();
+      pageLoadEnd(scrollToTop);
     } else {
       firstLoadAnimation();
     }
@@ -179,13 +179,13 @@ export const firstLoadAnimation = async () => {
   }, 1200);
 };
 
-export const pageLoadStart = ({ noScroll = false }) => {
+export const pageLoadStart = (scrollToTop = true) => {
   if (typeof window !== "undefined") {
     closeModals();
     document.body.setAttribute("data-form-cart-state", "");
     document.body.classList.add("page-leave-active");
 
-    if (!noScroll) {
+    if (scrollToTop) {
       setTimeout(() => {
         const scrollContainer = document.querySelector("[data-scroll-container]");
         window.scrollTo({ top: 0, behavior: "auto" });
@@ -194,13 +194,13 @@ export const pageLoadStart = ({ noScroll = false }) => {
     }
   }
 };
-export const pageLoadEnd = () => {
+export const pageLoadEnd = (scrollToTop = true) => {
   if (typeof window !== "undefined") {
     const scrollContainer = document.querySelector("[data-scroll-container]");
     if (scrollContainer && scrollContainer.classList.contains("wrapper-no-transform")) scrollContainer.classList.remove("wrapper-no-transform");
   }
   if (typeof window !== "undefined") {
-    window.scrollTo({ top: 0 });
+    if (scrollToTop) window.scrollTo({ top: 0 });
     const body = document.body;
     body.classList.replace("page-leave-active", "page-enter-active");
     setTimeout(() => {
