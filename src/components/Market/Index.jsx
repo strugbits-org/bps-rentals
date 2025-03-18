@@ -32,7 +32,7 @@ const MarketPage = ({
 
   const pageSize = 6;
   const [pageLimit, setPageLimit] = useState(pageSize);
-  const [cookies, setCookie, removeCookie] = useCookies(["marketScrollPosition", "marketPageSize", "marketLoadPrevState", "marketSlug"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["marketScrollPosition", "marketPageSize", "marketLoadPrevState", "marketSlug", "marketSlideIndex"]);
   const [savedProductsData, setSavedProductsData] = useState([]);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
@@ -146,19 +146,20 @@ const MarketPage = ({
     removeCookie("marketSlug", { path: "/" });
   };
 
-  useEffect(() => {
+  const handlePageLoad = () => {
     if (cookies.marketLoadPrevState && cookies.marketSlug === slug) {
       if (cookies.marketPageSize) setPageLimit(cookies.marketPageSize);
       setTimeout(() => {
         if (cookies.marketScrollPosition) window.scrollTo(0, cookies.marketScrollPosition);
         if (cookies.marketSlideIndex) {
-          setTimeout(() => {
-            const swiper = sliderRef.current.swiper;
-            if (swiper) {
+          const waitForSwiper = setInterval(() => {
+            if (sliderRef.current?.swiper) {
+              clearInterval(waitForSwiper);
+              const swiper = sliderRef.current.swiper;
               swiper.updateSlides();
               swiper.slideTo(cookies.marketSlideIndex);
             }
-          }, 2e3);
+          }, 3e2);
         }
         setTimeout(() => {
           markPageLoaded(true, false);
@@ -171,6 +172,10 @@ const MarketPage = ({
         clearPageState();
       }, 500);
     }
+  };
+
+  useEffect(() => {
+    handlePageLoad();
     fetchSavedProducts();
   }, [])
 

@@ -31,7 +31,7 @@ const Highlights = ({ pageContent, data, savedProductsData, setSavedProductsData
                             savedProductsData={savedProductsData}
                             setSavedProductsData={setSavedProductsData}
                           />
-                          <AnimateLink to={`/product/${item.product.slug}`} className="link-highlight">
+                          <AnimateLink to={`/product/${item.product.slug}`} className="link-highlight" onProductRedirect={() => savePageState(index)}>
                             <div className="container-img bg-blue-1">
                               <ImageWrapper key={item.featureImage} defaultDimensions={{ width: 699, height: 385 }} url={item.featureImage} attributes={{ "data-aos": "scaleOut .8s ease-out-cubic 0s, d:loop" }} />
                             </div>
