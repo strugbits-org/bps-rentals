@@ -4,6 +4,16 @@ import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 const baseUrl = process.env.BASE_URL;
 
+export const getProductsKeywords = async () => {
+  try {
+    const productKeywordsData = await getDataFetchFunction({ "dataCollectionId": "ProductKeywords" });
+    const keywords = productKeywordsData._items[0]?.data?.keywords || [];
+    return keywords;
+  } catch (error) {
+    logError("Error fetching products keywords:", error);
+  }
+};
+
 export const getAllProducts = async ({ categories = [], searchTerm, adminPage = false }) => {
   try {
     const payload = {
@@ -42,9 +52,10 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
     }
 
     if (categories.length === 0 && searchTerm) {
-      return products.filter(product =>
-        searchTerm === "" || (product.search && product.search.toLowerCase().includes(searchTerm))
-      );
+      const term = searchTerm.trim().toLowerCase();
+      if (!term) return products;
+
+      return searchProductsData(term, products);
     }
 
     return products.filter(product =>
@@ -199,41 +210,89 @@ export const fetchAllProductsPaths = async () => {
     logError("Error fetching all products:", error);
   }
 };
+
 export const searchProducts = async (term, location) => {
   try {
-    const response = await getDataFetchFunction({
+    const isFullSearch = !location;
+    const pageLimit = isFullSearch ? 1000 : 3;
+
+    const baseFilters = {
       dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: ["product"],
       ne: [
-        {
-          key: "hidden",
-          value: true,
-        },
-        {
-          key: "isF1Exclusive",
-          value: true,
-        },
+        { key: "hidden", value: true },
+        { key: "isF1Exclusive", value: true }
       ],
-      hasSome: [
-        {
-          key: "location",
-          values: location,
-        }
-      ],
-      includeVariants: false,
-      contains: ["search", term],
-      limit: 3,
+      includeVariants: isFullSearch ? true : false,
+      limit: pageLimit,
+      sortOrder: "asc",
+      sortKey: "_id"
+    };
+
+    if (location) baseFilters.hasSome = [{ key: "location", values: location }];
+
+    let items = [];
+
+    const response = await getDataFetchFunction({
+      ...baseFilters,
+      startsWith: [{ key: "title", value: term }]
     });
 
-    if (!response || !response._items) {
-      throw new Error("Response does not contain _items", response);
+    const data = response._items?.filter(item => typeof item.data.product !== "string").map(item => item.data) || [];
+    items = items.concat(data);
+    if (items.length >= pageLimit) return items;
+
+    const fetchProducts = async ({ searchKey, limit, excludeIds = [], searchPrefix = " ", correctionEnabled = false, searchType = "and" }) => {
+      const response = await getDataFetchFunction({
+        ...baseFilters,
+        search: [searchKey, term],
+        limit,
+        searchPrefix,
+        ne: [...baseFilters.ne, ...excludeIds.map(id => ({ key: "product", value: id }))],
+        correctionEnabled,
+        searchType
+      });
+      return response._items?.filter(item => typeof item.data.product !== "string").map(item => item.data) || [];
+    };
+
+    // Define search strategies in order of preference
+    const searchStrategies = [
+      { searchKey: "title", searchPrefix: " ", correctionEnabled: false, searchType: "and" },
+      { searchKey: "title", searchPrefix: "", correctionEnabled: false, searchType: "and" },
+      { searchKey: "title", searchPrefix: " ", correctionEnabled: false, searchType: "or" },
+      { searchKey: "title", searchPrefix: "", correctionEnabled: false, searchType: "or" },
+      { searchKey: "title", searchPrefix: " ", correctionEnabled: true, searchType: "and" },
+      { searchKey: "title", searchPrefix: "", correctionEnabled: true, searchType: "and" },
+      { searchKey: "title", searchPrefix: " ", correctionEnabled: true, searchType: "or" },
+      { searchKey: "title", searchPrefix: "", correctionEnabled: true, searchType: "or" },
+      { searchKey: "search", searchPrefix: "", correctionEnabled: false, searchType: "and" },
+      { searchKey: "search", searchPrefix: "", correctionEnabled: false, searchType: "or" }
+    ];
+
+    // Execute strategies in sequence until we have 3 items
+    for (const strategy of searchStrategies) {
+      if (items.length >= pageLimit) break;
+
+      const excludeIds = items.map(({ product }) => product?._id);
+      const newLimit = pageLimit - items.length;
+      const newItems = await fetchProducts({
+        ...strategy,
+        limit: newLimit,
+        excludeIds
+      });
+
+      items = items.concat(newItems);
+
+      if (items.length >= pageLimit) break;
     }
-    return response._items.map(x => x.data);
+
+    return items;
   } catch (error) {
     logError("Error searching products:", error);
     return [];
   }
 };
+
 export const getAllColorsData = async () => {
   try {
     const response = await getDataFetchFunction({
@@ -621,6 +680,27 @@ export const getCatalogIdBySku = async (productSku) => {
     }
   } catch (error) {
     logError("Error fetching product variants:", error);
+    return [];
+  }
+};
+
+export const getCartPricingTiersData = async (product) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "locationFilteredVariant",
+      hasSome: [{ key: "product", values: product }],
+    });
+
+    if (!response?._items) {
+      throw new Error("Response does not contain _items");
+    }
+
+    return response._items.map(({ data }) => ({
+      _id: data.product,
+      pricingTiers: Array.isArray(data?.pricingTiers) ? data.pricingTiers : [],
+    }));
+  } catch (error) {
+    logError("Error fetching products pricing tiers data:", error);
     return [];
   }
 };

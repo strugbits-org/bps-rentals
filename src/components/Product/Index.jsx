@@ -10,7 +10,7 @@ import {
   resetSlideIndex,
   updatedWatched,
 } from "@/Utils/AnimationFunctions";
-import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, compareArray, findPriceForTier } from "@/Utils/Utils";
 
 import { getSavedProductData } from "@/Services/ProductsApis";
 import { AddProductToCart } from "@/Services/CartApis";
@@ -25,7 +25,6 @@ import { AvailabilityCard } from "./AvailabilityCard";
 import MatchItWith from "./MatchItWithSection";
 import SnapShots from "./SnapShotsSection";
 import useUserData from "@/Hooks/useUserData";
-import { decryptField } from "@/Utils/Encrypt";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
@@ -48,6 +47,14 @@ const ProductPostPage = ({
     "cartQuantity",
     "userTokens",
     "location",
+    "homeScrollPosition",
+    "scrollPosition",
+    "searchScrollPosition",
+    "marketScrollPosition",
+    "homeLoadPrevState",
+    "loadPrevState",
+    "searchLoadPrevState",
+    "marketLoadPrevState",
   ]);
 
   const { productSnapshotData, defaultVariant } = selectedProductDetails;
@@ -62,7 +69,7 @@ const ProductPostPage = ({
   const [cartQuantity, setCartQuantity] = useState(1);
   const [customTextFields, setCustomTextFields] = useState({});
 
-  const { permissions } = useUserData();
+  const { permissions, pricingTier } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
   const SHOW_FIREPROOF_CERTIFICATES = permissions && permissions.includes(PERMISSIONS.SHOW_FIREPROOF_CERTIFICATES);
   const SHOW_DOCUMENTS = permissions && permissions.includes(PERMISSIONS.SHOW_DOCUMENTS);
@@ -212,7 +219,7 @@ const ProductPostPage = ({
       const total = cookies.cartQuantity ? cookies.cartQuantity + newItems : newItems;
       setCookie("cartQuantity", total, { path: "/" });
 
-      pageLoadStart({});
+      pageLoadStart();
       router.push("/cart");
     } catch (error) {
       pageLoadEnd();
@@ -248,6 +255,25 @@ const ProductPostPage = ({
     }
   }, [selectedVariant])
 
+  useEffect(() => {
+    const handleBackButton = () => {
+      if (cookies.homeScrollPosition) {
+        setCookie("homeLoadPrevState", true, { path: "/" });
+      } else if (cookies.scrollPosition) {
+        setCookie("loadPrevState", true, { path: "/" });
+      } else if (cookies.searchScrollPosition) {
+        setCookie("searchLoadPrevState", true, { path: "/" });
+      } else if (cookies.marketScrollPosition) {
+        setCookie("marketLoadPrevState", true, { path: "/" });
+      }
+    };
+
+    window.addEventListener("popstate", handleBackButton);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, []);
 
   return (
     <>
@@ -425,9 +451,7 @@ const ProductPostPage = ({
                         <li className="seat-height">
                           <span className="specs-title">Price</span>
                           <span className="specs-text">
-                            {decryptField(
-                              selectedProductDetails.product.formattedPrice
-                            )}
+                            {findPriceForTier(selectedProductDetails, pricingTier)}
                           </span>
                         </li>
                       )}

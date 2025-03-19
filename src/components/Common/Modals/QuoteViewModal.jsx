@@ -47,7 +47,7 @@ const QuoteViewModal = ({ data, handleAddToCart }) => {
                             className="list-cart list-cart-product"
                             data-aos="d:loop"
                           >
-                            <QuoteItems quoteData={data?.lineItems} />
+                            <QuoteItems quoteData={data?.lineItems} status={"created"} />
                           </ul>
                           <div className="flex-center mt-lg-105 mt-tablet-55 mt-phone-35">
                             <button

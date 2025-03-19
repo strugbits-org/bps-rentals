@@ -5,8 +5,11 @@ import { filterSearchData, formatDate } from "@/Utils/Utils";
 import { useCookies } from "react-cookie";
 import { searchProducts } from "@/Services/ProductsApis";
 import debounce from 'lodash/debounce';
-import { updatedWatched } from "@/Utils/AnimationFunctions";
+import { pageLoadEnd, pageLoadStart, updatedWatched } from "@/Utils/AnimationFunctions";
 import { ImageWrapper } from "../ImageWrapper";
+import { usePathname } from "next/navigation";
+import logError from "@/Utils/ServerActions";
+import { useRouter } from "next/navigation";
 
 const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, searchPagesData }) => {
 
@@ -28,35 +31,38 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [filteredPortfolios, setFilteredPortfolios] = useState([]);
   const [filteredPages, setFilteredPages] = useState([]);
-  const [cookies, setCookie] = useCookies(["location"]);
+  const [productsLoading, setProductsLoading] = useState(false);
+  const [cookies, _setCookie] = useCookies(["location"]);
+  const pathname = usePathname();
+  const router = useRouter();
+
 
   const handleSearchFilter = (value) => {
-    const term = value !== undefined ? value : searchTerm;
-    const filteredPagesData = searchPagesData.filter(page => {
-      const matchedTerm = term === "" || (page.content && page.content.toLowerCase().includes(term));
-      return matchedTerm;
-    });
-    setFilteredPages(filteredPagesData);
+    const term = (value ?? searchTerm).trim().toLowerCase();
+    if (!term) {
+      setFilteredPages(searchPagesData);
+      setPortfoliosResult(portfolios);
+      setBlogsResult(blogs);
+      return;
+    }
 
-    const filteredPortfoliosData = portfolios.filter(portfolio => {
-      const matchedTerm = term === "" || (portfolio.titleAndDescription && portfolio.titleAndDescription.toLowerCase().includes(term));
-      return matchedTerm;
-    });
-    setPortfoliosResult(filteredPortfoliosData);
+    const words = term.split(/\s+/).filter(Boolean);
+    const searchRegex = new RegExp(words.map(word => `(?=.*${word})`).join(""), "i");
 
-    const filteredBlogsData = blogs.filter(blog => {
-      const matchedTerm = term === "" || (blog.titleAndDescription && blog.titleAndDescription.toLowerCase().includes(term));
-      return matchedTerm;
-    });
-    setBlogsResult(filteredBlogsData);
-  }
+    const filterByTerm = (data, key) =>
+      data.filter(item => searchRegex.test(item[key]?.toLowerCase() || ""));
+
+    setFilteredPages(filterByTerm(searchPagesData, "content"));
+    setPortfoliosResult(filterByTerm(portfolios, "titleAndDescription"));
+    setBlogsResult(filterByTerm(blogs, "titleAndDescription"));
+  };
+
 
   const handleInputChange = (e) => {
     const value = e.target.value.toLowerCase();
     setSelectedStudios([]);
     setSelectedMarkets([]);
     setSearchTerm(value);
-    handleSearchFilter(value);
   };
   const handleStudioFilter = (studio) => {
     if (selectedStudios.includes(studio)) {
@@ -94,14 +100,24 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   }, [BlogsResult, portfoliosResult]);
 
   const handleProductsFilter = async (term = "") => {
-    const filteredProductsData = await searchProducts(term, cookies.location);
-    setFilteredProducts(filteredProductsData);
-    updatedWatched();
+    try {
+      setProductsLoading(true);
+      const filteredProductsData = await searchProducts(term, cookies.location);
+      setFilteredProducts(filteredProductsData);
+      updatedWatched();
+    } catch (error) {
+      logError("Error fetching products:", error);
+    } finally {
+      setProductsLoading(false);
+    }
   }
 
   useEffect(() => {
     if (searchActive) {
-      const delayedSearch = debounce(() => { handleProductsFilter(searchTerm) }, 500);
+      const delayedSearch = debounce(() => {
+        handleSearchFilter(searchTerm);
+        handleProductsFilter(searchTerm)
+      }, 500);
       delayedSearch();
       return () => delayedSearch.cancel();
     }
@@ -115,6 +131,15 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
     }
     e.preventDefault();
   };
+
+  const handleSeeAll = () => {
+    const params = new URLSearchParams({ query: searchTerm });
+    router.push(`/search?${params}`);
+    pageLoadStart();
+    setTimeout(() => {
+      pageLoadEnd();
+    }, 2200);
+  }
 
   return (
     <section className="menu-search" data-get-submenu="search">
@@ -189,19 +214,29 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                     </ul>
                   </div>
                   <div className="column-results">
-                    <div className={`result-rental ${filteredProducts.length === 0 ? "hidden" : ""}`}>
+                    {productsLoading && <><div className="loader-small"></div><br /><br /></>}
+                    <div className={`result-rental ${productsLoading || filteredProducts.length === 0 ? "hidden" : ""}`}>
                       <div className="container-title-results">
                         <h2 className="title-results split-chars" data-aos>
                           {searchSectionDetails?.rentalTitle} <span>{` "${searchTerm}"`}</span>
                         </h2>
-                        <AnimateLink
-                          to={`/search/${searchTerm}`}
-                          data-menu-close
-                          className="btn-border-blue"
-                        >
-                          <span>See more</span>
-                          <i className="icon-arrow-right"></i>
-                        </AnimateLink>
+                        {pathname === "/search" ?
+                          <button
+                            onClick={handleSeeAll}
+                            data-menu-close
+                            className={`btn-border-blue ${filteredProducts.length < 3 || productsLoading ? "hidden" : ""}`}
+                          >
+                            <span>See more</span>
+                            <i className="icon-arrow-right"></i>
+                          </button> : <AnimateLink
+                            to={pathname !== "/search" ? `/search?query=${searchTerm}` : ``}
+                            data-menu-close
+                            className={`btn-border-blue ${filteredProducts.length < 3 || productsLoading ? "hidden" : ""}`}
+                          >
+                            <span>See more</span>
+                            <i className="icon-arrow-right"></i>
+                          </AnimateLink>}
+
                       </div>
                       <div className="slider-content-phone">
                         <div className="swiper-container">
@@ -326,7 +361,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                         </div>
                       </div>
                     </div>
-                    {filteredProducts.length === 0 && filteredPortfolios.length === 0 && <h6 style={{ width: "100%" }} className="ml-4 mt-3-cs fs--40">No products or projects were found for {searchTerm}</h6>}
+                    {!productsLoading && filteredProducts.length === 0 && filteredPortfolios.length === 0 && <h6 style={{ width: "100%" }} className="ml-4 mt-3-cs fs--40">No products or projects were found for {searchTerm}</h6>}
                   </div>
                   <div className="result-our-markets">
                     <div className="container-title-results">

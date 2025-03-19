@@ -19,7 +19,6 @@ const RevalidateButton = () => {
         pageRevalidated: false,
         siteRevalidated: false,
         errorMessage: null,
-        failedRoutes: [],
         reloading: false,
     });
 
@@ -47,18 +46,16 @@ const RevalidateButton = () => {
             pageRevalidated: false,
             siteRevalidated: false,
             errorMessage: null,
-            failedRoutes: [],
             reloading: false,
         }));
 
         try {
             const res = await revalidateFn();
 
-            if (!isPage && res?.failed?.length > 0) {
+            if (!isPage && !res) {
                 setRevalidationState((prevState) => ({
                     ...prevState,
                     [setStateKey]: false,
-                    failedRoutes: res.failed,
                     pageRevalidated: isPage,
                     siteRevalidated: !isPage,
                 }));
@@ -86,7 +83,7 @@ const RevalidateButton = () => {
         }
     };
 
-    const { isRevalidatingPage, isRevalidatingSite, pageRevalidated, siteRevalidated, failedRoutes, errorMessage, reloading } = revalidationState;
+    const { isRevalidatingPage, isRevalidatingSite, pageRevalidated, siteRevalidated, errorMessage, reloading } = revalidationState;
 
     return (
         <div ref={buttonRef} className="revalidate-button" data-cursor-style="off">
@@ -121,17 +118,6 @@ const RevalidateButton = () => {
                     <span>{isRevalidatingSite ? "Invalidating Site..." : "Invalidate Site"}</span>
                 </button>
                 {siteRevalidated && <p>Site invalidated successfully! Reloading...</p>}
-
-                {failedRoutes.length > 0 && (
-                    <div>
-                        <p style={{ color: 'red' }}>Failed to invalidate routes:</p>
-                        <ul>
-                            {failedRoutes.map((route, index) => (
-                                <li key={index}>{route}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
 
                 {errorMessage && <p style={{ color: 'red' }}>Error: {errorMessage}</p>}
             </div>

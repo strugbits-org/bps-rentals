@@ -16,7 +16,7 @@ async function handleAuthentication(req) {
     return authenticatedUserData;
   } catch (error) {
     logError("Authentication error:", error);
-    return null;
+    throw new Error(error.message);
   }
 }
 

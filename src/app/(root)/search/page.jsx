@@ -5,9 +5,11 @@ import {
   fetchBestSellers,
   getAllColorsData,
   getAllProducts,
+  getProductsKeywords
 } from "@/Services/ProductsApis";
 import { getHomeSectionDetails, getMarketsData, getPageMetaData } from "@/Services/SectionsApis";
 import logError from "@/Utils/ServerActions";
+import { Suspense } from "react";
 
 export async function generateMetadata() {
   try {
@@ -28,9 +30,7 @@ export async function generateMetadata() {
   }
 }
 
-export default async function Page({ params }) {
-  const searchTerm = decodeURIComponent(params.for);
-  const searchFor = searchTerm.toLowerCase();
+export default async function Page() {
 
   try {
     const [
@@ -40,6 +40,7 @@ export default async function Page({ params }) {
       marketsData,
       colorsData,
       bestSeller,
+      productKeywords,
       productsData,
     ] = await Promise.all([
       getHomeSectionDetails(),
@@ -48,25 +49,26 @@ export default async function Page({ params }) {
       getMarketsData(),
       getAllColorsData(),
       fetchBestSellers(),
-      getAllProducts({ searchTerm: searchFor }),
+      getProductsKeywords(),
+      getAllProducts({}),
     ]);
 
     return (
-      <SearchPage
-        searchFor={searchFor}
-        pageContent={homePageContent}
-        bannersData={bannersData}
-        locations={locations}
-        marketsData={marketsData}
-        colorsData={colorsData}
-        bestSeller={bestSeller}
-        productsData={productsData}
-      />
+      <Suspense>
+        <SearchPage
+          pageContent={homePageContent}
+          bannersData={bannersData}
+          locations={locations}
+          marketsData={marketsData}
+          colorsData={colorsData}
+          bestSeller={bestSeller}
+          productKeywords={productKeywords}
+          fullProductsData={productsData}
+        />
+      </Suspense>
     );
   } catch (error) {
     logError("Error fetching Search page data:", error);
   }
 
 }
-
-export const dynamic = 'force-static';

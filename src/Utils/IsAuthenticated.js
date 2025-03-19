@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
-
 import { authWixClient, createWixClient } from "./CreateWixClient";
 import logError from "./ServerActions";
 import { extractPermissions } from "./checkPermissions";
+import { getMemberPricingTier } from "@/Services/Index";
 
 export const isAuthenticated = async (token) => {
   try {
@@ -11,7 +11,17 @@ export const isAuthenticated = async (token) => {
       throw new Error("Unauthorized: No token provided");
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      if (err.name === "TokenExpiredError") {
+        throw new Error("Token has expired");
+      } else {
+        console.error("JWT verification failed:", err.message);
+      }
+    }
 
     const authClient = await authWixClient();
     const wixClient = await createWixClient();
@@ -35,6 +45,7 @@ export const isAuthenticated = async (token) => {
 
     const badgeIds = memberBadges?.memberBadgeIds?.[0]?.badgeIds || [];
     const permissions = extractPermissions(badgeIds);
+    const pricingTier = await getMemberPricingTier(badgeIds);    
 
     const loggedInUserData = {
       ...memberData._items[0].data,
@@ -42,7 +53,8 @@ export const isAuthenticated = async (token) => {
       firstName: privateMemberData._items[0].data.firstName,
       lastName: privateMemberData._items[0].data.lastName,
       phone: privateMemberData._items[0].data.mainPhone,
-      permissions: permissions
+      permissions: permissions,
+      pricingTier: pricingTier
     };
 
     if (memberData._items.length === 0) {
@@ -52,6 +64,9 @@ export const isAuthenticated = async (token) => {
     return loggedInUserData;
   } catch (error) {
     logError(error);
+    if (error.message === "Token has expired") {
+      throw new Error(error.message);      
+    }
     throw new Error(`Unauthorized: ${error.message}`);
   }
 };

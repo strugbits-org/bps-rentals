@@ -7,6 +7,7 @@ import { cartWixClient, createWixClient } from "@/Utils/CreateWixClient";
 import { isValidEmail, isValidPassword } from "@/Utils/AuthApisUtils";
 import { extractPermissions } from "@/Utils/checkPermissions";
 import logError from "@/Utils/ServerActions";
+import { getMemberPricingTier } from "@/Services/Index";
 
 export const POST = async (req) => {
   try {
@@ -67,6 +68,13 @@ export const POST = async (req) => {
     const responseData = await memberResponse.json();
     const memberResponseData = responseData.data;
 
+    if (!memberResponseData) {
+      return NextResponse.json(
+        { message: "Error saving member data, please try again" },
+        { status: 500 }
+      )      
+    }
+
     const memberId = memberResponseData._id;
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -91,6 +99,7 @@ export const POST = async (req) => {
     const memberBadges = await wixClient.badges.listBadgesPerMember([memberId]);
     const badgeIds = memberBadges?.memberBadgeIds?.[0]?.badgeIds || [];
     const permissions = extractPermissions(badgeIds);
+    const pricingTier = await getMemberPricingTier(badgeIds);    
 
     const memberTokens = await wixClient.auth.getMemberTokensForExternalLogin(
       memberId,
@@ -117,29 +126,10 @@ export const POST = async (req) => {
       loginEmail: email,
       firstName: firstName,
       lastName: lastName,
-      mainPhone: [phone],
-      permissions: permissions
+      mainPhone: phone,
+      permissions: permissions,
+      pricingTier: pricingTier,
     };
-
-    // Email notification
-    // const emailOptions = {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     contactId: "4c14f669-db2d-45c3-aa13-b69108cde0b2",
-    //     variables: {
-    //       name: `${firstName} ${lastName}`,
-    //       email,
-    //     },
-    //   }),
-    // };
-
-    // await fetch(
-    //   `${process.env.RENTALS_URL}/registerNotification`,
-    //   emailOptions
-    // );
 
     return NextResponse.json(
       {

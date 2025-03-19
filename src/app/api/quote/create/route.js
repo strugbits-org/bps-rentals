@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import handleAuthentication from "@/Utils/HandleAuthentication";
 import { cartWixClient } from "@/Utils/CreateWixClient";
+import logError from "@/Utils/ServerActions";
 
 async function fetchData(url, options) {
   const response = await fetch(url, options);
@@ -132,6 +133,7 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
+    logError("Error", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

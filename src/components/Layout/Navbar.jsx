@@ -31,7 +31,7 @@ const Navbar = ({
   portfoliosData,
   searchPagesData,
 }) => {
-  const [cookies, setCookie] = useCookies(["authToken", "cartQuantity"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["authToken", "cartQuantity", "userData", "userTokens"]);
   const router = useRouter();
   const path = usePathname();
 
@@ -47,7 +47,7 @@ const Navbar = ({
   const checkUser = () => {
     const submenuLogin = document.querySelector(".submenu-login");
     if (loggedIn && loggedIn !== "undefined") {
-      pageLoadStart({});
+      pageLoadStart();
       if (path === "/my-account") {
         setTimeout(() => {
           pageLoadEnd();
@@ -71,6 +71,16 @@ const Navbar = ({
   const getCartTotalQuantity = async () => {
     try {
       const response = await getProductsCart();
+      if (response === "Token has expired") {
+        removeCookie("authToken", { path: "/" });
+        removeCookie("userData", { path: "/" });
+        removeCookie("userTokens", { path: "/" });
+        removeCookie("cartQuantity", { path: "/" });
+        setTimeout(() => {
+          router.push("/");
+        }, 500);
+        return;
+      }
       const total = response ? calculateTotalCartQuantity(response) : "0";
       if (total !== cookies.cartQuantity) {
         setCookie("cartQuantity", total, { path: "/" });

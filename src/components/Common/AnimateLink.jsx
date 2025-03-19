@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { pageLoadEnd, pageLoadStart } from "@/Utils/AnimationFunctions";
 
-const AnimateLink = ({ to, children, className, target, attributes }) => {
+const AnimateLink = ({ to, children, className, target, attributes, onProductRedirect }) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -12,13 +12,15 @@ const AnimateLink = ({ to, children, className, target, attributes }) => {
     if (to === undefined || !to || to === "") return;
 
     if (pathname === to) {
-      pageLoadStart({ noScroll: true });
+      pageLoadStart(false);
       setTimeout(() => pageLoadEnd(), 900);
       return;
     }
 
     if (target === undefined || !target || target === "") {
-      pageLoadStart({});
+      pageLoadStart();
+      if (onProductRedirect) onProductRedirect();
+
       setTimeout(() => {
         router.push(to);
         router.refresh();
