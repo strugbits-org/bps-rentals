@@ -135,7 +135,6 @@ const MarketPage = ({
     setCookie("marketScrollPosition", scrollPosition, { path: "/" });
     setCookie("marketPageSize", pageLimit, { path: "/" });
     setCookie("marketSlug", slug, { path: "/" });
-    setCookie("marketLoadPrevState", true, { path: "/" });
   }
 
   const clearPageState = () => {

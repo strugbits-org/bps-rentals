@@ -272,7 +272,6 @@ const SearchPage = ({
         setCookie("searchScrollPosition", scrollPosition, { path: "/" });
         setCookie("searchPageSize", pageLimit, { path: "/" });
         setCookie("searchLastActiveColor", lastActiveColor, { path: "/" });
-        setCookie("searchLoadPrevState", true, { path: "/" });
     };
 
     const clearPageState = () => {

@@ -127,14 +127,13 @@ const HomePage = ({
   const savePageState = (slideIndex) => {
     const scrollPosition = window.scrollY;
     setCookie("homeScrollPosition", scrollPosition, { path: "/" });
-    setCookie("homeLoadPrevState", true, { path: "/" });
     setCookie("homeSlideIndex", slideIndex, { path: "/" });
   }
 
   const clearPageState = () => {
     removeCookie("homeScrollPosition", { path: "/" });
-    removeCookie("homeLoadPrevState", { path: "/" });
     removeCookie("homeSlideIndex", { path: "/" });
+    removeCookie("homeLoadPrevState", { path: "/" });
   };
 
   const handlePageLoad = () => {
@@ -165,6 +164,8 @@ const HomePage = ({
   };
 
   useEffect(() => {
+    console.log("Page Loaded");
+    
     handlePageLoad();
     fetchSavedProducts();
   }, []);

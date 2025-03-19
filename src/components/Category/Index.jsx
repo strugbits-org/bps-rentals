@@ -320,7 +320,6 @@ const CategoryPage = ({
     setCookie("pageSize", pageLimit, { path: "/" });
     setCookie("lastActiveColor", lastActiveColor, { path: "/" });
     setCookie("categorySlug", slug, { path: "/" });
-    setCookie("loadPrevState", true, { path: "/" });
   }
 
   const clearPageState = () => {
