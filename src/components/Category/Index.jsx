@@ -166,10 +166,7 @@ const CategoryPage = ({
         });
         setFilterColors(colors);
       }
-    }
-
-    console.log("cookies", cookies);
-    
+    }    
 
     if ((cookies?.filterColors?.length !== 0 || cookies?.filterCategories?.length !== 0 || cookies?.showProductSets) && cookies?.loadPrevState && cookies?.categorySlug) {
       if (cookies.filterCategories) setFilterCategories(categories.map((x) => { return { ...x, checked: cookies.filterCategories.some((y) => y._id === x._id) } }));

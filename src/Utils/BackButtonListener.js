@@ -6,7 +6,6 @@ export default function BackButtonListener() {
 
     useEffect(() => {
         const handleBackButton = () => {
-            console.log("Back button pressed!");
             pageLoadStart({ noScroll: true });
         };
 
