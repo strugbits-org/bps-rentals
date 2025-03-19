@@ -55,7 +55,7 @@ const Login = ({
       });
       removeCookie("cartId", { path: "/" });
       if (authToken) {
-        pageLoadStart({});
+        pageLoadStart();
         submenuLogin.classList.remove("active");
         button.classList.remove("active");
         router.push("/my-account");

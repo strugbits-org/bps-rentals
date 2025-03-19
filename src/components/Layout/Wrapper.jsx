@@ -18,7 +18,7 @@ const Wrapper = ({ children }) => {
   return (
     <div id="main-transition">
       <div id={`pg-${cleanPath}`} className="wrapper" data-scroll-container>
-        {children}
+          {children}
       </div>
     </div>
   );

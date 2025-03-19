@@ -74,7 +74,7 @@ const ProductPostPage = ({
     if (selectedVariantFilteredData && selectedVariantFilteredData?.images) {
       const combinedVariantData = {
         ...selectedVariantData,
-        ...selectedVariantFilteredData, 
+        ...selectedVariantFilteredData,
         modalUrl: modalUrl,
       };
 
@@ -211,7 +211,7 @@ const ProductPostPage = ({
       const total = cookies.cartQuantity ? cookies.cartQuantity + newItems : newItems;
       setCookie("cartQuantity", total, { path: "/" });
 
-      pageLoadStart({});
+      pageLoadStart();
       router.push("/cart");
     } catch (error) {
       pageLoadEnd();
@@ -247,6 +247,25 @@ const ProductPostPage = ({
     }
   }, [selectedVariant])
 
+  useEffect(() => {
+    const handleBackButton = () => {
+      if (cookies.homeScrollPosition) {
+        setCookie("homeLoadPrevState", true, { path: "/" });
+      } else if (cookies.scrollPosition) {
+        setCookie("loadPrevState", true, { path: "/" });
+      } else if (cookies.searchScrollPosition) {
+        setCookie("searchLoadPrevState", true, { path: "/" });
+      } else if (cookies.marketScrollPosition) {
+        setCookie("marketLoadPrevState", true, { path: "/" });
+      }
+    };
+
+    window.addEventListener("popstate", handleBackButton);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, []);
 
   return (
     <>

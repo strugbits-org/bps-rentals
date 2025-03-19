@@ -135,7 +135,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const handleSeeAll = () => {
     const params = new URLSearchParams({ query: searchTerm });
     router.push(`/search?${params}`);
-    pageLoadStart({});
+    pageLoadStart();
     setTimeout(() => {
       pageLoadEnd();
     }, 2200);
