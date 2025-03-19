@@ -1,4 +1,5 @@
 import { confirmEmail } from "@/Services/AuthApis";
+import { isValidEmail } from "@/Utils/AuthApisUtils";
 import logError from "@/Utils/ServerActions";
 import { useState } from "react";
 
@@ -17,13 +18,15 @@ const ForgotPassword = ({
     if (isDisabled) return;
     setDisabled(true);
     try {
+      const invalidEmail = isValidEmail(formData?.email);
+      if (!invalidEmail) {
+        throw new Error("Please enter a valid email address");
+      }
       setMessage("");
       const response = await confirmEmail({ email: formData?.email });
 
       if (response?.error) {
-        setMessage(response.message);
-        setModalState({ success: false, error: true });
-        return;
+        throw new Error(response.message);
       }
 
       setMessage("Reset password link has been sent to your email");
@@ -33,7 +36,7 @@ const ForgotPassword = ({
         email: "",
       });
     } catch (error) {
-      logError("Error during confirm email:", error);
+      logError("Error sending confirmation email", error);
       setModalState({ success: false, error: true });
       setMessage(error?.message);
     } finally {
@@ -45,6 +48,7 @@ const ForgotPassword = ({
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
   return (
     <div className="container-forgot-password d-none">
       <div className="container-password">
@@ -84,9 +88,6 @@ const ForgotPassword = ({
               </button>
             </div>
           </form>
-          <h3 data-aos="fadeIn" data-form-error>
-            Error, Try again!
-          </h3>
         </div>
       </div>
     </div>

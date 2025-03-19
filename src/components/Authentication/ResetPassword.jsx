@@ -56,7 +56,7 @@ const ResetPassword = () => {
       } else {
         setMessage("Your password has been reset successfully.");
         setModalState({ success: true, error: false });
-        pageLoadStart({});
+        pageLoadStart();
         router.push("/");
       }
     } catch (error) {

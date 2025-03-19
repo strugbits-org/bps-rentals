@@ -39,7 +39,7 @@ const Markets = ({ pageContent, marketsData }) => {
                           <ImageWrapper key={image} defaultDimensions={{ width: 350, height: 350 }} url={image} />
                         </div>
                         <div className="container-text">
-                          <h3 className="title-project split-words">
+                          <h3 className="title-project">
                             {cardname}
                           </h3>
                           <ul className="list-tags">

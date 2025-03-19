@@ -44,6 +44,7 @@ import CustomBodyScripts from "@/Services/CustomBodyScripts";
 import { ToastContainer } from 'react-toastify';
 import { getChatConfiguration, getChatTriggerEvents } from "@/Services/Index";
 import Chat from "@/components/Common/Chat";
+import BackButtonListener from "@/Utils/BackButtonListener";
 
 export const metadata = {
   title: "Rent Event Furnishings - Blueprint Studios",
@@ -157,6 +158,7 @@ export default async function RootLayout({ children }) {
             socialLinks={socialLinks}
           />
           <CustomBodyScripts />
+          <BackButtonListener />
         </body>
       </html>
     </>

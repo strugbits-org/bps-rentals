@@ -4,7 +4,7 @@ import ModalCanvas3d from "../ModalCanvas3d";
 import { reloadCartModal, resetSlideIndexModal } from "@/Utils/AnimationFunctions";
 import { AvailabilityCard } from "@/components/Product/AvailabilityCard";
 import { SaveProductButton } from "../SaveProductButton";
-import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, compareArray, findPriceForTier } from "@/Utils/Utils";
 import { AddProductToCart } from "@/Services/CartApis";
 import { useCookies } from "react-cookie";
 import Modal from "./Modal";
@@ -14,7 +14,6 @@ import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
 import AnimateLink from "../AnimateLink";
 import "@/assets/style/product-set.css"
-import { decryptField } from "@/Utils/Encrypt";
 
 const CartModalCollection = ({
   productData,
@@ -29,7 +28,7 @@ const CartModalCollection = ({
   setSavedProductsData,
 }) => {
 
-  const { permissions } = useUserData();
+  const { permissions, pricingTier } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -152,7 +151,7 @@ const CartModalCollection = ({
   };
 
   useEffect(() => {
-    const prices = productsSets.map(({ price, quantity }) => Number((decryptField(price)).replace(/[^\d.-]/g, '')) * quantity);
+    const prices = productsSets.map(set => Number((findPriceForTier(set, pricingTier, "set")).replace(/[^\d.-]/g, '')) * set.quantity);
     const total = prices.reduce((acc, x) => acc + x, 0);
     setTotalPrice(`$ ${total.toFixed(2)}`);
   }, [productsSets]);
@@ -324,7 +323,8 @@ const CartModalCollection = ({
                                 {SHOW_PRICES && <span className="price">Price</span>}
                                 <span className="quantity">Quantity</span>
                               </div>
-                              {productsSets.map(({ variant, slug, quantity, color, size, name, price }) => {
+                              {productsSets.map((set) => {
+                                const { variant, slug, quantity, color, size, name } = set;
                                 return (
                                   <div key={variant} className="product-set-item fs--16">
                                     <AnimateLink
@@ -335,7 +335,7 @@ const CartModalCollection = ({
                                       {name} {color ? `| ${color}` : ""}
                                     </AnimateLink>
                                     <span className="size">{size || "-"}</span>
-                                    {SHOW_PRICES && <span className="price">{decryptField(price) || "-"}</span>}
+                                    {SHOW_PRICES && <span className="price">{findPriceForTier(set, pricingTier, "set")}</span>}
                                     <div className="quantity container-add-to-cart">
                                       <div className="container-input container-input-quantity">
                                         <button

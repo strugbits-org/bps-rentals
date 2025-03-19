@@ -19,7 +19,7 @@ const Modal = ({
     });
 
     if (redirectUrl) {
-      pageLoadStart({});
+      pageLoadStart();
       setTimeout(() => {
         router.push(redirectUrl);
       }, 400);

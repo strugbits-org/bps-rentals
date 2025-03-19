@@ -106,6 +106,7 @@ export default async function Page({ params }) {
 
     return (
       <MarketPage
+        slug={slug}
         marketSection={marketSection.rentalsMarket}
         newArrivalSectionContent={homeNewArrivalSectionContent}
         homeSectionDetails={homeSectionDetails}

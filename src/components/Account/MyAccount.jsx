@@ -19,7 +19,7 @@ const MyAccount = ({ myAccountPageContent }) => {
     setTimeout(markPageLoaded, 200);
   }, []);
 
-  const [cookies, setCookie] = useCookies(["authToken", "userData"]);
+  const [_cookies, setCookie] = useCookies(["authToken", "userData"]);
 
   const { firstName, lastName, email, phone } = useUserData();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -52,11 +52,10 @@ const MyAccount = ({ myAccountPageContent }) => {
     if (isButtonDisabled) return;
     setIsButtonDisabled(true);
     try {
-      const response = await updateProfile(formData);
+      const updatedData = { ...formData, phone: typeof formData.phone === "string" ? formData.phone : formData.phone[0] };
+      const response = await updateProfile(updatedData);
       if (response?.error) {
-        setMessage(response.message);
-        setModalState({ success: false, error: true });
-        return;
+        throw new Error(response.message);
       }
       setModalState({ success: true, error: false });
 
@@ -68,9 +67,9 @@ const MyAccount = ({ myAccountPageContent }) => {
       });
       setInitialData(formData);
     } catch (error) {
-      setMessage("An error occurred. Please try again.");
-      logError("Error updating profile", error);
+      setMessage("Error updating profile. Please try again.");
       setModalState({ success: false, error: true });
+      logError("Error updating profile", error);
     } finally {
       setIsButtonDisabled(false);
     }
@@ -78,7 +77,7 @@ const MyAccount = ({ myAccountPageContent }) => {
 
   const discardChanges = (e) => {
     e.preventDefault();
-    pageLoadStart({});
+    pageLoadStart();
     setTimeout(() => {
       setFormData(initialData);
       pageLoadEnd();

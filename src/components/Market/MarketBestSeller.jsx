@@ -1,20 +1,7 @@
-import React, { useEffect, useState } from 'react'
 import ProductCard from '../Category/ProductCard';
-import { markPageLoaded, updatedWatched } from '@/Utils/AnimationFunctions';
-// import AutoClickWrapper from '../Common/AutoClickWrapper';
 
-export const MarketBestSeller = ({ products, savedProductsData, setSavedProductsData, getSelectedProductSnapShots }) => {
-    const pageSize = 6;
-    const [pageLimit, setPageLimit] = useState(pageSize);
-
-    const handleAutoSeeMore = () => {
-        setPageLimit((prev) => prev + pageSize);
-        updatedWatched(true);
-    }
-
-    useEffect(() => {
-        markPageLoaded();
-    }, [])
+export const MarketBestSeller = ({ products, savedProductsData, setSavedProductsData, getSelectedProductSnapShots, pageLimit, handleAutoSeeMore, savePageState }) => {
+    if (products.length === 0) return;
 
     return (
         <>
@@ -27,6 +14,7 @@ export const MarketBestSeller = ({ products, savedProductsData, setSavedProducts
                                     return (
                                         <li key={index} className="list-item">
                                             <ProductCard
+                                                onProductRedirect={savePageState}
                                                 key={index}
                                                 productData={item}
                                                 getSelectedProductSnapShots={getSelectedProductSnapShots}
@@ -40,12 +28,12 @@ export const MarketBestSeller = ({ products, savedProductsData, setSavedProducts
                             {pageLimit < products.length && (
                                 <div className="flex-center">
                                     {/* <AutoClickWrapper onIntersect={handleAutoSeeMore}> */}
-                                        <button
-                                            onClick={handleAutoSeeMore}
-                                            className="btn-border-blue mt-lg-90 mt-tablet-40 mt-phone-50"
-                                        >
-                                            <span>See more</span>
-                                        </button>
+                                    <button
+                                        onClick={handleAutoSeeMore}
+                                        className="btn-border-blue mt-lg-90 mt-tablet-40 mt-phone-50"
+                                    >
+                                        <span>See more</span>
+                                    </button>
                                     {/* </AutoClickWrapper> */}
                                 </div>
                             )}

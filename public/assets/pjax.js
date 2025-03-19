@@ -654,20 +654,21 @@ function requireHandleResponse() {
       trigger2(document, "pjax:complete pjax:error", options);
       return;
     }
-    var currentState = window.history.state || {};
-    window.history.replaceState(
-      {
-        url: currentState.url || window.location.href,
-        title: currentState.title || document.title,
-        uid: currentState.uid || newUid2(),
-        scrollPos: [
-          document.documentElement.scrollLeft || document.body.scrollLeft,
-          document.documentElement.scrollTop || document.body.scrollTop
-        ]
-      },
-      document.title,
-      window.location.href
-    );
+    // var currentState = window.history.state || {};
+    // window.history.replaceState(
+    //   {
+    //     url: currentState.url || window.location.href,
+    //     title: currentState.title || document.title,
+    //     uid: currentState.uid || newUid2(),
+    //     scrollPos: [
+    //       document.documentElement.scrollLeft || document.body.scrollLeft,
+    //       document.documentElement.scrollTop || document.body.scrollTop
+    //     ]
+    //   },
+    //   document.title,
+    //   window.location.href
+    // );
+
     var oldHref = href;
     if (request.responseURL) {
       if (href !== request.responseURL) {
@@ -711,7 +712,7 @@ function requireIsSupported() {
     return isSupported;
   hasRequiredIsSupported = 1;
   isSupported = function() {
-    return window.history && window.history.pushState && window.history.replaceState && // pushState isn’t reliable on iOS until 5.
+    return window.history && window.history.pushState && window.history.replaceState &&
     !navigator.userAgent.match(
       /((iPod|iPhone|iPad).+\bOS\s+[1-4]\D|WebApps\/.+CFNetwork)/
     );
@@ -874,27 +875,27 @@ Pjax.prototype = {
     if (state.options.history) {
       if (!window.history.state) {
         this.lastUid = this.maxUid = newUid();
-        window.history.replaceState(
-          {
-            url: window.location.href,
-            title: document.title,
-            uid: this.maxUid,
-            scrollPos: [0, 0]
-          },
-          document.title
-        );
+        // window.history.replaceState(
+        //   {
+        //     url: window.location.href,
+        //     title: document.title,
+        //     uid: this.maxUid,
+        //     scrollPos: [0, 0]
+        //   },
+        //   document.title
+        // );
       }
       this.lastUid = this.maxUid = newUid();
-      window.history.pushState(
-        {
-          url: state.href,
-          title: state.options.title,
-          uid: this.maxUid,
-          scrollPos: [0, 0]
-        },
-        state.options.title,
-        state.href
-      );
+      // window.history.pushState(
+      //   {
+      //     url: state.href,
+      //     title: state.options.title,
+      //     uid: this.maxUid,
+      //     scrollPos: [0, 0]
+      //   },
+      //   state.options.title,
+      //   state.href
+      // );
     }
     this.forEachSelectors(function(el) {
       this.parseDOM(el);

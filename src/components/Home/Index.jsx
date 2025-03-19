@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Studios from "../Common/Sections/StudiosSection";
 import Markets from "../Common/Sections/MarketSection";
 import Highlights from "../Common/Sections/HighlightsSection";
@@ -12,6 +12,8 @@ import BestSellersHome from "./BestSellersHome";
 import { getSavedProductData } from "@/Services/ProductsApis";
 import CartModal from "../Common/Modals/CartModal";
 import logError from "@/Utils/ServerActions";
+import ClientsSection from "../Common/Sections/ClientsSection";
+import { useCookies } from "react-cookie";
 
 const HomePage = ({
   heroSectionContent,
@@ -23,15 +25,17 @@ const HomePage = ({
   dreamBigSectionContent,
   studiosData,
   marketsData,
-  bestSellers
+  bestSellers,
+  clientsGallery
 }) => {
   const [savedProductsData, setSavedProductsData] = useState([]);
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
   const [selectedVariantData, setSelectedVariantData] = useState(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-  const [productFilteredVariantData, setProductFilteredVariantData] =
-    useState();
+  const [productFilteredVariantData, setProductFilteredVariantData] = useState();
+  const [cookies, setCookie, removeCookie] = useCookies(["homeScrollPosition", "homeLoadPrevState", "homeSlideIndex"]);
+  const sliderRef = useRef(null);
 
   const getSelectedProductSnapShots = async (productData, activeVariant) => {
     setSelectedProductData(productData);
@@ -120,22 +124,61 @@ const HomePage = ({
     }
   }
 
-  useEffect(() => {
-    setTimeout(markPageLoaded, 500);
-    fetchSavedProducts();
-  }, [])
+  const savePageState = (slideIndex) => {
+    const scrollPosition = window.scrollY;
+    setCookie("homeScrollPosition", scrollPosition, { path: "/" });
+    setCookie("homeSlideIndex", slideIndex, { path: "/" });
+  }
 
+  const clearPageState = () => {
+    removeCookie("homeScrollPosition", { path: "/" });
+    removeCookie("homeSlideIndex", { path: "/" });
+    removeCookie("homeLoadPrevState", { path: "/" });
+  };
+
+  const handlePageLoad = () => {
+    if (cookies.homeLoadPrevState) {
+      setTimeout(() => {
+        if (cookies.homeScrollPosition) window.scrollTo(0, cookies.homeScrollPosition);
+        if (cookies.homeSlideIndex) {
+          const waitForSwiper = setInterval(() => {
+            if (sliderRef.current?.swiper) {
+              clearInterval(waitForSwiper);
+              const swiper = sliderRef.current.swiper;
+              swiper.updateSlides();
+              swiper.slideTo(cookies.homeSlideIndex);
+            }
+          }, 3e2);    
+        }
+        setTimeout(() => {
+          markPageLoaded(true, false);
+          clearPageState();
+        }, 500);
+      }, 500);
+    } else {
+      setTimeout(() => {
+        markPageLoaded();
+        clearPageState();
+      }, 500);
+    };
+  };
+
+  useEffect(() => {    
+    handlePageLoad();
+    fetchSavedProducts();
+  }, []);
 
   return (
     <>
       <BannerHome content={heroSectionContent} />
       <BestSellersHome products={bestSellerProducts} content={heroSectionContent} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} />
       <NewArrival content={newArrivalSectionContent} />
-      <Highlights pageContent={homeSectionDetails} data={highlightsSectionData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} />
+      <Highlights pageContent={homeSectionDetails} data={highlightsSectionData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} savePageState={savePageState} sliderRef={sliderRef} />
       <HotTrendsCategory pageContent={homeSectionDetails} data={hotTrendsSectionContent} />
       <Markets pageContent={homeSectionDetails} marketsData={marketsData} />
       <Studios content={homeSectionDetails} studiosData={studiosData} />
       <DreamBig content={dreamBigSectionContent} />
+      <ClientsSection data={clientsGallery} />
       <CartModal
         productData={selectedProductData}
         setProductData={setSelectedProductData}

@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { authWixClient, cartWixClient, createWixClient, createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import logError from "@/Utils/ServerActions";
 import { extractPermissions } from "@/Utils/checkPermissions";
+import { getMemberPricingTier } from "@/Services/Index";
 
 export const POST = async (req) => {
   try {
@@ -61,6 +62,7 @@ export const POST = async (req) => {
     const memberBadges = await wixClient.badges.listBadgesPerMember([memberId]);
     const badgeIds = memberBadges?.memberBadgeIds?.[0]?.badgeIds || [];
     const permissions = extractPermissions(badgeIds);
+    const pricingTier = await getMemberPricingTier(badgeIds);    
   
     const memberTokens = await wixClient.auth.getMemberTokensForExternalLogin(
       selectedMemberData._id,
@@ -86,7 +88,8 @@ export const POST = async (req) => {
       firstName: selectedMemberData.firstName,
       lastName: selectedMemberData.lastName,
       mainPhone: selectedMemberData.mainPhone,
-      permissions: permissions
+      permissions: permissions,
+      pricingTier: pricingTier
     };
 
     return NextResponse.json(

@@ -4,12 +4,11 @@ import ModalCanvas3d from "../ModalCanvas3d";
 import { reloadCartModal, resetSlideIndexModal } from "@/Utils/AnimationFunctions";
 import { AvailabilityCard } from "@/components/Product/AvailabilityCard";
 import { SaveProductButton } from "../SaveProductButton";
-import { calculateTotalCartQuantity, compareArray } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, compareArray, findPriceForTier } from "@/Utils/Utils";
 import { AddProductToCart } from "@/Services/CartApis";
 import { useCookies } from "react-cookie";
 import Modal from "./Modal";
 import useUserData from "@/Hooks/useUserData";
-import { decryptField } from "@/Utils/Encrypt";
 import { ImageWrapper } from "../ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
@@ -30,7 +29,7 @@ const CartModalSimple = ({
   setSavedProductsData,
 }) => {
 
-  const { permissions } = useUserData();
+  const { permissions, pricingTier } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -331,7 +330,7 @@ const CartModalSimple = ({
                                 <li className="seat-height">
                                   <span className="specs-title">Price</span>
                                   <span className="specs-text">
-                                    {decryptField(selectedVariantData.price)}
+                                    {findPriceForTier(productData, pricingTier)}
                                   </span>
                                 </li>
                               )}

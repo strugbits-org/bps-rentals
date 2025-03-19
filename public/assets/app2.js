@@ -9775,6 +9775,12 @@ var require_app2 = __commonJS({
       });
 
     document
+      .querySelector(".initScript")
+      .addEventListener("customInitScriptWithNoScroll", () => {
+        whenContainerReady();
+      });
+
+    document
       .querySelector(".parallaxTrigger")
       .addEventListener("triggerParallax", () => {
         Parallax();

@@ -11,6 +11,7 @@ import {
   getHotTrendsSection,
   getMarketsData,
   getNewArrivalSectionContent,
+  getOurClientsSectionData,
   getPageMetaData,
   getStudiosData,
 } from "@/Services/SectionsApis";
@@ -46,6 +47,7 @@ export default async function Page() {
       bestSellerProducts,
       homeSectionDetails,
       homeDreamBigSectionContent,
+      ourClientsSectionData,
       studiosData,
       marketsData,
       bestSellers
@@ -57,10 +59,13 @@ export default async function Page() {
       getBestSellerProducts(bestSeller, 12),
       getHomeSectionDetails(),
       getDreamBigSectionContent(),
+      getOurClientsSectionData(),
       getStudiosData(),
       getMarketsData(),
       fetchBestSellers()
     ]);
+
+    const clientsGallery = ourClientsSectionData.find(x => x.slug === "/")?.images || [];
 
     return (
       <HomePage
@@ -74,6 +79,7 @@ export default async function Page() {
         studiosData={studiosData}
         marketsData={marketsData}
         bestSellers={bestSellers}
+        clientsGallery={clientsGallery}
       />
     );
   } catch (error) {

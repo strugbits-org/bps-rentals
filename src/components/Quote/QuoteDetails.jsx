@@ -329,7 +329,7 @@ const QuoteDetails = ({ quoteRequestPageContent, quoteDetailPageContent }) => {
               </span>
               <form className="form-cart">
                 <ul className="list-cart list-cart-product" data-aos="d:loop">
-                  <QuoteItems quoteData={quoteData.lineItems} />
+                  <QuoteItems quoteData={quoteData.lineItems} status="created" />
                 </ul>
               </form>
             </div>

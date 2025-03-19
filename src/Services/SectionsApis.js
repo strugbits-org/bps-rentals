@@ -412,3 +412,19 @@ export const getBlogsData = async () => {
     return [];
   }
 };
+
+export const getOurClientsSectionData = async () => {
+  try {
+    const response = await getDataFetchFunction({
+      "dataCollectionId": "OurClientsSection",
+      "eq": [{ "key": "rentals", "value": true }]
+    });
+    if (!response._items) {
+      throw new Error("No data found for OurClientsSection");
+    }
+    return response._items.map((x) => x.data).sort((a, b) => a.order - b.order);
+  } catch (error) {
+    logError("Error fetching OurClientsSection data:", error);
+    return [];
+  }
+}
