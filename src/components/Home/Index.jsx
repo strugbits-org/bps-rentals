@@ -163,9 +163,7 @@ const HomePage = ({
     };
   };
 
-  useEffect(() => {
-    console.log("Page Loaded");
-    
+  useEffect(() => {    
     handlePageLoad();
     fetchSavedProducts();
   }, []);

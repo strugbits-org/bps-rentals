@@ -47,6 +47,14 @@ const ProductPostPage = ({
     "cartQuantity",
     "userTokens",
     "location",
+    "homeScrollPosition",
+    "scrollPosition",
+    "searchScrollPosition",
+    "marketScrollPosition",
+    "homeLoadPrevState",
+    "loadPrevState",
+    "searchLoadPrevState",
+    "marketLoadPrevState",
   ]);
 
   const { productSnapshotData, defaultVariant } = selectedProductDetails;
