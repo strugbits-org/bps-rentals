@@ -1,4 +1,4 @@
-import AnimateLink from "./AnimateLink";
+import { CustomButton } from "./CustomButton";
 
 const StudiosFixedMenu = ({ data }) => {
   const url = process.env.CORPORATE_URL;
@@ -8,14 +8,15 @@ const StudiosFixedMenu = ({ data }) => {
         <div className="category-menu">
           <ul className="category-menu-list">
             {data.map((data, index) => {
+              const { cardName, link } = data;
               return (
                 <li key={index}>
-                  <AnimateLink
-                    to={`${url}/services/${data.slug}`}
-                    // target={"_blank"}
-                    className="btn-underline-white">
-                    <span>{data.cardName}</span>
-                  </AnimateLink>
+                  <CustomButton
+                    data={{ label: cardName, action: link.startsWith("https://") ? link : url + link }}
+                    customClasses={"btn-underline-white"}
+                    showArrow={false}
+                  >
+                  </CustomButton>
                 </li>
               );
             })}

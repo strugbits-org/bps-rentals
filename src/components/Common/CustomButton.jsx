@@ -39,11 +39,9 @@ export const CustomButton = ({ data, customClasses = "", attributes, target, sho
             {showArrow && <i className="icon-arrow-right-2"></i>}
         </btn-modal-open>
     ) : (
-        <AnimateLink to={data.action} target={actionType === "external_link" && target !== "self" ? "_blank" : undefined}>
-            <button className={customClasses || 'btn-blue'} data-cursor-style="off" {...attributes}>
-                <span>{data.label}</span>
-                {showArrow && <i className="icon-arrow-right"></i>}
-            </button>
+        <AnimateLink to={data.action} target={actionType === "external_link" && target !== "self" ? "_blank" : undefined} className={customClasses || 'btn-blue'} data-cursor-style="off" attributes={attributes}>
+            <span>{data.label}</span>
+            {showArrow && <i className="icon-arrow-right"></i>}
         </AnimateLink>
     )
 }
