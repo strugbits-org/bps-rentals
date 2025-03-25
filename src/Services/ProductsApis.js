@@ -30,7 +30,7 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
         },
       ],
       includeVariants: adminPage ? false : true,
-      limit: 1500,
+      limit: 1800,
       increasedLimit: 700,
     };
 
