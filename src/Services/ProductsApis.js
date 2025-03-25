@@ -31,7 +31,7 @@ const sanitizeProduct = (product) => {
   return sanitizedProduct;
 };
 
-export const getAllProducts = async ({ categories = [], adminPage = false, optimizeContent = false }) => {
+export const getAllProducts = async ({ categories = [], adminPage = false, optimizeContent = true }) => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
