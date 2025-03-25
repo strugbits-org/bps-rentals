@@ -30,7 +30,7 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
         },
       ],
       includeVariants: adminPage ? false : true,
-      limit: "infinite",
+      limit: 1500,
       increasedLimit: 700,
     };
 
@@ -47,20 +47,11 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
       ...x.data.subCategoryData && { subCategoryData: x.data.subCategoryData }
     }));
 
-    if (categories.length === 0 && !searchTerm) {
-      return products;
-    }
+    if (categories.length === 0) return products;
 
-    if (categories.length === 0 && searchTerm) {
-      const term = searchTerm.trim().toLowerCase();
-      if (!term) return products;
+    const filteredProducts = products.filter(product => product.subCategoryData.some(x => categories.includes(x._id)));
 
-      return searchProductsData(term, products);
-    }
-
-    return products.filter(product =>
-      product.subCategoryData.some(x => categories.includes(x._id))
-    );
+    return filteredProducts;
   } catch (error) {
     logError("Error fetching products:", error);
     return [];
