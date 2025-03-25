@@ -50,7 +50,7 @@ export default async function Page() {
       getAllColorsData(),
       fetchBestSellers(),
       getProductsKeywords(),
-      getAllProducts({optimizeContent: true}),
+      getAllProducts({}),
     ]);
 
     return (
