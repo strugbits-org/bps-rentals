@@ -14,7 +14,24 @@ export const getProductsKeywords = async () => {
   }
 };
 
-export const getAllProducts = async ({ categories = [], searchTerm, adminPage = false }) => {
+// Utility function to remove unwanted fields from an object
+const sanitizeProduct = (product) => {
+  const { defaultVariant, isF1, isF1Exclusive, category, syncColor, _owner, ...sanitizedProduct } = product;
+
+  if (product.product) {
+    const {
+      brand, collections, currency, discount, discountedPrice, formattedDiscountedPrice,
+      inStock, inventoryItem, manageVariants, numericId, productType, quantityInStock, ribbon,
+      ribbons, seoData, trackInventory, ...sanitizedNestedProduct
+    } = product.product;
+
+    sanitizedProduct.product = sanitizedNestedProduct;
+  }
+
+  return sanitizedProduct;
+};
+
+export const getAllProducts = async ({ categories = [], adminPage = false, optimizeContent = false }) => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
@@ -29,8 +46,8 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
           value: true,
         },
       ],
-      includeVariants: adminPage ? false : true,
-      limit: 1800,
+      includeVariants: !adminPage,
+      limit: "infinite",
       increasedLimit: 700,
     };
 
@@ -41,15 +58,21 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
       throw new Error("Response does not contain _items", response);
     }
 
-    const products = response._items.map((x) => ({
-      subCategoryData: [],
-      ...x.data,
-      ...x.data.subCategoryData && { subCategoryData: x.data.subCategoryData }
-    }));
+    const products = response._items.map((x) => {
+      const baseProduct = {
+        subCategoryData: [],
+        ...x.data,
+        ...(x.data.subCategoryData && { subCategoryData: x.data.subCategoryData }),
+      };
+
+      return optimizeContent ? sanitizeProduct(baseProduct) : baseProduct;
+    });
 
     if (categories.length === 0) return products;
 
-    const filteredProducts = products.filter(product => product.subCategoryData.some(x => categories.includes(x._id)));
+    const filteredProducts = products.filter(product =>
+      product.subCategoryData.some(x => categories.includes(x._id))
+    );
 
     return filteredProducts;
   } catch (error) {
@@ -57,6 +80,7 @@ export const getAllProducts = async ({ categories = [], searchTerm, adminPage = 
     return [];
   }
 };
+
 
 export const getProductsByCategory = async (categories = [], adminPage = false) => {
   try {

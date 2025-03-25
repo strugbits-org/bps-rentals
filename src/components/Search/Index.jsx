@@ -189,6 +189,7 @@ const SearchPage = ({
 
     useEffect(() => {
         setInitialValues();
+        console.log("fullProductsData", fullProductsData);
     }, [fullProductsData]);
 
     const getSelectedProductSnapShots = async (productData, activeVariant) => {
