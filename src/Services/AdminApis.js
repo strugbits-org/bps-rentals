@@ -2,6 +2,7 @@
 import logError from "@/Utils/ServerActions";
 import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
+import { sanitizeProduct } from "@/Utils/Utils";
 
 const baseUrl = process.env.BASE_URL;
 
@@ -68,7 +69,7 @@ export const getAllProductsForSets = async () => {
             increasedLimit: 700
         });
         if (response && response._items) {
-            return response._items.filter(x => x.data.product?._id).map((x) => x.data);
+            return response._items.filter(x => x.data.product?._id).map((x) => sanitizeProduct(x.data));
         } else {
             throw new Error("Response does not contain _items");
         }

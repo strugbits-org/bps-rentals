@@ -2,6 +2,7 @@
 import logError from "@/Utils/ServerActions";
 import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
+import { sanitizeProduct } from "@/Utils/Utils";
 const baseUrl = process.env.BASE_URL;
 
 export const getProductsKeywords = async () => {
@@ -12,23 +13,6 @@ export const getProductsKeywords = async () => {
   } catch (error) {
     logError("Error fetching products keywords:", error);
   }
-};
-
-// Utility function to remove unwanted fields from an object
-const sanitizeProduct = (product) => {
-  const { defaultVariant, isF1, isF1Exclusive, category, syncColor, _owner, ...sanitizedProduct } = product;
-
-  if (product.product) {
-    const {
-      brand, collections, currency, discount, discountedPrice, formattedDiscountedPrice,
-      inStock, inventoryItem, manageVariants, numericId, productType, quantityInStock, ribbon,
-      ribbons, seoData, trackInventory, ...sanitizedNestedProduct
-    } = product.product;
-
-    sanitizedProduct.product = sanitizedNestedProduct;
-  }
-
-  return sanitizedProduct;
 };
 
 export const getAllProducts = async ({ categories = [], adminPage = false, optimizeContent = true }) => {

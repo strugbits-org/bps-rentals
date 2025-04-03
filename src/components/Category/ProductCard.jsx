@@ -5,6 +5,7 @@ import { compareArray, findPriceForTier } from "@/Utils/Utils";
 import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import { decryptField } from "@/Utils/Encrypt";
 
 const ProductCard = ({
   productData,
@@ -99,7 +100,7 @@ const ProductCard = ({
                 })}
               </div>
               <div className="dimensions"><span>{activeVariant.location.toString()} <i className="icon-pin"></i></span></div>
-              <div className="dimensions">{product && SHOW_PRICES && (<span>{findPriceForTier(productData, pricingTier)}</span>)}</div>
+              <div className="dimensions">{activeVariant?.variant && SHOW_PRICES && (<span>{pricingTier ? findPriceForTier(productData, pricingTier) : decryptField(activeVariant.variant.price)}</span>)}</div>
             </div>
           )}
         </div>

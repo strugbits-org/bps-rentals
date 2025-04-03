@@ -12,6 +12,7 @@ import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import { decryptField } from "@/Utils/Encrypt";
 
 const CartModalSimple = ({
   productData,
@@ -330,7 +331,7 @@ const CartModalSimple = ({
                                 <li className="seat-height">
                                   <span className="specs-title">Price</span>
                                   <span className="specs-text">
-                                    {findPriceForTier(productData, pricingTier)}
+                                    {pricingTier ? findPriceForTier(productData, pricingTier) : decryptField(selectedVariantData.price)}
                                   </span>
                                 </li>
                               )}

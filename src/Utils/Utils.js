@@ -364,3 +364,29 @@ export const filterItemsBySchedule = (items) => {
     );
   });
 };
+
+export const sanitizeProducts = (products) => products.map(sanitizeProduct);
+
+const sanitizeObject = (obj, keysToRemove) => {
+  if (!obj || typeof obj !== 'object') return obj;
+  const sanitized = { ...obj };
+  keysToRemove.forEach((key) => delete sanitized[key]);
+  return sanitized;
+};
+
+export const sanitizeProduct = (product) => {
+  const keysToRemove = ['defaultVariant', 'isF1', 'isF1Exclusive', 'category', 'syncColor', '_owner'];
+  const sanitizedProduct = sanitizeObject(product, keysToRemove);
+
+  if (sanitizedProduct.product) {
+    const nestedKeysToRemove = [
+      'brand', 'collections', 'currency', 'discount', 'discountedPrice',
+      'formattedDiscountedPrice', 'inStock', 'inventoryItem', 'manageVariants',
+      'numericId', 'productType', 'quantityInStock', 'ribbon', 'ribbons',
+      'seoData', 'trackInventory'
+    ];
+    sanitizedProduct.product = sanitizeObject(sanitizedProduct.product, nestedKeysToRemove);
+  }
+
+  return sanitizedProduct;
+};
