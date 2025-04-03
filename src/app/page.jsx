@@ -2,7 +2,7 @@ import HomePage from "@/components/Home/Index";
 import {
   getHomeHeroSectionContent,
 } from "@/Services/HomeApis";
-import { fetchBestSellers, getBestSellerProducts } from "@/Services/ProductsApis";
+import { fetchBestSellers, getBestSellerProducts, getDemoBanners } from "@/Services/ProductsApis";
 
 import {
   getDreamBigSectionContent,
@@ -50,7 +50,8 @@ export default async function Page() {
       ourClientsSectionData,
       studiosData,
       marketsData,
-      bestSellers
+      bestSellers,
+      demoBanners
     ] = await Promise.all([
       getHomeHeroSectionContent(),
       getNewArrivalSectionContent(),
@@ -62,13 +63,15 @@ export default async function Page() {
       getOurClientsSectionData(),
       getStudiosData(),
       getMarketsData(),
-      fetchBestSellers()
+      fetchBestSellers(),
+      getDemoBanners()
     ]);
 
     const clientsGallery = ourClientsSectionData.find(x => x.slug === "/")?.images || [];
 
     return (
       <HomePage
+      demoBanners={demoBanners}
         heroSectionContent={homeHeroSectionContent}
         newArrivalSectionContent={homeNewArrivalSectionContent}
         hotTrendsSectionContent={homeHotTrendsSectionContent}

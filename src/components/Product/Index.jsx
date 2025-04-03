@@ -28,6 +28,7 @@ import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import { decryptField } from "@/Utils/Encrypt";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -161,6 +162,19 @@ const ProductPostPage = ({
 
       setProductFoundInCategories(categoriesFound);
     }
+
+    const variant = {
+      "sku": "MSBR10KA",
+      "size": "72”L X 23”W X 48”H\n",
+      "visible": true,
+      "discountedPrice": decryptField("71422ab194e095f708c24ba107736899:970c3ba99c3f8f0295cd60a8af5fadce"),
+      "price":  decryptField("31dd5db5e25bec6703fd0e4c77c5730b:5dcb895d677ce5d05598825c8afff8a8"),
+      "color": "BROWN - NATURAL",
+      "imageSrc": "https://static.wixstatic.com/media/339f77_276d3bca138e44e7a84926e4544315e3~mv2.jpg",
+      "variantId": "ef13ebc8-6e5e-5620-eb8c-f1d11ac5eb5a-1c0612b5-5318-45ac-b170-ff10876edea9"
+    }
+    console.log("variant", variant);
+
     setTimeout(markPageLoaded, 900);
   }, [selectedProductDetails]);
 

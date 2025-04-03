@@ -1,9 +1,33 @@
+"use client";
 import AnimateLink from "../AnimateLink";
 import ProductCard from "@/components/Category/ProductCard";
 import { ImageWrapper } from "../ImageWrapper";
+import { useEffect, useState } from "react";
 
-const Highlights = ({ pageContent, data, savedProductsData, setSavedProductsData, getSelectedProductSnapShots, savePageState, sliderRef }) => {
+const Highlights = ({ pageContent, data, savedProductsData, setSavedProductsData, getSelectedProductSnapShots, savePageState, sliderRef, demoBanners }) => {
   if (data.length === 0) return;
+
+  const filterBannersBySchedule = () => {
+    const now = new Date();
+    return demoBanners.filter((banner) => {
+      if (!banner.scheduled) return true;
+      const startDate = banner.visibilityStartDate ? new Date(banner.visibilityStartDate.$date) : null;
+      const endDate = banner.visibilityEndDate ? new Date(banner.visibilityEndDate.$date) : null;
+
+      return (
+        (!startDate || now >= startDate) &&
+        (!endDate || now <= endDate)
+      );
+    });
+  };
+  const [bannersData, setBannersData] = useState([]);
+  useEffect(() => {
+    console.log("demoBanners", demoBanners);
+    
+    const filteredBanners = filterBannersBySchedule();
+    setBannersData(filteredBanners);
+  }, [demoBanners]);
+
 
   return (
     <section className="section-highlights">
@@ -14,7 +38,7 @@ const Highlights = ({ pageContent, data, savedProductsData, setSavedProductsData
               className="fs--60 fs-phone-40 blue-1 text-center split-words"
               data-aos="d:loop"
             >
-              {pageContent && pageContent.highlightsSectionTitle}
+              {pageContent && pageContent.highlightsSectionTitle} || {bannersData.map(banner => banner.title + ", ")}
             </h2>
             <div className="slider-highlights mt-lg-95 mt-tablet-55 mt-phone-35">
               <div ref={sliderRef} className="swiper-container">

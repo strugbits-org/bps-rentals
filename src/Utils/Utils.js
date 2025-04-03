@@ -70,7 +70,7 @@ export const getAllCategoriesPaths = (categoriesData) => {
 
     return [...parentCategory, ...subcategories];
   });
-  return paths;
+  return      [];
 }
 
 export const hasMatchingColor = (colorsArray, variantColors) => {
