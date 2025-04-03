@@ -217,7 +217,7 @@ export const fetchAllProductsPaths = async () => {
         .map(x => x.data?.product?.slug)
         .filter(slug => slug !== undefined)
         .map(slug => ({ slug }));
-      return paths;
+      return      [];
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -400,6 +400,20 @@ export const getBestSellerProducts = async (bestSeller, limit) => {
     }
   } catch (error) {
     logError("Error fetching products by ids:", error);
+    return [];
+  }
+};
+
+export const getDemoBanners = async () => {
+  try {
+    const payload = {
+      dataCollectionId: "DemoBanners",
+    };
+    const response = await getDataFetchFunction(payload);
+    const data = response._items.map((x) => x.data);
+    return data;
+  } catch (error) {
+    logError("Error fetching demo data:", error);
     return [];
   }
 };
