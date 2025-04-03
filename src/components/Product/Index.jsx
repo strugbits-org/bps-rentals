@@ -28,6 +28,7 @@ import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import { decryptField } from "@/Utils/Encrypt";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -446,12 +447,12 @@ const ProductPostPage = ({
                         }
                       )}
 
-                    {selectedProductDetails && SHOW_PRICES &&
-                      selectedProductDetails.product.formattedPrice && (
+                    {selectedVariant && SHOW_PRICES &&
+                      selectedVariant.price && (
                         <li className="seat-height">
                           <span className="specs-title">Price</span>
                           <span className="specs-text">
-                            {findPriceForTier(selectedProductDetails, pricingTier)}
+                            {pricingTier ? findPriceForTier(selectedProductDetails, pricingTier) : decryptField(selectedVariant.price)}
                           </span>
                         </li>
                       )}
