@@ -489,18 +489,12 @@ export const getProductVariants = async (id) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "Stores/Variants",
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      hasSome: null,
-      ne: null,
       eq: [
         {
           key: "productId",
           value: id,
         },
       ],
-      skip: null,
     });
 
     if (response && response._items) {
@@ -658,18 +652,12 @@ export const getCatalogIdBySku = async (productSku) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "Stores/Variants",
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      hasSome: null,
-      ne: null,
       eq: [
         {
           key: "sku",
           value: productSku,
         },
       ],
-      skip: null,
     });
 
     if (response && response._items) {
@@ -680,6 +668,28 @@ export const getCatalogIdBySku = async (productSku) => {
   } catch (error) {
     logError("Error fetching product variants:", error);
     return [];
+  }
+};
+
+export const getVariantBySku = async (sku) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "Stores/Variants",
+      hasSome: [
+        {
+          key: "sku",
+          values: sku,
+        },
+      ],
+    });
+
+    if (response && response._items) {
+      return response._items[0].data;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    logError("Error fetching product variants:", error);
   }
 };
 

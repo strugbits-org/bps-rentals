@@ -99,7 +99,7 @@ const ProductCard = ({
                   }
                 })}
               </div>
-              <div className="dimensions"><span>{activeVariant.location.toString()} <i className="icon-pin"></i></span></div>
+              {activeVariant.location.toString() && <div className="dimensions"><span>{activeVariant.location.toString()} <i className="icon-pin"></i></span></div>}
               <div className="dimensions">{activeVariant?.variant && SHOW_PRICES && (<span>{pricingTier ? findPriceForTier(productData, pricingTier) : decryptField(activeVariant.variant.price)}</span>)}</div>
             </div>
           )}

@@ -50,6 +50,42 @@ export const bulkUpdateCollection = async (dataCollectionId, items) => {
     }
 };
 
+export const fetchProductsForSets = async ({ query = "", notEqual = null }) => {
+    try {
+        const payload = {
+            dataCollectionId: "locationFilteredVariant",
+            includeReferencedItems: ["product"],
+            ne: [
+                {
+                    key: "hidden",
+                    value: true,
+                },
+                {
+                    key: "isF1Exclusive",
+                    value: true,
+                },
+            ],
+            contains: ["title", query],
+        };
+        if (notEqual) {
+            payload.ne.push({
+                key: "product",
+                value: notEqual,
+            });
+        }
+        const response = await getDataFetchFunction(payload);
+
+        if (response && response._items) {
+            return response._items.map((x) => sanitizeProduct(x.data)).filter(x => x.product?._id && !x?.productSets?.length);
+        } else {
+            throw new Error("Response does not contain _items");
+        }
+    } catch (error) {
+        logError("Error fetching product sets:", error);
+        return [];
+    }
+};
+
 export const getAllProductsForSets = async () => {
     try {
         const response = await getDataFetchFunction({

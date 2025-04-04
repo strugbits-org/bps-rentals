@@ -14,10 +14,9 @@ import AnimateLink from '../Common/AnimateLink';
 import { decryptField } from '@/Utils/Encrypt';
 import ModalDialogue from '../Common/Modals/ModalDialogue';
 
-export const ProductSets = ({ products }) => {
+export const ProductSets = () => {
 
     const [dataSets, setDataSets] = useState([]);
-    const [options, setOptions] = useState([]);
     const [toggleSetModal, setToggleSetModal] = useState(false);
     const [activeSet, setActiveSet] = useState();
     const { permissions } = useUserData();
@@ -108,14 +107,7 @@ export const ProductSets = ({ products }) => {
 
     useEffect(() => {
         fetchSets();
-    }, [])
-
-    useEffect(() => {
-        const activeProduct = products.find(({ product }) => activeSet?.product === product._id);
-        const filteredProducts = products.filter(({ productSets }) => !productSets?.length);
-        const options = activeProduct ? [activeProduct, ...filteredProducts] : filteredProducts;
-        setOptions(options);
-    }, [activeSet, products]);
+    }, []);
 
     if (!ADMIN_PANEL_ACCESS) return <Error404Page inline={true} />
 
@@ -199,7 +191,6 @@ export const ProductSets = ({ products }) => {
                     activeSet={activeSet}
                     setActiveSet={setActiveSet}
                     setToggleSetModal={setToggleSetModal}
-                    options={options}
                     onUpdate={handleOnUpdate}
                     onSave={handleOnSave}
                 />

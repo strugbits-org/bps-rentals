@@ -1,60 +1,23 @@
 "use client";
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { ModalWrapper } from "./ModalWrapper/ModalWrapper";
 import { CustomSelect } from "../CustomSelect";
 import { closeModal, openModal } from "@/Utils/AnimationFunctions";
 import { ImageWrapper } from "../ImageWrapper";
-import {updateProductSetData } from "@/Services/AdminApis";
+import { updateProductSetData } from "@/Services/AdminApis";
 import { toast } from "react-toastify";
 import logError from "@/Utils/ServerActions";
 import { decryptField } from "@/Utils/Encrypt";
+import { getVariantBySku } from "@/Services/ProductsApis";
 
-const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, onUpdate, onSave }) => {
+const ProductSetModal = ({ activeSet, setActiveSet, setToggleSetModal, onUpdate, onSave }) => {
   const [mainProduct, setMainProduct] = useState(null);
   const [productsSet, setProductsSet] = useState([]);
   const [productSetValue, setProductSetValue] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const productsOptions = useMemo(
-    () =>
-      options
-        .filter(({ variantData, product }) => mainProduct?.product !== product._id && variantData.some((variant) => variant?.variant?._id))
-        .map(({ subCategoryData = [], product }) => ({
-          value: product._id,
-          product: product._id,
-          slug: product.slug,
-          name: product.name,
-          image: product.mainMedia,
-          label: product.name,
-          categories: subCategoryData.map((cat) => cat["link-copy-of-category-name-2"]),
-        })),
-    [options, mainProduct]
-  );
-
-  const variantsOptions = useMemo(() => {
-    return options.flatMap(({ product, variantData, pricingTiers }) =>
-      product._id !== mainProduct?.product
-        ? variantData
-          .filter(({ sku, variant }) => variant._id && sku && !productsSet.some((prod) => prod.variant === sku))
-          .map(({ sku, variant }) => ({
-            value: sku,
-            productId: product._id,
-            name: product.name,
-            slug: product.slug,
-            size: variant.size,
-            id: variant._id,
-            price: product.price,
-            pricingTiers: pricingTiers || [],
-            color: variant.color,
-            image: variant.imageSrc,
-            label: `${product.name}${variant.color ? ` | ${variant.color}` : ""} | ${sku}`,
-          }))
-        : []
-    );
-  }, [options, mainProduct, productsSet]);
-
   const handleSelectSetProduct = useCallback(
-    (e) => {
+    async (e) => {
       setProductSetValue(e);
 
       const decryptedPringTiers = e.pricingTiers.map((tier) => ({
@@ -63,12 +26,15 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
         formattedPrice: decryptField(tier.formattedPrice),
       }));
 
+      const variantData = await getVariantBySku(e.sku);      
+
       const data = {
         product: e.productId,
         variant: e.value,
         name: e.name,
         slug: e.slug,
-        id: e.id,
+        id: variantData.variantId,
+        sku: e.sku,
         size: e.size,
         color: e.color,
         price: e.price ? decryptField(e.price) : "$0.00",
@@ -83,7 +49,6 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
     },
     [setProductSetValue, setProductsSet]
   );
-
 
   const updateProductSet = async () => {
     if (!mainProduct) {
@@ -123,19 +88,19 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
     }
   };
 
-  const removeSetProduct = (id) => {
+  const removeSetProduct = (sku) => {
     setProductsSet(prev => {
-      const updatedData = prev.filter(prod => prod.variant !== id);
+      const updatedData = prev.filter(prod => prod.variant !== sku);
       if (!updatedData.length) setProductSetValue(null);
       return updatedData;
     });
   };
 
-  const handleQuantityChange = async (id, quantity) => {
+  const handleQuantityChange = async (sku, quantity) => {
     if (quantity < 10000 && quantity > 0) {
       setProductsSet(prev => {
         const updatedProductsSet = prev.map((x) => {
-          if (id === x.variant) x.quantity = Number(quantity);
+          if (sku === x.variant) x.quantity = Number(quantity);
           return x;
         });
         return updatedProductsSet;
@@ -179,7 +144,10 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
         <div className="row products-set-container products-set-container-top mt-lg-35 mt-tablet-20 mt-phone-15">
           <div className="col-lg-6">
             <CustomSelect
-              options={productsOptions}
+              type={"products"}
+              productsSet={productsSet}
+              activeSet={activeSet}
+              mainProduct={mainProduct}
               label={"MAIN PRODUCT*"}
               placeholder="Select main product"
               selectedValue={mainProduct}
@@ -214,8 +182,11 @@ const ProductSetModal = ({ activeSet, setActiveSet, options, setToggleSetModal, 
           <div className="col-lg-6">
             <div className={"mb-30"}>
               <CustomSelect
-                options={variantsOptions}
+                productsSet={productsSet}
+                activeSet={activeSet}
+                type={"variants"}
                 label={"SET OF PRODUCTS*"}
+                mainProduct={mainProduct}
                 placeholder="Select set of products"
                 onChange={handleSelectSetProduct}
                 selectedValue={productSetValue}
