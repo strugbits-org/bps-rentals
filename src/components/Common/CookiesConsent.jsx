@@ -13,10 +13,10 @@ const CookiesConsent = () => {
         <p className="font-2 fs--12 text-cookies lh-150">
           This website uses cookies to provide necessary website functionality,
           improve your experience and analyze our traffic. By using our website,
-          you agree to our
+          you agree to our&nbsp;
           <AnimateLink className="btn-underline-white" to={`${CORPORATE_URL}/privacy-policy`} >
             <span>Privacy Policy</span>
-          </AnimateLink>
+          </AnimateLink>&nbsp;
           and our cookies usage.
         </p>
         <button
