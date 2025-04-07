@@ -296,6 +296,38 @@ export const formatPriceEncrypted = (price, quantity) => {
   return `${currencySymbol}${formattedPrice}`;
 }
 
+export const findPriceTier = ({ price, variantPrice, pricingTiers = [], tier, type = "product" }) => {
+  try {
+    const normalizedPrice = (price) => {
+      const cleaned = price && decryptField(price)?.replace(/[^0-9.-]+/g, "");
+      return cleaned ? Number(cleaned) : price;
+    };
+
+    const priceValue = normalizedPrice(price);
+    const variantPriceValue = normalizedPrice(variantPrice);
+    const priceDifference = Number(variantPriceValue) - Number(priceValue);
+
+    const hasTiers = tier && pricingTiers.length > 0;
+
+    if (hasTiers) {
+      const priceData = pricingTiers.find(({ name }) => name === tier);
+
+      if (priceData) {
+        const value = type === "cartProduct" ? priceData : priceData.price;
+        const finalPrice = normalizedPrice(value) + priceDifference;
+
+        if (finalPrice) return "$ " + finalPrice.toFixed(2);
+      }
+    } else {
+      throw new Error("No pricing tiers available");
+    }
+  } catch (_) {
+    // Silent fail
+  }
+
+  return decryptField(variantPrice);
+};
+
 export const findPriceForTier = (fullProductData, tier, type = "product") => {
   try {
     if (
