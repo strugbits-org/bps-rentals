@@ -10,7 +10,7 @@ import {
   resetSlideIndex,
   updatedWatched,
 } from "@/Utils/AnimationFunctions";
-import { calculateTotalCartQuantity, compareArray, findPriceForTier } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, compareArray, findPriceTier } from "@/Utils/Utils";
 
 import { getSavedProductData } from "@/Services/ProductsApis";
 import { AddProductToCart } from "@/Services/CartApis";
@@ -28,7 +28,6 @@ import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
-import { decryptField } from "@/Utils/Encrypt";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -452,7 +451,12 @@ const ProductPostPage = ({
                         <li className="seat-height">
                           <span className="specs-title">Price</span>
                           <span className="specs-text">
-                            {pricingTier ? findPriceForTier(selectedProductDetails, pricingTier) : decryptField(selectedVariant.price)}
+                            {findPriceTier({
+                              tier: pricingTier,
+                              pricingTiers: selectedProductDetails?.pricingTiers,
+                              price: selectedProductDetails.product?.price,
+                              variantPrice: selectedVariant?.price,
+                            })}
                           </span>
                         </li>
                       )}

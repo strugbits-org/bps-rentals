@@ -54,7 +54,7 @@ export default async function Page() {
     ]);
 
     return (
-      <Suspense fallback={null}>
+      <Suspense>
         <SearchPage
           pageContent={homePageContent}
           bannersData={bannersData}

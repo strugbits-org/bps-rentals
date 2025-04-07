@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, use } from 'react';
+import { useCallback } from 'react';
 import AsyncSelect from 'react-select/async';
 import { fetchProductsForSets } from '@/Services/AdminApis';
 import debounce from 'lodash/debounce';
@@ -15,20 +15,6 @@ export const CustomSelect = ({
     productsSet = [],
     mainProduct
 }) => {
-
-    const [defaultOptions, setDefaultOptions] = useState([]);
-
-    useEffect(() => {
-        const fetchDefaultOptions = async () => {
-            const products = await fetchProductsForSets({});
-            const formattedOptions = type === "products"
-                ? formatProductOptions(products)
-                : formatVariantOptions(products);
-            setDefaultOptions(formattedOptions);
-        };
-
-        fetchDefaultOptions();
-    }, [activeSet, type]);
 
     const formatProductOptions = (products) =>
         products.map(({ subCategoryData = [], product }) => ({
@@ -103,19 +89,11 @@ export const CustomSelect = ({
         }),
     };
 
-    useEffect(() => {
-        const filteredOptions = type === "products"
-            ? defaultOptions.filter(option => option.product !== mainProduct?.product)
-            : defaultOptions.filter(option => option.productId !== mainProduct?.product);        
-        setDefaultOptions(filteredOptions);
-    }, [mainProduct])
-
     return (
         <>
             {label && <label className="fs--30">{label}</label>}
             <AsyncSelect
                 noOptionsMessage={({ inputValue }) => inputValue ? "No products found" : "Type to search for products"}
-                defaultOptions={defaultOptions}
                 className="mt-10"
                 loadOptions={promiseOptions}
                 onChange={onChange}
