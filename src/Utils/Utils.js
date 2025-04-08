@@ -89,15 +89,13 @@ export const shuffleArray = (array) => {
 export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) => {
   const slug = "link-copy-of-category-name-2";
 
-  const filteredBanners = filterItemsBySchedule(bannersData);
-
   // Create an array for the final placement of banners
-  const finalBannersArray = Array(filteredBanners.length).fill(null);
+  const finalBannersArray = Array(bannersData.length).fill(null);
 
   // Separate banners into fixed and dynamic
   const dynamicBanners = [];
 
-  filteredBanners.forEach((banner) => {
+  bannersData.forEach((banner) => {
     const { categories = [], desiredPosition, priority = 0 } = banner;
 
     // Check if the banner matches the current category
@@ -289,24 +287,15 @@ export const formatPrice = (price, quantity) => {
   return `${currencySymbol}${formattedPrice}`;
 }
 
-export const formatPriceEncrypted = (price, quantity) => {
-  const currencySymbol = decryptField(price.formattedAmount).charAt(0);
-  const totalPrice = decryptField(price.amount) * quantity;
-  const formattedPrice = totalPrice.toFixed(2);
-  return `${currencySymbol}${formattedPrice}`;
-}
-
-const normalizedPrice = (price, quantity) => {
+const normalizedPrice = (price, quantity, priceDifference) => {
   const cleaned = price && decryptField(price)?.replace(/[^0-9.-]+/g, "");
-  const priceValue = cleaned ? Number(cleaned) : price;
+  const priceValue = Number(cleaned) + (priceDifference || 0);
   return quantity ? priceValue * quantity : priceValue;
 };
 
-export const findPriceTier = ({ price, variantPrice, pricingTiers = [], tier, type = "product", quantity, isRawPrice = false }) => {
+export const findPriceTier = ({ price, variantPrice, pricingTiers = [], tier, quantity, isRawPrice = false }) => {
+  const formatPriceValue = price => isRawPrice ? price : "$ " + price.toFixed(2);
   try {
-
-    const formatPrice = price => isRawPrice ? price : "$ " + price.toFixed(2);
-
     const priceValue = normalizedPrice(price);
     const variantPriceValue = normalizedPrice(variantPrice);
     const priceDifference = Number(variantPriceValue) - Number(priceValue);
@@ -316,8 +305,8 @@ export const findPriceTier = ({ price, variantPrice, pricingTiers = [], tier, ty
     if (hasTiers) {
       const priceData = pricingTiers.find(({ name }) => name === tier);
       if (priceData) {
-        const finalPrice = normalizedPrice(priceData.price, quantity) + priceDifference;
-        return formatPrice(finalPrice);
+        const finalPrice = normalizedPrice(priceData.price, quantity, priceDifference);
+        return formatPriceValue(finalPrice);
       }
     } else {
       throw new Error("No pricing tiers available");
@@ -327,63 +316,8 @@ export const findPriceTier = ({ price, variantPrice, pricingTiers = [], tier, ty
   }
 
   const fallbackPrice = normalizedPrice(variantPrice, quantity);
-  return formatPrice(fallbackPrice);
+  return formatPriceValue(fallbackPrice);
 };
-
-export const findPriceForTier = (fullProductData, tier, type = "product") => {
-  try {
-    if (
-      fullProductData &&
-      fullProductData.pricingTiers &&
-      Array.isArray(fullProductData.pricingTiers) &&
-      tier
-    ) {
-      const priceData = fullProductData.pricingTiers.find(
-        (tierItem) => tierItem.name === tier
-      );
-
-      if (priceData?.formattedPrice) {
-        return decryptField(type === "product" ? priceData?.formattedPrice : type === "cartProduct" ? priceData : priceData?.price);
-      }
-    }
-  } catch (error) {
-    // console.error("Error fetching price:", error);
-  }
-
-  return decryptField(type === "product" ? fullProductData?.product?.formattedPrice : fullProductData?.price);
-};
-
-export const findPriceTierForCartSet = (fullProductData, tier) => {
-  try {
-    if (
-      fullProductData &&
-      fullProductData.pricingTiers &&
-      Array.isArray(fullProductData.pricingTiers) &&
-      tier
-    ) {
-      const priceData = fullProductData.pricingTiers.find(
-        (tierItem) => tierItem.name === tier
-      );
-
-      if (priceData?.formattedPrice) {
-        return decryptField(priceData?.formattedPrice);
-      }
-    }
-  } catch (error) {
-    // console.error("Error fetching price:", error);
-  }
-
-  return decryptField(fullProductData?.price?.formattedAmount);
-};
-
-export const findPriceForTierWithQuantity = (fullProductData, tier, quantity) => {
-  const price = findPriceForTier(fullProductData, tier, "cartProduct");
-  const currencySymbol = decryptField(price?.formattedPrice || price?.formattedAmount).charAt(0);
-  const totalPrice = decryptField(price?.price || price.convertedAmount) * quantity;
-
-  const formattedPrice = totalPrice.toFixed(2);
-  return `${currencySymbol}${formattedPrice}`;
-}
 
 export const filterItemsBySchedule = (items) => {
   const now = new Date();

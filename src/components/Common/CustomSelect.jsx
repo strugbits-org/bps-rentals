@@ -38,6 +38,7 @@ export const CustomSelect = ({
                     slug: product.slug,
                     size: variant.size,
                     sku,
+                    productPrice: product.price,
                     price: variant.price || product.price,
                     pricingTiers: pricingTiers || [],
                     color: variant.color,

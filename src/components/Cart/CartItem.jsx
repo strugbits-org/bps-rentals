@@ -1,5 +1,5 @@
 "use client";
-import { extractSlugFromUrl, findPriceForTierWithQuantity, findPriceTier, findPriceTierForCartSet, formatDescriptionLines, formatPriceEncrypted } from '@/Utils/Utils';
+import { extractSlugFromUrl, findPriceTier, formatDescriptionLines } from '@/Utils/Utils';
 import React, { useEffect, useState } from 'react'
 import { ImageWrapper } from '../Common/ImageWrapper';
 import { PERMISSIONS } from '@/Utils/Schema/permissions';
@@ -154,12 +154,19 @@ export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updatePr
     const location = formattedDescription.find(x => x.title === "location")?.value || "-";
 
     useEffect(() => {
-        const prices = productSets.map((set) => {
-            const { quantity, price, quotePrice } = set;
-            const formattedPrice = pricingTier && set?.pricingTiers?.length > 0 ? findPriceForTierWithQuantity(set, pricingTier, quantity) : formatPriceEncrypted(price, quantity);
-            const convertToNumber = Number((status === "created" ? `$ ${(decryptField(quotePrice) * quantity)}` : formattedPrice).replace(/[^\d.-]/g, ''));
-            return convertToNumber;
+        const prices = productSets.map(set => {
+            const productPrice = set.catalogReference.options.customTextFields?.productPrice;
+            const price = findPriceTier({
+                tier: pricingTier,
+                pricingTiers: status === "created" ? [] : set?.pricingTiers,
+                price: productPrice,
+                variantPrice: status === "created" ? set.quotePrice : set?.price.amount,
+                isRawPrice: true,
+                quantity: set.quantity
+            });            
+            return price;
         });
+
         const total = prices.reduce((acc, x) => acc + x, 0);
         const formattedPrice = `$ ${total.toFixed(2)}`;
 
@@ -229,10 +236,13 @@ export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updatePr
                             <span className={`quantity ${isReadOnly ? "read-only" : ""}`}>Quantity</span>
                         </div>
                         {productSets.map(item => {
-                            const { quantity } = item;
+                            const { catalogReference, quantity } = item;
                             const formattedData = formatDescriptionLines(item.descriptionLines);
                             const color = formattedData.find(x => x.title === "Color")?.value || "-";
                             const size = formattedData.find(x => x.title === "Size")?.value || "-";
+
+                            const productPrice = catalogReference.options.customTextFields?.productPrice;
+
 
                             return (
                                 <div key={item._id} className="product-set-item fs--16">
@@ -244,7 +254,12 @@ export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updatePr
                                         {item.productName.original} {color ? `| ${color}` : ""}
                                     </AnimateLink>
                                     <span className="size">{size}</span>
-                                    {SHOW_PRICES && <span className="price">{status === "created" ? `$ ${(decryptField(item.quotePrice) * quantity).toFixed(2).toLocaleString()}` : findPriceTierForCartSet(item, pricingTier) || "-"}</span>}
+                                    {SHOW_PRICES && <span className="price">{findPriceTier({
+                                        tier: pricingTier,
+                                        pricingTiers: status === "created" ? [] : item?.pricingTiers,
+                                        price: productPrice || item?.price.amount,
+                                        variantPrice: status === "created" ? item.quotePrice : item?.price.amount
+                                    })}</span>}
                                     {isReadOnly ? (
                                         <span className="quantity read-only">
                                             {quantity}

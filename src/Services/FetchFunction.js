@@ -95,7 +95,7 @@ const getDataFetchFunction = async (payload) => {
       dataQuery = dataQuery.contains(search[0], searchPrefix ? searchPrefix + words[0] : words[0] || "");
       if (words.length > 1) {
         dataQuery = searchType === "or" ? dataQuery.or(newQuery) : dataQuery.and(newQuery);
-      } 
+      }
     };
 
     // Increase limit if "infinite"
@@ -142,6 +142,7 @@ const getDataFetchFunction = async (payload) => {
       'formattedPrice',
       'price',
       'discountedPrice',
+      'productPrice'
     ];
     // Encrypt specific fields if needed
     const collectionsToEncrypt = ["Stores/Products", "locationFilteredVariant", "RentalsNewArrivals"];
@@ -151,6 +152,7 @@ const getDataFetchFunction = async (payload) => {
           if (val.data?.productSets?.length) {
             val.data.productSets = val.data.productSets.map(set => {
               set.price = encryptField(set.price);
+              set.productPrice = encryptField(set.productPrice);
               if (set.pricingTiers?.length) {
                 set.pricingTiers.forEach(val2 => {
                   encryptPriceFields(val2, fieldsToEncrypt);

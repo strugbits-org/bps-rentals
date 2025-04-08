@@ -99,14 +99,17 @@ const ProductCard = ({
                 })}
               </div>
               {activeVariant.location.toString() && <div className="dimensions"><span>{activeVariant.location.toString()} <i className="icon-pin"></i></span></div>}
-              <div className="dimensions">
-                {findPriceTier({
-                  tier: pricingTier,
-                  pricingTiers: productData?.pricingTiers,
-                  price: productData.product?.price,
-                  variantPrice: activeVariant.variant.price,
-                })}
-              </div>
+              {SHOW_PRICES && activeVariant.variant?.price && (
+                <div className="dimensions">
+                  {findPriceTier({
+                    tier: pricingTier,
+                    pricingTiers: productData?.pricingTiers,
+                    price: productData.product?.price,
+                    variantPrice: activeVariant.variant.price,
+                  })}
+                </div>
+              )}
+
             </div>
           )}
         </div>

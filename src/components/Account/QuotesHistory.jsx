@@ -151,9 +151,10 @@ const QuotesHistory = () => {
           ) : (
             quotesData.slice(0, pageLimit).map((quote, index) => {
               const { data } = quote;
-              const totalPrice = data.lineItems.reduce((total, item) => {
-                return total + Number(decryptField(item.price)) * item.quantity;
-              }, 0);
+
+              const totalPrice = data.lineItems
+                .filter(item => !item.description.includes("PRODUCT SET"))
+                .reduce((total, item) => total + Number(decryptField(item.price)) * item.quantity, 0);
 
               const issueDate = quoteDateFormatter(data.dates.issueDate);
               return (
@@ -163,15 +164,12 @@ const QuotesHistory = () => {
                       <h2 className="name">{data.title}</h2>
                       <div className="date">{issueDate}</div>
                     </div>
-                    {SHOW_PRICES && totalPrice ? (
-                      <div className="value">
-                        $ {totalPrice.toLocaleString()}
-                      </div>
-                    ) : totalPrice === 0 ? (
-                      <div className="value">$ 0</div>
-                    ) : (
-                      <div className="value"></div>
-                    )}
+                    <div className="value">
+                      {SHOW_PRICES && totalPrice !== null && totalPrice !== undefined
+                        ? `$ ${totalPrice.toLocaleString()}`
+                        : ''}
+                    </div>
+
                     <div className="container-btn">
                       <btn-modal-open
                         group="modal-quotes-history"

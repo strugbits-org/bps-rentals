@@ -4,7 +4,7 @@ import ModalCanvas3d from "../ModalCanvas3d";
 import { reloadCartModal, resetSlideIndexModal } from "@/Utils/AnimationFunctions";
 import { AvailabilityCard } from "@/components/Product/AvailabilityCard";
 import { SaveProductButton } from "../SaveProductButton";
-import { calculateTotalCartQuantity, compareArray, findPriceForTier } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, compareArray, findPriceTier } from "@/Utils/Utils";
 import { AddProductToCart } from "@/Services/CartApis";
 import { useCookies } from "react-cookie";
 import Modal from "./Modal";
@@ -101,7 +101,7 @@ const CartModalCollection = ({
         return acc;
       }, {});
 
-      const customFieldsSorted = { location: product_location, Size: selectedVariantData.size, ...customFields }
+      const customFieldsSorted = { location: product_location, Size: selectedVariantData.size, ...customFields, productPrice: productData.product?.price };
       const lineItems = [
         {
           catalogReference: {
@@ -116,13 +116,13 @@ const CartModalCollection = ({
         }
       ]
 
-      productsSets.forEach(({ id, product, size, quantity }) => {
+      productsSets.forEach(({ id, product, size, quantity, productPrice }) => {
         lineItems.push({
           catalogReference: {
             appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
             catalogItemId: product,
             options: {
-              customTextFields: { location: product_location, Size: size, productSetId: product_id },
+              customTextFields: { location: product_location, Size: size, productSetId: product_id, productPrice },
               variantId: id,
             },
           },
@@ -151,7 +151,17 @@ const CartModalCollection = ({
   };
 
   useEffect(() => {
-    const prices = productsSets.map(set => Number((findPriceForTier(set, pricingTier, "set")).replace(/[^\d.-]/g, '')) * set.quantity);
+    const prices = productsSets.map(set => {
+      const price = findPriceTier({
+        tier: pricingTier,
+        pricingTiers: set?.pricingTiers,
+        price: set?.productPrice,
+        variantPrice: set?.price,
+        isRawPrice: true,
+        quantity: set.quantity
+      })
+      return price;
+    });
     const total = prices.reduce((acc, x) => acc + x, 0);
     setTotalPrice(`$ ${total.toFixed(2)}`);
   }, [productsSets]);
@@ -335,7 +345,12 @@ const CartModalCollection = ({
                                       {name} {color ? `| ${color}` : ""}
                                     </AnimateLink>
                                     <span className="size">{size || "-"}</span>
-                                    {SHOW_PRICES && <span className="price">{findPriceForTier(set, pricingTier, "set")}</span>}
+                                    {SHOW_PRICES && <span className="price">{findPriceTier({
+                                      tier: pricingTier,
+                                      pricingTiers: set?.pricingTiers,
+                                      price: set?.productPrice,
+                                      variantPrice: set?.price,
+                                    })}</span>}
                                     <div className="quantity container-add-to-cart">
                                       <div className="container-input container-input-quantity">
                                         <button

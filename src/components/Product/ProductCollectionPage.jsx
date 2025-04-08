@@ -10,7 +10,7 @@ import {
   resetSlideIndex,
   updatedWatched,
 } from "@/Utils/AnimationFunctions";
-import { calculateTotalCartQuantity, compareArray, findPriceForTier } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, compareArray, findPriceTier } from "@/Utils/Utils";
 
 import { getSavedProductData } from "@/Services/ProductsApis";
 import { AddProductToCart } from "@/Services/CartApis";
@@ -148,7 +148,17 @@ const ProductCollectionPage = ({
   };
 
   useEffect(() => {
-    const prices = productsSets.map(set => Number((findPriceForTier(set, pricingTier, "set")).replace(/[^\d.-]/g, '')) * set.quantity);
+    const prices = productsSets.map(set => {
+      const price = findPriceTier({
+        tier: pricingTier,
+        pricingTiers: set?.pricingTiers,
+        price: set?.productPrice,
+        variantPrice: set?.price,
+        isRawPrice: true,
+        quantity: set.quantity
+      })
+      return price;
+    });
     const total = prices.reduce((acc, x) => acc + x, 0);
     setTotalPrice(`$ ${total.toFixed(2)}`);
   }, [productsSets]);
@@ -175,7 +185,7 @@ const ProductCollectionPage = ({
         return acc;
       }, {});
 
-      const customFieldsSorted = { location: product_location, Size: selectedVariant.size, ...customFields }
+      const customFieldsSorted = { location: product_location, Size: selectedVariant.size, ...customFields, productPrice: selectedProductDetails.product?.price };
       const lineItems = [
         {
           catalogReference: {
@@ -190,13 +200,13 @@ const ProductCollectionPage = ({
         }
       ]
 
-      productsSets.forEach(({ id, product, size, quantity }) => {
+      productsSets.forEach(({ id, product, size, quantity, productPrice }) => {
         lineItems.push({
           catalogReference: {
             appId: "215238eb-22a5-4c36-9e7b-e7c08025e04e",
             catalogItemId: product,
             options: {
-              customTextFields: { location: product_location, Size: size, productSetId: product_id },
+              customTextFields: { location: product_location, Size: size, productSetId: product_id, productPrice },
               variantId: id,
             },
           },
@@ -397,7 +407,7 @@ const ProductCollectionPage = ({
                     </div>
                     {productsSets.map((set) => {
                       const { name, variant, slug, color, size, quantity } = set;
-                      
+
                       return (
                         <div key={variant} className="product-set-item fs--16">
                           <AnimateLink
@@ -408,7 +418,14 @@ const ProductCollectionPage = ({
                             {name} {color ? `| ${color}` : ""}
                           </AnimateLink>
                           <span className="size">{size || "-"}</span>
-                          {SHOW_PRICES && <span className="price">{findPriceForTier(set, pricingTier, "set")}</span>}
+                          {SHOW_PRICES && <span className="price">
+                            {findPriceTier({
+                              tier: pricingTier,
+                              pricingTiers: set?.pricingTiers,
+                              price: set?.productPrice,
+                              variantPrice: set?.price,
+                            })}
+                          </span>}
                           <div className="quantity container-add-to-cart">
                             <div className="container-input container-input-quantity">
                               <button
