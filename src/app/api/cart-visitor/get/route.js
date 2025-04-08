@@ -17,7 +17,7 @@ export const POST = async (req) => {
     ];
 
     cart.lineItems.forEach((item) => {
-      ['price', 'fullPrice', 'priceBeforeDiscounts'].forEach((field) => {
+      ['price', 'fullPrice', 'priceBeforeDiscounts', 'lineItemPrice'].forEach((field) => {
         encryptPriceFields(item[field], fieldsToEncrypt);
       });
     });

@@ -195,7 +195,7 @@ const ProductPostPage = ({
         return acc;
       }, {});
 
-      const customFieldsSorted = { location: product_location, Size: selectedVariant.size, ...customFields }
+      const customFieldsSorted = { location: product_location, Size: selectedVariant.size, ...customFields, productPrice: selectedProductDetails.product?.price };
 
       const cartData = {
         lineItems: [

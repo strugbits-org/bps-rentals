@@ -25,7 +25,7 @@ export const GET = async (req, context) => {
 
     data.data.lineItems.forEach((item) => {
       if (item.price) item.price = encryptField(item.price.toString());
-      ['price', 'fullPrice', 'priceBeforeDiscounts'].forEach((field) => {
+      ['price', 'fullPrice', 'priceBeforeDiscounts', 'lineItemPrice'].forEach((field) => {
         if (item?.fullItem) encryptPriceFields(item.fullItem[field], fieldsToEncrypt);
       });
     });

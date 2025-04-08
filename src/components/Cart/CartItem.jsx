@@ -1,5 +1,5 @@
 "use client";
-import { extractSlugFromUrl, findPriceForTierWithQuantity, findPriceTierForCartSet, formatDescriptionLines, formatPriceEncrypted } from '@/Utils/Utils';
+import { extractSlugFromUrl, findPriceForTierWithQuantity, findPriceTier, findPriceTierForCartSet, formatDescriptionLines, formatPriceEncrypted } from '@/Utils/Utils';
 import React, { useEffect, useState } from 'react'
 import { ImageWrapper } from '../Common/ImageWrapper';
 import { PERMISSIONS } from '@/Utils/Schema/permissions';
@@ -12,7 +12,9 @@ export const CartItem = ({ data, isReadOnly, handleQuantityChange, updateProduct
     const { permissions, pricingTier } = useUserData();
     const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
-    const { _id, quantity, productName, url, image, physicalProperties, descriptionLines } = data;
+    const { _id, quantity, productName, url, image, physicalProperties, descriptionLines, catalogReference } = data;
+    const productPrice = catalogReference.options.customTextFields?.productPrice;
+
     const formattedDescription = formatDescriptionLines(descriptionLines);
 
     return (
@@ -82,7 +84,13 @@ export const CartItem = ({ data, isReadOnly, handleQuantityChange, updateProduct
                             })}
                         </ul>
                         <div>
-                            {SHOW_PRICES && <div class="fs--24 mb-10 text-right">{status === "created" ? `$ ${(decryptField(cartData.price) * quantity).toFixed(2).toLocaleString()}` : findPriceForTierWithQuantity(data, pricingTier, quantity)}</div>}
+                            {SHOW_PRICES && <div class="fs--24 mb-10 text-right">{status === "created" ? `$ ${(decryptField(cartData.price) * quantity).toFixed(2).toLocaleString()}` : findPriceTier({
+                                tier: pricingTier,
+                                pricingTiers: data?.pricingTiers,
+                                price: pricingTier ? productPrice : data.price.amount,
+                                variantPrice: data.price.amount,
+                                quantity: quantity,
+                            })}</div>}
                             <div className="quantity position-static-lg">
                                 <span className="fs--20 no-mobile">
                                     Quantity
@@ -144,17 +152,17 @@ export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updatePr
     const ids = [_id, ...productSets.map((item) => item._id)];
     const formattedDescription = formatDescriptionLines(descriptionLines);
     const location = formattedDescription.find(x => x.title === "location")?.value || "-";
-    
+
     useEffect(() => {
         const prices = productSets.map((set) => {
             const { quantity, price, quotePrice } = set;
             const formattedPrice = pricingTier && set?.pricingTiers?.length > 0 ? findPriceForTierWithQuantity(set, pricingTier, quantity) : formatPriceEncrypted(price, quantity);
-            const convertToNumber = Number(( status === "created" ? `$ ${(decryptField(quotePrice) * quantity)}` : formattedPrice).replace(/[^\d.-]/g, ''));
+            const convertToNumber = Number((status === "created" ? `$ ${(decryptField(quotePrice) * quantity)}` : formattedPrice).replace(/[^\d.-]/g, ''));
             return convertToNumber;
         });
         const total = prices.reduce((acc, x) => acc + x, 0);
         const formattedPrice = `$ ${total.toFixed(2)}`;
-        
+
         setTotalPrice(formattedPrice);
     }, [productSets, pricingTier]);
 
