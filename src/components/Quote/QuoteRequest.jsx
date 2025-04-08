@@ -161,27 +161,11 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
 
       const cartItemsIds = response.map(product => product.catalogReference.catalogItemId);
       const pricingTiersData = await getCartPricingTiersData(cartItemsIds);
-
       const pricingTiersMap = new Map(pricingTiersData.map(tier => [tier._id, tier.pricingTiers]));
-
-      const decryptPricingTiers = (tiers) => {
-        return tiers?.map(tier => ({
-          ...tier,
-          price: tier.price ? decryptField(tier.price) : undefined,
-          formattedPrice: tier.formattedPrice ? decryptField(tier.formattedPrice) : undefined
-        }));
-      };
-
-      const decryptItemPrices = (item, fields) => {
-        fields.forEach(field => {
-          if (item[field]) decryptPriceFields(item[field], ['amount', 'convertedAmount', 'formattedAmount', 'formattedConvertedAmount']);
-        });
-      };
 
       const cartData = response.map(item => {
         const pricingTiers = pricingTiersMap.get(item.catalogReference.catalogItemId) || [];
-        decryptItemPrices(item, ['price', 'fullPrice', 'priceBeforeDiscounts', 'lineItemPrice']);
-        return { ...item, pricingTiers: decryptPricingTiers(pricingTiers) };
+        return { ...item, pricingTiers: pricingTiers };
       });
 
       setCartItems(cartData);
