@@ -351,7 +351,7 @@ export const sanitizeProduct = (product) => {
       'brand', 'collections', 'currency', 'discount', 'discountedPrice',
       'formattedDiscountedPrice', 'inStock', 'inventoryItem', 'manageVariants',
       'numericId', 'productType', 'quantityInStock', 'ribbon', 'ribbons',
-      'seoData', 'trackInventory'
+      'seoData', 'trackInventory', 'productOptions', 'link-products-slug', 'productPageUrl', 'pricePerUnitData'
     ];
     sanitizedProduct.product = sanitizeObject(sanitizedProduct.product, nestedKeysToRemove);
   }
