@@ -3,6 +3,7 @@ import logError from "@/Utils/ServerActions";
 import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 import { sanitizeProduct } from "@/Utils/Utils";
+import { encryptPriceFields } from "@/Utils/Encrypt";
 const baseUrl = process.env.BASE_URL;
 
 export const getProductsKeywords = async () => {
@@ -109,9 +110,7 @@ export const fetchProductsByIds = async (products) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "locationFilteredVariant",
-      includeReferencedItems: [
-        "product"
-      ],
+      includeReferencedItems: ["product"],
       ne: [
         {
           key: "hidden",
@@ -473,7 +472,7 @@ export const getPairWithData = async () => {
       dataCollectionId: "BPSPairItWith",
       increasedLimit: 700,
       limit: "infinite",
-    });
+    });    
 
     if (response && response._items) {
       return response._items.map((x) => x.data);
@@ -507,34 +506,7 @@ export const getProductVariants = async (id) => {
     return [];
   }
 };
-export const getProductVariantsImages = async (id) => {
-  try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "BPSProductImages",
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      hasSome: null,
-      ne: null,
-      eq: [
-        {
-          key: "productId",
-          value: id,
-        },
-      ],
-      skip: null,
-    });
 
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    logError("Error fetching product snapshots:", error);
-    return [];
-  }
-};
 export const getAllCategoriesData = async () => {
   try {
     const response = await getDataFetchFunction({
@@ -710,6 +682,123 @@ export const getCartPricingTiersData = async (product) => {
     }));
   } catch (error) {
     logError("Error fetching products pricing tiers data:", error);
+    return [];
+  }
+};
+
+
+// ----------------------------------------
+
+export const getStoreProduct = async (slug) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "Stores/Products",
+      eq: [
+        {
+          key: "slug",
+          value: slug,
+        },
+      ],
+    });
+    if (response && response._items) {
+      const product = response._items[0].data;
+      const fieldsToEncrypt = [
+        'formattedDiscountedPrice',
+        'pricePerUnitData',
+        'pricePerUnit',
+        'formattedPricePerUnit',
+        'formattedPrice',
+        'price',
+        'discountedPrice',
+        'productPrice'
+      ];
+      encryptPriceFields(product, fieldsToEncrypt);
+      return product;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    logError("Error fetching selected ProductId:", error);
+  }
+};
+
+export const fetchProductById = async (slug) => {
+  try {
+    const product = await getStoreProduct(slug);
+    if (!product._id) return;
+    const response = await getDataFetchFunction({
+      dataCollectionId: "locationFilteredVariant",
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+      hasSome: [
+        {
+          key: "product",
+          values: [product._id],
+        },
+      ],
+    });
+    if (response && response._items) {
+      const productData = response._items[0]?.data;
+      productData.subCategoryData = productData.subCategoryData || [];
+      productData.product = product;
+      return productData;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    logError("Error fetching products by ids:", error);
+  }
+};
+
+export const getPairedProducts = async (slug) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "BPSPairItWith",
+      eq: [
+        {
+          key: "productId",
+          value: slug,
+        },
+      ]
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data);
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    logError("Error fetching products(getPairItWithProductsId):", error);
+  }
+};
+
+export const getProductVariantsImages = async (ids) => {
+  try {
+    const response = await getDataFetchFunction({
+      dataCollectionId: "BPSProductImages",
+      hasSome: [
+        {
+          key: "productId",
+          values: ids,
+        },
+      ],
+    });
+
+    if (response && response._items) {
+      return response._items.map((x) => x.data);
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    console.error("Error fetching product snapshots:", error);
     return [];
   }
 };
