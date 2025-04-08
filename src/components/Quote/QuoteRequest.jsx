@@ -13,6 +13,7 @@ import logError from "@/Utils/ServerActions";
 import { decryptField, decryptPriceFields } from "@/Utils/Encrypt";
 import { useCookies } from "react-cookie";
 import { getCartPricingTiersData } from "@/Services/ProductsApis";
+import { findPriceTier } from "@/Utils/Utils";
 
 const QuoteRequest = ({ quoteRequestPageContent }) => {
   const { firstName, lastName, email } = useUserData();
@@ -65,30 +66,20 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
       const newUrl = productImageURLForQuote(product.image);
       const isProductSet = product.catalogReference.options.customTextFields?.isProductSet;
       const productSetId = product.catalogReference.options.customTextFields?.productSetId;
+      const productPrice = product.catalogReference.options.customTextFields?.productPrice;
       const productSet = cartItems.find((item) => item.catalogReference.catalogItemId === productSetId);
 
       let description = product.productName.original;
       if (isProductSet) description = product.productName.original + " | PRODUCT SET";
       if (productSet) description = product.productName.original + ` | SET OF ${productSet.productName.original}`;
 
-      const findPriceForTier = (product) => {
-        try {    
-          if (
-            product?.pricingTiers &&
-            Array.isArray(product.pricingTiers) &&
-            pricingTier
-          ) {
-            const priceData = product.pricingTiers.find(tierItem => tierItem.name === pricingTier);
-            if (priceData?.price) {
-              return Number(priceData?.price);
-            }
-          }
-        } catch (error) {
-          // console.error("Error fetching price:", error);
-        }
-      
-        return Number(product?.price?.convertedAmount);
-      };
+      const price = findPriceTier({
+        tier: pricingTier,
+        pricingTiers: product?.pricingTiers,
+        price: pricingTier ? productPrice : product.price.amount,
+        variantPrice: product.price.amount,
+        isRawPrice: true,
+      })
 
       return {
         lineItId: product._id,
@@ -97,7 +88,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
         description: description,
         quantity: product.quantity,
         location: product.catalogReference.options.customTextFields.location,
-        price: findPriceForTier(product),
+        price: price,
         src: newUrl,
         productUrl: product.url,
         fullItem: product,
@@ -158,7 +149,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
     setModalButtonLabel("Continue Shopping");
     setModalButtonRedirection("/category/new");
     setModalState({ success: false, error: true });
-  };  
+  };
 
   const getCart = async () => {
     try {
@@ -167,12 +158,12 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
         handleEmptyCart();
         return;
       }
-  
+
       const cartItemsIds = response.map(product => product.catalogReference.catalogItemId);
       const pricingTiersData = await getCartPricingTiersData(cartItemsIds);
-  
+
       const pricingTiersMap = new Map(pricingTiersData.map(tier => [tier._id, tier.pricingTiers]));
-  
+
       const decryptPricingTiers = (tiers) => {
         return tiers?.map(tier => ({
           ...tier,
@@ -180,16 +171,16 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
           formattedPrice: tier.formattedPrice ? decryptField(tier.formattedPrice) : undefined
         }));
       };
-  
+
       const decryptItemPrices = (item, fields) => {
         fields.forEach(field => {
           if (item[field]) decryptPriceFields(item[field], ['amount', 'convertedAmount', 'formattedAmount', 'formattedConvertedAmount']);
         });
       };
-  
+
       const cartData = response.map(item => {
         const pricingTiers = pricingTiersMap.get(item.catalogReference.catalogItemId) || [];
-        decryptItemPrices(item, ['price', 'fullPrice', 'priceBeforeDiscounts']);
+        decryptItemPrices(item, ['price', 'fullPrice', 'priceBeforeDiscounts', 'lineItemPrice']);
         return { ...item, pricingTiers: decryptPricingTiers(pricingTiers) };
       });
 

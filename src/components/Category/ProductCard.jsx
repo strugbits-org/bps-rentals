@@ -1,11 +1,10 @@
 import AnimateLink from "../Common/AnimateLink";
 import React, { useEffect, useState } from "react";
 import { SaveProductButton } from "../Common/SaveProductButton";
-import { compareArray, findPriceForTier } from "@/Utils/Utils";
+import { compareArray, findPriceTier } from "@/Utils/Utils";
 import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
-import { decryptField } from "@/Utils/Encrypt";
 
 const ProductCard = ({
   productData,
@@ -100,7 +99,14 @@ const ProductCard = ({
                 })}
               </div>
               {activeVariant.location.toString() && <div className="dimensions"><span>{activeVariant.location.toString()} <i className="icon-pin"></i></span></div>}
-              <div className="dimensions">{activeVariant?.variant && SHOW_PRICES && (<span>{pricingTier ? findPriceForTier(productData, pricingTier) : decryptField(activeVariant.variant.price)}</span>)}</div>
+              <div className="dimensions">
+                {findPriceTier({
+                  tier: pricingTier,
+                  pricingTiers: productData?.pricingTiers,
+                  price: productData.product?.price,
+                  variantPrice: activeVariant.variant.price,
+                })}
+              </div>
             </div>
           )}
         </div>

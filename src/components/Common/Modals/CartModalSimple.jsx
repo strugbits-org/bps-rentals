@@ -4,7 +4,7 @@ import ModalCanvas3d from "../ModalCanvas3d";
 import { reloadCartModal, resetSlideIndexModal } from "@/Utils/AnimationFunctions";
 import { AvailabilityCard } from "@/components/Product/AvailabilityCard";
 import { SaveProductButton } from "../SaveProductButton";
-import { calculateTotalCartQuantity, compareArray, findPriceForTier } from "@/Utils/Utils";
+import { calculateTotalCartQuantity, compareArray, findPriceTier } from "@/Utils/Utils";
 import { AddProductToCart } from "@/Services/CartApis";
 import { useCookies } from "react-cookie";
 import Modal from "./Modal";
@@ -12,7 +12,6 @@ import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
-import { decryptField } from "@/Utils/Encrypt";
 
 const CartModalSimple = ({
   productData,
@@ -98,7 +97,7 @@ const CartModalSimple = ({
         return acc;
       }, {});
 
-      const customFieldsSorted = { location: product_location, Size: selectedVariantData.size, ...customFields }
+      const customFieldsSorted = { location: product_location, Size: selectedVariantData.size, ...customFields, productPrice: productData.product?.price };
 
       const cartData = {
         lineItems: [
@@ -331,7 +330,12 @@ const CartModalSimple = ({
                                 <li className="seat-height">
                                   <span className="specs-title">Price</span>
                                   <span className="specs-text">
-                                    {pricingTier ? findPriceForTier(productData, pricingTier) : decryptField(selectedVariantData.price)}
+                                    {findPriceTier({
+                                      tier: pricingTier,
+                                      pricingTiers: productData?.pricingTiers,
+                                      price: productData.product?.price,
+                                      variantPrice: selectedVariantData?.price,
+                                    })}
                                   </span>
                                 </li>
                               )}

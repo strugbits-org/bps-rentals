@@ -33,7 +33,7 @@ export const POST = async (req) => {
     data.items.forEach((item) => {
       item.data.lineItems.forEach((lineItem) => {
         if (lineItem.price) lineItem.price = encryptField(lineItem.price.toString());
-        ['price', 'fullPrice', 'priceBeforeDiscounts'].forEach((field) => {
+        ['price', 'fullPrice', 'priceBeforeDiscounts', 'lineItemPrice'].forEach((field) => {
           if (lineItem?.fullItem) encryptPriceFields(lineItem.fullItem[field], fieldsToEncrypt);
         });
       });

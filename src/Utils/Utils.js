@@ -220,7 +220,7 @@ export const extractCategoryIds = (selectedCategoryData) => {
 export const formatDescriptionLines = (items) => {
   return items.reduce((acc, item) => {
     const title = item.name?.translated || item.name?.original;
-    if (title && title !== "isProductSet" && title !== "productSetId") {
+    if (title && title !== "isProductSet" && title !== "productSetId" && title !== "productPrice") {
       const value = item.colorInfo?.translated || item.colorInfo?.original || item.plainText?.translated || item.plainText?.original || item.colorInfo?.code;
       acc.push({ title, value });
     }
@@ -296,12 +296,16 @@ export const formatPriceEncrypted = (price, quantity) => {
   return `${currencySymbol}${formattedPrice}`;
 }
 
-export const findPriceTier = ({ price, variantPrice, pricingTiers = [], tier, type = "product" }) => {
+const normalizedPrice = (price, quantity) => {
+  const cleaned = price && decryptField(price)?.replace(/[^0-9.-]+/g, "");
+  const priceValue = cleaned ? Number(cleaned) : price;
+  return quantity ? priceValue * quantity : priceValue;
+};
+
+export const findPriceTier = ({ price, variantPrice, pricingTiers = [], tier, type = "product", quantity, isRawPrice = false }) => {
   try {
-    const normalizedPrice = (price) => {
-      const cleaned = price && decryptField(price)?.replace(/[^0-9.-]+/g, "");
-      return cleaned ? Number(cleaned) : price;
-    };
+
+    const formatPrice = price => isRawPrice ? price : "$ " + price.toFixed(2);
 
     const priceValue = normalizedPrice(price);
     const variantPriceValue = normalizedPrice(variantPrice);
@@ -311,12 +315,9 @@ export const findPriceTier = ({ price, variantPrice, pricingTiers = [], tier, ty
 
     if (hasTiers) {
       const priceData = pricingTiers.find(({ name }) => name === tier);
-
       if (priceData) {
-        const value = type === "cartProduct" ? priceData : priceData.price;
-        const finalPrice = normalizedPrice(value) + priceDifference;
-
-        if (finalPrice) return "$ " + finalPrice.toFixed(2);
+        const finalPrice = normalizedPrice(priceData.price, quantity) + priceDifference;
+        return formatPrice(finalPrice);
       }
     } else {
       throw new Error("No pricing tiers available");
@@ -325,7 +326,8 @@ export const findPriceTier = ({ price, variantPrice, pricingTiers = [], tier, ty
     // Silent fail
   }
 
-  return decryptField(variantPrice);
+  const fallbackPrice = normalizedPrice(variantPrice, quantity);
+  return formatPrice(fallbackPrice);
 };
 
 export const findPriceForTier = (fullProductData, tier, type = "product") => {
