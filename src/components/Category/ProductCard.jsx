@@ -15,7 +15,7 @@ const ProductCard = ({
   lastActiveColor,
   filteredProducts = [],
   bestSeller = [],
-  onProductRedirect
+  onProductRedirect,
 }) => {
   const { product, variantData, defaultVariant } = productData;
   const categories = productData?.subCategoryData || [];

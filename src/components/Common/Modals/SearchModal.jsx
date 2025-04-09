@@ -5,7 +5,7 @@ import { filterSearchData, formatDate } from "@/Utils/Utils";
 import { useCookies } from "react-cookie";
 import { searchProducts } from "@/Services/ProductsApis";
 import debounce from 'lodash/debounce';
-import { pageLoadEnd, pageLoadStart, updatedWatched } from "@/Utils/AnimationFunctions";
+import { pageLoadStart, updatedWatched } from "@/Utils/AnimationFunctions";
 import { ImageWrapper } from "../ImageWrapper";
 import { usePathname } from "next/navigation";
 import logError from "@/Utils/ServerActions";
@@ -102,7 +102,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
   const handleProductsFilter = async (term = "") => {
     try {
       setProductsLoading(true);
-      const filteredProductsData = await searchProducts(term, cookies.location);
+      const filteredProductsData = await searchProducts({ term: term, location: cookies.location });
       setFilteredProducts(filteredProductsData);
       updatedWatched();
     } catch (error) {
@@ -136,9 +136,6 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
     const params = new URLSearchParams({ query: searchTerm });
     router.push(`/search?${params}`);
     pageLoadStart();
-    setTimeout(() => {
-      pageLoadEnd();
-    }, 2200);
   }
 
   return (

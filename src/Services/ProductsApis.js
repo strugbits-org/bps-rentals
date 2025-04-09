@@ -210,11 +210,8 @@ export const fetchAllProductsPaths = async () => {
   }
 };
 
-export const searchProducts = async (term, location) => {
+export const searchProducts = async ({ term, productSets, location, colors = [], pageLimit = 3, skip = 0 }) => {
   try {
-    const isFullSearch = !location;
-    const pageLimit = isFullSearch ? 1000 : 3;
-
     const baseFilters = {
       dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: ["product"],
@@ -222,13 +219,22 @@ export const searchProducts = async (term, location) => {
         { key: "hidden", value: true },
         { key: "isF1Exclusive", value: true }
       ],
-      includeVariants: isFullSearch ? true : false,
+      includeVariants: false,
       limit: pageLimit,
+      skip: skip,
       sortOrder: "asc",
       sortKey: "_id"
     };
 
     if (location) baseFilters.hasSome = [{ key: "location", values: location }];
+    if (colors.length > 0) baseFilters.hasSome = [{ key: "colors", values: colors }];
+    if (productSets) {      
+      baseFilters.ne.push({
+        key: "productSets",
+        value: []
+      });
+      baseFilters.isNotEmpty = "productSets";
+    };
 
     let items = [];
 
@@ -511,18 +517,12 @@ export const getProductVariantsImages = async (id) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "BPSProductImages",
-      returnTotalCount: null,
-      contains: null,
-      limit: null,
-      hasSome: null,
-      ne: null,
       eq: [
         {
           key: "productId",
           value: id,
         },
       ],
-      skip: null,
     });
 
     if (response && response._items) {
