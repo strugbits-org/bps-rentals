@@ -1,12 +1,7 @@
 import SearchPage from "@/components/Search/Index";
 import { getRentalsBanners } from "@/Services/Index";
 import { getFilterLocations } from "@/Services/NavbarApis";
-import {
-  fetchBestSellers,
-  getAllColorsData,
-  getAllProducts,
-  getProductsKeywords
-} from "@/Services/ProductsApis";
+import { fetchBestSellers, getAllColorsData } from "@/Services/ProductsApis";
 import { getHomeSectionDetails, getMarketsData, getPageMetaData } from "@/Services/SectionsApis";
 import logError from "@/Utils/ServerActions";
 import { Suspense } from "react";
@@ -40,17 +35,15 @@ export default async function Page() {
       marketsData,
       colorsData,
       bestSeller,
-      productKeywords,
-      productsData,
+      productSnapshotData,
+      variantsData
     ] = await Promise.all([
       getHomeSectionDetails(),
       getRentalsBanners(),
       getFilterLocations(),
       getMarketsData(),
       getAllColorsData(),
-      fetchBestSellers(),
-      getProductsKeywords(),
-      getAllProducts({}),
+      fetchBestSellers()
     ]);
 
     return (
@@ -62,8 +55,6 @@ export default async function Page() {
           marketsData={marketsData}
           colorsData={colorsData}
           bestSeller={bestSeller}
-          productKeywords={productKeywords}
-          fullProductsData={productsData}
         />
       </Suspense>
     );
@@ -72,5 +63,3 @@ export default async function Page() {
   }
 
 }
-
-export const dynamic = "force-dynamic";
