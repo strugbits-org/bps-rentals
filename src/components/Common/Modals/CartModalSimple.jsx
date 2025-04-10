@@ -145,7 +145,7 @@ const CartModalSimple = ({
           <modal-item>
             <div className="wrapper-section">
               <section className="section-modal-product">
-                <div className="container-fluid">
+                <div className={`container-fluid  ${!selectedVariantData && "hidden"}`}>
                   <div className="row">
                     <div className="col-lg-10 offset-lg-1">
                       <div
@@ -516,6 +516,15 @@ const CartModalSimple = ({
                     </div>
                   </div>
                 </div>
+                {!selectedVariantData && <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-lg-10 offset-lg-1">
+                        <div className="w-full d-flex justify-content-center">
+                          <div className="loader-small"></div>
+                        </div>
+                    </div>
+                  </div>
+                </div>}
               </section>
             </div>
           </modal-item>

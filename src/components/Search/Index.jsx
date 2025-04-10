@@ -2,16 +2,15 @@
 import React, { useEffect, useState } from "react";
 import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
 import Markets from "../Common/Sections/MarketSection";
-import { getSavedProductData } from "@/Services/ProductsApis";
+import { getProductVariants, getProductVariantsImages, getSavedProductData, searchProducts } from "@/Services/ProductsApis";
 import { useCookies } from "react-cookie";
 import CartModal from "../Common/Modals/CartModal";
-import { compareArray, scoreBasedBanners } from "@/Utils/Utils";
+import { scoreBasedBanners } from "@/Utils/Utils";
 import ProductCard from "../Category/ProductCard";
 import { Banner } from "../Category/Banner";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
 import logError from "@/Utils/ServerActions";
 import { useSearchParams } from "next/navigation";
-import { searchProductsData } from "@/Services/SearchApis";
 
 const SearchPage = ({
     pageContent,
@@ -19,16 +18,12 @@ const SearchPage = ({
     locations,
     marketsData,
     colorsData,
-    fullProductsData,
-    bestSeller,
-    productKeywords
+    bestSeller
 }) => {
     let bannerIndex = -1;
-    const pageSize = 18;
+    const pageSize = 6;
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredProducts, setFilteredProducts] = useState([]);
-    const [pageLimit, setPageLimit] = useState(pageSize);
-    // const [cookies, setCookie] = useCookies(["location"]);
     const [cookies, setCookie, removeCookie] = useCookies(["location", "searchFilterColors", "searchShowProductSets", "searchScrollPosition", "searchPageSize", "searchLoadPrevState", "searchLastActiveColor"]);
 
     const [filterColors, setFilterColors] = useState([]);
@@ -45,60 +40,35 @@ const SearchPage = ({
     const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
     const [productFilteredVariantData, setProductFilteredVariantData] = useState();
     const [productSetsFilter, setproductSetsFilter] = useState(false);
-    const [productsData, setProductsData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [isPageLoading, setIsPageLoading] = useState(false);
+    const [searchCompleted, setSearchCompleted] = useState(false);
 
     const searchParams = useSearchParams();
 
-    const handleFilterChange = async ({ filteredData = [], colors = [] }) => {
+    const handleFilterChange = async (colors = []) => {
+        setLoading(true);
         try {
-            const products = filteredData?.length !== 0 ? filteredData : productsData;
-            const selectedColors =
-                colors?.length !== 0
-                    ? colors.filter((x) => x.checked).map((x) => x.label)
-                    : filterColors.filter((x) => x.checked).map((x) => x.label);
+            const selectedColors = colors?.length > 0 ? colors.filter((x) => x.checked).map((x) => x.label) : filterColors.filter((x) => x.checked).map((x) => x.label);
+            const products = await searchProducts({ term: searchTerm, location: cookies.location, colors: selectedColors, pageLimit: pageSize, productSets: productSetsFilter });
+            if (products.length < pageSize) setSearchCompleted(true);
 
-            const selectedLocation = cookies.location;
-
-            const filteredProductsList = products.filter((product) => {
-                if (productSetsFilter && (!product?.productSets || product?.productSets?.length === 0)) return false;
-
-                let hasVariants, hasColor, hasLocation;
-                if (selectedColors.length !== 0) {
-                    const variantFilter = selectedColors.map(x => `${cookies.location}-${x}`);
-                    hasVariants = compareArray(variantFilter, product.variantColorLocation);
-
-                    return hasVariants;
-
-                } else {
-                    hasColor =
-                        selectedColors.length > 0
-                            ? product.colors.some((color) => selectedColors.includes(color))
-                            : true;
-
-                    const productHasLocation = product.location.includes(selectedLocation);
-                    const variantHasLocation = productHasLocation ? product.variantData.some(variant => variant.location.includes(selectedLocation)) : false;
-                    hasLocation = productHasLocation && variantHasLocation;
-
-                    return hasLocation && hasColor;
-                }
-            });
-
-            setFilteredProducts(filteredProductsList);
+            setFilteredProducts(products);
             updatedWatched(true, true);
         } catch (error) {
             logError("Error fetching products:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const handleColorChange = (data) => {
         setLastActiveColor(data.label !== lastActiveColor ? data.label : null);
 
-        const updatedColors = filterColors.map((item) =>
-            item.label === data.label ? { ...item, checked: !item.checked } : item
-        );
-
+        const updatedColors = filterColors.map((item) => item.label === data.label ? { ...item, checked: !item.checked } : item);
         setFilterColors(updatedColors);
-        handleFilterChange({ colors: updatedColors });
+
+        handleFilterChange(updatedColors);
         setCookie("searchFilterColors", updatedColors, { path: "/" });
     };
 
@@ -107,10 +77,9 @@ const SearchPage = ({
     };
 
     const setInitialValues = async () => {
-
-        const categoryId = "00000000-000000-000000-000000000001";
-        // set filter colors
+        setLoading(true);
         if (colorsData) {
+            const categoryId = "00000000-000000-000000-000000000001";
             const filteredColor = colorsData.find((x) => x.category === categoryId);
             if (filteredColor) {
                 const colors = filteredColor.colors.map((x) => {
@@ -122,44 +91,50 @@ const SearchPage = ({
 
         const searchTerm = searchParams.get("query");
         if (searchTerm) setSearchTerm(searchTerm);
-        const filteredData = await searchProductsData(searchTerm, fullProductsData, productKeywords);
-        setProductsData(filteredData);
 
-        if ((cookies?.searchFilterColors?.length !== 0 || cookies?.searchShowProductSets) && cookies?.searchLoadPrevState) {
-            if (cookies.searchFilterColors) setFilterColors(cookies.searchFilterColors);
-            if (cookies.searchShowProductSets) setproductSetsFilter(cookies.searchShowProductSets);
-            if (cookies.searchLastActiveColor) setLastActiveColor(cookies.searchLastActiveColor);
-            handleFilterChange({ filteredData, colors: cookies.searchFilterColors || [] });
-        } else {
-            const filteredProducts = filteredData.filter((product) => {
-                const productHasLocation = product.location.includes(cookies.location);
-                const variantHasLocation = productHasLocation ? product.variantData.some(variant => variant.location.includes(cookies.location)) : false;
-                return productHasLocation && variantHasLocation;
-            });
+        const filteredData = await searchProducts({ term: searchTerm, location: cookies.location, pageLimit: pageSize });
+        if (filteredData.length < pageSize) setSearchCompleted(true);
+        setFilteredProducts(filteredData);
 
-            setFilteredProducts(filteredProducts);
-        }
+        // if ((cookies?.searchFilterColors?.length !== 0 || cookies?.searchShowProductSets) && cookies?.searchLoadPrevState) {
+        //     if (cookies.searchFilterColors) setFilterColors(cookies.searchFilterColors);
+        //     if (cookies.searchShowProductSets) setproductSetsFilter(cookies.searchShowProductSets);
+        //     if (cookies.searchLastActiveColor) setLastActiveColor(cookies.searchLastActiveColor);
+        //     handleFilterChange({ filteredData, colors: cookies.searchFilterColors || [] });
+        // }
 
-        if (cookies?.searchLoadPrevState) {
-            if (cookies.searchPageSize) setPageLimit(cookies.searchPageSize);
-            setTimeout(() => {
-                if (cookies.searchScrollPosition) window.scrollTo(0, cookies.searchScrollPosition);
-                setTimeout(() => {
-                    markPageLoaded(true, false);
-                    setEnableFilterTrigger(true);
-                    clearPageState();
-                }, 500);
-            }, 500);
-        } else {
-            setTimeout(() => {
-                markPageLoaded(true);
-                setEnableFilterTrigger(true);
-                clearPageState();
-            }, 500);
-        }
+        // if (cookies?.searchLoadPrevState) {
+        //     setTimeout(() => {
+        //         if (cookies.searchScrollPosition) window.scrollTo(0, cookies.searchScrollPosition);
+        //         setTimeout(() => {
+        //             updatedWatched(true, true);
+        //             setLoading(false);
+        //             setEnableFilterTrigger(true);
+        //             clearPageState();
+        //         }, 500);
+        //     }, 500);
+        // } else {
+        // }
+        setTimeout(() => {
+            updatedWatched(true, true);
+            setLoading(false);
+            setEnableFilterTrigger(true);
+            clearPageState();
+        }, 500);
 
         const savedProducts = await getSavedProductData();
         setSavedProductsData(savedProducts);
+
+        // while (filteredProducts.length < 120) {
+        //     const filteredData = await searchProducts({ term: searchTerm, location: cookies.location, pageLimit: pageSize, skip: filteredProducts.length });
+        //     const updatedProductsData = [...filteredProducts, ...filteredData];            
+        //     setFilteredProducts(updatedProductsData);
+
+        //     if (filteredData.length < pageSize) {
+        //         setSearchCompleted(true);
+        //         break;
+        //     }
+        // }
 
     };
     useEffect(() => {
@@ -170,11 +145,11 @@ const SearchPage = ({
                     : { ...x, checked: false }
             )
         );
-        if (enableFilterTrigger) handleFilterChange({});
+        if (enableFilterTrigger) handleFilterChange();
     }, [cookies.location]);
 
     useEffect(() => {
-        if (enableFilterTrigger) handleFilterChange({});
+        if (enableFilterTrigger) handleFilterChange();
         setCookie("searchShowProductSets", productSetsFilter, { path: "/" });
     }, [productSetsFilter]);
 
@@ -184,17 +159,20 @@ const SearchPage = ({
     }, [bannersData]);
 
     useEffect(() => {
-        if (searchTerm) setSearchTerm(searchTerm);
-    }, [searchParams]);
-
-    useEffect(() => {
+        setTimeout(() => {
+            markPageLoaded(true);
+        }, 400);
         setInitialValues();
-    }, [fullProductsData]);
+    }, [searchParams]);
 
     const getSelectedProductSnapShots = async (productData, activeVariant) => {
         setSelectedProductData(productData);
         try {
-            const { productSnapshotData, productVariantsData } = productData;
+            const productId = productData.product._id;
+            const [productSnapshotData, productVariantsData] = await Promise.all([
+                getProductVariantsImages(productId),
+                getProductVariants(productId)
+            ]);
 
             let dataMap = new Map(
                 productVariantsData.map((item) => [item.sku.toLowerCase(), item])
@@ -262,15 +240,27 @@ const SearchPage = ({
         }
     };
 
-    const handleAutoSeeMore = () => {
-        setPageLimit((prev) => prev + pageSize);
-        updatedWatched(true);
+    const handleAutoSeeMore = async () => {
+        try {
+            setIsPageLoading(true);
+            const selectedColors = filterColors.filter((x) => x.checked).map((x) => x.label);
+            const products = await searchProducts({ term: searchTerm, location: cookies.location, colors: selectedColors, pageLimit: pageSize, productSets: productSetsFilter, skip: filteredProducts.length });
+            if (products.length < pageSize) setSearchCompleted(true);
+
+            const updatedProductsData = [...filteredProducts, ...products];
+            setFilteredProducts(updatedProductsData);
+            updatedWatched(true);
+        } catch (error) {
+            logError("Error fetcing more products:", error);
+        } finally {
+            setIsPageLoading(false);
+        }
     }
 
     const savePageState = () => {
         const scrollPosition = window.scrollY;
         setCookie("searchScrollPosition", scrollPosition, { path: "/" });
-        setCookie("searchPageSize", pageLimit, { path: "/" });
+        setCookie("searchPageSize", filteredProducts.length, { path: "/" });
         setCookie("searchLastActiveColor", lastActiveColor, { path: "/" });
     };
 
@@ -358,7 +348,7 @@ const SearchPage = ({
                         <div className="col-lg-10 column-content">
                             <div className="product-list-wrapper container-wrapper-list">
                                 <ul className="product-list grid-lg-33 grid-tablet-50 grid-list">
-                                    {filteredProducts.slice(0, pageLimit).map((data, index) => {
+                                    {!loading && filteredProducts.map((data, index) => {
                                         const shouldInsertBanner = (index + 1) % 12 === 0 && sortedBanners.length > 0;
                                         if (shouldInsertBanner) bannerIndex = (bannerIndex + 1) % sortedBanners.length;
 
@@ -388,14 +378,29 @@ const SearchPage = ({
                                     })}
 
                                 </ul>
-                                {filteredProducts.length === 0 && (
+                                {filteredProducts.length === 0 && !loading && (
                                     <h6
                                         className="fs--40 text-center mt-90"
                                     >
                                         No Products Found
                                     </h6>
                                 )}
-                                {pageLimit < filteredProducts.length && (
+                                <h6
+                                    className="fs--40 text-center mt-90"
+                                >
+                                    {searchCompleted}
+                                </h6>
+                                {loading &&
+                                    <div className="mt-50 d-flex justify-content-center">
+                                        <div className="loader-small"></div>
+                                    </div>
+                                }
+                                {!loading && isPageLoading &&
+                                    <div className="mt-50 d-flex justify-content-center">
+                                        <div className="loader-small"></div>
+                                    </div>
+                                }
+                                {!loading && !isPageLoading && !searchCompleted && filteredProducts.length > 0 && (
                                     <div className="flex-center">
                                         <AutoClickWrapper onIntersect={handleAutoSeeMore}>
                                             <button

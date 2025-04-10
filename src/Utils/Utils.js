@@ -259,14 +259,23 @@ export const decryptProductPrices = (data) => {
     'formattedPrice',
     'price',
     'discountedPrice',
+    'productPrice'
   ];
   if (data.length > 0) {
     data = data.map(val => {
       if (val.data?.productSets?.length) {
         val.data.productSets = val.data.productSets.map(set => {
-          set.price = encryptField(set.price);
+          set.price = decryptField(set.price);
+          if (set.productPrice) {
+            set.productPrice = decryptField(set.productPrice);
+          }
           return set;
         });
+      }
+      if (val.data.pricingTiers?.length) {
+        val.data.pricingTiers.forEach(val2 => {
+          decryptPriceFields(val2, fieldsToDecrypt);
+        })
       }
       if (val.data.variantData) {
         val.data.variantData = val.data.variantData.map(val2 => {
@@ -351,10 +360,22 @@ export const sanitizeProduct = (product) => {
       'brand', 'collections', 'currency', 'discount', 'discountedPrice',
       'formattedDiscountedPrice', 'inStock', 'inventoryItem', 'manageVariants',
       'numericId', 'productType', 'quantityInStock', 'ribbon', 'ribbons',
-      'seoData', 'trackInventory'
+      'seoData', 'trackInventory', 'productOptions', 'link-products-slug', 'productPageUrl', 'pricePerUnitData'
     ];
     sanitizedProduct.product = sanitizeObject(sanitizedProduct.product, nestedKeysToRemove);
   }
 
   return sanitizedProduct;
+};
+
+export const attachVariantsAndSnapshots = (data, productSnapshotData, productVariantsData) => {
+  const updatedData = data.map((product) => {
+    if (!product._id) return;
+    const productId = product.product._id;
+    product.productSnapshotData = productSnapshotData.filter(x => x.productId === productId);
+    product.productVariantsData = productVariantsData.filter(x => x.productId === productId);
+    return product;
+  });
+
+  return updatedData;
 };
