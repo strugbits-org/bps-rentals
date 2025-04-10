@@ -367,15 +367,3 @@ export const sanitizeProduct = (product) => {
 
   return sanitizedProduct;
 };
-
-export const attachVariantsAndSnapshots = (data, productSnapshotData, productVariantsData) => {
-  const updatedData = data.map((product) => {
-    if (!product._id) return;
-    const productId = product.product._id;
-    product.productSnapshotData = productSnapshotData.filter(x => x.productId === productId);
-    product.productVariantsData = productVariantsData.filter(x => x.productId === productId);
-    return product;
-  });
-
-  return updatedData;
-};

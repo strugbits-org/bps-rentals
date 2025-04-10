@@ -4,14 +4,13 @@ import ProductPostPage from '@/components/Product/Index';
 
 import {
   getAllCategoriesData,
-  fetchAllProductsPaths,
-  // getAllProducts,
   fetchBestSellers,
   fetchAllProducts,
   fetchProductsByIds,
   fetchProductById,
   getPairedProducts,
-  getProductVariantsImages
+  getProductVariantsImages,
+  getProductVariants
 } from '@/Services/ProductsApis';
 import { getPageMetaData, getProductBlogsData, getProductPortfolioData } from "@/Services/SectionsApis";
 import { buildMetadata, removeHTMLTags } from '@/Utils/Utils';
@@ -58,13 +57,6 @@ export async function generateMetadata({ params }) {
 
 export const generateStaticParams = async () => {
   return [];
-  try {
-    const paths = await fetchAllProductsPaths() || [];
-    return paths.slice(0, 1);
-  } catch (error) {
-    logError("Error generating static params(product page):", error);
-    return [];
-  }
 }
 
 export default async function Page({ params }) {
@@ -76,17 +68,16 @@ export default async function Page({ params }) {
     const [
       pairedProducts,
       productSnapshotData,
-      // products,
+      productVariantsData,
       categoriesData,
       bestSeller
     ] = await Promise.all([
       getPairedProducts(selectedProductId),
       getProductVariantsImages([selectedProductId]),
-      // getAllProducts({}),
+      getProductVariants(selectedProductId),
       getAllCategoriesData(),
       fetchBestSellers()
     ]);
-    // const selectedProduct = products.find((x) => decodeURIComponent(x.product.slug) === slug);
     if (!selectedProduct) {
       throw new Error(`Product Data not found for slug: ${slug}`);
     }
@@ -99,21 +90,17 @@ export default async function Page({ params }) {
       getProductPortfolioData(selectedProductId),
     ]);
 
-    // const dataMap = new Map(selectedProduct.productVariantsData.map(({ sku, _id }) => [sku, _id]));
+    const dataMap = new Map(productVariantsData.map(({ sku, _id }) => [sku, _id]));
     selectedProduct.productSnapshotData = productSnapshotData;
 
-    selectedProduct.variantData = selectedProduct.variantData.map((variant) => {
-      variant.variant.variantId = variant.variant._id;
-      return variant;
-    });
-    // selectedProduct.variantData = selectedProduct.variantData.reduce((acc, variant) => {
-    //   const variantId = dataMap.get(variant.sku);
-    //   if (variantId) {
-    //     variant.variant.variantId = variantId;
-    //     acc.push(variant);
-    //   }
-    //   return acc;
-    // }, []);
+    selectedProduct.variantData = selectedProduct.variantData.reduce((acc, variant) => {
+      const variantId = dataMap.get(variant.sku);
+      if (variantId) {
+        variant.variant.variantId = variantId;
+        acc.push(variant);
+      }
+      return acc;
+    }, []);
 
     if (selectedProduct.variantData.length === 0) {
       throw new Error(`No Variants found for product/slug: ${slug}`);
