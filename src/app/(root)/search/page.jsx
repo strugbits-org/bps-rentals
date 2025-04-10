@@ -34,9 +34,7 @@ export default async function Page() {
       locations,
       marketsData,
       colorsData,
-      bestSeller,
-      productSnapshotData,
-      variantsData
+      bestSeller
     ] = await Promise.all([
       getHomeSectionDetails(),
       getRentalsBanners(),

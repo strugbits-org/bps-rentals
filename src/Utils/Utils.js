@@ -259,14 +259,23 @@ export const decryptProductPrices = (data) => {
     'formattedPrice',
     'price',
     'discountedPrice',
+    'productPrice'
   ];
   if (data.length > 0) {
     data = data.map(val => {
       if (val.data?.productSets?.length) {
         val.data.productSets = val.data.productSets.map(set => {
-          set.price = encryptField(set.price);
+          set.price = decryptField(set.price);
+          if (set.productPrice) {
+            set.productPrice = decryptField(set.productPrice);
+          }
           return set;
         });
+      }
+      if (val.data.pricingTiers?.length) {
+        val.data.pricingTiers.forEach(val2 => {
+          decryptPriceFields(val2, fieldsToDecrypt);
+        })
       }
       if (val.data.variantData) {
         val.data.variantData = val.data.variantData.map(val2 => {

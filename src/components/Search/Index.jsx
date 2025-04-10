@@ -77,7 +77,7 @@ const SearchPage = ({
     };
 
     const setInitialValues = async () => {
-
+        setLoading(true);
         if (colorsData) {
             const categoryId = "00000000-000000-000000-000000000001";
             const filteredColor = colorsData.find((x) => x.category === categoryId);
@@ -159,7 +159,9 @@ const SearchPage = ({
     }, [bannersData]);
 
     useEffect(() => {
-        markPageLoaded(true);
+        setTimeout(() => {
+            markPageLoaded(true);
+        }, 400);
         setInitialValues();
     }, [searchParams]);
 
