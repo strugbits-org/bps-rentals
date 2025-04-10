@@ -159,7 +159,9 @@ const SearchPage = ({
     }, [bannersData]);
 
     useEffect(() => {
-        markPageLoaded(true);
+        setTimeout(() => {
+            markPageLoaded(true);
+        }, 400);
         setInitialValues();
     }, [searchParams]);
 
