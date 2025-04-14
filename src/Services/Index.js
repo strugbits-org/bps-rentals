@@ -29,7 +29,7 @@ export const postForm = async (name, payload) => {
 export const getRentalsBanners = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsBanners",
+      dataCollectionId: "DemoBanners",
       includeReferencedItems: ["categories"],
       limit: "infinite",
     });

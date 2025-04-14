@@ -144,7 +144,8 @@ const getDataFetchFunction = async (payload) => {
       'discountedPrice',
       'productPrice'
     ];
-    // Encrypt specific fields if needed
+
+    // Encrypt specific fields if required (ensure these fields are also handled in the decryption logic, particularly in the product sorting API where the collection is being updated)
     const collectionsToEncrypt = ["Stores/Products", "locationFilteredVariant", "RentalsNewArrivals"];
     if (data._items.length > 0 && collectionsToEncrypt.includes(dataCollectionId) && encodePrice) {
       data._items = data._items.map(val => {

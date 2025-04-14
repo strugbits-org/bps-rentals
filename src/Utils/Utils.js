@@ -90,12 +90,13 @@ export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) 
   const slug = "link-copy-of-category-name-2";
 
   // Create an array for the final placement of banners
-  const finalBannersArray = Array(bannersData.length).fill(null);
+  const filteredBanners = filterItemsBySchedule(bannersData);
+  const finalBannersArray = Array(filteredBanners.length).fill(null);
 
   // Separate banners into fixed and dynamic
   const dynamicBanners = [];
 
-  bannersData.forEach((banner) => {
+  filteredBanners.forEach((banner) => {
     const { categories = [], desiredPosition, priority = 0 } = banner;
 
     // Check if the banner matches the current category
