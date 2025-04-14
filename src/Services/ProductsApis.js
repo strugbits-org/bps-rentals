@@ -170,13 +170,54 @@ export const fetchAllProducts = async (slug) => {
     logError("Error fetching all products:", error);
   }
 };
+export const fetchProductPaths = async ({ limit, skip = 0 }) => {
+  try {
+    const payload = {
+      dataCollectionId: "locationFilteredVariant",
+      includeReferencedItems: ["product"],
+      limit: limit,
+      skip: skip,
+      returnTotalCount: true,
+      ne: [
+        {
+          key: "hidden",
+          value: true,
+        },
+        {
+          key: "isF1Exclusive",
+          value: true,
+        },
+      ],
+    };
+    const response = await getDataFetchFunction(payload);
+
+    if (response && response._items) {
+      const totalCount = response._totalCount || 0;
+      const paths = response._items
+        .map(x => x.data?.product?.slug)
+        .filter(slug => slug !== undefined)
+        .map(slug => ({ slug }));
+
+      return {
+        paths,
+        totalCount,
+      };
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    logError("Error fetching all products:", error);
+  }
+};
+
 export const fetchAllProductsPaths = async () => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
       includeReferencedItems: ["product"],
-      limit: "infinite",
-      increasedLimit: 700,
+      limit: 100,
+      // limit: "infinite",
+      // increasedLimit: 700,
       ne: [
         {
           key: "hidden",
@@ -227,7 +268,7 @@ export const searchProducts = async ({ term, productSets, location, colors = [],
 
     if (location) baseFilters.hasSome = [{ key: "location", values: location }];
     if (colors.length > 0) baseFilters.hasSome = [{ key: "colors", values: colors }];
-    if (productSets) {      
+    if (productSets) {
       baseFilters.ne.push({
         key: "productSets",
         value: []
@@ -478,7 +519,7 @@ export const getPairWithData = async () => {
       dataCollectionId: "BPSPairItWith",
       increasedLimit: 700,
       limit: "infinite",
-    });    
+    });
 
     if (response && response._items) {
       return response._items.map((x) => x.data);
