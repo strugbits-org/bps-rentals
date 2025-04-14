@@ -10,7 +10,6 @@ import QuoteConfirmedModal from "../Common/Modals/QuoteConfirmedModal";
 import Modal from "../Common/Modals/Modal";
 import useUserData from "@/Hooks/useUserData";
 import logError from "@/Utils/ServerActions";
-import { decryptField, decryptPriceFields } from "@/Utils/Encrypt";
 import { useCookies } from "react-cookie";
 import { getCartPricingTiersData } from "@/Services/ProductsApis";
 import { findPriceTier } from "@/Utils/Utils";
