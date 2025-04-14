@@ -48,6 +48,7 @@ const SearchPage = ({
 
     const handleFilterChange = async (colors = []) => {
         setLoading(true);
+        setSearchCompleted(false);
         try {
             const selectedColors = colors?.length > 0 ? colors.filter((x) => x.checked).map((x) => x.label) : filterColors.filter((x) => x.checked).map((x) => x.label);
             const products = await searchProducts({ term: searchTerm, location: cookies.location, colors: selectedColors, pageLimit: pageSize, productSets: productSetsFilter });
@@ -78,6 +79,7 @@ const SearchPage = ({
 
     const setInitialValues = async () => {
         setLoading(true);
+        setSearchCompleted(false);
         if (colorsData) {
             const categoryId = "00000000-000000-000000-000000000001";
             const filteredColor = colorsData.find((x) => x.category === categoryId);
@@ -96,25 +98,6 @@ const SearchPage = ({
         if (filteredData.length < pageSize) setSearchCompleted(true);
         setFilteredProducts(filteredData);
 
-        // if ((cookies?.searchFilterColors?.length !== 0 || cookies?.searchShowProductSets) && cookies?.searchLoadPrevState) {
-        //     if (cookies.searchFilterColors) setFilterColors(cookies.searchFilterColors);
-        //     if (cookies.searchShowProductSets) setproductSetsFilter(cookies.searchShowProductSets);
-        //     if (cookies.searchLastActiveColor) setLastActiveColor(cookies.searchLastActiveColor);
-        //     handleFilterChange({ filteredData, colors: cookies.searchFilterColors || [] });
-        // }
-
-        // if (cookies?.searchLoadPrevState) {
-        //     setTimeout(() => {
-        //         if (cookies.searchScrollPosition) window.scrollTo(0, cookies.searchScrollPosition);
-        //         setTimeout(() => {
-        //             updatedWatched(true, true);
-        //             setLoading(false);
-        //             setEnableFilterTrigger(true);
-        //             clearPageState();
-        //         }, 500);
-        //     }, 500);
-        // } else {
-        // }
         setTimeout(() => {
             updatedWatched(true, true);
             setLoading(false);
@@ -124,17 +107,6 @@ const SearchPage = ({
 
         const savedProducts = await getSavedProductData();
         setSavedProductsData(savedProducts);
-
-        // while (filteredProducts.length < 120) {
-        //     const filteredData = await searchProducts({ term: searchTerm, location: cookies.location, pageLimit: pageSize, skip: filteredProducts.length });
-        //     const updatedProductsData = [...filteredProducts, ...filteredData];            
-        //     setFilteredProducts(updatedProductsData);
-
-        //     if (filteredData.length < pageSize) {
-        //         setSearchCompleted(true);
-        //         break;
-        //     }
-        // }
 
     };
     useEffect(() => {
