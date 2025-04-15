@@ -86,6 +86,21 @@ export const shuffleArray = (array) => {
   return array;
 };
 
+export const filterItemsBySchedule = (items) => {
+  const now = new Date();
+  return items.filter((banner) => {
+    if (!banner.scheduled) return true;
+    const startDate = banner.visibilityStartDate ? new Date(banner.visibilityStartDate.$date) : null;
+    const endDate = banner.visibilityEndDate ? new Date(banner.visibilityEndDate.$date) : null;
+
+    return (
+      (!startDate || now >= startDate) &&
+      (!endDate || now <= endDate)
+    );
+  });
+};
+
+// Organizes banners based on desired positions, category matching, and scoring
 export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) => {
   const slug = "link-copy-of-category-name-2";
 
@@ -110,14 +125,49 @@ export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) 
 
       // Ensure the desired position is within bounds
       if (index >= 0 && index < finalBannersArray.length) {
-        finalBannersArray[index] = { ...banner };
+        // If position is already taken, place the one with higher priority
+        if (finalBannersArray[index]) {
+          if (priority > finalBannersArray[index].priority) {
+            // Move the existing banner to dynamic pool
+            dynamicBanners.push({
+              ...finalBannersArray[index],
+              score: (finalBannersArray[index].isCategoryMatch ? 10 : 0) +
+                finalBannersArray[index].priority +
+                Math.random() * random
+            });
+
+            // Place the new banner in the fixed position
+            finalBannersArray[index] = { ...banner, isCategoryMatch };
+          } else {
+            // Add current banner to dynamic pool
+            dynamicBanners.push({
+              ...banner,
+              score: (isCategoryMatch ? 10 : 0) + priority + Math.random() * random,
+              isCategoryMatch
+            });
+          }
+        } else {
+          // Position is free, place the banner
+          finalBannersArray[index] = { ...banner, isCategoryMatch };
+        }
+      } else {
+        // Position out of bounds, treat as dynamic
+        dynamicBanners.push({
+          ...banner,
+          score: (isCategoryMatch ? 10 : 0) + priority + Math.random() * random,
+          isCategoryMatch
+        });
       }
     } else {
       // Add dynamic banners for later placement
       const categoryMatchScore = isCategoryMatch ? 10 : 0;
       const randomScore = Math.random() * random;
       const dynamicScore = categoryMatchScore + priority + randomScore;
-      dynamicBanners.push({ ...banner, score: dynamicScore });
+      dynamicBanners.push({
+        ...banner,
+        score: dynamicScore,
+        isCategoryMatch
+      });
     }
   });
 
@@ -131,8 +181,18 @@ export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) 
       finalBannersArray[i] = dynamicBanners[dynamicIndex++];
     }
   }
+
+  finalBannersArray.forEach(banner => {
+    if (banner) {
+      delete banner.score;
+      delete banner.isCategoryMatch;
+    }
+  });
+
+  console.log("Final Banners Array:", finalBannersArray);
+
   return finalBannersArray;
-}
+};
 
 export const compareArray = (arr1, arr2) => {
   const set1 = new Set(arr1);
@@ -327,20 +387,6 @@ export const findPriceTier = ({ price, variantPrice, pricingTiers = [], tier, qu
 
   const fallbackPrice = normalizedPrice(variantPrice, quantity);
   return formatPriceValue(fallbackPrice);
-};
-
-export const filterItemsBySchedule = (items) => {
-  const now = new Date();
-  return items.filter((banner) => {
-    if (!banner.scheduled) return true;
-    const startDate = banner.visibilityStartDate ? new Date(banner.visibilityStartDate.$date) : null;
-    const endDate = banner.visibilityEndDate ? new Date(banner.visibilityEndDate.$date) : null;
-
-    return (
-      (!startDate || now >= startDate) &&
-      (!endDate || now <= endDate)
-    );
-  });
 };
 
 export const sanitizeProducts = (products) => products.map(sanitizeProduct);

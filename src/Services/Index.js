@@ -31,6 +31,7 @@ export const getRentalsBanners = async () => {
     const response = await getDataFetchFunction({
       dataCollectionId: "DemoBanners",
       includeReferencedItems: ["categories"],
+      contains: ["title", "Banner"],
       limit: "infinite",
     });
     if (response && response._items) {
