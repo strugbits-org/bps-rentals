@@ -111,85 +111,54 @@ const filterDefaultBanner = (banners) => {
   return regularBanners.length ? regularBanners : defaultBanners;
 };
 
-// Organizes banners based on desired positions, category matching, and scoring
 export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) => {
   const slug = "link-copy-of-category-name-2";
 
-  
+  // Create an array for the final placement of banners
   const activeBanners = filterItemsBySchedule(bannersData);
   const filteredBanners = filterDefaultBanner(activeBanners);
   const finalBannersArray = Array(filteredBanners.length).fill(null);
 
+  // Separate banners into fixed and dynamic
   const dynamicBanners = [];
 
   filteredBanners.forEach((banner) => {
     const { categories = [], desiredPosition, priority = 0 } = banner;
 
+    // Check if the banner matches the current category
     const isCategoryMatch = categories.some(
       (category) => category?.[slug] === currentCategory
     );
 
     if (isCategoryMatch && desiredPosition !== undefined) {
+      // Adjust desiredPosition (1-based) to 0-based index
       const index = desiredPosition - 1;
 
+      // Ensure the desired position is within bounds
       if (index >= 0 && index < finalBannersArray.length) {
-        if (finalBannersArray[index]) {
-          if (priority > finalBannersArray[index].priority) {
-            dynamicBanners.push({
-              ...finalBannersArray[index],
-              score: (finalBannersArray[index].isCategoryMatch ? 10 : 0) +
-                finalBannersArray[index].priority +
-                Math.random() * random
-            });
-
-            finalBannersArray[index] = { ...banner, isCategoryMatch };
-          } else {
-            dynamicBanners.push({
-              ...banner,
-              score: (isCategoryMatch ? 10 : 0) + priority + Math.random() * random,
-              isCategoryMatch
-            });
-          }
-        } else {
-          finalBannersArray[index] = { ...banner, isCategoryMatch };
-        }
-      } else {
-        dynamicBanners.push({
-          ...banner,
-          score: (isCategoryMatch ? 10 : 0) + priority + Math.random() * random,
-          isCategoryMatch
-        });
+        finalBannersArray[index] = { ...banner };
       }
     } else {
+      // Add dynamic banners for later placement
       const categoryMatchScore = isCategoryMatch ? 10 : 0;
       const randomScore = Math.random() * random;
       const dynamicScore = categoryMatchScore + priority + randomScore;
-      dynamicBanners.push({
-        ...banner,
-        score: dynamicScore,
-        isCategoryMatch
-      });
+      dynamicBanners.push({ ...banner, score: dynamicScore });
     }
   });
 
+  // Sort dynamic banners by their score
   dynamicBanners.sort((a, b) => b.score - a.score);
 
+  // Fill empty slots in the final array with dynamic banners
   let dynamicIndex = 0;
   for (let i = 0; i < finalBannersArray.length; i++) {
     if (!finalBannersArray[i] && dynamicIndex < dynamicBanners.length) {
       finalBannersArray[i] = dynamicBanners[dynamicIndex++];
     }
   }
-
-  finalBannersArray.forEach(banner => {
-    if (banner) {
-      delete banner.score;
-      delete banner.isCategoryMatch;
-    }
-  });
-
   return finalBannersArray;
-};
+}
 
 export const compareArray = (arr1, arr2) => {
   const set1 = new Set(arr1);
