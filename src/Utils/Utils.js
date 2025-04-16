@@ -100,35 +100,41 @@ export const filterItemsBySchedule = (items) => {
   });
 };
 
+const filterDefaultBanner = (banners) => {
+  const defaultBanners = [];
+  const regularBanners = [];
+
+  for (const banner of banners) {
+    (banner.default ? defaultBanners : regularBanners).push(banner);
+  }
+
+  return regularBanners.length ? regularBanners : defaultBanners;
+};
+
 // Organizes banners based on desired positions, category matching, and scoring
 export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) => {
   const slug = "link-copy-of-category-name-2";
 
-  // Create an array for the final placement of banners
-  const filteredBanners = filterItemsBySchedule(bannersData);
+  
+  const activeBanners = filterItemsBySchedule(bannersData);
+  const filteredBanners = filterDefaultBanner(activeBanners);
   const finalBannersArray = Array(filteredBanners.length).fill(null);
 
-  // Separate banners into fixed and dynamic
   const dynamicBanners = [];
 
   filteredBanners.forEach((banner) => {
     const { categories = [], desiredPosition, priority = 0 } = banner;
 
-    // Check if the banner matches the current category
     const isCategoryMatch = categories.some(
       (category) => category?.[slug] === currentCategory
     );
 
     if (isCategoryMatch && desiredPosition !== undefined) {
-      // Adjust desiredPosition (1-based) to 0-based index
       const index = desiredPosition - 1;
 
-      // Ensure the desired position is within bounds
       if (index >= 0 && index < finalBannersArray.length) {
-        // If position is already taken, place the one with higher priority
         if (finalBannersArray[index]) {
           if (priority > finalBannersArray[index].priority) {
-            // Move the existing banner to dynamic pool
             dynamicBanners.push({
               ...finalBannersArray[index],
               score: (finalBannersArray[index].isCategoryMatch ? 10 : 0) +
@@ -136,10 +142,8 @@ export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) 
                 Math.random() * random
             });
 
-            // Place the new banner in the fixed position
             finalBannersArray[index] = { ...banner, isCategoryMatch };
           } else {
-            // Add current banner to dynamic pool
             dynamicBanners.push({
               ...banner,
               score: (isCategoryMatch ? 10 : 0) + priority + Math.random() * random,
@@ -147,11 +151,9 @@ export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) 
             });
           }
         } else {
-          // Position is free, place the banner
           finalBannersArray[index] = { ...banner, isCategoryMatch };
         }
       } else {
-        // Position out of bounds, treat as dynamic
         dynamicBanners.push({
           ...banner,
           score: (isCategoryMatch ? 10 : 0) + priority + Math.random() * random,
@@ -159,7 +161,6 @@ export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) 
         });
       }
     } else {
-      // Add dynamic banners for later placement
       const categoryMatchScore = isCategoryMatch ? 10 : 0;
       const randomScore = Math.random() * random;
       const dynamicScore = categoryMatchScore + priority + randomScore;
@@ -171,10 +172,8 @@ export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) 
     }
   });
 
-  // Sort dynamic banners by their score
   dynamicBanners.sort((a, b) => b.score - a.score);
 
-  // Fill empty slots in the final array with dynamic banners
   let dynamicIndex = 0;
   for (let i = 0; i < finalBannersArray.length; i++) {
     if (!finalBannersArray[i] && dynamicIndex < dynamicBanners.length) {
@@ -188,8 +187,6 @@ export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) 
       delete banner.isCategoryMatch;
     }
   });
-
-  console.log("Final Banners Array:", finalBannersArray);
 
   return finalBannersArray;
 };

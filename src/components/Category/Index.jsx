@@ -199,13 +199,13 @@ const CategoryPage = ({
           setEnableFilterTrigger(true);
           clearPageState();
         }, 500);
-      }, 1000);
+      }, 800);
     } else {
       setTimeout(() => {
         markPageLoaded(true);
         setEnableFilterTrigger(true);
         clearPageState();
-      }, 1000);
+      }, 800);
     }
 
     const savedProducts = await getSavedProductData();
@@ -226,9 +226,6 @@ const CategoryPage = ({
   useEffect(() => {
     const slugField = "link-copy-of-category-name-2";
     const currentCategory = selectedCategoryData?.parentCollection?.[slugField] || selectedCategoryData?.[slugField] || "";
-
-    console.log("bannersData", bannersData);
-    
     const banners = scoreBasedBanners({ bannersData, currentCategory });    
 
     setSortedBanners(banners);
