@@ -86,11 +86,38 @@ export const shuffleArray = (array) => {
   return array;
 };
 
+export const filterItemsBySchedule = (items) => {
+  const now = new Date();
+  return items.filter((banner) => {
+    if (!banner.scheduled) return true;
+    const startDate = banner.visibilityStartDate ? new Date(banner.visibilityStartDate.$date) : null;
+    const endDate = banner.visibilityEndDate ? new Date(banner.visibilityEndDate.$date) : null;
+    if (!startDate && !endDate) return false;
+
+    return (
+      (!startDate || now >= startDate) &&
+      (!endDate || now <= endDate)
+    );
+  });
+};
+
+const filterDefaultBanner = (banners) => {
+  const defaultBanners = [];
+  const regularBanners = [];
+
+  for (const banner of banners) {
+    (banner.default ? defaultBanners : regularBanners).push(banner);
+  }
+
+  return regularBanners.length ? regularBanners : defaultBanners;
+};
+
 export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) => {
   const slug = "link-copy-of-category-name-2";
 
   // Create an array for the final placement of banners
-  const filteredBanners = filterItemsBySchedule(bannersData);
+  const activeBanners = filterItemsBySchedule(bannersData);
+  const filteredBanners = filterDefaultBanner(activeBanners);
   const finalBannersArray = Array(filteredBanners.length).fill(null);
 
   // Separate banners into fixed and dynamic
@@ -107,18 +134,21 @@ export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) 
     if (isCategoryMatch && desiredPosition !== undefined) {
       // Adjust desiredPosition (1-based) to 0-based index
       const index = desiredPosition - 1;
-
       // Ensure the desired position is within bounds
-      if (index >= 0 && index < finalBannersArray.length) {
+      if (
+        index >= 0 &&
+        index < finalBannersArray.length &&
+        finalBannersArray[index] === null
+      ) {
         finalBannersArray[index] = { ...banner };
+        return; // Placement successful
       }
-    } else {
-      // Add dynamic banners for later placement
-      const categoryMatchScore = isCategoryMatch ? 10 : 0;
-      const randomScore = Math.random() * random;
-      const dynamicScore = categoryMatchScore + priority + randomScore;
-      dynamicBanners.push({ ...banner, score: dynamicScore });
     }
+    // Add dynamic banners for later placement
+    const categoryMatchScore = isCategoryMatch ? 10 : 0;
+    const randomScore = Math.random() * random;
+    const dynamicScore = categoryMatchScore + priority + randomScore;
+    dynamicBanners.push({ ...banner, score: dynamicScore });
   });
 
   // Sort dynamic banners by their score
@@ -132,7 +162,7 @@ export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) 
     }
   }
   return finalBannersArray;
-}
+};
 
 export const compareArray = (arr1, arr2) => {
   const set1 = new Set(arr1);
@@ -327,20 +357,6 @@ export const findPriceTier = ({ price, variantPrice, pricingTiers = [], tier, qu
 
   const fallbackPrice = normalizedPrice(variantPrice, quantity);
   return formatPriceValue(fallbackPrice);
-};
-
-export const filterItemsBySchedule = (items) => {
-  const now = new Date();
-  return items.filter((banner) => {
-    if (!banner.scheduled) return true;
-    const startDate = banner.visibilityStartDate ? new Date(banner.visibilityStartDate.$date) : null;
-    const endDate = banner.visibilityEndDate ? new Date(banner.visibilityEndDate.$date) : null;
-
-    return (
-      (!startDate || now >= startDate) &&
-      (!endDate || now <= endDate)
-    );
-  });
 };
 
 export const sanitizeProducts = (products) => products.map(sanitizeProduct);
