@@ -78,6 +78,7 @@ const SearchPage = ({
     };
 
     const setInitialValues = async () => {
+        setSearchCompleted(false);
         setLoading(true);
         setSearchCompleted(false);
         if (colorsData) {
@@ -94,20 +95,42 @@ const SearchPage = ({
         const searchTerm = searchParams.get("query");
         if (searchTerm) setSearchTerm(searchTerm);
 
-        const filteredData = await searchProducts({ term: searchTerm, location: cookies.location, pageLimit: pageSize });
-        if (filteredData.length < pageSize) setSearchCompleted(true);
-        setFilteredProducts(filteredData);
 
-        setTimeout(() => {
-            updatedWatched(true, true);
-            setLoading(false);
-            setEnableFilterTrigger(true);
-            clearPageState();
-        }, 500);
+        if (cookies?.searchLoadPrevState) {
+            if ((cookies?.searchFilterColors?.length !== 0 || cookies?.searchShowProductSets) && cookies?.searchLoadPrevState) {
+                if (cookies.searchFilterColors) setFilterColors(cookies.searchFilterColors);
+                if (cookies.searchShowProductSets) setproductSetsFilter(cookies.searchShowProductSets);
+                if (cookies.searchLastActiveColor) setLastActiveColor(cookies.searchLastActiveColor);
+
+                const selectedColors = cookies.searchFilterColors.filter((x) => x.checked).map((x) => x.label) || [];
+                const filteredData = await searchProducts({ term: searchTerm, location: cookies.location, pageLimit: cookies.searchPageSize || pageSize, productSets: cookies.searchShowProductSets, colors: selectedColors });
+                if (filteredData.length < pageSize) setSearchCompleted(true);
+                setFilteredProducts(filteredData);
+            }
+            setTimeout(() => {
+                setLoading(false);
+                updatedWatched(true, true);
+            }, 300);
+            setTimeout(() => {
+                if (cookies.searchScrollPosition) window.scrollTo(0, cookies.searchScrollPosition);
+                setEnableFilterTrigger(true);
+                clearPageState();
+            }, 800);
+        } else {
+            const filteredData = await searchProducts({ term: searchTerm, location: cookies.location, pageLimit: pageSize });
+            if (filteredData.length < pageSize) setSearchCompleted(true);
+            setFilteredProducts(filteredData);
+            setTimeout(() => {
+                updatedWatched(true, true);
+                setLoading(false);
+                setEnableFilterTrigger(true);
+                clearPageState();
+            }, 500);
+        }
+
 
         const savedProducts = await getSavedProductData();
         setSavedProductsData(savedProducts);
-
     };
     useEffect(() => {
         setFilterLocations(
@@ -231,6 +254,8 @@ const SearchPage = ({
 
     const savePageState = () => {
         const scrollPosition = window.scrollY;
+        setCookie("searchFilterColors", filterColors, { path: "/" });
+        setCookie("searchShowProductSets", productSetsFilter, { path: "/" });
         setCookie("searchScrollPosition", scrollPosition, { path: "/" });
         setCookie("searchPageSize", filteredProducts.length, { path: "/" });
         setCookie("searchLastActiveColor", lastActiveColor, { path: "/" });
@@ -241,8 +266,8 @@ const SearchPage = ({
         removeCookie("searchShowProductSets", { path: "/" });
         removeCookie("searchScrollPosition", { path: "/" });
         removeCookie("searchPageSize", { path: "/" });
-        removeCookie("searchLoadPrevState", { path: "/" });
         removeCookie("searchLastActiveColor", { path: "/" });
+        removeCookie("searchLoadPrevState", { path: "/" });
     };
 
     return (

@@ -57,7 +57,7 @@ const ArticleSection = ({ data }) => {
                               <div className="date">
                                 <span>
                                   {" "}
-                                  {formatDate(lastPublishedDate.$date)}
+                                  {formatDate(lastPublishedDate)}
                                 </span>
                               </div>
                             </div>

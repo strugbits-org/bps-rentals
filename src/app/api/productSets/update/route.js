@@ -15,23 +15,17 @@ export const POST = async (req) => {
     const body = await req.json();
 
     const { id, productSets } = body;
-    const productData = await client.items.queryDataItems({ dataCollectionId: "locationFilteredVariant" }).eq("product", id).find();
+    const productData = await client.items.query("locationFilteredVariant").eq("product", id).find();
 
-    if (productData._items.length === 0) {
+    if (productData.items.length === 0) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    const { _id, dataCollectionId, data } = productData._items[0];
+    const data = productData.items[0];
 
-    await client.items.updateDataItem(_id, {
-      dataCollectionId,
-      dataItem: {
-        _id,
-        data: {
-          ...data,
-          productSets
-        }
-      },
+    await client.items.update("locationFilteredVariant", {
+      ...data,
+      productSets
     });
     return NextResponse.json(
       {
