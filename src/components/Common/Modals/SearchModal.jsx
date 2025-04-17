@@ -451,7 +451,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                       </div>
                                       <div className="date">
                                         <span>
-                                          {formatDate(blogRef.lastPublishedDate.$date)}
+                                          {formatDate(blogRef.lastPublishedDate)}
                                         </span>
                                       </div>
                                     </div>

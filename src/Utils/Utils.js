@@ -197,8 +197,8 @@ export const formatCustomDate = (dateString) => {
 export const quoteDateFormatter = (date) => {
   if (typeof date === "string") {
     return new Date(date).toISOString().split("T")[0];
-  } else if (date && date.$date) {
-    return new Date(date.$date).toISOString().split("T")[0];
+  } else if (date && date) {
+    return new Date(date).toISOString().split("T")[0];
   }
   return "";
 };
@@ -264,8 +264,8 @@ export const decryptProductPrices = (data) => {
   ];
   if (data.length > 0) {
     data = data.map(val => {
-      if (val.data?.productSets?.length) {
-        val.data.productSets = val.data.productSets.map(set => {
+      if (val?.productSets?.length) {
+        val.productSets = val.productSets.map(set => {
           set.price = decryptField(set.price);
           if (set.productPrice) {
             set.productPrice = decryptField(set.productPrice);
@@ -273,18 +273,18 @@ export const decryptProductPrices = (data) => {
           return set;
         });
       }
-      if (val.data.pricingTiers?.length) {
-        val.data.pricingTiers.forEach(val2 => {
+      if (val.pricingTiers?.length) {
+        val.pricingTiers.forEach(val2 => {
           decryptPriceFields(val2, fieldsToDecrypt);
         })
       }
-      if (val.data.variantData) {
-        val.data.variantData = val.data.variantData.map(val2 => {
+      if (val.variantData) {
+        val.variantData = val.variantData.map(val2 => {
           decryptPriceFields(val2.variant, fieldsToDecrypt);
           return val2;
         });
       }
-      decryptPriceFields(val.data.product, fieldsToDecrypt);
+      decryptPriceFields(val.product, fieldsToDecrypt);
       return val;
     });
   }

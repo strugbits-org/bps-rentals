@@ -37,7 +37,7 @@ export const POST = async (req) => {
       increasedLimit: 500
     });
 
-    const data = response._items.filter(x => x.data.product?._id).map((x) => x.data);    
+    const data = response.items.filter(x => x.product?._id);    
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
     logError(error);

@@ -63,11 +63,9 @@ const getDataFetchFunction = async (payload) => {
     const client = await createWixClientApiStrategy();
 
     // Set up query options
-    let dataQuery = client.items.queryDataItems({
-      dataCollectionId,
-      includeReferencedItems,
-      returnTotalCount: returnTotalCount || limit === "infinite",
-    });
+    const options = { returnTotalCount };
+    let dataQuery = client.items.query(dataCollectionId);
+    if (includeReferencedItems && includeReferencedItems.length > 0) includeReferencedItems.forEach(x => dataQuery = dataQuery.include(x));
 
     // Apply filters
     if (contains?.length === 2) dataQuery = dataQuery.contains(contains[0], contains[1]);
@@ -84,7 +82,7 @@ const getDataFetchFunction = async (payload) => {
       let words = search[1].split(/\s+/).filter(Boolean);
       if (correctionEnabled) {
         const productKeywordsData = await getDataFetchFunction({ "dataCollectionId": "ProductKeywords" });
-        const productKeywords = productKeywordsData._items[0]?.data?.keywords || [];
+        const productKeywords = productKeywordsData.items[0]?.keywords || [];
         words = await Promise.all(words.map(word => correctSearchTerm(word, productKeywords)));
       }
       let newQuery = words.slice(1).reduce((query, word) =>
@@ -104,16 +102,16 @@ const getDataFetchFunction = async (payload) => {
     }
 
     // Fetch data with retries
-    let data = await retryAsyncOperation(() => dataQuery.find());
+    let data = await retryAsyncOperation(() => dataQuery.find(options));
 
     // Handle "infinite" limit scenario
     if (limit === "infinite") {
-      let items = data._items;
-      while (items.length < data._totalCount) {
-        data = await retryAsyncOperation(() => data._fetchNextPage());
-        items = [...items, ...data._items];
+      let items = data.items;
+      while (data.hasNext()) {
+        data = await retryAsyncOperation(() => data.next());
+        items = [...items, ...data.items];
       }
-      data._items = items;
+      data.items = items;
     }
 
     if (!encodePrice && !includeVariants) return data;
@@ -125,11 +123,11 @@ const getDataFetchFunction = async (payload) => {
         getAllProductVariants()
       ]);
 
-      data._items = data._items.map((product) => {
-        if (!product.data._id) return;
-        const productId = product.data.product._id;
-        product.data.productSnapshotData = productsVariantImagesData.filter(x => x.productId === productId);
-        product.data.productVariantsData = productsVariantsData.filter(x => x.productId === productId);
+      data.items = data.items.map((product) => {
+        if (!product._id) return;
+        const productId = product.product._id;
+        product.productSnapshotData = productsVariantImagesData.filter(x => x.productId === productId);
+        product.productVariantsData = productsVariantsData.filter(x => x.productId === productId);
         return product;
       });
     }
@@ -147,11 +145,11 @@ const getDataFetchFunction = async (payload) => {
 
     // Encrypt specific fields if required (ensure these fields are also handled in the decryption logic, particularly in the product sorting API where the collection is being updated)
     const collectionsToEncrypt = ["Stores/Products", "locationFilteredVariant", "RentalsNewArrivals"];
-    if (data._items.length > 0 && collectionsToEncrypt.includes(dataCollectionId) && encodePrice) {
-      data._items = data._items.map(val => {
+    if (data.items.length > 0 && collectionsToEncrypt.includes(dataCollectionId) && encodePrice) {
+      data.items = data.items.map(val => {
         if (dataCollectionId === "locationFilteredVariant") {
-          if (val.data?.productSets?.length) {
-            val.data.productSets = val.data.productSets.map(set => {
+          if (val?.productSets?.length) {
+            val.productSets = val.productSets.map(set => {
               set.price = encryptField(set.price);
               set.productPrice = encryptField(set.productPrice);
               if (set.pricingTiers?.length) {
@@ -163,19 +161,21 @@ const getDataFetchFunction = async (payload) => {
               return set;
             });
           }
-          if (val.data.variantData) {
-            val.data.variantData = val.data.variantData.map(val2 => {
+          if (val.variantData) {
+            val.variantData = val.variantData.map(val2 => {
               encryptPriceFields(val2.variant, fieldsToEncrypt);
               return val2;
             });
           }
-          if (val.data.pricingTiers) {
-            val.data.pricingTiers.forEach(val2 => {
+          if (val.pricingTiers) {
+            val.pricingTiers.forEach(val2 => {
               encryptPriceFields(val2, fieldsToEncrypt);
             })
           }
         }
-        encryptPriceFields(val.data.product, fieldsToEncrypt);
+        if (val?.product) {
+          encryptPriceFields(val.product, fieldsToEncrypt);
+        }
         return val;
       });
     }
