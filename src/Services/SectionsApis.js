@@ -1,3 +1,4 @@
+import { getFilteredBanners } from "@/Utils/Utils";
 import getDataFetchFunction from "./FetchFunction";
 import { fetchProductsByIds } from "./ProductsApis";
 import logError from "@/Utils/ServerActions";
@@ -91,16 +92,16 @@ export const getHighlightsSection = async (dataCollectionId) => {
 export const getHotTrendsSection = async () => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "Stores/Collections",
-      eq: [
-        {
-          key: "name",
-          value: "Hot Trends"
-        }
-      ],
+      dataCollectionId: "RentalsHotTrendsBanner",
+      includeReferencedItems: ["category"],
     });
+
+
     if (response && response._items) {
-      return response._items[0].data;
+      const data = response._items.map((x) => x.data);
+      const hotTrendsBanner = getFilteredBanners(data);
+      console.log("hotTrendsBanner", hotTrendsBanner);
+      return hotTrendsBanner[0];
     } else {
       throw new Error("Response does not contain _items");
     }
