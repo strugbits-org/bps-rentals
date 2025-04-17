@@ -33,8 +33,8 @@ export const getRentalsBanners = async () => {
       includeReferencedItems: ["categories"],
       limit: "infinite",
     });
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
+    if (response && response.items) {
+      return response.items;
     } else {
       throw new Error("Response does not contain _items", response);
     }
@@ -50,8 +50,8 @@ export const getQuoteRequestPageContent = async () => {
       dataCollectionId: "RentalsQuoteRequestPage",
     });
 
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -66,8 +66,8 @@ export const getQuoteDetailPageContent = async () => {
       dataCollectionId: "RentalsQuotesDetailPage",
     });
 
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -91,10 +91,10 @@ export const getChatConfiguration = async (origin) => {
         }
       ],
     });
-    if (!response._items || !response._items[0]) {
+    if (!response.items || !response.items[0]) {
       throw new Error("No data found for ChatbotConfiguration");
     }
-    return response._items[0].data;
+    return response.items[0];
   } catch (error) {
     // logError("Error fetching ChatbotConfiguration data:", error);
     return {};
@@ -105,10 +105,10 @@ export const getChatTriggerEvents = async () => {
   try {
     const response = await getDataFetchFunction({ "dataCollectionId": "ChatWidgetTriggerRentals" });
 
-    if (!response._items || !response._items) {
+    if (!response.items || !response.items) {
       throw new Error("No data found for ChatWidgetTrigger");
     }
-    return response._items.map((x) => x.data);
+    return response.items;
   } catch (error) {
     logError("Error getting chat trigger events", error);
   }
@@ -122,11 +122,11 @@ export const getMemberPricingTier = async (badgeIds) => {
       "sortKey": "order",
     });
 
-    if (!response._items || !response._items) {
+    if (!response.items || !response.items) {
       throw new Error("No data found for BadgesPricingTiers");
     }
 
-    const badgesData = response._items.map((x) => x.data);
+    const badgesData = response.items;
 
     if (!badgesData.length) return null;
 

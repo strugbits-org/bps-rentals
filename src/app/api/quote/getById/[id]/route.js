@@ -10,9 +10,9 @@ export const GET = async (req, context) => {
     const id = params.id;
 
     const wixClient = await createWixClientApiStrategy();
-    const data = await wixClient.items.getDataItem(id, { dataCollectionId: "RequestQuote", });
+    const data = await wixClient.items.get("RequestQuote", id);
 
-    if (!data.data.lineItems.length) {
+    if (!data.lineItems.length) {
       return NextResponse.json({ error: "Quote not found" }, { status: 404 })
     };
 
@@ -23,7 +23,7 @@ export const GET = async (req, context) => {
       'formattedConvertedAmount'
     ];
 
-    data.data.lineItems.forEach((item) => {
+    data.lineItems.forEach((item) => {
       if (item.price) item.price = encryptField(item.price.toString());
       ['price', 'fullPrice', 'priceBeforeDiscounts', 'lineItemPrice'].forEach((field) => {
         if (item?.fullItem) encryptPriceFields(item.fullItem[field], fieldsToEncrypt);
@@ -33,7 +33,7 @@ export const GET = async (req, context) => {
     return NextResponse.json(
       {
         message: "Quotes Successfully fetched",
-        data: data.data,
+        data: data,
       },
       { status: 200 }
     );

@@ -149,8 +149,7 @@ const QuotesHistory = () => {
               </h6>
             </div>
           ) : (
-            quotesData.slice(0, pageLimit).map((quote, index) => {
-              const { data } = quote;
+            quotesData.slice(0, pageLimit).map((data, index) => {
 
               const totalPrice = data.lineItems
                 .filter(item => !item.description.includes("PRODUCT SET"))
@@ -174,7 +173,7 @@ const QuotesHistory = () => {
                       <btn-modal-open
                         group="modal-quotes-history"
                         class="btn-view"
-                        onClick={() => setItemData(quotesData[index].data)}
+                        onClick={() => setItemData(quotesData[index])}
                       >
                         <span>View</span>
                         <i className="icon-arrow-diagonal"></i>

@@ -53,7 +53,7 @@ export const getAllQuotes = async () => {
       throw new Error(data.error);
     }
 
-    return data.data._items;
+    return data.data.items;
   } catch (error) {
     throw new Error(error);
   }

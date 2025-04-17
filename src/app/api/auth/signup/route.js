@@ -27,13 +27,11 @@ export const POST = async (req) => {
     }
 
     const memberData = await wixClient.items
-      .queryDataItems({
-        dataCollectionId: "membersPassword",
-      })
+      .query("membersPassword")
       .eq("userEmail", email)
       .find();
 
-    if (memberData._items.length > 0) {
+    if (memberData.items.length > 0) {
       return NextResponse.json(
         { message: "Email already exists" },
         { status: 403 }
@@ -72,7 +70,7 @@ export const POST = async (req) => {
       return NextResponse.json(
         { message: "Error saving member data, please try again" },
         { status: 500 }
-      )      
+      )
     }
 
     const memberId = memberResponseData._id;
@@ -80,14 +78,9 @@ export const POST = async (req) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     try {
-      await wixClient.items.insertDataItem({
-        dataCollectionId: "membersPassword",
-        dataItem: {
-          data: {
-            userEmail: email,
-            userPassword: hashedPassword,
-          },
-        },
+      await wixClient.items.insert("membersPassword", {
+        userEmail: email,
+        userPassword: hashedPassword,
       });
     } catch (error) {
       return NextResponse.json(
@@ -99,7 +92,7 @@ export const POST = async (req) => {
     const memberBadges = await wixClient.badges.listBadgesPerMember([memberId]);
     const badgeIds = memberBadges?.memberBadgeIds?.[0]?.badgeIds || [];
     const permissions = extractPermissions(badgeIds);
-    const pricingTier = await getMemberPricingTier(badgeIds);    
+    const pricingTier = await getMemberPricingTier(badgeIds);
 
     const memberTokens = await wixClient.auth.getMemberTokensForExternalLogin(
       memberId,

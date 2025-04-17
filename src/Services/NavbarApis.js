@@ -16,8 +16,8 @@ export const getLoginModalContent = async () => {
       hasSome: null,
       skip: null,
     });
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -40,8 +40,8 @@ export const getCreateAccountModalContent = async () => {
       hasSome: null,
       skip: null,
     });
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -64,8 +64,8 @@ export const getForgotPasswordModalContent = async () => {
       hasSome: null,
       skip: null,
     });
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -79,8 +79,8 @@ export const getSearchSectionDetails = async () => {
     const response = await getDataFetchFunction({
       dataCollectionId: "SearchSectionDetails",
     });
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -95,8 +95,8 @@ export const getFilterLocations = async () => {
     const response = await getDataFetchFunction({
       dataCollectionId: "FilterLocations",
     });
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
+    if (response && response.items) {
+      return response.items;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -112,17 +112,9 @@ export const getNavbarCategoriesData = async () => {
     const response = await getDataFetchFunction({
       dataCollectionId: "HeaderCategoryMenu",
       includeReferencedItems: ["categoryName"],
-      // eq: [
-      //   {
-      //     key: "hideMenu",
-      //     value: true,
-      //   },
-      // ],
     });
-    if (response && response._items) {
-      const categoriesData = response._items
-        .map((x) => x.data)
-        .sort((a, b) => a.order - b.order);
+    if (response && response.items) {
+      const categoriesData = response.items.sort((a, b) => a.order - b.order);
       return categoriesData;
     } else {
       throw new Error("Response does not contain _items");

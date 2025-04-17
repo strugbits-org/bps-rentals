@@ -8,8 +8,8 @@ export const getFooterData = async () => {
     const response = await getDataFetchFunction({
       "dataCollectionId": "Footer"
     });
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -23,8 +23,8 @@ export const getContactData = async () => {
     const response = await getDataFetchFunction({
       "dataCollectionId": "ContactDetails"
     });
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
+    if (response && response.items) {
+      return response.items;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -39,8 +39,8 @@ export const getSocialLinks = async () => {
     const response = await getDataFetchFunction({
       "dataCollectionId": "SocialLinks",
     });
-    if (response && response._items) {
-      return response._items.map((x) => x.data).sort((a, b) => a.orderNumber - b.orderNumber);
+    if (response && response.items) {
+      return response.items.sort((a, b) => a.orderNumber - b.orderNumber);
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -65,8 +65,8 @@ export const getFooterNavigationMenu = async () => {
         },
       ]
     });
-    if (response && response._items) {
-      return response._items.map((x) => x.data).sort((a, b) => a.orderNumber - b.orderNumber);
+    if (response && response.items) {
+      return response.items.sort((a, b) => a.orderNumber - b.orderNumber);
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -81,8 +81,8 @@ export const getContactUsContent = async () => {
     const response = await getDataFetchFunction({
       "dataCollectionId": "ContactUsContent"
     });
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }

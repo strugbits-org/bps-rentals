@@ -72,21 +72,20 @@ export const ProductsListing = ({ selectedCategoryData, data, slug }) => {
     const { permissions } = useUserData();
     const ADMIN_PANEL_ACCESS = permissions && permissions.includes(PERMISSIONS.ADMIN_PANEL_ACCESS);
 
-
     const handleDragEnd = (event) => {
         const { active, over } = event;
         if (!over || active.id === over.id || loading) return;
         setFilteredProducts(prev => {
-            const oldIndex = prev.findIndex(item => item.data.product._id === active.id);
-            const newIndex = prev.findIndex(item => item.data.product._id === over.id);
+            const oldIndex = prev.findIndex(item => item.product._id === active.id);
+            const newIndex = prev.findIndex(item => item.product._id === over.id);
             return arrayMove(prev, oldIndex, newIndex);
         });
     };
 
     const setInitialData = () => {
         const sortedProducts = [...data].sort((a, b) => {
-            const orderA = a.data.orderNumber && a.data.orderNumber[slug] !== undefined ? a.data.orderNumber[slug] : 0;
-            const orderB = b.data.orderNumber && b.data.orderNumber[slug] !== undefined ? b.data.orderNumber[slug] : 0;
+            const orderA = a.orderNumber && a.orderNumber[slug] !== undefined ? a.orderNumber[slug] : 0;
+            const orderB = b.orderNumber && b.orderNumber[slug] !== undefined ? b.orderNumber[slug] : 0;
             return orderA - orderB;
         });
         setFilteredProducts(sortedProducts);
@@ -98,11 +97,11 @@ export const ProductsListing = ({ selectedCategoryData, data, slug }) => {
         setLoading(true);
         try {
             const updatedProducts = filteredProducts.map((item, index) => {
-                const product = { ...item }
-                if (!product.data.orderNumber) {
-                    product.data.orderNumber = {};
+                const product = { ...item, product: item.product?._id };
+                if (!product.orderNumber) {
+                    product.orderNumber = {};
                 }
-                product.data.orderNumber[slug] = index;
+                product.orderNumber[slug] = index;
                 return product;
             });
             if (!updatedProducts.length) return;
@@ -138,7 +137,7 @@ export const ProductsListing = ({ selectedCategoryData, data, slug }) => {
     return (
         <div className="wrapper-account">
             <div className="wrapper-bottom d-flex-lg products-listing-admin">
-                <h1 className="fs--60 blue-1 split-words">{selectedCategoryData?.name || "All"}</h1>
+                <h1 className="fs--60 blue-1 split-words">{selectedCategoryData?.name || selectedCategoryData?.parentCollection?.name || "All"}</h1>
                 <div className="d-flex-lg flex-mobile-center align-self-center ml-auto mt-10">
                     <button onClick={handleSave} className={`btn-3-blue btn-blue btn-small mr-10 order-mobile-1 ${loading ? "btn-disabled" : ""}`} disabled={loading}>
                         <span>{loading ? "Saving" : "Save"}</span>
@@ -155,12 +154,11 @@ export const ProductsListing = ({ selectedCategoryData, data, slug }) => {
                     </div>
                 ) : (
                     <DndContext onDragEnd={handleDragEnd}>
-                        <SortableContext items={filteredProducts.map((item) => item.data.product._id)}>
+                        <SortableContext items={filteredProducts.map((item) => item.product._id)}>
                             <ul className="list-saved-products grid-lg-25 grid-tablet-33 grid-phone-50">
                                 {filteredProducts.slice(0, pageLimit).map((item, index) => {
-                                    const { data } = item;
                                     return (
-                                        <SortableItem key={data.product._id} index={index} product={data.product} />
+                                        <SortableItem key={item.product._id} index={index} product={item.product} />
                                     )
                                 })}
                             </ul>

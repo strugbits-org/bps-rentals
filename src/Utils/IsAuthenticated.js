@@ -6,7 +6,7 @@ import { getMemberPricingTier } from "@/Services/Index";
 
 export const isAuthenticated = async (token) => {
   try {
-    
+
     if (!token) {
       throw new Error("Unauthorized: No token provided");
     }
@@ -26,38 +26,37 @@ export const isAuthenticated = async (token) => {
     const authClient = await authWixClient();
     const wixClient = await createWixClient();
 
-    const privateMemberData = await authClient.items
-      .queryDataItems({
-        dataCollectionId: "Members/PrivateMembersData",
-      })
-      .eq("loginEmail", decoded.email)
-      .find();
+    // Parallel queries for better performance
+    const [privateMemberData, memberData] = await Promise.all([
+      authClient.items
+        .query("Members/PrivateMembersData")
+        .eq("loginEmail", decoded.email)
+        .find(),
 
-    const memberData = await wixClient.items
-      .queryDataItems({
-        dataCollectionId: "membersPassword",
-      })
-      .eq("userEmail", decoded.email)
-      .find();
+      wixClient.items
+        .query("membersPassword")
+        .eq("userEmail", decoded.email)
+        .find()
+    ]);
 
-    const id = privateMemberData._items?.[0]?.data?._id;
+    const id = privateMemberData.items?.[0]?._id;
     const memberBadges = await wixClient.badges.listBadgesPerMember([id]);
 
     const badgeIds = memberBadges?.memberBadgeIds?.[0]?.badgeIds || [];
     const permissions = extractPermissions(badgeIds);
-    const pricingTier = await getMemberPricingTier(badgeIds);    
+    const pricingTier = await getMemberPricingTier(badgeIds);
 
     const loggedInUserData = {
-      ...memberData._items[0].data,
+      ...memberData.items[0],
       memberId: id,
-      firstName: privateMemberData._items[0].data.firstName,
-      lastName: privateMemberData._items[0].data.lastName,
-      phone: privateMemberData._items[0].data.mainPhone,
+      firstName: privateMemberData.items[0].firstName,
+      lastName: privateMemberData.items[0].lastName,
+      phone: privateMemberData.items[0].mainPhone,
       permissions: permissions,
       pricingTier: pricingTier
     };
 
-    if (memberData._items.length === 0) {
+    if (memberData.items.length === 0) {
       throw new Error("Unauthorized: No matching user data");
     }
 
@@ -65,7 +64,7 @@ export const isAuthenticated = async (token) => {
   } catch (error) {
     logError(error);
     if (error.message === "Token has expired") {
-      throw new Error(error.message);      
+      throw new Error(error.message);
     }
     throw new Error(`Unauthorized: ${error.message}`);
   }

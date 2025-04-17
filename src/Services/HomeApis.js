@@ -8,8 +8,8 @@ export const getHomeHeroSectionContent = async () => {
     const response = await getDataFetchFunction({
       dataCollectionId: "RentalsHomeHero",
     });
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }

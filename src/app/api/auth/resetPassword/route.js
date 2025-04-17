@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 
 import { createWixClient } from "@/Utils/CreateWixClient";
 import { isValidPassword } from "@/Utils/AuthApisUtils";
+import logError from "@/Utils/ServerActions";
 
 export const PUT = async (req) => {
   const body = await req.json();
@@ -29,11 +30,8 @@ export const PUT = async (req) => {
 
     const wixClient = await createWixClient();
 
-    const memberData = await wixClient.items.getDataItem(userId, {
-      dataCollectionId: "membersPassword",
-    });
+    const userData = await wixClient.items.get("membersPassword", userId);
 
-    const userData = memberData.data;
     if (!userData._id) {
       return NextResponse.json({ message: "No User found" }, { status: 400 });
     }
@@ -51,15 +49,9 @@ export const PUT = async (req) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    await wixClient.items.updateDataItem(userData._id, {
-      dataCollectionId: "membersPassword",
-      dataItemId: userData._id,
-      dataItem: {
-        data: {
-          ...userData,
-          userPassword: hashedPassword,
-        },
-      },
+    await wixClient.items.update("membersPassword", {
+      ...userData,
+      userPassword: hashedPassword,
     });
 
     return NextResponse.json(
@@ -67,6 +59,7 @@ export const PUT = async (req) => {
       { status: 200 }
     );
   } catch (error) {
+    logError("error", error);
     return NextResponse.json(
       { message: "Invalid token", reason: error.message },
       { status: 400 }

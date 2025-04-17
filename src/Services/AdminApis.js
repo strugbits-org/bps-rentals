@@ -75,8 +75,8 @@ export const fetchProductsForSets = async ({ query = "", notEqual = null }) => {
         }
         const response = await getDataFetchFunction(payload);
 
-        if (response && response._items) {
-            return response._items.map((x) => sanitizeProduct(x.data)).filter(x => x.product?._id && !x?.productSets?.length);
+        if (response && response.items) {
+            return response.items.map((x) => sanitizeProduct(x)).filter(x => x.product?._id && !x?.productSets?.length);
         } else {
             throw new Error("Response does not contain _items");
         }
@@ -104,8 +104,8 @@ export const getAllProductsForSets = async () => {
             limit: "infinite",
             increasedLimit: 700
         });
-        if (response && response._items) {
-            return response._items.filter(x => x.data.product?._id).map((x) => sanitizeProduct(x.data));
+        if (response && response.items) {
+            return response.items.filter(x => x.product?._id).map((x) => sanitizeProduct(x));
         } else {
             throw new Error("Response does not contain _items");
         }

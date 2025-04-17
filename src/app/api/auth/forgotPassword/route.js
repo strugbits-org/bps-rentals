@@ -4,8 +4,7 @@ import { authWixClient, createWixClientApiStrategy } from "@/Utils/CreateWixClie
 import logError from "@/Utils/ServerActions";
 
 const fetchMemberData = async (client, collectionId, field, value) =>
-  client.items
-    .queryDataItems({ dataCollectionId: collectionId })
+  client.items.query(collectionId)
     .eq(field, value)
     .find();
 
@@ -26,15 +25,14 @@ export const POST = async (req) => {
     const privateMemberData = privateMemberResult.status === "fulfilled" ? privateMemberResult.value : null;
     const memberData = memberResult.status === "fulfilled" ? memberResult.value : null;
 
-    if (!privateMemberData?._items?.length || !memberData?._items?.length) {
+    if (!privateMemberData?.items?.length || !memberData?.items?.length) {
       return NextResponse.json(
         { message: "Account with this email does not exist" },
         { status: 404 }
       );
     }
 
-    const selectedMemberData = memberData._items[0].data;
-    const fullMemberData = privateMemberData._items[0].data;
+    const fullMemberData = privateMemberData.items[0];
 
     const currentDate = new Date();
     const twoHoursLater = new Date(currentDate.getTime() + 2 * 60 * 60 * 1000);
@@ -49,17 +47,12 @@ export const POST = async (req) => {
     });
 
     const userData = {
-      ...memberData.items[0].data,
+      ...memberData.items[0],
       emailToken: formattedDate,
     };
 
-    const res = await wixClient.items.updateDataItem(selectedMemberData._id, {
-      dataCollectionId: "membersPassword",
-      dataItemId: selectedMemberData._id,
-      dataItem: { data: userData },
-    });
-
-    const userId = res.dataItem._id;
+    const res = await wixClient.items.update("membersPassword", userData);
+    const userId = res._id;
 
     const origin = process.env.BASE_URL;
     const resetUrl = `${origin}/reset-password?reset-id=${encodeURIComponent(

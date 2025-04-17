@@ -7,8 +7,8 @@ const StudiosFixedMenu = ({ data }) => {
       <div className="category-menu-wrapper">
         <div className="category-menu">
           <ul className="category-menu-list">
-            {data.map((data, index) => {
-              const { cardName, link } = data;
+            {data.map((item, index) => {
+              const { cardName, link } = item;
               return (
                 <li key={index}>
                   <CustomButton

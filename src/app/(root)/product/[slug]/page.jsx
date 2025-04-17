@@ -29,11 +29,11 @@ export async function generateMetadata({ params }) {
     ]);
 
     const { title, noFollowTag } = metaData;
-    if (!productData && !productData?.data) {
+    if (!productData && !productData) {
       throw new Error(`Product Data not found for slug: ${slug}`);
     }
 
-    const { product } = productData.data;
+    const { product } = productData;
     const description = removeHTMLTags(product.description);
 
     const metadata = buildMetadata(

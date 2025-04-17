@@ -15,13 +15,11 @@ export const POST = async (req) => {
     const wixClientApi = await createWixClientApiStrategy();
 
     const memberData = await wixClientApi.items
-      .queryDataItems({
-        dataCollectionId: "membersPassword",
-      })
+      .query("membersPassword")
       .eq("userEmail", email)
       .find();
 
-    if (memberData._items.length === 0) {
+    if (memberData.items.length === 0) {
       return NextResponse.json(
         { message: "No user found with the provided email" },
         { status: 401 }
@@ -30,7 +28,7 @@ export const POST = async (req) => {
 
     const isMatch = await bcrypt.compare(
       password,
-      memberData._items[0]?.data?.userPassword
+      memberData.items[0]?.userPassword
     );
 
     if (!isMatch) {
@@ -43,18 +41,16 @@ export const POST = async (req) => {
     const jwtToken = jwt.sign({ email: email }, process.env.JWT_SECRET, {
       expiresIn: "30d",
     });
-    delete memberData._items[0].data.password;
+    delete memberData.items[0].password;
 
     const authClient = await authWixClient();
 
     const privateMemberData = await authClient.items
-      .queryDataItems({
-        dataCollectionId: "Members/PrivateMembersData",
-      })
+      .query("Members/PrivateMembersData")
       .eq("loginEmail", email)
       .find();
 
-    const selectedMemberData = privateMemberData._items[0].data;
+    const selectedMemberData = privateMemberData.items[0];
 
     const wixClient = await createWixClient();
 
