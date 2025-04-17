@@ -71,8 +71,6 @@ export const getHighlightsSection = async (dataCollectionId) => {
       const items = response.items;
       const productIds = items.map(x => (x.product || x.products));
       const fullProducts = await fetchProductsByIds(productIds);
-      console.log("fullProducts", fullProducts[0]);
-      
       fullProducts.forEach((fullProduct) => {
         const matchingItem = items.find(item => (item.product || item.products) === fullProduct.product._id);
         if (matchingItem) {

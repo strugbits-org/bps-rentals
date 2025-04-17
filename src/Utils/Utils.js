@@ -90,8 +90,8 @@ export const filterItemsBySchedule = (items) => {
   const now = new Date();
   return items.filter((banner) => {
     if (!banner.scheduled) return true;
-    const startDate = banner.visibilityStartDate ? new Date(banner.visibilityStartDate.$date) : null;
-    const endDate = banner.visibilityEndDate ? new Date(banner.visibilityEndDate.$date) : null;
+    const startDate = banner.visibilityStartDate ? new Date(banner.visibilityStartDate) : null;
+    const endDate = banner.visibilityEndDate ? new Date(banner.visibilityEndDate) : null;
     if (!startDate && !endDate) return false;
 
     return (
