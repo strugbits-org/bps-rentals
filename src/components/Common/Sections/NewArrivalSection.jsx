@@ -1,4 +1,4 @@
-import AnimateLink from "../AnimateLink";
+import { CustomButton } from "../CustomButton";
 import { ImageWrapper } from "../ImageWrapper";
 
 const NewArrival = ({ content }) => {
@@ -18,17 +18,18 @@ const NewArrival = ({ content }) => {
         >
           {content && content.title}
         </span>
-        <AnimateLink
-          to={content.buttonAction}
-          className={"btn-blue mt-lg-60 mt-tablet-45 aos-animate fadeIn"}
+        <CustomButton
+          customClasses={"btn-blue mt-lg-60 mt-tablet-45 aos-animate fadeIn"}
+          data={{
+            label: content.buttonLabel,
+            action: content.buttonAction
+          }}
           attributes={{
             "data-aos": "fadeIn .6s ease-in-out .3s, d:loop",
             "data-cursor-style": "off",
           }}
         >
-          <span>{content && content.buttonLabel} </span>
-          <i className="icon-arrow-right"></i>
-        </AnimateLink>
+        </CustomButton>
       </div>
       <div
         className="container-img bg-img bg-beige-1 z-0"

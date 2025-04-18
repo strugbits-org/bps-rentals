@@ -2,7 +2,7 @@ import Account from "@/components/Account/Index";
 import ChangePassword from "@/components/Account/ChangePassword";
 import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
 import { getChangePasswordPageContent } from "@/Services/MyAccountApis";
-import { getPageMetaData, getRentalsTeamsBanner } from "@/Services/SectionsApis";
+import { getPageMetaData, getNewArrivalSectionContent } from "@/Services/SectionsApis";
 import logError from "@/Utils/ServerActions";
 
 export async function generateMetadata() {
@@ -39,7 +39,7 @@ export default async function Page() {
       getSocialLinks(),
       getFooterNavigationMenu(),
       getChangePasswordPageContent(),
-      getRentalsTeamsBanner()
+      getNewArrivalSectionContent("account")
     ]);
     return (
       <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >

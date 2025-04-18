@@ -2,7 +2,7 @@ import Account from "@/components/Account/Index";
 import MyAccount from "@/components/Account/MyAccount";
 import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
 import { getMyAccountPageContent } from "@/Services/MyAccountApis";
-import { getPageMetaData, getRentalsTeamsBanner } from "@/Services/SectionsApis";
+import { getNewArrivalSectionContent, getPageMetaData } from "@/Services/SectionsApis";
 import logError from "@/Utils/ServerActions";
 
 export async function generateMetadata() {
@@ -32,17 +32,17 @@ export default async function Page() {
       socialLinks,
       navigationMenu,
       myAccountPageContent,
-      teamsBanner
+      banner
     ] = await Promise.all([
       getFooterData(),
       getContactData(),
       getSocialLinks(),
       getFooterNavigationMenu(),
       getMyAccountPageContent(),
-      getRentalsTeamsBanner()
+      getNewArrivalSectionContent("account")
     ]);
     return (
-      <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
+      <Account banner={banner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }} >
         <MyAccount myAccountPageContent={myAccountPageContent} />
       </Account>
     );

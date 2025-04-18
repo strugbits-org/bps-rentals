@@ -86,38 +86,31 @@ export const shuffleArray = (array) => {
   return array;
 };
 
-export const filterItemsBySchedule = (items) => {
+export const getFilteredBanners = (banners) => {
   const now = new Date();
-  return items.filter((banner) => {
-    if (!banner.scheduled) return true;
-    const startDate = banner.visibilityStartDate ? new Date(banner.visibilityStartDate) : null;
-    const endDate = banner.visibilityEndDate ? new Date(banner.visibilityEndDate) : null;
-    if (!startDate && !endDate) return false;
-
-    return (
-      (!startDate || now >= startDate) &&
-      (!endDate || now <= endDate)
-    );
-  });
-};
-
-const filterDefaultBanner = (banners) => {
   const defaultBanners = [];
   const regularBanners = [];
 
   for (const banner of banners) {
+    if (banner.scheduled) {
+      const startDate = banner.visibilityStartDate ? new Date(banner.visibilityStartDate.$date) : null;
+      const endDate = banner.visibilityEndDate ? new Date(banner.visibilityEndDate.$date) : null;
+      if (!startDate && !endDate) continue;
+      if ((startDate && now < startDate) || (endDate && now > endDate)) continue;
+    }
+
     (banner.default ? defaultBanners : regularBanners).push(banner);
   }
 
   return regularBanners.length ? regularBanners : defaultBanners;
 };
 
+
 export const scoreBasedBanners = ({ bannersData, currentCategory, random = 9 }) => {
   const slug = "link-copy-of-category-name-2";
 
   // Create an array for the final placement of banners
-  const activeBanners = filterItemsBySchedule(bannersData);
-  const filteredBanners = filterDefaultBanner(activeBanners);
+  const filteredBanners = getFilteredBanners(bannersData);
   const finalBannersArray = Array(filteredBanners.length).fill(null);
 
   // Separate banners into fixed and dynamic

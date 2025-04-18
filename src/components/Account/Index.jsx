@@ -88,7 +88,7 @@ const Account = ({ children, footerData, banner }) => {
   const router = useRouter();
   const { permissions } = useUserData();
 
-  const [cookies, setCookie, removeCookie] = useCookies([
+  const [cookies, _setCookie, removeCookie] = useCookies([
     "authToken",
     "userData",
     "userTokens",

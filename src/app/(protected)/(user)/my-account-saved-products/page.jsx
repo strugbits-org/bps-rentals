@@ -2,7 +2,7 @@ import Account from "@/components/Account/Index";
 import SavedProducts from "@/components/Account/SavedProducts";
 import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
 import { getAllProductVariants, getAllProductVariantsImages } from "@/Services/ProductsApis";
-import { getPageMetaData, getRentalsTeamsBanner } from "@/Services/SectionsApis";
+import { getPageMetaData, getNewArrivalSectionContent } from "@/Services/SectionsApis";
 import logError from "@/Utils/ServerActions";
 
 export async function generateMetadata() {
@@ -39,7 +39,7 @@ export default async function Page() {
       getContactData(),
       getSocialLinks(),
       getFooterNavigationMenu(),
-      getRentalsTeamsBanner(),
+      getNewArrivalSectionContent("account"),
       getAllProductVariantsImages(),
       getAllProductVariants(),
     ]);
