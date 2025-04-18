@@ -45,11 +45,9 @@ export const getNewArrivalSectionContent = async (slug) => {
     const response = await getDataFetchFunction({
       dataCollectionId: "RentalsNewArrivals"
     });
-    if (response && response._items) {
+    if (response && response.items) {
       const marketSlug = slug ? slug : "/";
-      const data = response._items
-        .map((x) => x.data)
-        .filter((y) => y.default || y.slug === marketSlug);
+      const data = response.items.filter((y) => y.default || y.slug === marketSlug);
       const banners = getFilteredBanners(data);
       return banners[0];
     } else {
@@ -95,11 +93,9 @@ export const getHotTrendsSection = async () => {
       includeReferencedItems: ["category"],
     });
 
-
-    if (response && response._items) {
-      const data = response._items.map((x) => x.data);
-      const hotTrendsBanner = getFilteredBanners(data);
-      return hotTrendsBanner[0];
+    if (response && response.items) {
+      const data = getFilteredBanners(response.items);
+      return data[0];
     } else {
       throw new Error("Response does not contain _items");
     }
