@@ -93,8 +93,8 @@ export const getFilteredBanners = (banners) => {
 
   for (const banner of banners) {
     if (banner.scheduled) {
-      const startDate = banner.visibilityStartDate ? new Date(banner.visibilityStartDate.$date) : null;
-      const endDate = banner.visibilityEndDate ? new Date(banner.visibilityEndDate.$date) : null;
+      const startDate = banner.visibilityStartDate ? new Date(banner.visibilityStartDate) : null;
+      const endDate = banner.visibilityEndDate ? new Date(banner.visibilityEndDate) : null;
       if (!startDate && !endDate) continue;
       if ((startDate && now < startDate) || (endDate && now > endDate)) continue;
     }

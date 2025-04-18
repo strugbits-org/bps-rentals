@@ -47,7 +47,7 @@ export const getNewArrivalSectionContent = async (slug) => {
     });
     if (response && response.items) {
       const marketSlug = slug ? slug : "/";
-      const data = response._items.filter((y) => y.default || y.slug === marketSlug);
+      const data = response.items.filter((y) => y.default || y.slug === marketSlug);
       return data;
     } else {
       throw new Error("Response does not contain _items");
@@ -92,7 +92,7 @@ export const getHotTrendsSection = async () => {
       includeReferencedItems: ["category"],
     });
 
-    if (response && response._items) {
+    if (response && response.items) {
       return response.items;
     } else {
       throw new Error("Response does not contain _items");
