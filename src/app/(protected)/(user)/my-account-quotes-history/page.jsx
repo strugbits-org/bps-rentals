@@ -5,7 +5,7 @@ import {
   getSocialLinks,
 } from "@/Services/FooterApis";
 
-import { getPageMetaData, getRentalsTeamsBanner } from "@/Services/SectionsApis";
+import { getPageMetaData, getNewArrivalSectionContent } from "@/Services/SectionsApis";
 
 import QuotesHistory from "@/components/Account/QuotesHistory";
 import Account from "@/components/Account/Index";
@@ -43,7 +43,7 @@ export default async function Page() {
       getContactData(),
       getSocialLinks(),
       getFooterNavigationMenu(),
-      getRentalsTeamsBanner()
+      getNewArrivalSectionContent("account")
     ]);
     return (
       <Account

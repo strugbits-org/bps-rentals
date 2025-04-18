@@ -1,7 +1,7 @@
 import Account from "@/components/Account/Index";
 import { ProductSets } from "@/components/Admin/ProductSets";
 import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
-import { getRentalsTeamsBanner } from "@/Services/SectionsApis";
+import { getNewArrivalSectionContent } from "@/Services/SectionsApis";
 import logError from "@/Utils/ServerActions";
 
 export const metadata = {
@@ -22,7 +22,7 @@ export default async function Page() {
       getContactData(),
       getSocialLinks(),
       getFooterNavigationMenu(),
-      getRentalsTeamsBanner(),
+      getNewArrivalSectionContent("account"),
     ]);
 
     return (

@@ -1,15 +1,8 @@
-import AnimateLink from "../AnimateLink";
 import { CustomButton } from "../CustomButton";
 import { ImageWrapper } from "../ImageWrapper";
 
 export const HotTrendsCategory = ({ data }) => {
-
-  if (!data) {
-    return null;
-  }
-
-  console.log("data", data);
-
+  if (!data) return;
 
   return (
     <section className="section-hot-trends white-1">
@@ -40,8 +33,8 @@ export const HotTrendsCategory = ({ data }) => {
           >
             <CustomButton
               data={{
-                label: data.buttonLabel || `/category/${data.category.slug}`,
-                action: data.buttonAction,
+                label: data.buttonLabel,
+                action: data.buttonAction || `/category/${data.category.slug}`,
               }}
               showArrow={false}
               customClasses={"btn-blue mt-lg-50 mt-mobile-20"}
@@ -50,12 +43,6 @@ export const HotTrendsCategory = ({ data }) => {
                 {data.buttonLabel}
               </span>
             </CustomButton>
-            {/* <AnimateLink to={`/category/${data.slug}`} className={"btn-blue mt-lg-50 mt-mobile-20"}
-              attributes={{ "data-cursor-style": "off" }}>
-              <span>
-                {data.buttonLabel}
-              </span>
-            </AnimateLink> */}
           </div>
         </div>
       </div>

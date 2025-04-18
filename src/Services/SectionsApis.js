@@ -43,16 +43,15 @@ export const getPageMetaData = async (path) => {
 export const getNewArrivalSectionContent = async (slug) => {
   try {
     const response = await getDataFetchFunction({
-      dataCollectionId: "RentalsNewArrivals",
-      eq: [
-        {
-          key: "slug",
-          value: slug || "/",
-        }
-      ]
+      dataCollectionId: "RentalsNewArrivals"
     });
     if (response && response._items) {
-      return response._items[0].data;
+      const marketSlug = slug ? slug : "/";
+      const data = response._items
+        .map((x) => x.data)
+        .filter((y) => y.default || y.slug === marketSlug);
+      const banners = getFilteredBanners(data);
+      return banners[0];
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -100,7 +99,6 @@ export const getHotTrendsSection = async () => {
     if (response && response._items) {
       const data = response._items.map((x) => x.data);
       const hotTrendsBanner = getFilteredBanners(data);
-      console.log("hotTrendsBanner", hotTrendsBanner);
       return hotTrendsBanner[0];
     } else {
       throw new Error("Response does not contain _items");
@@ -195,22 +193,6 @@ export const getStudiosData = async () => {
     }
   } catch (error) {
     logError("Error fetching StudiosData data:", error);
-    return [];
-  }
-};
-
-export const getRentalsTeamsBanner = async () => {
-  try {
-    const response = await getDataFetchFunction({
-      dataCollectionId: "RentalTeamsBanner",
-    });
-    if (response && response._items) {
-      return response._items[0].data;
-    } else {
-      throw new Error("Response does not contain _items");
-    }
-  } catch (error) {
-    logError("Error fetching Rentals Teams Banner data:", error);
     return [];
   }
 };
