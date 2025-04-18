@@ -197,7 +197,7 @@ const MarketPage = ({
       />
       <MarketIntroSection data={marketSection} />
       <MarketBestSeller products={bestSellerProducts} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} pageLimit={pageLimit} handleAutoSeeMore={handleAutoSeeMore} savePageState={savePageState} />
-      <NewArrival content={newArrivalSectionContent} />
+      <NewArrival data={newArrivalSectionContent} />
       <Highlights pageContent={homeSectionDetails} data={highlightsSectionData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} savePageState={savePageState} sliderRef={sliderRef} />
       <MarketSlider content={homeSectionDetails} marketSliderData={marketSliderData} />
       <PeopleReviewSlider data={peopleReviewSliderData} homeSectionDetails={homeSectionDetails} />

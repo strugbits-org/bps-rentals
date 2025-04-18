@@ -172,7 +172,7 @@ const HomePage = ({
     <>
       <BannerHome content={heroSectionContent} />
       <BestSellersHome products={bestSellerProducts} content={heroSectionContent} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} />
-      <NewArrival content={newArrivalSectionContent} />
+      <NewArrival data={newArrivalSectionContent} />
       <Highlights pageContent={homeSectionDetails} data={highlightsSectionData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} savePageState={savePageState} sliderRef={sliderRef} />
       <HotTrendsCategory data={hotTrendsSectionContent} />
       <Markets pageContent={homeSectionDetails} marketsData={marketsData} />
