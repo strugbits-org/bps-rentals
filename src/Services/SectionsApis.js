@@ -50,8 +50,7 @@ export const getNewArrivalSectionContent = async (slug) => {
       const data = response._items
         .map((x) => x.data)
         .filter((y) => y.default || y.slug === marketSlug);
-      const banners = getFilteredBanners(data);
-      return banners[0];
+      return data;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -95,11 +94,9 @@ export const getHotTrendsSection = async () => {
       includeReferencedItems: ["category"],
     });
 
-
     if (response && response._items) {
       const data = response._items.map((x) => x.data);
-      const hotTrendsBanner = getFilteredBanners(data);
-      return hotTrendsBanner[0];
+      return data;
     } else {
       throw new Error("Response does not contain _items");
     }

@@ -1,7 +1,11 @@
+"use client";
+import { getFilteredBanners } from "@/Utils/Utils";
 import { CustomButton } from "../CustomButton";
 import { ImageWrapper } from "../ImageWrapper";
 
-const NewArrival = ({ content }) => {
+const NewArrival = ({ data }) => {
+  const banners = getFilteredBanners(data);
+  const content = banners[0];
   if (!content) return;
   return (
     <section className="section-new-arrivals white-1">

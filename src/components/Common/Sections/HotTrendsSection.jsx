@@ -1,8 +1,12 @@
+import { getFilteredBanners } from "@/Utils/Utils";
 import { CustomButton } from "../CustomButton";
 import { ImageWrapper } from "../ImageWrapper";
 
 export const HotTrendsCategory = ({ data }) => {
-  if (!data) return;
+
+  const banners = getFilteredBanners(data);
+  const content = banners[0];
+  if (!content) return;
 
   return (
     <section className="section-hot-trends white-1">
@@ -13,18 +17,18 @@ export const HotTrendsCategory = ({ data }) => {
               className="d-block fs--40 fs--mobile-25 fw-600"
               data-aos="fadeIn .6s ease-in-out 0s, d:loop"
             >
-              {data.category.name}
+              {content.category.name}
             </span>
             <h2
               className="fs--90 fs-tablet-40 fs-phone-60 lh-100 fw-600 pt-lg-35 pt-tablet-10 pt-phone-20 section-title split-words"
               data-aos="d:loop"
             >
-              {data.title}
+              {content.title}
             </h2>
           </div>
           <div className="col-12">
             <div className="container-img bg-img">
-              <ImageWrapper defaultDimensions={{ width: 1374, height: 547 }} url={data.category.mainMedia} q={"100"} attributes={{ "data-parallax": "", "data-translate-x-from": "10vw", "data-translate-x-to": "0" }} />
+              <ImageWrapper defaultDimensions={{ width: 1374, height: 547 }} url={content.category.mainMedia} q={"100"} attributes={{ "data-parallax": "", "data-translate-x-from": "10vw", "data-translate-x-to": "0" }} />
             </div>
           </div>
           <div
@@ -33,14 +37,14 @@ export const HotTrendsCategory = ({ data }) => {
           >
             <CustomButton
               data={{
-                label: data.buttonLabel,
-                action: data.buttonAction || `/category/${data.category.slug}`,
+                label: content.buttonLabel,
+                action: content.buttonAction || `/category/${content.category.slug}`,
               }}
               showArrow={false}
               customClasses={"btn-blue mt-lg-50 mt-mobile-20"}
               attributes={{ "data-cursor-style": "off" }}>
               <span>
-                {data.buttonLabel}
+                {content.buttonLabel}
               </span>
             </CustomButton>
           </div>
