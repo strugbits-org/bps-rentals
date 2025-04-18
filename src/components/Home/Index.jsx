@@ -174,7 +174,7 @@ const HomePage = ({
       <BestSellersHome products={bestSellerProducts} content={heroSectionContent} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} />
       <NewArrival content={newArrivalSectionContent} />
       <Highlights pageContent={homeSectionDetails} data={highlightsSectionData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} savePageState={savePageState} sliderRef={sliderRef} />
-      <HotTrendsCategory pageContent={homeSectionDetails} data={hotTrendsSectionContent} />
+      <HotTrendsCategory data={hotTrendsSectionContent} />
       <Markets pageContent={homeSectionDetails} marketsData={marketsData} />
       <Studios content={homeSectionDetails} studiosData={studiosData} />
       <DreamBig content={dreamBigSectionContent} />

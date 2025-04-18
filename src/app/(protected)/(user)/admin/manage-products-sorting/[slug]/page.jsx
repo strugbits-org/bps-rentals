@@ -2,7 +2,7 @@ import Account from "@/components/Account/Index";
 import { ProductsListing } from "@/components/Admin/ProductsListing";
 import { getContactData, getFooterData, getFooterNavigationMenu, getSocialLinks } from "@/Services/FooterApis";
 import { fetchAllCategoriesData, getAllProducts, getProductsByCategory } from "@/Services/ProductsApis";
-import { getRentalsTeamsBanner } from "@/Services/SectionsApis";
+import { getNewArrivalSectionContent } from "@/Services/SectionsApis";
 import logError from "@/Utils/ServerActions";
 import { extractCategoryIds, findCategoryData } from "@/Utils/Utils";
 import { notFound } from "next/navigation";
@@ -44,7 +44,7 @@ export default async function Page({ params }) {
       getContactData(),
       getSocialLinks(),
       getFooterNavigationMenu(),
-      getRentalsTeamsBanner()
+      getNewArrivalSectionContent("account")
     ]);
 
     return (
