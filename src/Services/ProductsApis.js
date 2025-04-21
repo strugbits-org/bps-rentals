@@ -215,7 +215,7 @@ export const fetchAllProductsPaths = async () => {
   }
 };
 
-export const searchProducts = async ({ term, productSets, location, colors = [], pageLimit = 3, skip = 0 }) => {
+export const searchProducts = async ({ term, productSets, location, colors = [], pageLimit = 3, skip = 0, skipProducts = [] }) => {
   try {
     const baseFilters = {
       dataCollectionId: "locationFilteredVariant",
@@ -228,7 +228,8 @@ export const searchProducts = async ({ term, productSets, location, colors = [],
       limit: pageLimit,
       skip: skip,
       sortOrder: "asc",
-      sortKey: "title"
+      sortKey: "_id",
+      not: ["product", skipProducts]
     };
 
     if (location) baseFilters.hasSome = [{ key: "location", values: location }];

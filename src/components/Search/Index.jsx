@@ -43,6 +43,7 @@ const SearchPage = ({
     const [loading, setLoading] = useState(true);
     const [isPageLoading, setIsPageLoading] = useState(false);
     const [searchCompleted, setSearchCompleted] = useState(false);
+    const [productIds, setProductIds] = useState([]);
 
     const searchParams = useSearchParams();
 
@@ -239,7 +240,7 @@ const SearchPage = ({
         try {
             setIsPageLoading(true);
             const selectedColors = filterColors.filter((x) => x.checked).map((x) => x.label);
-            const products = await searchProducts({ term: searchTerm, location: cookies.location, colors: selectedColors, pageLimit: pageSize, productSets: productSetsFilter, skip: filteredProducts.length });
+            const products = await searchProducts({ term: searchTerm, location: cookies.location, colors: selectedColors, pageLimit: pageSize, productSets: productSetsFilter, skipProducts: productIds });
             if (products.length < pageSize) setSearchCompleted(true);
 
             const updatedProductsData = [...filteredProducts, ...products];
@@ -260,6 +261,13 @@ const SearchPage = ({
         setCookie("searchPageSize", filteredProducts.length, { path: "/" });
         setCookie("searchLastActiveColor", lastActiveColor, { path: "/" });
     };
+
+    useEffect(() => {
+        if (filteredProducts.length > 0) {
+            const ids = filteredProducts.map((x) => x.product._id);
+            setProductIds(ids);
+        }
+    }, [filteredProducts]);
 
     const clearPageState = () => {
         removeCookie("searchFilterColors", { path: "/" });
@@ -382,11 +390,6 @@ const SearchPage = ({
                                         No Products Found
                                     </h6>
                                 )}
-                                <h6
-                                    className="fs--40 text-center mt-90"
-                                >
-                                    {searchCompleted}
-                                </h6>
                                 {loading &&
                                     <div className="mt-50 d-flex justify-content-center">
                                         <div className="loader-small"></div>

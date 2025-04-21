@@ -56,6 +56,7 @@ const getDataFetchFunction = async (payload) => {
       searchPrefix,
       correctionEnabled,
       searchType,
+      not,
       log
     } = payload;
 
@@ -68,6 +69,10 @@ const getDataFetchFunction = async (payload) => {
     if (includeReferencedItems && includeReferencedItems.length > 0) includeReferencedItems.forEach(x => dataQuery = dataQuery.include(x));
 
     // Apply filters
+    if (not?.length === 2 && not[1]?.length > 0) {
+      dataQuery = dataQuery.not(client.items.filter().hasSome(not[0], not[1]));
+    }
+
     if (contains?.length === 2) dataQuery = dataQuery.contains(contains[0], contains[1]);
     if (eq && eq.length > 0) eq.forEach(filter => dataQuery = dataQuery.eq(filter.key, filter.value));
     if (hasSome && hasSome.length > 0) hasSome.forEach(filter => dataQuery = dataQuery.hasSome(filter.key, filter.values));
