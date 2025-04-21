@@ -357,11 +357,6 @@ const SearchPage = ({
                                         No Products Found
                                     </h6>
                                 )}
-                                <h6
-                                    className="fs--40 text-center mt-90"
-                                >
-                                    {searchCompleted}
-                                </h6>
                                 {loading &&
                                     <div className="mt-50 d-flex justify-content-center">
                                         <div className="loader-small"></div>
