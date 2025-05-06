@@ -8,7 +8,7 @@ const baseUrl = process.env.BASE_URL;
 export const getProductsKeywords = async () => {
   try {
     const productKeywordsData = await getDataFetchFunction({ "dataCollectionId": "ProductKeywords" });
-    const keywords = productKeywordsData._items[0]?.data?.keywords || [];
+    const keywords = productKeywordsData.items[0]?.keywords || [];
     return keywords;
   } catch (error) {
     logError("Error fetching products keywords:", error);
@@ -36,17 +36,17 @@ export const getAllProducts = async ({ categories = [], adminPage = false, optim
     };
 
     const response = await getDataFetchFunction(payload);
-    if (adminPage) return response._items;
+    if (adminPage) return response.items;
 
-    if (!response || !response._items) {
+    if (!response || !response.items) {
       throw new Error("Response does not contain _items", response);
     }
 
-    const products = response._items.map((x) => {
+    const products = response.items.map((x) => {
       const baseProduct = {
         subCategoryData: [],
-        ...x.data,
-        ...(x.data.subCategoryData && { subCategoryData: x.data.subCategoryData }),
+        ...x,
+        ...(x.subCategoryData && { subCategoryData: x.subCategoryData }),
       };
 
       return optimizeContent ? sanitizeProduct(baseProduct) : baseProduct;
@@ -94,10 +94,10 @@ export const getProductsByCategory = async (categories = [], adminPage = false) 
 
     const response = await getDataFetchFunction(payload);
 
-    if (!response || !response._items) {
+    if (!response || !response.items) {
       throw new Error("Response does not contain _items", response);
     }
-    return response._items;
+    return response.items;
 
   } catch (error) {
     logError("Error fetching products(admin):", error);
@@ -133,8 +133,13 @@ export const fetchProductsByIds = async (products) => {
       limit: "infinite",
       increasedLimit: 700,
     });
-    if (response && response._items) {
-      return response._items.map((x) => x.data.subCategoryData ? x.data : { subCategoryData: [], ...x.data });
+    if (response && response.items) {
+      const products = response.items.map((x) => ({
+        subCategoryData: [],
+        ...x,
+        ...x.subCategoryData && { subCategoryData: x.subCategoryData }
+      }));
+      return products;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -162,8 +167,8 @@ export const fetchAllProducts = async (slug) => {
       ],
     };
     const response = await getDataFetchFunction(payload);
-    if (response && response._items) {
-      return response._items.find((x) => (x.data.product.slug === slug));
+    if (response && response.items) {
+      return response.items.find((x) => (x.product.slug === slug));
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -196,9 +201,9 @@ export const fetchAllProductsPaths = async () => {
       ],
     };
     const response = await getDataFetchFunction(payload);
-    if (response && response._items) {
-      const paths = response._items
-        .map(x => x.data?.product?.slug)
+    if (response && response.items) {
+      const paths = response.items
+        .map(x => x?.product?.slug)
         .filter(slug => slug !== undefined)
         .map(slug => ({ slug }));
       return paths;
@@ -210,7 +215,7 @@ export const fetchAllProductsPaths = async () => {
   }
 };
 
-export const searchProducts = async ({ term, productSets, location, colors = [], pageLimit = 3, skip = 0 }) => {
+export const searchProducts = async ({ term, productSets, location, colors = [], pageLimit = 3, skip = 0, skipProducts = [] }) => {
   try {
     const baseFilters = {
       dataCollectionId: "locationFilteredVariant",
@@ -223,12 +228,13 @@ export const searchProducts = async ({ term, productSets, location, colors = [],
       limit: pageLimit,
       skip: skip,
       sortOrder: "asc",
-      sortKey: "_id"
+      sortKey: "_id",
+      not: ["product", skipProducts]
     };
 
     if (location) baseFilters.hasSome = [{ key: "location", values: location }];
     if (colors.length > 0) baseFilters.hasSome = [{ key: "colors", values: colors }];
-    if (productSets) {      
+    if (productSets) {
       baseFilters.ne.push({
         key: "productSets",
         value: []
@@ -243,7 +249,7 @@ export const searchProducts = async ({ term, productSets, location, colors = [],
       startsWith: [{ key: "title", value: term }]
     });
 
-    const data = response._items?.filter(item => typeof item.data.product !== "string").map(item => item.data) || [];
+    const data = response.items?.filter(item => typeof item.product !== "string") || [];
     items = items.concat(data);
     if (items.length >= pageLimit) return items;
 
@@ -257,7 +263,7 @@ export const searchProducts = async ({ term, productSets, location, colors = [],
         correctionEnabled,
         searchType
       });
-      return response._items?.filter(item => typeof item.data.product !== "string").map(item => item.data) || [];
+      return response.items?.filter(item => typeof item.product !== "string") || [];
     };
 
     // Define search strategies in order of preference
@@ -306,8 +312,8 @@ export const getAllColorsData = async () => {
       // log: true
     });
 
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
+    if (response && response.items) {
+      return response.items;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -323,8 +329,8 @@ export const getAllProductVariantsImages = async () => {
       limit: "infinite",
     });
 
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
+    if (response && response.items) {
+      return response.items;
     } else {
       throw new Error("Response does not contain _items", response);
     }
@@ -340,8 +346,8 @@ export const getAllProductVariants = async () => {
       increasedLimit: 100,
       limit: "infinite",
     });
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
+    if (response && response.items) {
+      return response.items;
     } else {
       throw new Error("Response does not contain _items", response);
     }
@@ -374,11 +380,11 @@ export const getBestSellerProducts = async (bestSeller, limit) => {
       includeVariants: true,
       limit: "infinite",
     });
-    if (response && response._items) {
-      const products = response._items.map((x) => ({
+    if (response && response.items) {
+      const products = response.items.map((x) => ({
         subCategoryData: [],
-        ...x.data,
-        ...x.data.subCategoryData && { subCategoryData: x.data.subCategoryData }
+        ...x,
+        ...x.subCategoryData && { subCategoryData: x.subCategoryData }
       }));
 
       if (limit) {
@@ -408,13 +414,30 @@ export const fetchBestSellers = async (slug) => {
       ];
     }
     const response = await getDataFetchFunction(payload);
-    if (response && response._items) {
-      return response._items.map((x) => x.data.category);
+    if (response && response.items) {
+      return response.items.map((x) => x.category);
     } else {
       throw new Error("Response does not contain _items");
     }
   } catch (error) {
     logError("Error fetching best seller ids:", error);
+    return [];
+  }
+};
+
+export const fetchProductAtthachmentTypes = async () => {
+  try {
+    const payload = {
+      dataCollectionId: "ProductAttachmentTypes",
+    };
+    const response = await getDataFetchFunction(payload);
+    if (response && response.items) {
+      return response.items;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    logError("Error fetching product attachment types:", error);
     return [];
   }
 };
@@ -426,13 +449,13 @@ export const fetchAllCategoriesCollections = async () => {
       increasedLimit: 100,
       limit: "infinite",
     });
-    if (response && response._items) {
+    if (response && response.items) {
       const all = "00000000-000000-000000-000000000001";
-      const categoriesData = response._items
+      const categoriesData = response.items
         .map(x => ({
-          ...x.data,
-          slug: x.data._id === all ? "all" : x.data.slug,
-          all: x.data._id === all
+          ...x,
+          slug: x._id === all ? "all" : x.slug,
+          all: x._id === all
         }))
         .sort((a, b) => a._id === all ? -1 : 0);
 
@@ -458,8 +481,8 @@ export const fetchAllCategoriesData = async () => {
       ],
       limit: 50,
     });
-    if (response && response._items) {
-      const categoriesData = response._items.map((x) => x.data);
+    if (response && response.items) {
+      const categoriesData = response.items;
       const filteredData = categoriesData.filter(
         (x) => x._id !== undefined && x.parentCollection.slug !== "all-products"
       );
@@ -481,8 +504,8 @@ export const getPairWithData = async () => {
       limit: "infinite",
     });
 
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
+    if (response && response.items) {
+      return response.items;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -503,8 +526,8 @@ export const getProductVariants = async (id) => {
       ],
     });
 
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
+    if (response && response.items) {
+      return response.items;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -525,8 +548,8 @@ export const getProductVariantsImages = async (id) => {
       ],
     });
 
-    if (response && response._items) {
-      return response._items.map((x) => x.data);
+    if (response && response.items) {
+      return response.items;
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -546,8 +569,8 @@ export const getAllCategoriesData = async () => {
       ],
       limit: "infinite",
     });
-    if (response && response._items) {
-      const categoriesData = response._items.map((x) => x.data);
+    if (response && response.items) {
+      const categoriesData = response.items;
       const filteredData = categoriesData.filter(
         (x) => x.parentCollection.slug !== "all-products"
       );
@@ -580,8 +603,8 @@ export const getSavedProductData = async (retries = 3, delay = 1000) => {
 
       const data = await response.json();
 
-      if (data && data._items) {
-        return data._items.map((x) => x.data);
+      if (data && data.items) {
+        return data.items;
       } else {
         throw new Error("Response does not contain _items", response);
       }
@@ -660,8 +683,8 @@ export const getCatalogIdBySku = async (productSku) => {
       ],
     });
 
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -683,8 +706,8 @@ export const getVariantBySku = async (sku) => {
       ],
     });
 
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -700,11 +723,11 @@ export const getCartPricingTiersData = async (product) => {
       hasSome: [{ key: "product", values: product }],
     });
 
-    if (!response?._items) {
+    if (!response?.items) {
       throw new Error("Response does not contain _items");
     }
 
-    return response._items.map(({ data }) => ({
+    return response.items.map((data) => ({
       _id: data.product,
       pricingTiers: Array.isArray(data?.pricingTiers) ? data.pricingTiers : [],
     }));

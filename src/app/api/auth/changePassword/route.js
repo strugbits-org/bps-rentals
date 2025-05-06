@@ -44,15 +44,9 @@ export const POST = async (req) => {
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
     const wixClient = await createWixClientApiStrategy();
-    await wixClient.items.updateDataItem(authenticatedUserData._id, {
-      dataCollectionId: "membersPassword",
-      dataItemId: authenticatedUserData._id,
-      dataItem: {
-        data: {
-          ...authenticatedUserData,
-          userPassword: hashedPassword,
-        },
-      },
+    await wixClient.items.update("membersPassword", {
+      ...authenticatedUserData,
+      userPassword: hashedPassword,
     });
 
     return NextResponse.json(

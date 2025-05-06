@@ -8,8 +8,8 @@ export const getMyAccountPageContent = async () => {
     const response = await getDataFetchFunction({
       dataCollectionId: "RentalsMyAccountPage",
     });
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }
@@ -24,8 +24,8 @@ export const getChangePasswordPageContent = async () => {
     const response = await getDataFetchFunction({
       dataCollectionId: "RentalsChangePasswordPage",
     });
-    if (response && response._items) {
-      return response._items[0].data;
+    if (response && response.items) {
+      return response.items[0];
     } else {
       throw new Error("Response does not contain _items");
     }

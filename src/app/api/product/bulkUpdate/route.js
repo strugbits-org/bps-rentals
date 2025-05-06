@@ -15,15 +15,11 @@ export const POST = async (req) => {
     const body = await req.json();
     const { dataCollectionId, items } = body;
     decryptProductPrices(items);
-
-    await client.items.bulkUpdateDataItems({
-      dataCollectionId,
-      dataItems: items
-    });
+    await client.items.bulkUpdate(dataCollectionId, items);
 
     return NextResponse.json(
       {
-        message: "Item update successfully",
+        message: "Items update successfully",
       },
       { status: 200 }
     );

@@ -16,27 +16,21 @@ export const GET = async (req, context) => {
     const memberId = authenticatedUserData.memberId;
 
     const wixClient = await createWixClientApiStrategy();
-    const locationFilterVariantData = await wixClient.items.queryDataItems({ dataCollectionId: "locationFilteredVariant", })
+    const locationFilterVariantData = await wixClient.items.query("locationFilteredVariant")
       .eq("product", id)
       .hasSome("members", [memberId])
       .find();
 
-    let productData = locationFilterVariantData._items[0];
-    let membersData = productData.data.members;
+    let productData = locationFilterVariantData.items[0];
+    let membersData = productData.members;
 
-    if (locationFilterVariantData._items.length === 0) {
+    if (locationFilterVariantData.items.length === 0) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    await wixClient.items.updateDataItem(productData._id, {
-      dataCollectionId: "locationFilteredVariant",
-      dataItem: {
-        _id: productData._id,
-        data: {
-          ...productData.data,
-          members: membersData.filter((member) => member !== memberId),
-        },
-      },
+    await wixClient.items.update("locationFilteredVariant", {
+      ...productData,
+      members: membersData.filter((member) => member !== memberId),
     });
 
     return NextResponse.json(

@@ -92,7 +92,7 @@ const CartPage = () => {
 
       const cartData = response.map((item) => {
         const pricingTier = pricingTiersData.find((tier) => tier._id === item.catalogReference.catalogItemId);
-        return { ...item, pricingTiers : pricingTier.pricingTiers };
+        return { ...item, pricingTiers : pricingTier?.pricingTiers || [] };
       });
       
       setCartItems(cartData);
