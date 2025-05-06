@@ -28,6 +28,7 @@ import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import { ProductDocuments } from "./ProductDocuments";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -36,6 +37,7 @@ const ProductPostPage = ({
   blogsData,
   portfolioData,
   bestSeller,
+  attachmentTypes
 }) => {
   const descriptionRef = useRef(null);
   const router = useRouter();
@@ -71,9 +73,6 @@ const ProductPostPage = ({
 
   const { permissions, pricingTier } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
-  const SHOW_FIREPROOF_CERTIFICATES = permissions && permissions.includes(PERMISSIONS.SHOW_FIREPROOF_CERTIFICATES);
-  const SHOW_DOCUMENTS = permissions && permissions.includes(PERMISSIONS.SHOW_DOCUMENTS);
-
 
   const handleImageChange = ({ index, selectedVariantData, modalUrl }) => {
     const selectedVariantFilteredData = productSnapshotData.find(
@@ -628,57 +627,7 @@ const ProductPostPage = ({
                   </div>
                 )}
 
-              {/* DOWNLOADS */}
-              {selectedProductDetails && SHOW_DOCUMENTS &&
-                selectedProductDetails.productDocs?.length > 0 && (
-                  <div className="container-info-text" data-aos="">
-                    <h3 className="title-info-text" data-aos="">
-                      Downloads
-                    </h3>
-                    <div
-                      className="container-btn container-btn-downloads"
-                      data-aos="fadeIn .8s ease-in-out"
-                    >
-                      {selectedProductDetails.productDocs.map((data, index) => {
-                        const { fileName, downloadUrl } = data;
-                        return (
-                          <a key={index} href={downloadUrl} download={fileName}>
-                            <button className="btn-small-tag">
-                              <span>{fileName}</span>
-                              <i className="icon-arrow-down"></i>
-                            </button>
-                          </a>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-              {/* Certificates */}
-              {selectedProductDetails && SHOW_FIREPROOF_CERTIFICATES &&
-                selectedProductDetails.fireProofCertificates?.length > 0 && (
-                  <div className="container-info-text" data-aos="">
-                    <h3 className="title-info-text" data-aos="">
-                      Fireproof Certificates
-                    </h3>
-                    <div
-                      className="container-btn container-btn-downloads"
-                      data-aos="fadeIn .8s ease-in-out"
-                    >
-                      {selectedProductDetails.fireProofCertificates.map((data, index) => {
-                        const { fileName, downloadUrl } = data;
-                        return (
-                          <a key={index} href={downloadUrl} download={fileName}>
-                            <button className="btn-small-tag">
-                              <span>{fileName}</span>
-                              <i className="icon-arrow-down"></i>
-                            </button>
-                          </a>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
+              <ProductDocuments selectedProductDetails={selectedProductDetails} attachmentTypes={attachmentTypes} />
 
               {/* PRODUCT FOUND */}
               {selectedProductDetails &&

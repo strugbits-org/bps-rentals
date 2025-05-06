@@ -425,6 +425,23 @@ export const fetchBestSellers = async (slug) => {
   }
 };
 
+export const fetchProductAtthachmentTypes = async () => {
+  try {
+    const payload = {
+      dataCollectionId: "ProductAttachmentTypes",
+    };
+    const response = await getDataFetchFunction(payload);
+    if (response && response.items) {
+      return response.items;
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    logError("Error fetching product attachment types:", error);
+    return [];
+  }
+};
+
 export const fetchAllCategoriesCollections = async () => {
   try {
     const response = await getDataFetchFunction({
