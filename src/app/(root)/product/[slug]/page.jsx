@@ -8,7 +8,8 @@ import {
   fetchAllProductsPaths,
   getAllProducts,
   fetchBestSellers,
-  fetchAllProducts
+  fetchAllProducts,
+  fetchProductAtthachmentTypes
 } from '@/Services/ProductsApis';
 import { getPageMetaData, getProductBlogsData, getProductPortfolioData } from "@/Services/SectionsApis";
 import { buildMetadata, removeHTMLTags } from '@/Utils/Utils';
@@ -71,12 +72,14 @@ export default async function Page({ params }) {
       pairWithData,
       products,
       categoriesData,
-      bestSeller
+      bestSeller,
+      attachmentTypes
     ] = await Promise.all([
       getPairWithData(),
       getAllProducts({}),
       getAllCategoriesData(),
-      fetchBestSellers()
+      fetchBestSellers(),
+      fetchProductAtthachmentTypes()
     ]);
     const selectedProduct = products.find((x) => decodeURIComponent(x.product.slug) === slug);
     if (!selectedProduct) {
@@ -121,6 +124,7 @@ export default async function Page({ params }) {
             blogsData={blogsData}
             portfolioData={portfolioData}
             bestSeller={bestSeller}
+            attachmentTypes={attachmentTypes}
           />
         ) : (
           <ProductPostPage
@@ -130,6 +134,7 @@ export default async function Page({ params }) {
             blogsData={blogsData}
             portfolioData={portfolioData}
             bestSeller={bestSeller}
+            attachmentTypes={attachmentTypes}
           />
         )}
       </Suspense>
