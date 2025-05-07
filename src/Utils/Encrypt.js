@@ -4,10 +4,13 @@ const algorithm = 'aes-256-cbc';
 
 const secretKey = Buffer.from(process.env.SECRET_KEY, 'hex');
 
-export const encryptField = (value) => {
+export const encryptField = (value, options = {}) => {
     try {
         if (typeof value === 'string') {
-            const iv = crypto.randomBytes(16);
+            const iv = options.useConsistentIV
+                ? generateConsistentIV(value)
+                : crypto.randomBytes(16);
+
             const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
             let encrypted = cipher.update(value, 'utf8', 'hex');
             encrypted += cipher.final('hex');
@@ -18,6 +21,12 @@ export const encryptField = (value) => {
         logError("Error encrypting field:", error);
         return value;
     }
+};
+
+// Generate a consistent IV based on the input value
+const generateConsistentIV = (value) => {
+    const hash = crypto.createHash('sha256').update(value).digest();
+    return Buffer.from(hash.subarray(0, 16));
 };
 
 export const decryptField = (value) => {
@@ -37,10 +46,10 @@ export const decryptField = (value) => {
     }
 };
 
-export const encryptPriceFields = (obj, fieldsToEncrypt) => {
+export const encryptPriceFields = (obj, fieldsToEncrypt, options = {}) => {
     if (!obj) return;
     const encryptIfExists = (field) => {
-        if (obj[field]) obj[field] = encryptField(obj[field].toString());
+        if (obj[field]) obj[field] = encryptField(obj[field].toString(), options);
     };
 
     fieldsToEncrypt.forEach(encryptIfExists);

@@ -179,7 +179,7 @@ const getDataFetchFunction = async (payload) => {
           }
         }
         if (val?.product) {
-          encryptPriceFields(val.product, fieldsToEncrypt);
+          encryptPriceFields(val.product, fieldsToEncrypt, { useConsistentIV: true });
         }
         return val;
       });
