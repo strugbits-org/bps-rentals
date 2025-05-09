@@ -259,6 +259,8 @@ const ProductCollectionPage = ({
     }
   }, [selectedVariant])
 
+  const copySku = () => navigator.clipboard.writeText(selectedVariant.sku);
+
   return (
     <>
       <section className="product-intro pt-lg-70" data-product-content>
@@ -385,9 +387,12 @@ const ProductCollectionPage = ({
                     {selectedVariant?.sku && (
                       <li className="sku">
                         <span className="specs-title">SKU</span>
-                        <span className="specs-text">
-                          {selectedVariant.sku}
-                        </span>
+                        <div className="container-copy">
+                          <button type="button" onClick={copySku} className="btn-copy copy-link d-flex">
+                            <span className="specs-text">{selectedVariant && selectedVariant.sku}</span>
+                            <i className="icon-copy specs-text ml-4"></i>
+                          </button>
+                        </div>
                       </li>
                     )}
                     {SHOW_PRICES && (

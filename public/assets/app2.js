@@ -9572,14 +9572,20 @@ var require_app2 = __commonJS({
       );
       copyTextareaBtn.forEach((element) => {
         element.classList.add("js-copy-link-running");
-        element
-          .querySelector(".copy-link")
-          .addEventListener("click", function () {
-            this.querySelector("span").innerText = "Copied!";
-            this.classList.add("copied");
-          });
+        element.querySelector(".copy-link").addEventListener("click", function () {
+          const span = this.querySelector("span");
+          const originalText = span.innerText;
+    
+          span.innerText = "Copied!";
+          this.classList.add("copied");
+    
+          setTimeout(() => {
+            span.innerText = originalText;
+            this.classList.remove("copied");
+          }, 2000);
+        });
       });
-    }
+    }    
     gsap$1.registerPlugin(ScrollToPlugin);
     function login() {
       let submenuLogin = document.querySelector("[data-form-active]");

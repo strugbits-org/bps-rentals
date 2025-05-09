@@ -169,7 +169,6 @@ const ProductPostPage = ({
     }
   };
 
-
   const handleInputChange = (name, value) => {
     setCustomTextFields((prevState) => ({
       ...prevState,
@@ -273,6 +272,8 @@ const ProductPostPage = ({
       window.removeEventListener("popstate", handleBackButton);
     };
   }, []);
+
+  const copySku = () => navigator.clipboard.writeText(selectedVariant.sku);
 
   return (
     <>
@@ -401,9 +402,12 @@ const ProductPostPage = ({
                     {selectedVariant && selectedVariant.sku && (
                       <li className="sku">
                         <span className="specs-title">SKU</span>
-                        <span className="specs-text">
-                          {selectedVariant && selectedVariant.sku}
-                        </span>
+                        <div className="container-copy">
+                          <button type="button" onClick={copySku} className="btn-copy copy-link d-flex">
+                            <span className="specs-text">{selectedVariant && selectedVariant.sku}</span>
+                            <i className="icon-copy specs-text ml-4"></i>
+                          </button>
+                        </div>
                       </li>
                     )}
 
