@@ -11,8 +11,6 @@ import AutoClickWrapper from "../Common/AutoClickWrapper";
 import logError from "@/Utils/ServerActions";
 
 const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
-
-
   const pageSize = 20;
   const [pageLimit, setPageLimit] = useState(pageSize);
 

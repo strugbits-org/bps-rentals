@@ -58,12 +58,20 @@ export const POST = async (req) => {
     const memberBadges = await wixClient.badges.listBadgesPerMember([memberId]);
     const badgeIds = memberBadges?.memberBadgeIds?.[0]?.badgeIds || [];
     const permissions = extractPermissions(badgeIds);
-    const pricingTier = await getMemberPricingTier(badgeIds);    
-  
+    const pricingTier = await getMemberPricingTier(badgeIds);
+
+    console.log("selectedMemberData", selectedMemberData);
+    console.log("process.env.CLIENT_API_KEY_WIX", process.env.CLIENT_API_KEY_WIX);
+    console.log("process.env.CLIENT_ID_WIX", process.env.CLIENT_ID_WIX);
+
+
     const memberTokens = await wixClient.auth.getMemberTokensForExternalLogin(
       selectedMemberData._id,
       process.env.CLIENT_API_KEY_WIX
     );
+
+    console.log("memberTokens", memberTokens);
+
 
     if (body?.cartId) {
       const visitorCart = await wixClientApi.cart.getCart(body.cartId);

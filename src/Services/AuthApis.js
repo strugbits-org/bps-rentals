@@ -52,7 +52,7 @@ export const signInUser = async (userData) => {
   }
 };
 
-export const confirmEmail = async (userData) => {
+export const forgotPassword = async (userData) => {
   try {
     const response = await fetch(`${baseUrl}/api/auth/forgotPassword`, {
       method: "POST",
