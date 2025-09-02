@@ -1,4 +1,3 @@
-import { getFilteredBanners } from "@/Utils/Utils";
 import getDataFetchFunction from "./FetchFunction";
 import { fetchProductsByIds } from "./ProductsApis";
 import logError from "@/Utils/ServerActions";
