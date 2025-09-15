@@ -10,6 +10,8 @@ import Footer from "@/components/Layout/Footer";
 import CookiesConsent from "@/components/Common/CookiesConsent";
 import Navbar from "@/components/Layout/Navbar";
 import StudiosFixedMenu from "@/components/Common/StudiosFixedMenu";
+import { GoogleTagManager } from '@next/third-parties/google';
+
 import {
   getNavbarCategoriesData,
   getCreateAccountModalContent,
@@ -105,6 +107,8 @@ export default async function RootLayout({ children }) {
     <>
       <CustomScripts />
       <html lang="en">
+        <GoogleTagManager gtmId="GTM-M7R5H46R" />
+
         <body
           data-scroll-direction="initial"
           data-search-container
