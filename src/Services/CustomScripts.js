@@ -33,7 +33,7 @@ export const CustomScripts = () => {
         src={`https://www.googletagmanager.com/gtag/js?id=G-4D3S4F1X60`}
         strategy="afterInteractive"
       />
-      <Script src='//fw-cdn.com/11846215/4437905.js' chat='false' strategy="afterInteractive" />
+      <Script src='https://fw-cdn.com/11846215/4437905.js' chat='false' strategy="afterInteractive" />
 
       <Script id="google-analytics" strategy="afterInteractive">
         {`
