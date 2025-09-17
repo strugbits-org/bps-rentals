@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 import logError from "@/Utils/ServerActions";
 import { useRouter } from "next/navigation";
 
-const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, portfolios, searchPagesData }) => {
+const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, blogsLoading, portfolios, portfoliosLoading, searchPagesData }) => {
 
   const CORPORATE_URL = process.env.CORPORATE_URL;
 
@@ -303,7 +303,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                         </div>
                       </div>
                     </div>
-                    <div className={`result-portfolio mt-lg-60 mt-mobile-40 ${filteredPortfolios.length === 0 ? "hidden" : ""}`}>
+                    <div className={`result-portfolio mt-lg-60 mt-mobile-40 ${filteredPortfolios.length === 0 && !portfoliosLoading ? "hidden" : ""}`}>
                       <div className="container-title-results">
                         <h2 className="title-results split-chars" data-aos>
                           {searchSectionDetails?.portfolioTitle} <span>{` "${searchTerm}"`}</span>
@@ -324,7 +324,12 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                             className="swiper-wrapper list-result-portfolio list-slider-phone grid-md-20"
                             data-aos
                           >
-                            {filteredPortfolios.map((portfolio, index) => {
+                            {portfoliosLoading ? (
+                              <div className="loading-state">
+                                <span>Loading portfolios...</span>
+                              </div>
+                            ) : (
+                              filteredPortfolios.map((portfolio, index) => {
                               const { portfolioRef } = portfolio;
                               return (
                                 <div
@@ -353,7 +358,8 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                   </AnimateLink>
                                 </div>
                               );
-                            })}
+                            })
+                            )}
                           </div>
                         </div>
                       </div>
@@ -399,7 +405,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                       })}
                     </ul>
                   </div>
-                  <div className={`result-blog ${filteredBlogs.length === 0 ? "hidden" : ""}`}>
+                  <div className={`result-blog ${filteredBlogs.length === 0 && !blogsLoading ? "hidden" : ""}`}>
                     <div className="container-title-results">
                       <h2 className="title-results split-chars" data-aos>
                         {searchSectionDetails?.blogTitle} <span>{` "${searchTerm}"`}</span>
@@ -420,7 +426,12 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                           className="swiper-wrapper list-result-blog list-slider-mobile list-blog grid-lg-20"
                           data-aos
                         >
-                          {filteredBlogs.map((blog, index) => {
+                          {blogsLoading ? (
+                            <div className="loading-state">
+                              <span>Loading blogs...</span>
+                            </div>
+                          ) : (
+                            filteredBlogs.map((blog, index) => {
                             const { blogRef, author } = blog;
                             return (
                               <div
@@ -465,7 +476,8 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, po
                                 </AnimateLink>
                               </div>
                             );
-                          })}
+                          })
+                          )}
                         </div>
                       </div>
                     </div>

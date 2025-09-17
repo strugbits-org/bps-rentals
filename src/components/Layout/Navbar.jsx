@@ -17,6 +17,7 @@ import AnimateLink from "../Common/AnimateLink";
 import { getProductsCart } from "@/Services/CartApis";
 import { calculateTotalCartQuantity } from "@/Utils/Utils";
 import logError from "@/Utils/ServerActions";
+import { fetchBlogsDataClient, fetchPortfoliosDataClient } from "@/Services/LayoutDataFetcher";
 
 const Navbar = ({
   locations,
@@ -27,10 +28,18 @@ const Navbar = ({
   studiosData,
   categoriesData,
   searchSectionDetails,
-  blogsData,
-  portfoliosData,
   searchPagesData,
 }) => {
+  console.log("locations", locations);
+  console.log("loginModalContent", loginModalContent);
+  console.log("createAccountModalContent", createAccountModalContent);
+  console.log("forgotPasswordModalContent", forgotPasswordModalContent);
+  console.log("marketsData", marketsData);
+  console.log("studiosData", studiosData);
+  console.log("categoriesData", categoriesData);
+  console.log("searchSectionDetails", searchSectionDetails);
+  console.log("searchPagesData", searchPagesData);
+  
   const [cookies, setCookie, removeCookie] = useCookies(["authToken", "cartQuantity", "userData", "userTokens"]);
   const router = useRouter();
   const path = usePathname();
@@ -43,6 +52,10 @@ const Navbar = ({
     success: false,
     error: false,
   });
+  const [blogsData, setBlogsData] = useState([]);
+  const [blogsLoading, setBlogsLoading] = useState(true);
+  const [portfoliosData, setPortfoliosData] = useState([]);
+  const [portfoliosLoading, setPortfoliosLoading] = useState(true);
 
   const checkUser = () => {
     const submenuLogin = document.querySelector(".submenu-login");
@@ -105,6 +118,42 @@ const Navbar = ({
     
     setCartQuantity(quantity);
   }, [cookies.cartQuantity]);
+
+  // Fetch blogs data client-side
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        setBlogsLoading(true);
+        const data = await fetchBlogsDataClient();
+        setBlogsData(data);
+      } catch (error) {
+        logError("Failed to fetch blogs data:", error);
+        setBlogsData([]);
+      } finally {
+        setBlogsLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  // Fetch portfolios data client-side
+  useEffect(() => {
+    const fetchPortfolios = async () => {
+      try {
+        setPortfoliosLoading(true);
+        const data = await fetchPortfoliosDataClient();
+        setPortfoliosData(data);
+      } catch (error) {
+        logError("Failed to fetch portfolios data:", error);
+        setPortfoliosData([]);
+      } finally {
+        setPortfoliosLoading(false);
+      }
+    };
+
+    fetchPortfolios();
+  }, []);
 
   return (
     <>
@@ -336,7 +385,9 @@ const Navbar = ({
               {/* Search */}
               <SearchModal
                 blogs={blogsData}
+                blogsLoading={blogsLoading}
                 portfolios={portfoliosData}
+                portfoliosLoading={portfoliosLoading}
                 searchSectionDetails={searchSectionDetails}
                 studiosData={studiosData}
                 marketsData={marketsData}
