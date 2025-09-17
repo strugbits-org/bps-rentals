@@ -12,31 +12,7 @@ import Navbar from "@/components/Layout/Navbar";
 import StudiosFixedMenu from "@/components/Common/StudiosFixedMenu";
 import { GoogleTagManager } from '@next/third-parties/google';
 
-import {
-  getNavbarCategoriesData,
-  getCreateAccountModalContent,
-  getForgotPasswordModalContent,
-  getLoginModalContent,
-  getFilterLocations,
-  getSearchSectionDetails,
-} from "@/Services/NavbarApis";
-import {
-  getContactData,
-  getContactUsContent,
-  getFooterData,
-  getFooterNavigationMenu,
-  getSocialLinks,
-} from "@/Services/FooterApis";
-import {
-  fetchInstaFeed,
-  fetchSearchPages,
-  getBlogsData,
-  getMarketsData,
-  getPortfolioData,
-  getSocialSectionBlogs,
-  getSocialSectionDetails,
-  getStudiosData,
-} from "@/Services/SectionsApis";
+import { fetchAllLayoutData } from "@/Services/LayoutDataFetcher";
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
 import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
@@ -44,7 +20,6 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import RevalidateButton from "@/components/Common/RevalidateButton";
 import CustomBodyScripts from "@/Services/CustomBodyScripts";
 import { ToastContainer } from 'react-toastify';
-import { getChatConfiguration, getChatTriggerEvents } from "@/Services/Index";
 import Chat from "@/components/Common/Chat";
 import BackButtonListener from "@/Utils/BackButtonListener";
 
@@ -54,10 +29,7 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-
-  const BASE_URL = process.env.BASE_URL;
-
-  const [
+  const {
     filterLocations,
     loginModalContent,
     createAccountModalContent,
@@ -67,41 +39,17 @@ export default async function RootLayout({ children }) {
     socialLinks,
     navigationMenu,
     contactUsContent,
-    blogsData,
-    portfoliosData,
-    marketsData,
-    studiosData,
-    allCategoriesData,
     socialSectionDetails,
     socialSectionBlogs,
     instaFeed,
     searchSectionDetails,
     searchPagesData,
     chatConfig,
-    chatTriggerEvents
-  ] = await Promise.all([
-    getFilterLocations(),
-    getLoginModalContent(),
-    getCreateAccountModalContent(),
-    getForgotPasswordModalContent(),
-    getFooterData(),
-    getContactData(),
-    getSocialLinks(),
-    getFooterNavigationMenu(),
-    getContactUsContent(),
-    getBlogsData(),
-    getPortfolioData(),
-    getMarketsData(),
-    getStudiosData(),
-    getNavbarCategoriesData(),
-    getSocialSectionDetails(),
-    getSocialSectionBlogs(),
-    fetchInstaFeed(),
-    getSearchSectionDetails(),
-    fetchSearchPages(),
-    getChatConfiguration(BASE_URL),
-    getChatTriggerEvents()
-  ]);
+    chatTriggerEvents,
+    marketsData,
+    studiosData,
+    allCategoriesData
+  } = await fetchAllLayoutData();
 
   return (
     <>
@@ -127,8 +75,6 @@ export default async function RootLayout({ children }) {
             loginModalContent={loginModalContent}
             createAccountModalContent={createAccountModalContent}
             forgotPasswordModalContent={forgotPasswordModalContent}
-            blogsData={blogsData}
-            portfoliosData={portfoliosData}
             marketsData={marketsData}
             studiosData={studiosData}
             searchSectionDetails={searchSectionDetails}
