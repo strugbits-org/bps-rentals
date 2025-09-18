@@ -31,22 +31,18 @@ export default async function Page() {
       contactData,
       socialLinks,
       navigationMenu,
-      teamsBanner,
-      productsVariantImagesData,
-      productsVariantsData,
+      teamsBanner
     ] = await Promise.all([
       getFooterData(),
       getContactData(),
       getSocialLinks(),
       getFooterNavigationMenu(),
-      getNewArrivalSectionContent("account"),
-      getAllProductVariantsImages(),
-      getAllProductVariants(),
+      getNewArrivalSectionContent("account")
     ]);
 
     return (
       <Account banner={teamsBanner} footerData={{ footerContent, contactData, socialLinks, navigationMenu }}>
-        <SavedProducts productsVariantImagesData={productsVariantImagesData} productsVariantsData={productsVariantsData} />
+        <SavedProducts />
       </Account>
     );
   } catch (error) {

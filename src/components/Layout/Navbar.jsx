@@ -30,16 +30,7 @@ const Navbar = ({
   searchSectionDetails,
   searchPagesData,
 }) => {
-  console.log("locations", locations);
-  console.log("loginModalContent", loginModalContent);
-  console.log("createAccountModalContent", createAccountModalContent);
-  console.log("forgotPasswordModalContent", forgotPasswordModalContent);
-  console.log("marketsData", marketsData);
-  console.log("studiosData", studiosData);
-  console.log("categoriesData", categoriesData);
-  console.log("searchSectionDetails", searchSectionDetails);
-  console.log("searchPagesData", searchPagesData);
-  
+
   const [cookies, setCookie, removeCookie] = useCookies(["authToken", "cartQuantity", "userData", "userTokens"]);
   const router = useRouter();
   const path = usePathname();

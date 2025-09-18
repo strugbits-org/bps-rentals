@@ -2,16 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
-import {
-  getSavedProductData,
-} from "@/Services/ProductsApis";
+import { getProductVariants, getProductVariantsImages, getSavedProductData } from "@/Services/ProductsApis";
 import ProductCard from "../Category/ProductCard";
 import CartModal from "../Common/Modals/CartModal";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
 import logError from "@/Utils/ServerActions";
 
-const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
-
+const SavedProducts = () => {
 
   const pageSize = 20;
   const [pageLimit, setPageLimit] = useState(pageSize);
@@ -21,13 +18,16 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
   const [productSnapshots, setProductSnapshots] = useState();
   const [selectedVariantData, setSelectedVariantData] = useState(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
-  const [productFilteredVariantData, setProductFilteredVariantData] =
-    useState();
+  const [productFilteredVariantData, setProductFilteredVariantData] = useState();
 
   const getSelectedProductSnapShots = async (productData, activeVariant) => {
     setSelectedProductData(productData);
     try {
-      const { productSnapshotData, productVariantsData } = productData;
+      const productId = productData.product._id;
+      const [productSnapshotData, productVariantsData] = await Promise.all([
+        getProductVariantsImages(productId),
+        getProductVariants(productId)
+      ]);
 
       let dataMap = new Map(
         productVariantsData.map((item) => [item.sku.toLowerCase(), item])
@@ -103,18 +103,7 @@ const SavedProducts = ({ productsVariantImagesData, productsVariantsData }) => {
   const fetchSavedProducts = async () => {
     try {
       const savedProducts = await getSavedProductData();
-      const items = savedProducts.map((product) => {
-        if (!product._id) return;
-        const productId = product.product._id;
-        product.productSnapshotData = productsVariantImagesData.filter(
-          (x) => x.productId === productId
-        );
-        product.productVariantsData = productsVariantsData.filter(
-          (x) => x.productId === productId
-        );
-        return product;
-      });
-      setSavedProductsData(items);
+      setSavedProductsData(savedProducts);
       setTimeout(markPageLoaded, 200);
     } catch (error) {
       logError("Error while fetching Saved Product", error);
