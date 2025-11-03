@@ -233,8 +233,13 @@ export const searchProducts = async ({ term, productSets, location, colors = [],
     };
 
     if (location) baseFilters.hasSome = [{ key: "location", values: location }];
-    if (colors.length > 0) baseFilters.hasSome = [{ key: "colors", values: colors }];
-    if (productSets) {
+    if (colors.length > 0) {
+      if (baseFilters.hasSome) {
+        baseFilters.hasSome.push({ key: "colors", values: colors });
+      } else {
+        baseFilters.hasSome = [{ key: "colors", values: colors }];
+      }
+    } if (productSets) {
       baseFilters.ne.push({
         key: "productSets",
         value: []
@@ -253,7 +258,7 @@ export const searchProducts = async ({ term, productSets, location, colors = [],
     items = items.concat(data);
     if (items.length >= pageLimit) return items;
 
-    const fetchProducts = async ({ searchKey, limit, excludeIds = [], searchPrefix = " ", correctionEnabled = false, searchType = "and" }) => {
+    const fetchProducts = async ({ searchKey, limit, excludeIds = [], searchPrefix = " ", correctionEnabled = false, searchType = "and", secondaryKey }) => {
       const response = await getDataFetchFunction({
         ...baseFilters,
         search: [searchKey, term],
@@ -261,7 +266,8 @@ export const searchProducts = async ({ term, productSets, location, colors = [],
         searchPrefix,
         ne: [...baseFilters.ne, ...excludeIds.map(id => ({ key: "product", value: id }))],
         correctionEnabled,
-        searchType
+        searchType,
+        secondaryKey,
       });
       return response.items?.filter(item => typeof item.product !== "string") || [];
     };
@@ -270,6 +276,8 @@ export const searchProducts = async ({ term, productSets, location, colors = [],
     const searchStrategies = [
       { searchKey: "title", searchPrefix: " ", correctionEnabled: false, searchType: "and" },
       { searchKey: "title", searchPrefix: "", correctionEnabled: false, searchType: "and" },
+      { searchKey: "title", secondaryKey: "colors", searchPrefix: "", correctionEnabled: false, searchType: "filterByColors" },
+      { searchKey: "title", secondaryKey: "colors", searchPrefix: "", correctionEnabled: false, searchType: "titleAndColors" },
       { searchKey: "title", searchPrefix: " ", correctionEnabled: false, searchType: "or" },
       { searchKey: "title", searchPrefix: "", correctionEnabled: false, searchType: "or" },
       { searchKey: "title", searchPrefix: " ", correctionEnabled: true, searchType: "and" },

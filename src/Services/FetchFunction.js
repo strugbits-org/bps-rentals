@@ -2,7 +2,8 @@ import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
 import { encryptField, encryptPriceFields } from "@/Utils/Encrypt";
 import logError from "@/Utils/ServerActions";
-import Fuse from 'fuse.js'
+import Fuse from 'fuse.js';
+import { filterProductColors, COLOR_NAMES } from "@/Utils/DetectColors";
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -56,6 +57,7 @@ const getDataFetchFunction = async (payload) => {
       searchPrefix,
       correctionEnabled,
       searchType,
+      secondaryKey,
       not,
       log
     } = payload;
@@ -84,22 +86,100 @@ const getDataFetchFunction = async (payload) => {
     if (sortKey) dataQuery = sortOrder === "asc" ? dataQuery.ascending(sortKey) : sortOrder === "desc" ? dataQuery.descending(sortKey) : dataQuery.ascending(sortKey);
 
     if (search?.length === 2) {
-      let words = search[1].split(/\s+/).filter(Boolean);
-      if (correctionEnabled) {
-        const productKeywordsData = await getDataFetchFunction({ "dataCollectionId": "ProductKeywords" });
-        const productKeywords = productKeywordsData.items[0]?.keywords || [];
-        words = await Promise.all(words.map(word => correctSearchTerm(word, productKeywords)));
-      }
-      let newQuery = words.slice(1).reduce((query, word) =>
-        query.contains(search[0], searchPrefix ? searchPrefix + word : word || ""),
-        dataQuery
-      );
+      if (searchType === "filterByColors") {
+        let words = search[1].split(/\s+/).filter(Boolean);
 
-      dataQuery = dataQuery.contains(search[0], searchPrefix ? searchPrefix + words[0] : words[0] || "");
-      if (words.length > 1) {
-        dataQuery = searchType === "or" ? dataQuery.or(newQuery) : dataQuery.and(newQuery);
+        if (correctionEnabled) {
+          const productKeywordsData = await getDataFetchFunction({ dataCollectionId: "ProductKeywords" });
+          const productKeywords = productKeywordsData.items[0]?.keywords || [];
+          words = await Promise.all(words.map(word => correctSearchTerm(word, productKeywords)));
+        }
+
+        // Separate color words from non-color words
+        const colorWords = filterProductColors(words, COLOR_NAMES);
+        const nonColorWords = words.filter(w => !colorWords.map(c => c.toUpperCase()).includes(w.toUpperCase()));
+
+        const primaryKey = search[0] || "title";
+        const secondarySearchKey = secondaryKey || "colors";
+
+        // Build query for color words in colors field (OR condition)
+        let colorsQuery = null;
+        if (colorWords.length > 0) {
+          colorWords.forEach((word) => {
+            const q = client.items.query(dataCollectionId).contains(secondarySearchKey, searchPrefix ? searchPrefix + word : word);
+            colorsQuery = colorsQuery ? colorsQuery.or(q) : q;
+          });
+        }
+
+        // Build query for non-color words in title field (AND condition)
+        let titleQuery = null;
+        if (nonColorWords.length > 0) {
+          nonColorWords.forEach((word) => {
+            const q = client.items.query(dataCollectionId).contains(primaryKey, searchPrefix ? searchPrefix + word : word);
+            titleQuery = titleQuery ? titleQuery.and(q) : q;
+          });
+        }
+
+        // Combine queries: if both exist, AND them together
+        if (colorsQuery && titleQuery) {
+          dataQuery = dataQuery.and(colorsQuery).and(titleQuery);
+        } else if (colorsQuery) {
+          dataQuery = dataQuery.and(colorsQuery);
+        } else if (titleQuery) {
+          dataQuery = dataQuery.and(titleQuery);
+        }
+      } else if (searchType === "titleAndColors") {
+        let words = search[1].split(/\s+/).filter(Boolean);
+
+        if (correctionEnabled) {
+          const productKeywordsData = await getDataFetchFunction({ dataCollectionId: "ProductKeywords" });
+          const productKeywords = productKeywordsData.items[0]?.keywords || [];
+          words = await Promise.all(words.map(word => correctSearchTerm(word, productKeywords)));
+        }
+
+        // If no words after processing, skip building title/colors conditions
+        if (words.length > 0) {
+          const primaryKey = search[0] || "title";
+          const secondarySearchKey = secondaryKey || "colors";
+
+          // build primary key OR group using the client
+          let primaryQuery = null;
+          words.forEach((word) => {
+            const q = client.items.query(dataCollectionId).contains(primaryKey, searchPrefix ? searchPrefix + word : word);
+            primaryQuery = primaryQuery ? primaryQuery.or(q) : q;
+          });
+
+          // build secondary key OR group using the client
+          let secondaryQuery = null;
+          words.forEach((word) => {
+            const q = client.items.query(dataCollectionId).contains(secondarySearchKey, searchPrefix ? searchPrefix + word : word);
+            secondaryQuery = secondaryQuery ? secondaryQuery.or(q) : q;
+          });
+
+          // combine both groups with AND into the main dataQuery
+          dataQuery = dataQuery.and(primaryQuery).and(secondaryQuery);
+        }
+      } else {
+        // existing logic unchanged
+        let words = search[1].split(/\s+/).filter(Boolean);
+        if (correctionEnabled) {
+          const productKeywordsData = await getDataFetchFunction({ dataCollectionId: "ProductKeywords" });
+          const productKeywords = productKeywordsData.items[0]?.keywords || [];
+          words = await Promise.all(words.map(word => correctSearchTerm(word, productKeywords)));
+        }
+
+        let newQuery = words.slice(1).reduce((query, word) =>
+          query.contains(search[0], searchPrefix ? searchPrefix + word : word || ""),
+          dataQuery
+        );
+
+        dataQuery = dataQuery.contains(search[0], searchPrefix ? searchPrefix + words[0] : words[0] || "");
+        if (words.length > 1) {
+          dataQuery = searchType === "or" ? dataQuery.or(newQuery) : dataQuery.and(newQuery);
+        }
       }
-    };
+    }
+
 
     // Increase limit if "infinite"
     if (limit === "infinite") {
