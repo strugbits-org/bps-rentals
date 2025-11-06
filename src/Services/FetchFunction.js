@@ -3,7 +3,7 @@ import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsAp
 import { encryptField, encryptPriceFields } from "@/Utils/Encrypt";
 import logError from "@/Utils/ServerActions";
 import Fuse from 'fuse.js';
-import { filterProductColors, COLOR_NAMES } from "@/Utils/DetectColors";
+import { filterProductColors, PRIMARY_COLORS } from "@/Utils/DetectColors";
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -96,7 +96,7 @@ const getDataFetchFunction = async (payload) => {
         }
 
         // Separate color words from non-color words
-        const colorWords = filterProductColors(words, COLOR_NAMES);
+        const colorWords = filterProductColors(words, PRIMARY_COLORS);
         const nonColorWords = words.filter(w => !colorWords.map(c => c.toUpperCase()).includes(w.toUpperCase()));
 
         const primaryKey = search[0] || "title";

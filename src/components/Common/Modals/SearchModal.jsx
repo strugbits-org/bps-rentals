@@ -10,6 +10,7 @@ import { ImageWrapper } from "../ImageWrapper";
 import { usePathname } from "next/navigation";
 import logError from "@/Utils/ServerActions";
 import { useRouter } from "next/navigation";
+import { detectColorsInSearchTerm } from "@/Utils/DetectColors";
 
 const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, blogsLoading, portfolios, portfoliosLoading, searchPagesData }) => {
 
@@ -102,7 +103,14 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, bl
   const handleProductsFilter = async (term = "") => {
     try {
       setProductsLoading(true);
-      const filteredProductsData = await searchProducts({ term: term, location: cookies.location });
+      const detectedColorsArray = detectColorsInSearchTerm(term);      
+      // Search products with detected colors
+      const filteredProductsData = await searchProducts({ 
+        term: term, 
+        location: cookies.location,
+        colors: detectedColorsArray
+      });
+      
       setFilteredProducts(filteredProductsData);
       updatedWatched();
     } catch (error) {
