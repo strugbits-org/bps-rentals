@@ -11,6 +11,7 @@ import { Banner } from "../Category/Banner";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
 import logError from "@/Utils/ServerActions";
 import { useSearchParams } from "next/navigation";
+import { detectColorsInSearchTerm } from "@/Utils/DetectColors";
 
 const SearchPage = ({
     pageContent,
@@ -82,20 +83,44 @@ const SearchPage = ({
         setSearchCompleted(false);
         setLoading(true);
         setSearchCompleted(false);
+        
+        const searchTerm = searchParams.get("query");
+        if (searchTerm) setSearchTerm(searchTerm);
+
+        // Initialize color filters
+        let initialColors = [];
+        let detectedColors = [];
+        
         if (colorsData) {
             const categoryId = "00000000-000000-000000-000000000001";
             const filteredColor = colorsData.find((x) => x.category === categoryId);
             if (filteredColor) {
-                const colors = filteredColor.colors.map((x) => {
-                    return { label: x, checked: false };
+                // Get available colors from the data
+                const availableColorLabels = filteredColor.colors;
+                
+                // Detect colors in the search term
+                if (searchTerm) {
+                    detectedColors = detectColorsInSearchTerm(searchTerm, availableColorLabels);
+                }
+                
+                // Create color filters with auto-checked detected colors
+                initialColors = filteredColor.colors.map((x) => {
+                    const isDetected = detectedColors.some(
+                        dc => dc.toUpperCase() === x.toUpperCase()
+                    );
+                    return { 
+                        label: x, 
+                        checked: isDetected 
+                    };
                 });
-                setFilterColors(colors);
+                
+                setFilterColors(initialColors);
+                // Set last active color if colors were detected
+                if (detectedColors.length > 0) {
+                    setLastActiveColor(detectedColors[detectedColors.length - 1]);
+                }
             }
         }
-
-        const searchTerm = searchParams.get("query");
-        if (searchTerm) setSearchTerm(searchTerm);
-
 
         if (cookies?.searchLoadPrevState) {
             if ((cookies?.searchFilterColors?.length !== 0 || cookies?.searchShowProductSets) && cookies?.searchLoadPrevState) {
@@ -118,7 +143,14 @@ const SearchPage = ({
                 clearPageState();
             }, 800);
         } else {
-            const filteredData = await searchProducts({ term: searchTerm, location: cookies.location, pageLimit: pageSize });
+            // Use detected colors for the initial search
+            const selectedColors = detectedColors.length > 0 ? detectedColors : [];
+            const filteredData = await searchProducts({ 
+                term: searchTerm, 
+                location: cookies.location, 
+                pageLimit: pageSize,
+                colors: selectedColors 
+            });
             if (filteredData.length < pageSize) setSearchCompleted(true);
             setFilteredProducts(filteredData);
             setTimeout(() => {
