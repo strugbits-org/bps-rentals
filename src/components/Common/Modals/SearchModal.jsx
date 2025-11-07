@@ -33,6 +33,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, bl
   const [filteredPortfolios, setFilteredPortfolios] = useState([]);
   const [filteredPages, setFilteredPages] = useState([]);
   const [productsLoading, setProductsLoading] = useState(false);
+  const [detectedColors, setDetectedColors] = useState([]);
   const [cookies, _setCookie] = useCookies(["location"]);
   const pathname = usePathname();
   const router = useRouter();
@@ -103,7 +104,9 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, bl
   const handleProductsFilter = async (term = "") => {
     try {
       setProductsLoading(true);
-      const detectedColorsArray = detectColorsInSearchTerm(term);      
+      const detectedColorsArray = detectColorsInSearchTerm(term);
+      setDetectedColors(detectedColorsArray);
+      
       // Search products with detected colors
       const filteredProductsData = await searchProducts({ 
         term: term, 
@@ -251,7 +254,25 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, bl
                           >
                             {filteredProducts.map((data, index) => {
                               const { product, variantData, defaultVariant } = data;
-                              const { variant, sku } = variantData.find(x => x.sku === defaultVariant) || variantData[0];
+                              
+                              // Find variant matching detected color, otherwise use default
+                              let activeVariantData = variantData.find(x => x.sku === defaultVariant) || variantData[0];
+                              
+                              if (detectedColors.length > 0) {
+                                // Try to find a variant that matches any of the detected colors
+                                const colorMatchedVariant = variantData.find(variant => 
+                                  variant.color && variant.color.some(color => 
+                                    detectedColors.some(detectedColor => 
+                                      detectedColor.toUpperCase() === color.toUpperCase()
+                                    )
+                                  )
+                                );
+                                if (colorMatchedVariant) {
+                                  activeVariantData = colorMatchedVariant;
+                                }
+                              }
+                              
+                              const { variant, sku } = activeVariantData;
 
                               return (
                                 <div
@@ -260,7 +281,7 @@ const SearchModal = ({ searchSectionDetails, studiosData, marketsData, blogs, bl
                                 >
                                   <div className="rental-product-link">
                                     <AnimateLink
-                                      to={`/product/${product.slug}`}
+                                      to={`/product/${product.slug}?variant=${sku}`}
                                       className="product-link"
                                       data-menu-close
                                     >
