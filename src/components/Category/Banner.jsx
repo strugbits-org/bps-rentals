@@ -3,6 +3,21 @@ import { CustomButton } from '../Common/CustomButton'
 import { ImageWrapper } from '../Common/ImageWrapper'
 
 export const Banner = ({ data }) => {
+    const handleCTAClick = () => {
+        // Trigger GA event
+        const eventData = {
+            banner_id: data._id || 'unknown',
+            banner_title: data.title || '',
+            banner_variant: data.type || '',
+            banner_position: data.desiredPosition || '',
+            page_location: window.location.href
+        };
+        
+        if (typeof window !== 'undefined' && window.gtag) {
+            window.gtag('event', 'banner_click', eventData);
+        }
+    };
+
     return (
         <>
             {data.type === "1" ? (
@@ -42,6 +57,7 @@ export const Banner = ({ data }) => {
                                         "data-cursor-style": "off"
                                     }}
                                     showArrow={data.showArrow}
+                                    onClick={handleCTAClick}
                                 >
                                 </CustomButton>
                             </div>
@@ -78,6 +94,7 @@ export const Banner = ({ data }) => {
                                                 "data-aos": "fadeIn .6s ease-in-out 0s, d:loop"
                                             }}
                                             showArrow={data.showArrow}
+                                            onClick={handleCTAClick}
                                         >
                                         </CustomButton>
                                         <CustomButton
@@ -90,6 +107,7 @@ export const Banner = ({ data }) => {
                                                 "data-aos": "fadeIn .6s ease-in-out 0s, d:loop"
                                             }}
                                             showArrow={data.showArrow}
+                                            onClick={handleCTAClick}
                                         >
                                         </CustomButton>
                                     </div>

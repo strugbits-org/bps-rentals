@@ -1,6 +1,6 @@
 import AnimateLink from "./AnimateLink";
 
-export const CustomButton = ({ data, customClasses = "", attributes, target, showArrow = true }) => {
+export const CustomButton = ({ data, customClasses = "", attributes, target, showArrow = true, onClick }) => {
     function isValidUrl(string) {
         try {
             new URL(string);
@@ -30,7 +30,10 @@ export const CustomButton = ({ data, customClasses = "", attributes, target, sho
     }
     return actionType === "modal" ? (
         <btn-modal-open
-            onClick={openMarketModal}
+            onClick={(e) => {
+                openMarketModal();
+                onClick?.();
+            }}
             group={data.action}
             class={`${customClasses || 'btn-blue'} ${data.action === "modal-market" ? "disable-click-outside" : ''}`}
             {...attributes}
@@ -39,7 +42,7 @@ export const CustomButton = ({ data, customClasses = "", attributes, target, sho
             {showArrow && <i className="icon-arrow-right-2"></i>}
         </btn-modal-open>
     ) : (
-        <AnimateLink to={data.action} target={actionType === "external_link" && target !== "self" ? "_blank" : undefined} className={customClasses || 'btn-blue'} data-cursor-style="off" attributes={attributes}>
+        <AnimateLink to={data.action} target={actionType === "external_link" && target !== "self" ? "_blank" : undefined} className={customClasses || 'btn-blue'} data-cursor-style="off" attributes={attributes} onProductRedirect={onClick}>
             <span>{data.label}</span>
             {showArrow && <i className="icon-arrow-right"></i>}
         </AnimateLink>
