@@ -28,9 +28,10 @@ const logSpamAttempt = async (formName, data) => {
             const wixClient = await createWixClient();
 
             await wixClient.items.insert("SpamLogs", {
+                title: "Rentals",
                 formData: data,
                 formType: formName,
-                timestamp: new Date() + "" // Store as string for readability,
+                timestamp: new Date().toISOString(),
             });
 
         } catch (error) {

@@ -114,7 +114,6 @@ const ContactForm = ({ data }) => {
               </span>
             )}
           </div>
-          {/* Honeypot field for spam protection - hidden from users */}
           <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
             <label htmlFor="website_url">Website</label>
             <input
