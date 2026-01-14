@@ -81,6 +81,20 @@ const Newsletter = ({ data }) => {
               <span className="error">{formErrors.email_f932.message}</span>
             )}
           </div>
+          {/* Honeypot field for spam protection - hidden from users */}
+          <div
+            style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }}
+            aria-hidden="true">
+            <label htmlFor="newsletter_website">Website</label>
+            <input
+              type="text"
+              id="newsletter_website"
+              name="website_url"
+              tabIndex={-1}
+              autoComplete="off"
+              {...register("website_url")}
+            />
+          </div>
           <div className="container-submit">
             <button type="submit" className="bt-submit" disabled={loading}>
               <span className="submit-text">
