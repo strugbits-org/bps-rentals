@@ -1,8 +1,8 @@
 diff --git a/node_modules/next/dist/esm/server/lib/incremental-cache/index.js b/node_modules/next/dist/esm/server/lib/incremental-cache/index.js
-index 16893c6..900dbb7 100644
+index ea58388..d8b6f85 100644
 --- a/node_modules/next/dist/esm/server/lib/incremental-cache/index.js
 +++ b/node_modules/next/dist/esm/server/lib/incremental-cache/index.js
-@@ -359,9 +359,9 @@ export class IncrementalCache {
+@@ -356,9 +356,9 @@ export class IncrementalCache {
          const itemSize = JSON.stringify(data).length;
          if (ctx.fetchCache && // we don't show this error/warning when a custom cache handler is being used
          // as it might not have this limit
@@ -15,10 +15,10 @@ index 16893c6..900dbb7 100644
              return;
          }
 diff --git a/node_modules/next/dist/server/lib/incremental-cache/index.js b/node_modules/next/dist/server/lib/incremental-cache/index.js
-index 480bbfc..3da7621 100644
+index 754eee8..dd37ee7 100644
 --- a/node_modules/next/dist/server/lib/incremental-cache/index.js
 +++ b/node_modules/next/dist/server/lib/incremental-cache/index.js
-@@ -386,9 +386,9 @@ class IncrementalCache {
+@@ -383,9 +383,9 @@ class IncrementalCache {
          const itemSize = JSON.stringify(data).length;
          if (ctx.fetchCache && // we don't show this error/warning when a custom cache handler is being used
          // as it might not have this limit
