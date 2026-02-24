@@ -152,7 +152,6 @@ const ProductCollectionPage = ({
       const price = findPriceTier({
         tier: pricingTier,
         pricingTiers: set?.pricingTiers,
-        price: set?.productPrice,
         variantPrice: set?.price,
         isRawPrice: true,
         quantity: set.quantity
@@ -427,7 +426,6 @@ const ProductCollectionPage = ({
                             {findPriceTier({
                               tier: pricingTier,
                               pricingTiers: set?.pricingTiers,
-                              price: set?.productPrice,
                               variantPrice: set?.price,
                             })}
                           </span>}

@@ -456,8 +456,7 @@ const ProductPostPage = ({
                           <span className="specs-text">
                             {findPriceTier({
                               tier: pricingTier,
-                              pricingTiers: selectedProductDetails?.pricingTiers,
-                              price: selectedProductDetails.product?.price,
+                              pricingTiers: selectedProductDetails.variantData?.[selectedVariantIndex]?.pricingTiers,
                               variantPrice: selectedVariant?.price,
                             })}
                           </span>

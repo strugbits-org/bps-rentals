@@ -249,6 +249,11 @@ const getDataFetchFunction = async (payload) => {
           if (val.variantData) {
             val.variantData = val.variantData.map(val2 => {
               encryptPriceFields(val2.variant, fieldsToEncrypt);
+              if (val2.pricingTiers?.length) {
+                val2.pricingTiers.forEach(tier => {
+                  encryptPriceFields(tier, fieldsToEncrypt);
+                });
+              }
               return val2;
             });
           }
