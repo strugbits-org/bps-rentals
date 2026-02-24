@@ -103,8 +103,7 @@ const ProductCard = ({
                 <div className="dimensions">
                   {findPriceTier({
                     tier: pricingTier,
-                    pricingTiers: productData?.pricingTiers,
-                    price: productData.product?.price,
+                    pricingTiers: activeVariant?.pricingTiers,
                     variantPrice: activeVariant.variant.price,
                   })}
                 </div>

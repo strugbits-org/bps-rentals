@@ -91,8 +91,10 @@ const CartPage = () => {
       const pricingTiersData = await getCartPricingTiersData(cartItemsIds);
 
       const cartData = response.map((item) => {
-        const pricingTier = pricingTiersData.find((tier) => tier._id === item.catalogReference.catalogItemId);
-        return { ...item, pricingTiers : pricingTier?.pricingTiers || [] };
+        const productData = pricingTiersData.find((tier) => tier._id === item.catalogReference.catalogItemId);
+        const variantSku = item.physicalProperties?.sku;
+        const variantTiers = productData?.variantData?.find((v) => v.sku === variantSku);
+        return { ...item, pricingTiers: variantTiers?.pricingTiers || [] };
       });
       
       setCartItems(cartData);
