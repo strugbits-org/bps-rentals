@@ -155,7 +155,6 @@ const CartModalCollection = ({
       const price = findPriceTier({
         tier: pricingTier,
         pricingTiers: set?.pricingTiers,
-        price: set?.productPrice,
         variantPrice: set?.price,
         isRawPrice: true,
         quantity: set.quantity
@@ -348,7 +347,6 @@ const CartModalCollection = ({
                                     {SHOW_PRICES && <span className="price">{findPriceTier({
                                       tier: pricingTier,
                                       pricingTiers: set?.pricingTiers,
-                                      price: set?.productPrice,
                                       variantPrice: set?.price,
                                     })}</span>}
                                     <div className="quantity container-add-to-cart">

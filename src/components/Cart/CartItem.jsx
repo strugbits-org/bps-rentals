@@ -87,7 +87,6 @@ export const CartItem = ({ data, isReadOnly, handleQuantityChange, updateProduct
                             {SHOW_PRICES && <div class="fs--24 mb-10 text-right">{status === "created" ? `$ ${(decryptField(cartData.price) * quantity).toFixed(2).toLocaleString()}` : findPriceTier({
                                 tier: pricingTier,
                                 pricingTiers: data?.pricingTiers,
-                                price: pricingTier ? productPrice : data.price.amount,
                                 variantPrice: data.price.amount,
                                 quantity: quantity,
                             })}</div>}
@@ -159,7 +158,6 @@ export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updatePr
             const price = findPriceTier({
                 tier: pricingTier,
                 pricingTiers: status === "created" ? [] : set?.pricingTiers,
-                price: productPrice,
                 variantPrice: status === "created" ? set.quotePrice : set?.price.amount,
                 isRawPrice: true,
                 quantity: set.quantity
@@ -257,7 +255,6 @@ export const CartItemGroup = ({ data, isReadOnly, handleQuantityChange, updatePr
                                     {SHOW_PRICES && <span className="price">{findPriceTier({
                                         tier: pricingTier,
                                         pricingTiers: status === "created" ? [] : item?.pricingTiers,
-                                        price: productPrice || item?.price.amount,
                                         variantPrice: status === "created" ? item.quotePrice : item?.price.amount
                                     })}</span>}
                                     {isReadOnly ? (

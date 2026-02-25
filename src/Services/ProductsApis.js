@@ -738,6 +738,7 @@ export const getCartPricingTiersData = async (product) => {
     return response.items.map((data) => ({
       _id: data.product,
       pricingTiers: Array.isArray(data?.pricingTiers) ? data.pricingTiers : [],
+      variantData: Array.isArray(data?.variantData) ? data.variantData : [],
     }));
   } catch (error) {
     logError("Error fetching products pricing tiers data:", error);
