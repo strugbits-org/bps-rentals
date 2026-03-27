@@ -235,7 +235,7 @@ const ProductCollectionPage = ({
 
   const updatedDescription = selectedProductDetails.product.description.replace(
     /color:#000000;/g,
-    "color:#0F41FA"
+    "color:var(--blue-1)"
   );
 
   const fetchSavedProducts = async () => {

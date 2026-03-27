@@ -145,27 +145,27 @@ html {
 
 .icon-360:before {
   content: "\e925";
-  color: #0f41fa;
+  color: var(--blue-1);
 }
 
 .icon-cart:before {
   content: "\e914";
-  color: #0f41fa;
+  color: var(--blue-1);
 }
 
 .icon-bps-logo:before {
   content: "\e924";
-  color: #1b40fa;
+  color: var(--blue-1);
 }
 
 .icon-logo:before {
   content: "\e900";
-  color: #0f41fa;
+  color: var(--blue-1);
 }
 
 .icon-filter:before {
   content: "\e923";
-  color: #0f41fa;
+  color: var(--blue-1);
 }
 
 .icon-logout:before {

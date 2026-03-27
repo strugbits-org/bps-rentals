@@ -598,19 +598,19 @@ input {
   color: #fff;
 }
 .red-1 {
-  color: #C50000;
+  color: var(--red-1);
 }
 .blue-1 {
-  color: #0F41FA;
+  color: var(--blue-1);
 }
 .bg-blue-1 {
-  background-color: #0F41FA;
+  background-color: var(--blue-1);
 }
 .bg-blue-2 {
-  background-color: #142B8B;
+  background-color: var(--blue-2);
 }
 .bg-beige-1 {
-  background-color: #BABAB2;
+  background-color: var(--beige-1);
 }
 :root {
   --black-1: #000;
