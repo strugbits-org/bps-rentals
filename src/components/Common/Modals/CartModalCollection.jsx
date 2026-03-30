@@ -14,6 +14,7 @@ import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
 import AnimateLink from "../AnimateLink";
 import "@/assets/style/product-set.css"
+import ThreeDSVG from "../../svgs/ThreeDSVG";
 
 const CartModalCollection = ({
   productData,
@@ -275,11 +276,7 @@ const CartModalCollection = ({
                                       <div className="swiper-slide">
                                         <div className="wrapper-img">
                                           <div className="container-img">
-                                            <img
-                                              alt="3d model"
-                                              src="/images/3d.svg"
-                                              className=" "
-                                            />
+                                            <ThreeDSVG />
                                           </div>
                                         </div>
                                       </div>

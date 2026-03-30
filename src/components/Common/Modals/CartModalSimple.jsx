@@ -12,6 +12,7 @@ import useUserData from "@/Hooks/useUserData";
 import { ImageWrapper } from "../ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import ThreeDSVG from "../../svgs/ThreeDSVG";
 
 const CartModalSimple = ({
   productData,
@@ -240,11 +241,7 @@ const CartModalSimple = ({
                                       <div className="swiper-slide">
                                         <div className="wrapper-img">
                                           <div className="container-img">
-                                            <img
-                                              alt="3d model"
-                                              src="/images/3d.svg"
-                                              className=" "
-                                            />
+                                            <ThreeDSVG />
                                           </div>
                                         </div>
                                       </div>

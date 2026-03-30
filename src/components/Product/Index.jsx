@@ -29,6 +29,7 @@ import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
 import { ProductDocuments } from "./ProductDocuments";
+import ThreeDSVG from "../svgs/ThreeDSVG";
 
 const ProductPostPage = ({
   selectedProductDetails,
@@ -364,12 +365,7 @@ const ProductPostPage = ({
                             <div className="swiper-slide">
                               <div className="wrapper-img img-3d">
                                 <div className="container-img">
-                                  <img
-                                    src="/images/3d.svg"
-                                    data-preload
-                                    className="media"
-                                    alt="3d model"
-                                  />
+                                  <ThreeDSVG />
                                 </div>
                                 <span className="hide">360</span>
                               </div>

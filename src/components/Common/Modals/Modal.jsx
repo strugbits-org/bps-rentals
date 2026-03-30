@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { pageLoadStart, updatedWatched } from "@/Utils/AnimationFunctions";
 import { useRouter } from "next/navigation";
+import AnimateLink from "../AnimateLink";
 
 const Modal = ({
   buttonLabel,
@@ -45,9 +46,16 @@ const Modal = ({
                 <div className="row">
                   <div className="col-lg-6 offset-lg-3">
                     <div className="content" data-feedback-area>
-                      <div className="container-img">
-                        <img src="/images/logo.svg" alt="logo" />
-                      </div>
+                      <AnimateLink
+                        to="/"
+                        className="logo"
+                        data-pjax
+                        aria-label="Blueprint Rentals"
+                        data-menu-close
+                      >
+                        <span>Blueprint Rentals</span>
+                        <i className="icon-logo"></i>
+                      </AnimateLink>
                       {message && (
                         <h2
                           className="fs--40 mt-lg-105 mt-mobile-110 mb-lg-75 mb-mobile-90 text-center text-uppercase split-words"

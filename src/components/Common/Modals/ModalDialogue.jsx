@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { updatedWatched } from "@/Utils/AnimationFunctions";
+import AnimateLink from "../AnimateLink";
 
 const ModalDialogue = ({
   buttonLabel,
@@ -25,9 +26,16 @@ const ModalDialogue = ({
                 <div className="row flex-center">
                   <div className="col-lg-4">
                     <div className="content" data-feedback-area>
-                      <div className="container-img">
-                        <img src="/images/logo.svg" alt="logo" />
-                      </div>
+                      <AnimateLink
+                        to="/"
+                        className="logo"
+                        data-pjax
+                        aria-label="Blueprint Rentals"
+                        data-menu-close
+                      >
+                        <span>Blueprint Rentals</span>
+                        <i className="icon-logo"></i>
+                      </AnimateLink>
                       <h2
                         className="fs--30 mt-lg-75 mt-mobile-75 mb-lg-75 mb-mobile-90 text-center text-uppercase split-words"
                         data-aos="fadeIn .8s ease-in-out .2s, d:loop"

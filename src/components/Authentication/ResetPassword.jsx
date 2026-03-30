@@ -6,6 +6,7 @@ import { markPageLoaded, pageLoadStart } from "@/Utils/AnimationFunctions";
 import { resetPassword } from "@/Services/AuthApis";
 import Modal from "../Common/Modals/Modal";
 import logError from "@/Utils/ServerActions";
+import AnimateLink from "../Common/AnimateLink";
 
 const ResetPassword = () => {
   const searchParams = useSearchParams();
@@ -69,14 +70,14 @@ const ResetPassword = () => {
   };
 
   useEffect(() => {
-    if (userId) {
-      markPageLoaded();
-    } else {
-      router.push("/");
-    }
+    // if (userId) {
+    markPageLoaded();
+    // } else {
+    //   router.push("/");
+    // }
   }, [userId]);
 
-  if (!userId) return;
+  // if (!userId) return;
   return (
     <div className="reset-password-main">
       {modalState.error && (
@@ -89,9 +90,16 @@ const ResetPassword = () => {
 
       <div className="reset-password-form-container">
         <div className="reset-password-form-logos">
-          <div className="container-img">
-            <img src="/images/logo.svg" alt="Logo" />
-          </div>
+          <AnimateLink
+            to="/"
+            className="logo"
+            data-pjax
+            aria-label="Blueprint Rentals"
+            data-menu-close
+          >
+            <span>Blueprint Rentals</span>
+            <i className="icon-logo"></i>
+          </AnimateLink>
           <h2
             className="fs--30 mt-lg-30 mt-mobile-30 mb-lg-30 mb-mobile-30 text-center text-uppercase split-words"
             data-aos="d:loop"
