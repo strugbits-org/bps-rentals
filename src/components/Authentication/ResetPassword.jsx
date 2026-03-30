@@ -70,14 +70,14 @@ const ResetPassword = () => {
   };
 
   useEffect(() => {
-    // if (userId) {
-    markPageLoaded();
-    // } else {
-    //   router.push("/");
-    // }
+    if (userId) {
+      markPageLoaded();
+    } else {
+      router.push("/");
+    }
   }, [userId]);
 
-  // if (!userId) return;
+  if (!userId) return;
   return (
     <div className="reset-password-main">
       {modalState.error && (
