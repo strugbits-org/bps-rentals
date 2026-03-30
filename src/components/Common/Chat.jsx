@@ -8,6 +8,7 @@ import image2 from "@/assets/svg/btn-chat-2.svg";
 import image3 from "@/assets/svg/btn-chat-3.svg";
 import { useDetectClickOutside } from "react-detect-click-outside";
 import { enableChat } from "@/Utils/AnimationFunctions";
+import InlineSvg from "./InlineSvg";
 
 const Chat = ({ config, triggerEvents }) => {
   const [chatConfig, setChatConfig] = useState();
@@ -126,15 +127,15 @@ const Chat = ({ config, triggerEvents }) => {
           <div className="btn-wrapper">
             <span>Hello?</span>
             <div className="container-img btn-top">
-              <img src={image1.src} data-preload className="media" alt="Chat Button Top" />
+              <InlineSvg src={image1.src} className="media" alt="Chat Button Top" />
             </div>
             <div className="bg-1"></div>
             <div className="container-img btn-middle">
-              <img src={image2.src} data-preload className="media" alt="Chat Button Middle" />
+              <InlineSvg src={image2.src} className="media" alt="Chat Button Middle" />
             </div>
             <div className="bg-2"></div>
             <div className="container-img btn-bottom">
-              <img src={image3.src} data-preload className="media" alt="Chat Button Bottom" />
+              <InlineSvg src={image3.src} className="media" alt="Chat Button Bottom" />
             </div>
           </div>
         </button>

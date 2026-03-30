@@ -15,6 +15,7 @@ import mangeProjectsIcon from "@/assets/menu-icons/project.svg"
 import mangeSortIcon from "@/assets/menu-icons/sort.svg"
 import productSetIcon from "@/assets/menu-icons/product-set.svg"
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import InlineSvg from "../Common/InlineSvg";
 
 const links = [
   { name: "My Account", icon: "icon-account", href: "/my-account" },
@@ -143,7 +144,7 @@ const Account = ({ children, footerData, banner }) => {
                       <i className={icon}></i>
                     ) : (
                       <div className="svg-custom">
-                        <img src={icon.src} alt="" />
+                        <InlineSvg src={icon.src} alt={name} />
                       </div>
                     )}
                     <span>{name}</span>

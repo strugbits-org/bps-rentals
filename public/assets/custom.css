@@ -815,10 +815,12 @@ li.IMPORTANT.long-desc {
 
 .menu-my-account .list-menu-my-account .link-account .svg-custom {
   width: 3.1rem;
+  color: var(--blue-1);
 }
 
-.menu-my-account .list-menu-my-account .link-account .svg-custom img {
+.menu-my-account .list-menu-my-account .link-account .svg-custom svg {
   width: 18px;
+  height: 18px;
 }
 
 
