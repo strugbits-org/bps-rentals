@@ -132,11 +132,11 @@
 
 .menu-search .wrapper-search .container-results .result-all-studios .list-result-all-studios .grid-item .link-studios:not(.active) {
   background-color: white;
-  color: #0f41fa;
+  color: var(--blue-1);
 }
 
 .menu-search .wrapper-search .container-results .result-all-studios .list-result-all-studios .grid-item .link-studios:not(.active):before {
-  color: #0f41fa;
+  color: var(--blue-1);
 }
 
 .menu-search .wrapper-search .container-results .result-all-studios .list-result-all-studios .grid-item .link-studios.disabled {
@@ -172,7 +172,7 @@
 }
 
 .result-our-markets .grid-item.active .market-link.project-link .container-text {
-  color: #0f41fa;
+  color: var(--blue-1);
 }
 
 .mt-3-cs {
@@ -180,7 +180,7 @@
 }
 
 .btn-disabled {
-  background: #babab2 !important;
+  background: var(--beige-1) !important;
   cursor: not-allowed;
   pointer-events: none;
   border: none;
@@ -188,7 +188,7 @@
 }
 
 .btn-disabled::before {
-  background: #babab2 !important;
+  background: var(--beige-1) !important;
 }
 
 .unavailable-warning-wrapper {
@@ -196,7 +196,7 @@
 }
 
 .unavailable-warning {
-  color: red !important;
+  color: var(--red-1) !important;
 }
 
 .unavailable-warning-wrapper btn-modal-open {
@@ -815,10 +815,12 @@ li.IMPORTANT.long-desc {
 
 .menu-my-account .list-menu-my-account .link-account .svg-custom {
   width: 3.1rem;
+  color: var(--blue-1);
 }
 
-.menu-my-account .list-menu-my-account .link-account .svg-custom img {
+.menu-my-account .list-menu-my-account .link-account .svg-custom svg {
   width: 18px;
+  height: 18px;
 }
 
 
@@ -2263,8 +2265,8 @@ button.btn-border-blue.red {
   aspect-ratio: 1;
   border-radius: 50%;
   background: 
-    radial-gradient(farthest-side,#0f41fa 94%,#0000) top/8px 8px no-repeat,
-    conic-gradient(#0000 30%,#0f41fa);
+    radial-gradient(farthest-side, var(--blue-1) 94%,#0000) top/8px 8px no-repeat,
+    conic-gradient(#0000 30%, var(--blue-1));
   -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 0);
   animation: l13 1s infinite linear;
 }

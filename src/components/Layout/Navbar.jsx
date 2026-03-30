@@ -221,7 +221,7 @@ const Navbar = ({
                     y="0px"
                     viewBox="0 0 55 38.5"
                   >
-                    <g id="bt-menu-bars" fill="#0F41FA">
+                    <g id="bt-menu-bars" fill="var(--blue-1)">
                       <rect
                         id="bottombar"
                         y="32.5"

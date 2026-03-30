@@ -13,6 +13,7 @@ import StudiosFixedMenu from "@/components/Common/StudiosFixedMenu";
 import { GoogleTagManager } from '@next/third-parties/google';
 
 import { fetchAllLayoutData } from "@/Services/LayoutDataFetcher";
+import { getThemeStyleBlock } from "@/Services/ThemeService";
 import ContactUsModal from "@/components/Common/Modals/ContactUsModal";
 import { SocialSection } from "@/components/Common/Sections/SocialSection";
 import { ExternalTriggers } from "@/components/Common/ExternalTriggers";
@@ -29,6 +30,11 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
+  const [layoutData, themeStyleBlock] = await Promise.all([
+    fetchAllLayoutData(),
+    getThemeStyleBlock()
+  ]);
+
   const {
     filterLocations,
     loginModalContent,
@@ -49,12 +55,15 @@ export default async function RootLayout({ children }) {
     marketsData,
     studiosData,
     allCategoriesData
-  } = await fetchAllLayoutData();
+  } = layoutData;
 
   return (
     <>
       <CustomScripts />
       <html lang="en">
+        <head>
+          <style dangerouslySetInnerHTML={{ __html: themeStyleBlock }} />
+        </head>
         <GoogleTagManager gtmId="GTM-M7R5H46R" />
 
         <body

@@ -29,9 +29,16 @@ const QuoteConfirmedModal = () => {
                 <div className="row">
                   <div className="col-lg-6 offset-lg-3">
                     <div className="content" data-feedback-area>
-                      <div className="container-img">
-                        <img src="/images/logo.svg" alt="logo" />
-                      </div>
+                      <AnimateLink
+                        to="/"
+                        className="logo"
+                        data-pjax
+                        aria-label="Blueprint Rentals"
+                        data-menu-close
+                      >
+                        <span>Blueprint Rentals</span>
+                        <i className="icon-logo"></i>
+                      </AnimateLink>
                       <h2
                         className="fs--60 mt-lg-75 mt-mobile-70 mb-lg-75 mb-mobile-70 text-center text-uppercase split-words"
                         data-aos="d:loop"
