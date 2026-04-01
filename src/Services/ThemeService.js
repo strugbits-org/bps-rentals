@@ -9,10 +9,11 @@ import logError from "@/Utils/ServerActions";
  */
 const DEFAULT_THEME_PALETTE = {
   // Brand colors (from Wix collection)
-  mainColor: "#1B40FA",
+  mainColor: "#0F41FA",
   accentColor1: "#87C3E7",
   accentColor2: "#BCE6FF",
   accentColor3: "#F2F2F2",
+  accentColor4: "#142B8B",  // Dark navy blue for sections like Designer Picks
 
   // Neutral colors
   black1: "#000000",
@@ -40,9 +41,10 @@ const DEFAULT_THEME_PALETTE = {
 const FIELD_TO_CSS_VAR_MAP = {
   // Primary brand colors (from Wix collection)
   mainColor: "--blue-1",
-  accentColor1: "--blue-2",
-  accentColor2: "--blue-3",
+  accentColor1: "--blue-3",  // Light blue
+  accentColor2: "--blue-4",  // Lighter blue
   accentColor3: "--white-2",
+  accentColor4: "--blue-2",  // Dark navy blue
 
   // Neutrals
   black1: "--black-1",
@@ -71,9 +73,10 @@ const FIELD_TO_CSS_VAR_MAP = {
  * - title: string (theme name, e.g., "Default", "Dark Mode")
  * - active: boolean (only one should be active)
  * - mainColor: string (hex color - primary brand color, maps to --blue-1)
- * - accentColor1: string (hex color - maps to --blue-2)
- * - accentColor2: string (hex color - maps to --blue-3)
+ * - accentColor1: string (hex color - light blue, maps to --blue-3)
+ * - accentColor2: string (hex color - lighter blue, maps to --blue-4)
  * - accentColor3: string (hex color - maps to --white-2)
+ * - accentColor4: string (hex color - dark navy blue, maps to --blue-2, for Designer Picks etc.)
  */
 export const getThemeConfig = async () => {
   try {
