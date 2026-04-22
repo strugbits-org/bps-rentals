@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 
-const isAuthorized = (authHeader) => authHeader && authHeader === process.env.NEXT_PUBLIC_REVALIDATE_TOKEN;
+const isAuthorized = (authHeader) => authHeader && authHeader === process.env.REVALIDATE_TOKEN;
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);

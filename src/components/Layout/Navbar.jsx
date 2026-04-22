@@ -18,6 +18,7 @@ import { getProductsCart } from "@/Services/CartApis";
 import { calculateTotalCartQuantity } from "@/Utils/Utils";
 import logError from "@/Utils/ServerActions";
 import { fetchBlogsDataClient, fetchPortfoliosDataClient } from "@/Services/LayoutDataFetcher";
+import { AUTH_REQUIRED, clearAuthCookies } from "@/Utils/AuthSession";
 
 const Navbar = ({
   locations,
@@ -75,11 +76,8 @@ const Navbar = ({
   const getCartTotalQuantity = async () => {
     try {
       const response = await getProductsCart();
-      if (response === "Token has expired") {
-        removeCookie("authToken", { path: "/" });
-        removeCookie("userData", { path: "/" });
-        removeCookie("userTokens", { path: "/" });
-        removeCookie("cartQuantity", { path: "/" });
+      if (response === AUTH_REQUIRED) {
+        clearAuthCookies(removeCookie);
         setTimeout(() => {
           router.push("/");
         }, 500);

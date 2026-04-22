@@ -2,6 +2,7 @@
 import logError from "@/Utils/ServerActions";
 import { AddProductToCartVisitor, getProductsCartVisitor, removeProductFromCartVisitor, updateProductsQuantityCartVisitor } from "./CartApisVisitor";
 import { getAuthToken, getCartId, getMemberTokens } from "./GetAuthToken";
+import { AUTH_REQUIRED, isAuthErrorMessage } from "@/Utils/AuthSession";
 
 const baseUrl = process.env.BASE_URL;
 
@@ -29,6 +30,11 @@ export const getProductsCart = async (retries = 3, delay = 1000) => {
         cache: "no-store",
       });
 
+      if (response.status === 401) {
+        const data = await response.json();
+        throw new Error(data.message || "Unauthorized");
+      }
+
       const data = await response.json();
       if (!data.cart?.lineItems) throw new Error(data.error);
 
@@ -36,8 +42,9 @@ export const getProductsCart = async (retries = 3, delay = 1000) => {
 
     } catch (error) {
       logError(`Error fetching cart: Attempt ${attempt} failed: ${error}`);
-      if (error.message === "Token has expired") {
-        return "Token has expired";
+
+      if (isAuthErrorMessage(error?.message)) {
+        return AUTH_REQUIRED;
       }
 
       if (attempt < retries) {
