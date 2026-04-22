@@ -3,6 +3,7 @@ import logError from "@/Utils/ServerActions";
 import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 import { sanitizeProduct } from "@/Utils/Utils";
+import { AUTH_REQUIRED, isAuthErrorMessage } from "@/Utils/AuthSession";
 const baseUrl = process.env.BASE_URL;
 
 export const getProductsKeywords = async () => {
@@ -609,6 +610,10 @@ export const getSavedProductData = async (retries = 3, delay = 1000) => {
         cache: "no-store",
       });
 
+      if (response.status === 401) {
+        throw new Error("Unauthorized");
+      }
+
       const data = await response.json();
 
       if (data && data.items) {
@@ -618,6 +623,10 @@ export const getSavedProductData = async (retries = 3, delay = 1000) => {
       }
     } catch (error) {
       logError(`Error fetching saved products: Attempt ${attempt + 1} failed: ${error}`);
+
+      if (isAuthErrorMessage(error?.message)) {
+        return AUTH_REQUIRED;
+      }
 
       if (attempt < retries) {
         logError(`Retrying in ${delay}ms...`);

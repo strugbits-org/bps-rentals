@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cartWixClient } from "@/Utils/CreateWixClient";
 import handleAuthentication from "@/Utils/HandleAuthentication";
 import { encryptPriceFields } from "@/Utils/Encrypt";
+import { isAuthError } from "@/Utils/AuthSession";
 
 const addItemToCart = async (cartClient) => {
   return await cartClient.currentCart.addToCurrentCart({
@@ -57,6 +58,10 @@ export const POST = async (req) => {
 
     return handleCartResponse(cart);
   } catch (error) {
+    if (isAuthError(error)) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
     if (error?.details?.applicationError?.code === "OWNED_CART_NOT_FOUND") {
       return await createNewCart(memberTokens);
     }
