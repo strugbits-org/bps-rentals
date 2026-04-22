@@ -1,14 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/navigation";
 import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
 import { getProductVariants, getProductVariantsImages, getSavedProductData } from "@/Services/ProductsApis";
 import ProductCard from "../Category/ProductCard";
 import CartModal from "../Common/Modals/CartModal";
 import AutoClickWrapper from "../Common/AutoClickWrapper";
 import logError from "@/Utils/ServerActions";
+import { AUTH_REQUIRED, clearAuthCookies } from "@/Utils/AuthSession";
 
 const SavedProducts = () => {
+  const router = useRouter();
+  const [_cookies, _setCookie, removeCookie] = useCookies([
+    "authToken",
+    "userData",
+    "userTokens",
+    "cartQuantity",
+  ]);
 
   const pageSize = 20;
   const [pageLimit, setPageLimit] = useState(pageSize);
@@ -103,6 +113,13 @@ const SavedProducts = () => {
   const fetchSavedProducts = async () => {
     try {
       const savedProducts = await getSavedProductData();
+
+      if (savedProducts === AUTH_REQUIRED) {
+        clearAuthCookies(removeCookie);
+        router.push("/");
+        return;
+      }
+
       setSavedProductsData(savedProducts);
       setTimeout(markPageLoaded, 200);
     } catch (error) {

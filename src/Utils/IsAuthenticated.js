@@ -3,6 +3,7 @@ import { authWixClient, createWixClient } from "./CreateWixClient";
 import logError from "./ServerActions";
 import { extractPermissions } from "./checkPermissions";
 import { getMemberPricingTier } from "@/Services/Index";
+import { isAuthErrorMessage } from "./AuthSession";
 
 export const isAuthenticated = async (token) => {
   try {
@@ -19,7 +20,7 @@ export const isAuthenticated = async (token) => {
       if (err.name === "TokenExpiredError") {
         throw new Error("Token has expired");
       } else {
-        console.error("JWT verification failed:", err.message);
+        throw new Error("Unauthorized: Invalid token");
       }
     }
 
@@ -63,9 +64,10 @@ export const isAuthenticated = async (token) => {
     return loggedInUserData;
   } catch (error) {
     logError(error);
-    if (error.message === "Token has expired") {
+    if (isAuthErrorMessage(error.message)) {
       throw new Error(error.message);
     }
+
     throw new Error(`Unauthorized: ${error.message}`);
   }
 };
