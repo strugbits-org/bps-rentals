@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
 import { signInUser } from "@/Services/AuthApis";
 import { hasRequested } from "@/Utils/Request3dAccess";
+import { decryptField } from "@/Utils/Encrypt";
+import { PERMISSIONS } from "@/Utils/Schema/permissions";
 import Disclaimer from "./Disclaimer";
 import logError from "@/Utils/ServerActions";
 
@@ -70,6 +72,19 @@ const Login = ({
           // continue to the request form (or confirmation if already requested)
           // instead of redirecting to the dashboard.
           setPending3dRequest(false);
+
+          const permissions =
+            response.member?.permissions?.map((p) => decryptField(p)) || [];
+          const hasDocumentsAccess = permissions.includes(PERMISSIONS.SHOW_DOCUMENTS);
+
+          if (hasDocumentsAccess) {
+            // Already has library access — close modal; product page will show files.
+            submenuLogin?.classList.remove("active");
+            button?.classList.remove("active");
+            setToggleModal("");
+            return;
+          }
+
           submenuLogin?.classList.add("active");
           const userKey = response.member?.memberId || response.member?.loginEmail;
           const nextView = hasRequested(userKey) ? "3d-confirmation" : "3d-request";
