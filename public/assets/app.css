@@ -3741,7 +3741,7 @@ html {
   height: 100%;
 }
 
-#loader .container-logo img {
+#loader .container-logo img, #loader .container-logo svg {
   position: absolute;
   top: 0;
   right: auto;
@@ -12497,7 +12497,7 @@ body.menu-leave:not(.page-leave-active) .wrapper-search .container-form {
   height: 100%;
 }
 
-.footer .container-logo img {
+.footer .container-logo img, .footer .container-logo svg  {
   position: absolute;
   top: 0;
   right: auto;
@@ -12752,7 +12752,8 @@ body.menu-leave:not(.page-leave-active) .wrapper-search .container-form {
   height: 100%;
 }
 
-.footer.footer-account .footer-logo-account img {
+.footer.footer-account .footer-logo-account img,
+.footer.footer-account .footer-logo-account svg {
   position: absolute;
   top: 0;
   right: auto;
