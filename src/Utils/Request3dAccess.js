@@ -34,3 +34,30 @@ export const hasRequested = (userKey) => {
     if (!userKey) return false;
     return readSet().includes(userKey);
 };
+
+export const clearRequested = (userKey) => {
+    if (typeof window === "undefined" || !userKey) return;
+    const set = readSet().filter((key) => key !== userKey);
+    try {
+        if (set.length === 0) {
+            window.localStorage.removeItem(KEY);
+        } else {
+            window.localStorage.setItem(KEY, JSON.stringify(set));
+        }
+    } catch {
+        /* storage unavailable — non-fatal */
+    }
+};
+
+export const getUserKeyFromUserData = (userData) => {
+    if (!userData) return null;
+    let parsed = userData;
+    if (typeof userData === "string") {
+        try {
+            parsed = JSON.parse(userData);
+        } catch {
+            return null;
+        }
+    }
+    return parsed?.memberId || parsed?.loginEmail || null;
+};
