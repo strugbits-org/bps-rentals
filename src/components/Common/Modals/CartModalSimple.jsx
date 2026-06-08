@@ -329,7 +329,8 @@ const CartModalSimple = ({
                                   <span className="specs-text">
                                     {findPriceTier({
                                       tier: pricingTier,
-                                      pricingTiers: productData?.variantData?.[selectedVariantIndex]?.pricingTiers,
+                                      pricingTiers: productData?.pricingTiers,
+                                      price: productData.product?.price,
                                       variantPrice: selectedVariantData?.price,
                                     })}
                                   </span>

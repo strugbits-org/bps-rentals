@@ -28,10 +28,10 @@ export const CustomSelect = ({
         }));
 
     const formatVariantOptions = (products) =>
-        products.filter(({ product }) => product._id !== mainProduct?.product).flatMap(({ product, variantData }) => {
+        products.filter(({ product }) => product._id !== mainProduct?.product).flatMap(({ product, variantData, pricingTiers }) => {
             return variantData
                 .filter(({ sku }) => sku && !productsSet.some((prod) => prod.variant === sku))
-                .map(({ sku, variant, pricingTiers }) => ({
+                .map(({ sku, variant }) => ({
                     value: sku,
                     productId: product._id,
                     name: product.name,

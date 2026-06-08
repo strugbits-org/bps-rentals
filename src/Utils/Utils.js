@@ -304,11 +304,6 @@ export const decryptProductPrices = (data) => {
       if (val.variantData) {
         val.variantData = val.variantData.map(val2 => {
           decryptPriceFields(val2.variant, fieldsToDecrypt);
-          if (val2.pricingTiers?.length) {
-            val2.pricingTiers.forEach(tier => {
-              decryptPriceFields(tier, fieldsToDecrypt);
-            });
-          }
           return val2;
         });
       }
@@ -325,21 +320,25 @@ export const formatPrice = (price, quantity) => {
   return `${currencySymbol}${formattedPrice}`;
 }
 
-const normalizedPrice = (price, quantity) => {
+const normalizedPrice = (price, quantity, priceDifference) => {
   const cleaned = price && decryptField(price)?.replace(/[^0-9.-]+/g, "");
-  const priceValue = Number(cleaned);
+  const priceValue = Number(cleaned) + (priceDifference || 0);
   return quantity ? priceValue * quantity : priceValue;
 };
 
-export const findPriceTier = ({ variantPrice, pricingTiers = [], tier, quantity, isRawPrice = false }) => {
+export const findPriceTier = ({ price, variantPrice, pricingTiers = [], tier, quantity, isRawPrice = false }) => {
   const formatPriceValue = price => isRawPrice ? price : "$ " + price.toFixed(2);
   try {
+    const priceValue = normalizedPrice(price);
+    const variantPriceValue = normalizedPrice(variantPrice);
+    const priceDifference = Number(variantPriceValue) - Number(priceValue);
+
     const hasTiers = tier && pricingTiers.length > 0;
 
     if (hasTiers) {
-      const priceData = pricingTiers.find(({ key }) => key === tier);
+      const priceData = pricingTiers.find(({ name }) => name === tier);
       if (priceData) {
-        const finalPrice = normalizedPrice(priceData.price, quantity);
+        const finalPrice = normalizedPrice(priceData.price, quantity, priceDifference);
         return formatPriceValue(finalPrice);
       }
     } else {

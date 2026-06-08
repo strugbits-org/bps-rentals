@@ -75,6 +75,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
       const price = findPriceTier({
         tier: pricingTier,
         pricingTiers: product?.pricingTiers,
+        price: pricingTier ? productPrice : product.price.amount,
         variantPrice: product.price.amount,
         isRawPrice: true,
       })
@@ -159,12 +160,11 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
 
       const cartItemsIds = response.map(product => product.catalogReference.catalogItemId);
       const pricingTiersData = await getCartPricingTiersData(cartItemsIds);
+      const pricingTiersMap = new Map(pricingTiersData.map(tier => [tier._id, tier.pricingTiers]));
 
       const cartData = response.map(item => {
-        const productData = pricingTiersData.find(tier => tier._id === item.catalogReference.catalogItemId);
-        const variantSku = item.physicalProperties?.sku;
-        const variantTiers = productData?.variantData?.find((v) => v.sku === variantSku);
-        return { ...item, pricingTiers: variantTiers?.pricingTiers || [] };
+        const pricingTiers = pricingTiersMap.get(item.catalogReference.catalogItemId) || [];
+        return { ...item, pricingTiers: pricingTiers };
       });
 
       setCartItems(cartData);

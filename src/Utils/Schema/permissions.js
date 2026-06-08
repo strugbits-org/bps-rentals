@@ -5,10 +5,3 @@ export const PERMISSIONS = {
     SHOW_DOCUMENTS: 'documents_access',
     MANAGE_PRODUCTS_SET: 'manage_products_sets_access',
 };
-
-// Mirrors the `value` column of the ProductAttachmentTypes CMS collection.
-export const ATTACHMENT_TYPES = {
-    FIREPROOF: 'fireproof',
-    THREE_D_MODELS: '3d-models',
-    OTHERS: 'others',
-};
