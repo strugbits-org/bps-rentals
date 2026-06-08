@@ -7,6 +7,13 @@ import CreateAccount from "../Authentication/CreateAccount";
 import Login from "../Authentication/Login";
 import Request3dForm from "../Authentication/Request3dForm";
 import Request3dConfirmation from "../Authentication/Request3dConfirmation";
+import {
+  clear3dRequestIntent,
+  get3dRequestIntentProduct,
+  is3dRequestIntentActive,
+  resetSubmenuAuthForms,
+  set3dRequestIntent,
+} from "@/Utils/Request3dAccess";
 
 import { pageLoadEnd, pageLoadStart } from "@/Utils/AnimationFunctions";
 import { usePathname, useRouter } from "next/navigation";
@@ -72,6 +79,7 @@ const Navbar = ({
       // Reset any leftover 3D-request view so the login form shows when opened here.
       setToggleModal("");
       setPending3dRequest(false);
+      clear3dRequestIntent();
       const element = document.querySelector(".header-info-list li.local-item.active");
       if (element) element.querySelector(".custom-close").click();
       submenuLogin.classList.toggle(
@@ -123,11 +131,13 @@ const Navbar = ({
     const handleOpen3dRequest = (e) => {
       const detail = e?.detail || {};
       setRequestProduct(detail.product || null);
+      resetSubmenuAuthForms();
       const submenuLogin = document.querySelector(".submenu-login");
       if (submenuLogin) submenuLogin.classList.add("active");
       if (detail.isLoggedIn) {
         setToggleModal(detail.alreadyRequested ? "3d-confirmation" : "3d-request");
       } else {
+        set3dRequestIntent(detail.product || null);
         setPending3dRequest(true);
         setToggleModal("login");
       }
@@ -152,7 +162,10 @@ const Navbar = ({
       document.dispatchEvent(new CustomEvent(isActive ? "modal:open" : "modal:close"));
       // Clear any leftover request intent on close so a later normal login can't
       // briefly flash the 3D request form from a stale pending flag.
-      if (!isActive) setPending3dRequest(false);
+      if (!isActive) {
+        setPending3dRequest(false);
+        clear3dRequestIntent();
+      }
     });
     observer.observe(submenuLogin, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
@@ -171,6 +184,7 @@ const Navbar = ({
   useEffect(() => {
     const is3dFlow =
       pending3dRequest ||
+      is3dRequestIntentActive() ||
       toggleModal === "3d-request" ||
       toggleModal === "3d-confirmation";
     if (!is3dFlow) return;
@@ -195,6 +209,7 @@ const Navbar = ({
       const submenuLogin = document.querySelector(".submenu-login");
       if (submenuLogin) submenuLogin.classList.remove("active");
       setPending3dRequest(false);
+      clear3dRequestIntent();
       // Keep the 3D view rendered through the panel's slide-out so the login form
       // underneath doesn't flash into view; clear it once the panel is hidden.
       setTimeout(() => setToggleModal(""), 700);
@@ -537,6 +552,9 @@ const Navbar = ({
                         createAccountModalContent={createAccountModalContent}
                         setMessage={setMessage}
                         setModalState={setModalState}
+                        setToggleModal={setToggleModal}
+                        pending3dRequest={pending3dRequest}
+                        setPending3dRequest={setPending3dRequest}
                       />
                       <ForgotPassword
                         forgotPasswordModalContent={forgotPasswordModalContent}

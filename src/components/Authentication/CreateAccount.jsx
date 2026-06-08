@@ -2,6 +2,10 @@
 import { useState } from "react";
 
 import { signUpUser } from "@/Services/AuthApis";
+import {
+  continue3dAccessAfterAuth,
+  is3dRequestIntentActive,
+} from "@/Utils/Request3dAccess";
 import Disclaimer from "./Disclaimer";
 import { useRouter } from "next/navigation";
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
@@ -12,12 +16,15 @@ const CreateAccount = ({
   createAccountModalContent,
   setMessage,
   setModalState,
+  setToggleModal,
+  pending3dRequest,
+  setPending3dRequest,
 }) => {
   const router = useRouter();
 
   const [submittingForm, setSubmittingForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(["authToken", "userData"]);
+  const [_cookies, setCookie, removeCookie] = useCookies(["authToken", "userData"]);
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -39,7 +46,15 @@ const CreateAccount = ({
     setSubmittingForm(true);
     setModalState({ success: true, error: false });
 
+    const in3dFlow = pending3dRequest || is3dRequestIntentActive();
+    if (in3dFlow) {
+      window.dispatchEvent(new CustomEvent("3d-request-view-open"));
+    }
+
     const submenuLogin = document.querySelector(".submenu-login");
+    const button = document.querySelector(".new-login-button");
+    let continued3dFlow = false;
+
     try {
       setMessage("Please wait, we're Creating your Account");
 
@@ -62,7 +77,6 @@ const CreateAccount = ({
         throw new Error(response.message);
       }
 
-      setModalState({ success: true, error: false });
       setFormData({
         first_name: "",
         last_name: "",
@@ -90,9 +104,22 @@ const CreateAccount = ({
       removeCookie("cartId", { path: "/" });
 
       if (authToken) {
-        pageLoadStart();
-        submenuLogin.classList.remove("active");
-        router.push("/my-account");
+        if (in3dFlow) {
+          setModalState({ success: false, error: false });
+          setMessage("");
+          continue3dAccessAfterAuth({
+            member: response.member,
+            submenuLogin,
+            button,
+            setToggleModal,
+            setPending3dRequest,
+          });
+          continued3dFlow = true;
+        } else {
+          pageLoadStart();
+          submenuLogin.classList.remove("active");
+          router.push("/my-account");
+        }
       }
 
       return response;
@@ -101,11 +128,17 @@ const CreateAccount = ({
       setModalState({ success: false, error: true });
       logError("Error creating account", error);
     } finally {
-      setTimeout(() => {
+      if (continued3dFlow) {
+        setSubmittingForm(false);
         setMessage("");
         setModalState({ success: false, error: false });
-        setSubmittingForm(false);
-      }, 4000);
+      } else {
+        setTimeout(() => {
+          setMessage("");
+          setModalState({ success: false, error: false });
+          setSubmittingForm(false);
+        }, 4000);
+      }
     }
   };
 
@@ -199,7 +232,9 @@ const CreateAccount = ({
           <div className="container-submit flex-center col-lg-12 mt-lg-5 mt-mobile-10">
             <button
               type="submit"
-              className="bt-submit btn-blue w-100 mt-tablet-10 w-mobile-100"
+              className="bt-submit btn-blue w-100 mt-tablet-10 w-mobile-100 disable-click-outside"
+              disabled={submittingForm}
+              onMouseDown={(e) => e.preventDefault()}
             >
               <span>
                 {createAccountModalContent && !submittingForm

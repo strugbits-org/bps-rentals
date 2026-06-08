@@ -2364,7 +2364,25 @@ button.btn-border-blue.red {
 }
 
 .submenu-login[data-form-active="3d-request"] .container-sign-in,
-.submenu-login[data-form-active="3d-confirmation"] .container-sign-in {
+.submenu-login[data-form-active="3d-confirmation"] .container-sign-in,
+.submenu-login[data-form-active="3d-request"] .container-create-account,
+.submenu-login[data-form-active="3d-confirmation"] .container-create-account,
+.submenu-login[data-form-active="3d-request"] .container-forgot-password,
+.submenu-login[data-form-active="3d-confirmation"] .container-forgot-password {
+  display: none !important;
+}
+
+.submenu-login[data-form-active="3d-request"] .container-create-account.d-none,
+.submenu-login[data-form-active="3d-confirmation"] .container-create-account.d-none {
+  display: none !important;
+}
+
+.submenu-login[data-form-active="login"] .container-request-access,
+.submenu-login[data-form-active="login"] .container-3d-confirm,
+.submenu-login[data-form-active="create-account"] .container-request-access,
+.submenu-login[data-form-active="create-account"] .container-3d-confirm,
+.submenu-login[data-form-active="forgot-password"] .container-request-access,
+.submenu-login[data-form-active="forgot-password"] .container-3d-confirm {
   display: none !important;
 }
 
