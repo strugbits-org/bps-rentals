@@ -1,6 +1,7 @@
 import useUserData from "@/Hooks/useUserData";
 import { updatedWatched } from "@/Utils/AnimationFunctions";
-import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import { ATTACHMENT_TYPES, PERMISSIONS } from "@/Utils/Schema/permissions";
+import { trackEvent } from "@/Utils/Analytics";
 import { useEffect, useState, useCallback } from "react";
 
 export const ProductDocuments = ({ selectedProductDetails, attachmentTypes }) => {
@@ -21,7 +22,7 @@ export const ProductDocuments = ({ selectedProductDetails, attachmentTypes }) =>
         }
 
         const filteredDocuments = selectedProductDetails.productDocuments.filter(doc => {
-            if (doc.attachmentType === "fireproof") {
+            if (doc.attachmentType === ATTACHMENT_TYPES.FIREPROOF) {
                 return SHOW_FIREPROOF_CERTIFICATES;
             }
             return SHOW_DOCUMENTS;
@@ -66,9 +67,21 @@ export const ProductDocuments = ({ selectedProductDetails, attachmentTypes }) =>
                             data-aos="fadeIn .8s ease-in-out"
                         >
                             {attachments.map((data, i) => {
-                                const { fileName, downloadUrl } = data;
+                                const { fileName, downloadUrl, attachmentType } = data;
                                 return (
-                                    <a key={`${index}-${i}-${fileName}`} href={downloadUrl} download={fileName}>
+                                    <a
+                                        key={`${index}-${i}-${fileName}`}
+                                        href={downloadUrl}
+                                        download={fileName}
+                                        onClick={() =>
+                                            trackEvent("file_download", {
+                                                file_name: fileName,
+                                                file_type: attachmentType || "",
+                                                product_name: selectedProductDetails?.product?.name || "",
+                                                product_slug: selectedProductDetails?.product?.slug || "",
+                                            })
+                                        }
+                                    >
                                         <button className="btn-small-tag">
                                             <span>{fileName}</span>
                                             <i className="icon-arrow-down"></i>

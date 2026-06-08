@@ -1,10 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import ForgotPassword from "../Authentication/ForgotPassword";
 import CreateAccount from "../Authentication/CreateAccount";
 import Login from "../Authentication/Login";
+import Request3dForm from "../Authentication/Request3dForm";
+import Request3dConfirmation from "../Authentication/Request3dConfirmation";
 
 import { pageLoadEnd, pageLoadStart } from "@/Utils/AnimationFunctions";
 import { usePathname, useRouter } from "next/navigation";
@@ -37,6 +39,9 @@ const Navbar = ({
   const path = usePathname();
 
   const [toggleModal, setToggleModal] = useState("");
+  const [requestProduct, setRequestProduct] = useState(null);
+  const [pending3dRequest, setPending3dRequest] = useState(false);
+  const suppressOutsideCloseUntil = useRef(0);
   const [loggedIn, setLoggedIn] = useState(false);
   const [cartQuantity, setCartQuantity] = useState();
   const [message, setMessage] = useState("Message");
@@ -64,6 +69,9 @@ const Navbar = ({
       }, 500);
     } else {
       if (path === "/my-account") return;
+      // Reset any leftover 3D-request view so the login form shows when opened here.
+      setToggleModal("");
+      setPending3dRequest(false);
       const element = document.querySelector(".header-info-list li.local-item.active");
       if (element) element.querySelector(".custom-close").click();
       submenuLogin.classList.toggle(
@@ -107,6 +115,105 @@ const Navbar = ({
     
     setCartQuantity(quantity);
   }, [cookies.cartQuantity]);
+
+  // Opened from the product page "Get 3D library access" badge. Guests see the
+  // login view first (and continue to the form after login); logged-in users go
+  // straight to the request form.
+  useEffect(() => {
+    const handleOpen3dRequest = (e) => {
+      const detail = e?.detail || {};
+      setRequestProduct(detail.product || null);
+      const submenuLogin = document.querySelector(".submenu-login");
+      if (submenuLogin) submenuLogin.classList.add("active");
+      if (detail.isLoggedIn) {
+        setToggleModal(detail.alreadyRequested ? "3d-confirmation" : "3d-request");
+      } else {
+        setPending3dRequest(true);
+        setToggleModal("login");
+      }
+    };
+    window.addEventListener("open-3d-request", handleOpen3dRequest);
+    return () => window.removeEventListener("open-3d-request", handleOpen3dRequest);
+  }, []);
+
+  // The login submenu is opened manually (bypassing the submenu controller that
+  // normally pauses the smooth-scroller). Without pausing it, normalizeScroll
+  // swallows wheel/touch so NO view (login / create account / forgot / 3D) can
+  // scroll. Mirror the controller: pause on open, resume on close, for every view.
+  // The app pauses the scroller on the "modal:open" event and resumes on "modal:close".
+  useEffect(() => {
+    const submenuLogin = document.querySelector(".submenu-login");
+    if (!submenuLogin) return;
+    let wasActive = submenuLogin.classList.contains("active");
+    const observer = new MutationObserver(() => {
+      const isActive = submenuLogin.classList.contains("active");
+      if (isActive === wasActive) return;
+      wasActive = isActive;
+      document.dispatchEvent(new CustomEvent(isActive ? "modal:open" : "modal:close"));
+      // Clear any leftover request intent on close so a later normal login can't
+      // briefly flash the 3D request form from a stale pending flag.
+      if (!isActive) setPending3dRequest(false);
+    });
+    observer.observe(submenuLogin, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  // Block the legacy submenu click-outside controller from closing the panel
+  // while login is in-flight (mouseup can land outside once the form swaps).
+  useEffect(() => {
+    const extendGracePeriod = () => {
+      suppressOutsideCloseUntil.current = Date.now() + 800;
+    };
+    window.addEventListener("3d-request-view-open", extendGracePeriod);
+    return () => window.removeEventListener("3d-request-view-open", extendGracePeriod);
+  }, []);
+
+  useEffect(() => {
+    const is3dFlow =
+      pending3dRequest ||
+      toggleModal === "3d-request" ||
+      toggleModal === "3d-confirmation";
+    if (!is3dFlow) return;
+
+    const blockGhostOutsideClick = (e) => {
+      if (Date.now() >= suppressOutsideCloseUntil.current) return;
+      if (e.target.closest(".wrapper-submenu-login")) return;
+      e.stopImmediatePropagation();
+    };
+
+    document.addEventListener("click", blockGhostOutsideClick, true);
+    return () => document.removeEventListener("click", blockGhostOutsideClick, true);
+  }, [pending3dRequest, toggleModal]);
+
+  // For the 3D request/confirmation views, handle click-outside / close-button
+  // (the manual open bypasses the controller's own outside-click handling).
+  useEffect(() => {
+    const is3dView = toggleModal === "3d-request" || toggleModal === "3d-confirmation";
+    if (!is3dView) return;
+
+    const close = () => {
+      const submenuLogin = document.querySelector(".submenu-login");
+      if (submenuLogin) submenuLogin.classList.remove("active");
+      setPending3dRequest(false);
+      // Keep the 3D view rendered through the panel's slide-out so the login form
+      // underneath doesn't flash into view; clear it once the panel is hidden.
+      setTimeout(() => setToggleModal(""), 700);
+    };
+
+    const handleDocClick = (e) => {
+      if (Date.now() < suppressOutsideCloseUntil.current) return;
+      if (e.target.closest(".container-3d-access")) return; // the badge that opens it
+      if (e.target.closest("[data-close-submenu]")) { close(); return; } // close / back button
+      if (e.target.closest(".wrapper-submenu-login")) return; // click inside the panel
+      close(); // click outside
+    };
+
+    const timer = setTimeout(() => document.addEventListener("click", handleDocClick), 300);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("click", handleDocClick);
+    };
+  }, [toggleModal]);
 
   // Fetch blogs data client-side
   useEffect(() => {
@@ -423,6 +530,8 @@ const Navbar = ({
                         setMessage={setMessage}
                         setToggleModal={setToggleModal}
                         setModalState={setModalState}
+                        pending3dRequest={pending3dRequest}
+                        setPending3dRequest={setPending3dRequest}
                       />
                       <CreateAccount
                         createAccountModalContent={createAccountModalContent}
@@ -434,6 +543,12 @@ const Navbar = ({
                         setMessage={setMessage}
                         setModalState={setModalState}
                       />
+                      <Request3dForm
+                        selectedProduct={requestProduct}
+                        setToggleModal={setToggleModal}
+                        active={toggleModal === "3d-request"}
+                      />
+                      <Request3dConfirmation setToggleModal={setToggleModal} />
                     </div>
                   </div>
                 </div>
