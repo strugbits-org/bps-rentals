@@ -13,7 +13,7 @@ import { AUTH_REQUIRED, clearAuthCookies } from "@/Utils/AuthSession";
 
 const SavedProducts = () => {
   const router = useRouter();
-  const [_cookies, _setCookie, removeCookie] = useCookies([
+  const [cookies, _setCookie, removeCookie] = useCookies([
     "authToken",
     "userData",
     "userTokens",
@@ -115,7 +115,7 @@ const SavedProducts = () => {
       const savedProducts = await getSavedProductData();
 
       if (savedProducts === AUTH_REQUIRED) {
-        clearAuthCookies(removeCookie);
+        clearAuthCookies(removeCookie, cookies.userData);
         router.push("/");
         return;
       }

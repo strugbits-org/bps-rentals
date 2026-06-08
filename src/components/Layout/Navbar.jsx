@@ -85,7 +85,7 @@ const Navbar = ({
     try {
       const response = await getProductsCart();
       if (response === AUTH_REQUIRED) {
-        clearAuthCookies(removeCookie);
+        clearAuthCookies(removeCookie, cookies.userData);
         setTimeout(() => {
           router.push("/");
         }, 500);
