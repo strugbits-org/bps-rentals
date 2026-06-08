@@ -8,7 +8,6 @@ import useUserData from "@/Hooks/useUserData";
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
 import { TeamsBannerAccount } from "./TeamsBannerAccount";
 import logError from "@/Utils/ServerActions";
-import { clearAuthCookies } from "@/Utils/AuthSession";
 import mangeBlogIcon from "@/assets/menu-icons/blog.svg"
 import mangeCacheIcon from "@/assets/menu-icons/cache.svg"
 import mangeProductIcon from "@/assets/menu-icons/product.svg"
@@ -104,7 +103,10 @@ const Account = ({ children, footerData, banner }) => {
     try {
       const loggedIn = cookies.authToken !== undefined;
       if (loggedIn) {
-        clearAuthCookies(removeCookie, cookies.userData);
+        removeCookie("authToken", { path: "/" });
+        removeCookie("userData", { path: "/" });
+        removeCookie("userTokens", { path: "/" });
+        removeCookie("cartQuantity", { path: "/" });
         setTimeout(() => {
           router.push("/");
         }, 200);

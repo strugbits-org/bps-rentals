@@ -5,9 +5,6 @@ import { useRouter } from "next/navigation";
 
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
 import { signInUser } from "@/Services/AuthApis";
-import { hasRequested } from "@/Utils/Request3dAccess";
-import { decryptField } from "@/Utils/Encrypt";
-import { PERMISSIONS } from "@/Utils/Schema/permissions";
 import Disclaimer from "./Disclaimer";
 import logError from "@/Utils/ServerActions";
 
@@ -16,8 +13,6 @@ const Login = ({
   setMessage,
   setToggleModal,
   setModalState,
-  pending3dRequest,
-  setPending3dRequest,
 }) => {
   const router = useRouter();
   const [_cookies, setCookie, removeCookie] = useCookies(["authToken", "userData"]);
@@ -32,9 +27,6 @@ const Login = ({
     e.preventDefault();
     if (isButtonDisabled) return;
     setIsButtonDisabled(true);
-    if (pending3dRequest) {
-      window.dispatchEvent(new CustomEvent("3d-request-view-open"));
-    }
     const submenuLogin = document.querySelector(".submenu-login");
     const button = document.querySelector(".new-login-button");
     try {
@@ -63,39 +55,14 @@ const Login = ({
       });
       removeCookie("cartId", { path: "/" });
       if (authToken) {
+        pageLoadStart();
+        submenuLogin.classList.remove("active");
+        button.classList.remove("active");
+        router.push("/my-account");
         setFormData({
           email: "",
           password: "",
         });
-        if (pending3dRequest) {
-          // Came from the "Get 3D library access" flow — stay in the submenu and
-          // continue to the request form (or confirmation if already requested)
-          // instead of redirecting to the dashboard.
-          setPending3dRequest(false);
-
-          const permissions =
-            response.member?.permissions?.map((p) => decryptField(p)) || [];
-          const hasDocumentsAccess = permissions.includes(PERMISSIONS.SHOW_DOCUMENTS);
-
-          if (hasDocumentsAccess) {
-            // Already has library access — close modal; product page will show files.
-            submenuLogin?.classList.remove("active");
-            button?.classList.remove("active");
-            setToggleModal("");
-            return;
-          }
-
-          submenuLogin?.classList.add("active");
-          const userKey = response.member?.memberId || response.member?.loginEmail;
-          const nextView = hasRequested(userKey) ? "3d-confirmation" : "3d-request";
-          setToggleModal(nextView);
-          window.dispatchEvent(new CustomEvent("3d-request-view-open"));
-        } else {
-          pageLoadStart();
-          submenuLogin.classList.remove("active");
-          button.classList.remove("active");
-          router.push("/my-account");
-        }
       }
     } catch (error) {
       setMessage(error.message || "Error during login, please try again.");
@@ -167,9 +134,8 @@ const Login = ({
             <div className="container-submit col-12 mt-mobile-10">
               <button
                 type="submit"
-                className="bt-submit btn-blue w-100 disable-click-outside"
+                className="bt-submit btn-blue w-100"
                 disabled={isButtonDisabled}
-                onMouseDown={(e) => e.preventDefault()}
               >
                 <span>
                   {loginModalContent && !isButtonDisabled

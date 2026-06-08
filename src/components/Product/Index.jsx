@@ -29,7 +29,6 @@ import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
 import { ProductDocuments } from "./ProductDocuments";
-import { Product3dModelBadge } from "./Product3dModelBadge";
 import ThreeDSVG from "../svgs/ThreeDSVG";
 
 const ProductPostPage = ({
@@ -453,7 +452,8 @@ const ProductPostPage = ({
                           <span className="specs-text">
                             {findPriceTier({
                               tier: pricingTier,
-                              pricingTiers: selectedProductDetails.variantData?.[selectedVariantIndex]?.pricingTiers,
+                              pricingTiers: selectedProductDetails?.pricingTiers,
+                              price: selectedProductDetails.product?.price,
                               variantPrice: selectedVariant?.price,
                             })}
                           </span>
@@ -562,8 +562,6 @@ const ProductPostPage = ({
                     }
                     setUnavailable={setUnavailable}
                   />
-
-                  <Product3dModelBadge selectedProductDetails={selectedProductDetails} />
 
                   {selectedProductDetails &&
                     selectedProductDetails.product.customTextFields.map(

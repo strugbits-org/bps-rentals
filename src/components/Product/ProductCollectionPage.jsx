@@ -29,7 +29,6 @@ import { ImageWrapper } from "../Common/ImageWrapper";
 import logError from "@/Utils/ServerActions";
 import { PERMISSIONS } from "@/Utils/Schema/permissions";
 import { ProductDocuments } from "./ProductDocuments";
-import { Product3dModelBadge } from "./Product3dModelBadge";
 import ThreeDSVG from "../svgs/ThreeDSVG";
 
 const ProductCollectionPage = ({
@@ -154,6 +153,7 @@ const ProductCollectionPage = ({
       const price = findPriceTier({
         tier: pricingTier,
         pricingTiers: set?.pricingTiers,
+        price: set?.productPrice,
         variantPrice: set?.price,
         isRawPrice: true,
         quantity: set.quantity
@@ -423,6 +423,7 @@ const ProductCollectionPage = ({
                             {findPriceTier({
                               tier: pricingTier,
                               pricingTiers: set?.pricingTiers,
+                              price: set?.productPrice,
                               variantPrice: set?.price,
                             })}
                           </span>}
@@ -495,8 +496,6 @@ const ProductCollectionPage = ({
                     selectedVariantData={selectedProductDetails.variantData[selectedVariantIndex]}
                     setUnavailable={setUnavailable}
                   />
-
-                  <Product3dModelBadge selectedProductDetails={selectedProductDetails} />
 
                   {selectedProductDetails &&
                     selectedProductDetails.product.customTextFields.map(
