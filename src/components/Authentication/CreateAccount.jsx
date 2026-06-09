@@ -45,6 +45,7 @@ const CreateAccount = ({
     if (submittingForm) return;
     setSubmittingForm(true);
     setModalState({ success: true, error: false });
+    setMessage("Please wait, we're Creating your Account");
 
     const in3dFlow = pending3dRequest || is3dRequestIntentActive();
     if (in3dFlow) {
@@ -56,8 +57,6 @@ const CreateAccount = ({
     let continued3dFlow = false;
 
     try {
-      setMessage("Please wait, we're Creating your Account");
-
       const userData = {
         email: formData.email,
         password: formData.password,
@@ -105,6 +104,7 @@ const CreateAccount = ({
 
       if (authToken) {
         if (in3dFlow) {
+          document.body.setAttribute("data-form-cart-state", "");
           setModalState({ success: false, error: false });
           setMessage("");
           continue3dAccessAfterAuth({

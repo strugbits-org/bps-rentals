@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import useUserData from "@/Hooks/useUserData";
 import { trackEvent } from "@/Utils/Analytics";
-import { markRequested } from "@/Utils/Request3dAccess";
+import { clear3dRequestIntent, markRequested } from "@/Utils/Request3dAccess";
 import { submit3dAccessRequest } from "@/Services/Request3dAccessApis";
 import logError from "@/Utils/ServerActions";
 
@@ -78,6 +78,7 @@ const Request3dForm = ({ selectedProduct, setToggleModal, active }) => {
 
       // Remember this user requested access so reopening goes straight to confirmation.
       markRequested(memberId || email);
+      clear3dRequestIntent();
       setToggleModal("3d-confirmation");
     } catch (err) {
       setError("Something went wrong. Please try again.");

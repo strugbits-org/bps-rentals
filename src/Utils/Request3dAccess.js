@@ -36,6 +36,12 @@ export const is3dRequestIntentActive = () => {
     return sessionStorage.getItem(PENDING_INTENT_KEY) !== null;
 };
 
+/** True while the user is in the product-page 3D access flow (any step). */
+export const isIn3dAccessFlow = (toggleModal = "") =>
+    is3dRequestIntentActive() ||
+    toggleModal === "3d-request" ||
+    toggleModal === "3d-confirmation";
+
 export const get3dRequestIntentProduct = () => {
     if (typeof window === "undefined") return null;
     try {
@@ -120,11 +126,11 @@ export const continue3dAccessAfterAuth = ({
     setPending3dRequest,
 }) => {
     setPending3dRequest(false);
-    clear3dRequestIntent();
     resetSubmenuAuthForms();
 
     const permissions = member?.permissions?.map((p) => decryptField(p)) || [];
     if (permissions.includes(PERMISSIONS.SHOW_DOCUMENTS)) {
+        clear3dRequestIntent();
         submenuLogin?.classList.remove("active");
         button?.classList.remove("active");
         setToggleModal("");

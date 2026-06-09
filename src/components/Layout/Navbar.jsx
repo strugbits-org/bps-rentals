@@ -9,7 +9,6 @@ import Request3dForm from "../Authentication/Request3dForm";
 import Request3dConfirmation from "../Authentication/Request3dConfirmation";
 import {
   clear3dRequestIntent,
-  get3dRequestIntentProduct,
   is3dRequestIntentActive,
   resetSubmenuAuthForms,
   set3dRequestIntent,
@@ -94,9 +93,12 @@ const Navbar = ({
       const response = await getProductsCart();
       if (response === AUTH_REQUIRED) {
         clearAuthCookies(removeCookie, cookies.userData);
-        setTimeout(() => {
-          router.push("/");
-        }, 500);
+        // Don't yank the user to the homepage mid 3D access flow (e.g. right after signup).
+        if (!is3dRequestIntentActive()) {
+          setTimeout(() => {
+            router.push("/");
+          }, 500);
+        }
         return;
       }
       const total = response ? calculateTotalCartQuantity(response) : "0";
