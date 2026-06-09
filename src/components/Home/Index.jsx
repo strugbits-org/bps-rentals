@@ -26,6 +26,7 @@ const HomePage = ({
   studiosData,
   marketsData,
   bestSellers,
+  comingSoon,
   clientsGallery
 }) => {
   const [savedProductsData, setSavedProductsData] = useState([]);
@@ -171,7 +172,7 @@ const HomePage = ({
   return (
     <>
       <BannerHome content={heroSectionContent} />
-      <BestSellersHome products={bestSellerProducts} content={heroSectionContent} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} />
+      <BestSellersHome products={bestSellerProducts} content={heroSectionContent} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} bestSeller={bestSellers} comingSoon={comingSoon} />
       <NewArrival data={newArrivalSectionContent} />
       <Highlights pageContent={homeSectionDetails} data={highlightsSectionData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} savePageState={savePageState} sliderRef={sliderRef} />
       <HotTrendsCategory data={hotTrendsSectionContent} />
@@ -191,6 +192,7 @@ const HomePage = ({
         setProductSnapshots={setProductSnapshots}
         setProductFilteredVariantData={setProductFilteredVariantData}
         bestSeller={bestSellers}
+        comingSoon={comingSoon}
         savedProductsData={savedProductsData}
         setSavedProductsData={setSavedProductsData}
       />

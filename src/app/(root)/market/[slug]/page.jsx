@@ -1,5 +1,5 @@
 import MarketPage from "@/components/Market/Index";
-import { fetchBestSellers, getBestSellerProducts } from "@/Services/ProductsApis";
+import { fetchBestSellers, fetchComingSoon, getBestSellerProducts } from "@/Services/ProductsApis";
 import {
   getDreamBigSectionContent,
   getHighlightsSection,
@@ -90,7 +90,8 @@ export default async function Page({ params }) {
       peopleReviewSliderData,
       highlightsSectionData,
       bestSellerProducts,
-      bestSellers
+      bestSellers,
+      comingSoon
     ] = await Promise.all([
       getNewArrivalSectionContent(slug),
       getHomeSectionDetails(),
@@ -101,7 +102,8 @@ export default async function Page({ params }) {
       getPeopleReviewSliderData(),
       getHighlightsSection(highlightsCollection),
       getBestSellerProducts(bestSeller),
-      fetchBestSellers()
+      fetchBestSellers(),
+      fetchComingSoon()
     ]);
 
     return (
@@ -118,6 +120,7 @@ export default async function Page({ params }) {
         peopleReviewSliderData={peopleReviewSliderData}
         bestSellerProducts={bestSellerProducts}
         bestSellers={bestSellers}
+        comingSoon={comingSoon}
       />
     );
   } catch (error) {

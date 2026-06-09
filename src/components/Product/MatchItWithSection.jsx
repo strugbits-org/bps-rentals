@@ -5,7 +5,7 @@ import CartModal from "../Common/Modals/CartModal";
 import logError from "@/Utils/ServerActions";
 import { initializeMatchSwiper } from "@/Utils/AnimationFunctions";
 
-const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsData, bestSeller }) => {
+const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsData, bestSeller, comingSoon }) => {
   const [selectedProductData, setSelectedProductData] = useState(null);
   const [productSnapshots, setProductSnapshots] = useState();
   const [selectedVariantData, setSelectedVariantData] = useState(null);
@@ -101,6 +101,7 @@ const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsD
         setProductSnapshots={setProductSnapshots}
         setProductFilteredVariantData={setProductFilteredVariantData}
         bestSeller={bestSeller}
+        comingSoon={comingSoon}
         savedProductsData={savedProductsData}
         setSavedProductsData={setSavedProductsData}
       />
@@ -123,6 +124,7 @@ const MatchItWith = ({ matchedProductsData, savedProductsData, setSavedProductsD
                           <ProductCard
                             key={index}
                             bestSeller={bestSeller}
+                            comingSoon={comingSoon}
                             productData={data}
                             getSelectedProductSnapShots={getSelectedProductSnapShots}
                             savedProductsData={savedProductsData}

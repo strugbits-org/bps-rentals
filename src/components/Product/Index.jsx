@@ -39,6 +39,7 @@ const ProductPostPage = ({
   blogsData,
   portfolioData,
   bestSeller,
+  comingSoon,
   attachmentTypes
 }) => {
   const descriptionRef = useRef(null);
@@ -68,6 +69,7 @@ const ProductPostPage = ({
   const [savedProductsData, setSavedProductsData] = useState([]);
   const [selectedVariant, setSelectedVariant] = useState();
   const [isBestSeller, setIsBestSeller] = useState(false);
+  const [isComingSoon, setIsComingSoon] = useState(false);
   const [buttonLabel, setButtonLabel] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [cartQuantity, setCartQuantity] = useState(1);
@@ -132,11 +134,9 @@ const ProductPostPage = ({
         setSelectedVariant(combinedVariantData);
       }
 
-      const isBestSellerProduct = compareArray(
-        bestSeller,
-        selectedProductDetails.subCategoryData.map((x) => x._id)
-      );
-      setIsBestSeller(isBestSellerProduct);
+      const categoryIds = selectedProductDetails.subCategoryData.map((x) => x._id);
+      setIsBestSeller(compareArray(bestSeller, categoryIds));
+      setIsComingSoon(compareArray(comingSoon, categoryIds));
 
       const categoriesFound = categoriesData.reduce((acc, subCategory) => {
         const { parentCollection, level2Collections } = subCategory;
@@ -297,6 +297,11 @@ const ProductPostPage = ({
                       {isBestSeller && (
                         <div className="best-seller-tag">
                           <span>Best Seller</span>
+                        </div>
+                      )}
+                      {isComingSoon && (
+                        <div className="coming-soon-tag">
+                          <span>Coming Soon</span>
                         </div>
                       )}
                       <SaveProductButton
@@ -672,6 +677,7 @@ const ProductPostPage = ({
           savedProductsData={savedProductsData}
           setSavedProductsData={setSavedProductsData}
           bestSeller={bestSeller}
+          comingSoon={comingSoon}
         />
       )}
 

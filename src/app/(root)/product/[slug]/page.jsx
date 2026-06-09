@@ -8,6 +8,7 @@ import {
   fetchAllProductsPaths,
   getAllProducts,
   fetchBestSellers,
+  fetchComingSoon,
   fetchAllProducts,
   fetchProductAtthachmentTypes
 } from '@/Services/ProductsApis';
@@ -73,12 +74,14 @@ export default async function Page({ params }) {
       products,
       categoriesData,
       bestSeller,
+      comingSoon,
       attachmentTypes
     ] = await Promise.all([
       getPairWithData(),
       getAllProducts({}),
       getAllCategoriesData(),
       fetchBestSellers(),
+      fetchComingSoon(),
       fetchProductAtthachmentTypes()
     ]);
     const selectedProduct = products.find((x) => decodeURIComponent(x.product.slug) === slug);
@@ -124,6 +127,7 @@ export default async function Page({ params }) {
             blogsData={blogsData}
             portfolioData={portfolioData}
             bestSeller={bestSeller}
+            comingSoon={comingSoon}
             attachmentTypes={attachmentTypes}
           />
         ) : (
@@ -134,6 +138,7 @@ export default async function Page({ params }) {
             blogsData={blogsData}
             portfolioData={portfolioData}
             bestSeller={bestSeller}
+            comingSoon={comingSoon}
             attachmentTypes={attachmentTypes}
           />
         )}

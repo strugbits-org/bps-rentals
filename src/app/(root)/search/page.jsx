@@ -1,7 +1,7 @@
 import SearchPage from "@/components/Search/Index";
 import { getRentalsBanners } from "@/Services/Index";
 import { getFilterLocations } from "@/Services/NavbarApis";
-import { fetchBestSellers, getAllColorsData } from "@/Services/ProductsApis";
+import { fetchBestSellers, fetchComingSoon, getAllColorsData } from "@/Services/ProductsApis";
 import { getHomeSectionDetails, getMarketsData, getPageMetaData } from "@/Services/SectionsApis";
 import logError from "@/Utils/ServerActions";
 import { Suspense } from "react";
@@ -34,14 +34,16 @@ export default async function Page() {
       locations,
       marketsData,
       colorsData,
-      bestSeller
+      bestSeller,
+      comingSoon
     ] = await Promise.all([
       getHomeSectionDetails(),
       getRentalsBanners(),
       getFilterLocations(),
       getMarketsData(),
       getAllColorsData(),
-      fetchBestSellers()
+      fetchBestSellers(),
+      fetchComingSoon()
     ]);
 
     return (
@@ -53,6 +55,7 @@ export default async function Page() {
           marketsData={marketsData}
           colorsData={colorsData}
           bestSeller={bestSeller}
+          comingSoon={comingSoon}
         />
       </Suspense>
     );

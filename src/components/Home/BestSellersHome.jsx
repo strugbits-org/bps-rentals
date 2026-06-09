@@ -3,7 +3,7 @@ import React from 'react';
 import { CustomButton } from '../Common/CustomButton';
 import ProductCard from '../Category/ProductCard';
 
-const BestSellersHome = ({ products, content, savedProductsData, setSavedProductsData, getSelectedProductSnapShots }) => {
+const BestSellersHome = ({ products, content, savedProductsData, setSavedProductsData, getSelectedProductSnapShots, bestSeller = [], comingSoon = [] }) => {
 
   return (
     <section className="home-best-sellers white-1" data-aos="d:loop">
@@ -49,6 +49,8 @@ const BestSellersHome = ({ products, content, savedProductsData, setSavedProduct
                         <ProductCard
                           key={index}
                           productData={item}
+                          bestSeller={bestSeller}
+                          comingSoon={comingSoon}
                           getSelectedProductSnapShots={getSelectedProductSnapShots}
                           savedProductsData={savedProductsData}
                           setSavedProductsData={setSavedProductsData}

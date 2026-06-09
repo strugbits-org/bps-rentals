@@ -15,6 +15,7 @@ const ProductCard = ({
   lastActiveColor,
   filteredProducts = [],
   bestSeller = [],
+  comingSoon = [],
   onProductRedirect,
 }) => {
   const { product, variantData, defaultVariant } = productData;
@@ -25,6 +26,7 @@ const ProductCard = ({
   const [filteredVariants, setFilteredVariants] = useState(variantData);
   const [activeVariant, setActiveVariant] = useState(defaultVariantData);
   const [isBestSeller, setIsBestSeller] = useState(false);
+  const [isComingSoon, setIsComingSoon] = useState(false);
   const { permissions, pricingTier } = useUserData();
   const SHOW_PRICES = permissions && permissions.includes(PERMISSIONS.SHOW_PRICES);
 
@@ -37,8 +39,9 @@ const ProductCard = ({
     } else {
       setActiveVariant(defaultVariantData)
     };
-    const isBestSellerProduct = compareArray(bestSeller, categories.map(x => x._id));
-    setIsBestSeller(isBestSellerProduct);
+    const categoryIds = categories.map(x => x._id);
+    setIsBestSeller(compareArray(bestSeller, categoryIds));
+    setIsComingSoon(compareArray(comingSoon, categoryIds));
   }
   useEffect(() => {
     if (filteredProducts.length !== 0) handleFilteredData();
@@ -61,6 +64,11 @@ const ProductCard = ({
         {!isSavedProduct && isBestSeller && (
           <div className="best-seller">
             <span>Best Seller</span>
+          </div>
+        )}
+        {!isSavedProduct && isComingSoon && (
+          <div className="coming-soon">
+            <span>Coming Soon</span>
           </div>
         )}
         <SaveProductButton

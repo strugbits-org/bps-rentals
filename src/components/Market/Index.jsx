@@ -27,7 +27,8 @@ const MarketPage = ({
   peopleReviewSliderData,
   highlightsSectionData,
   bestSellerProducts,
-  bestSellers
+  bestSellers,
+  comingSoon
 }) => {
 
   const pageSize = 6;
@@ -192,11 +193,12 @@ const MarketPage = ({
         setProductSnapshots={setProductSnapshots}
         setProductFilteredVariantData={setProductFilteredVariantData}
         bestSeller={bestSellers}
+        comingSoon={comingSoon}
         savedProductsData={savedProductsData}
         setSavedProductsData={setSavedProductsData}
       />
       <MarketIntroSection data={marketSection} />
-      <MarketBestSeller products={bestSellerProducts} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} pageLimit={pageLimit} handleAutoSeeMore={handleAutoSeeMore} savePageState={savePageState} />
+      <MarketBestSeller products={bestSellerProducts} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} pageLimit={pageLimit} handleAutoSeeMore={handleAutoSeeMore} savePageState={savePageState} bestSeller={bestSellers} comingSoon={comingSoon} />
       <NewArrival data={newArrivalSectionContent} />
       <Highlights pageContent={homeSectionDetails} data={highlightsSectionData} savedProductsData={savedProductsData} setSavedProductsData={setSavedProductsData} getSelectedProductSnapShots={getSelectedProductSnapShots} savePageState={savePageState} sliderRef={sliderRef} />
       <MarketSlider content={homeSectionDetails} marketSliderData={marketSliderData} />

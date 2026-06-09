@@ -1,6 +1,6 @@
 import ProductCard from '../Category/ProductCard';
 
-export const MarketBestSeller = ({ products, savedProductsData, setSavedProductsData, getSelectedProductSnapShots, pageLimit, handleAutoSeeMore, savePageState }) => {
+export const MarketBestSeller = ({ products, savedProductsData, setSavedProductsData, getSelectedProductSnapShots, pageLimit, handleAutoSeeMore, savePageState, bestSeller = [], comingSoon = [] }) => {
     if (products.length === 0) return;
 
     return (
@@ -17,6 +17,8 @@ export const MarketBestSeller = ({ products, savedProductsData, setSavedProducts
                                                 onProductRedirect={savePageState}
                                                 key={index}
                                                 productData={item}
+                                                bestSeller={bestSeller}
+                                                comingSoon={comingSoon}
                                                 getSelectedProductSnapShots={getSelectedProductSnapShots}
                                                 savedProductsData={savedProductsData}
                                                 setSavedProductsData={setSavedProductsData}

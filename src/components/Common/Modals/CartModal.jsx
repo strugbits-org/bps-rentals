@@ -13,6 +13,7 @@ const CartModal = ({
   setProductSnapshots,
   setProductFilteredVariantData,
   bestSeller = [],
+  comingSoon = [],
   savedProductsData,
   setSavedProductsData,
 }) => {
@@ -31,6 +32,7 @@ const CartModal = ({
         setProductSnapshots={setProductSnapshots}
         setProductFilteredVariantData={setProductFilteredVariantData}
         bestSeller={bestSeller}
+        comingSoon={comingSoon}
         savedProductsData={savedProductsData}
         setSavedProductsData={setSavedProductsData}
       />
@@ -43,6 +45,7 @@ const CartModal = ({
         setProductSnapshots={setProductSnapshots}
         setProductFilteredVariantData={setProductFilteredVariantData}
         bestSeller={bestSeller}
+        comingSoon={comingSoon}
         savedProductsData={savedProductsData}
         setSavedProductsData={setSavedProductsData}
       />

@@ -23,6 +23,7 @@ const CategoryPage = ({
   colorsData,
   selectedCategoryData,
   bestSeller,
+  comingSoon,
   productsData,
 }) => {
   const pageSize = 18;
@@ -344,6 +345,7 @@ const CategoryPage = ({
         setProductSnapshots={setProductSnapshots}
         setProductFilteredVariantData={setProductFilteredVariantData}
         bestSeller={bestSeller}
+        comingSoon={comingSoon}
         savedProductsData={savedProductsData}
         setSavedProductsData={setSavedProductsData}
       />
@@ -469,6 +471,7 @@ const CategoryPage = ({
                           <ProductCard
                             key={index}
                             bestSeller={bestSeller}
+                            comingSoon={comingSoon}
                             productData={data}
                             filteredProducts={filteredProducts}
                             getSelectedProductSnapShots={getSelectedProductSnapShots}

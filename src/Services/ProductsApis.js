@@ -434,6 +434,31 @@ export const fetchBestSellers = async (slug) => {
   }
 };
 
+export const fetchComingSoon = async (slug) => {
+  try {
+    const payload = {
+      dataCollectionId: "ComingSoon",
+    };
+    if (slug) {
+      payload.hasSome = [
+        {
+          key: "slug",
+          values: [slug],
+        },
+      ];
+    }
+    const response = await getDataFetchFunction(payload);
+    if (response && response.items) {
+      return response.items.map((x) => x.category);
+    } else {
+      throw new Error("Response does not contain _items");
+    }
+  } catch (error) {
+    logError("Error fetching coming soon ids:", error);
+    return [];
+  }
+};
+
 export const fetchProductAtthachmentTypes = async () => {
   try {
     const payload = {
