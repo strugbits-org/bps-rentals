@@ -19,6 +19,7 @@ const Login = ({
   setModalState,
   pending3dRequest,
   setPending3dRequest,
+  setAuthMember,
 }) => {
   const router = useRouter();
   const [_cookies, setCookie, removeCookie] = useCookies(["authToken", "userData"]);
@@ -76,8 +77,10 @@ const Login = ({
             button,
             setToggleModal,
             setPending3dRequest,
+            setAuthMember,
           });
         } else {
+          setAuthMember?.(null);
           pageLoadStart();
           submenuLogin.classList.remove("active");
           button.classList.remove("active");

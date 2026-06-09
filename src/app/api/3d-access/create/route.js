@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import handleAuthentication from "@/Utils/HandleAuthentication";
 import logError from "@/Utils/ServerActions";
 
 // Relays a 3D library access request to the Wix backend, which fires the
@@ -8,6 +9,18 @@ export const POST = async (req) => {
   try {
     if (!process.env.RENTALS_URL) {
       throw new Error("RENTALS_URL is not configured");
+    }
+
+    const authToken = req.headers.get("authorization");
+    if (!authToken) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    let authenticatedUser;
+    try {
+      authenticatedUser = await handleAuthentication(req);
+    } catch {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
@@ -22,19 +35,26 @@ export const POST = async (req) => {
       productSlug,
     } = body;
 
+    const resolvedEmail = authenticatedUser?.userEmail || email;
+    if (!resolvedEmail) {
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+    }
+
+    const wixPayload = {
+      firstName: firstName || "",
+      lastName: lastName || "",
+      email: resolvedEmail,
+      company: company || "",
+      usage: usage || "",
+      note: note || "",
+      productName: productName || "",
+      productSlug: productSlug || "",
+    };
+
     const response = await fetch(`${process.env.RENTALS_URL}/request3dAccess`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        firstName: firstName || "",
-        lastName: lastName || "",
-        email: email || "",
-        company: company || "",
-        usage: usage || "",
-        note: note || "",
-        productName: productName || "",
-        productSlug: productSlug || "",
-      }),
+      body: JSON.stringify(wixPayload),
     });
 
     if (!response.ok) {

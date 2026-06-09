@@ -19,6 +19,7 @@ const CreateAccount = ({
   setToggleModal,
   pending3dRequest,
   setPending3dRequest,
+  setAuthMember,
 }) => {
   const router = useRouter();
 
@@ -113,9 +114,11 @@ const CreateAccount = ({
             button,
             setToggleModal,
             setPending3dRequest,
+            setAuthMember,
           });
           continued3dFlow = true;
         } else {
+          setAuthMember?.(null);
           pageLoadStart();
           submenuLogin.classList.remove("active");
           router.push("/my-account");

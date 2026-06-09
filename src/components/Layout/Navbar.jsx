@@ -46,6 +46,7 @@ const Navbar = ({
 
   const [toggleModal, setToggleModal] = useState("");
   const [requestProduct, setRequestProduct] = useState(null);
+  const [authMember, setAuthMember] = useState(null);
   const [pending3dRequest, setPending3dRequest] = useState(false);
   const suppressOutsideCloseUntil = useRef(0);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -93,6 +94,7 @@ const Navbar = ({
       const response = await getProductsCart();
       if (response === AUTH_REQUIRED) {
         clearAuthCookies(removeCookie, cookies.userData);
+        setAuthMember(null);
         // Don't yank the user to the homepage mid 3D access flow (e.g. right after signup).
         if (!is3dRequestIntentActive()) {
           setTimeout(() => {
@@ -113,6 +115,9 @@ const Navbar = ({
   useEffect(() => {
     const authTokenValid = cookies.authToken && cookies.authToken !== "undefined";
     setLoggedIn(authTokenValid);
+    if (!authTokenValid) {
+      setAuthMember(null);
+    }
     if (authTokenValid) {
       getCartTotalQuantity();
     }
@@ -166,6 +171,7 @@ const Navbar = ({
       // briefly flash the 3D request form from a stale pending flag.
       if (!isActive) {
         setPending3dRequest(false);
+        setAuthMember(null);
         clear3dRequestIntent();
       }
     });
@@ -211,6 +217,7 @@ const Navbar = ({
       const submenuLogin = document.querySelector(".submenu-login");
       if (submenuLogin) submenuLogin.classList.remove("active");
       setPending3dRequest(false);
+      setAuthMember(null);
       clear3dRequestIntent();
       // Keep the 3D view rendered through the panel's slide-out so the login form
       // underneath doesn't flash into view; clear it once the panel is hidden.
@@ -549,6 +556,7 @@ const Navbar = ({
                         setModalState={setModalState}
                         pending3dRequest={pending3dRequest}
                         setPending3dRequest={setPending3dRequest}
+                        setAuthMember={setAuthMember}
                       />
                       <CreateAccount
                         createAccountModalContent={createAccountModalContent}
@@ -557,6 +565,7 @@ const Navbar = ({
                         setToggleModal={setToggleModal}
                         pending3dRequest={pending3dRequest}
                         setPending3dRequest={setPending3dRequest}
+                        setAuthMember={setAuthMember}
                       />
                       <ForgotPassword
                         forgotPasswordModalContent={forgotPasswordModalContent}
@@ -565,6 +574,7 @@ const Navbar = ({
                       />
                       <Request3dForm
                         selectedProduct={requestProduct}
+                        authMember={authMember}
                         setToggleModal={setToggleModal}
                         active={toggleModal === "3d-request"}
                       />

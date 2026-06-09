@@ -41,6 +41,10 @@ export const isAuthenticated = async (token) => {
     ]);
 
     const id = privateMemberData.items?.[0]?._id;
+    if (!id) {
+      throw new Error("Unauthorized: Member not found");
+    }
+
     const memberBadges = await wixClient.badges.listBadgesPerMember([id]);
 
     const badgeIds = memberBadges?.memberBadgeIds?.[0]?.badgeIds || [];

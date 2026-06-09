@@ -106,6 +106,21 @@ export const getUserKeyFromUserData = (userData) => {
     return parsed?.memberId || parsed?.loginEmail || null;
 };
 
+/** True when authMember matches the current session cookie (or cookie not synced yet). */
+export const isAuthMemberCurrent = (authMember, cookieUserData) => {
+    if (!authMember) return false;
+    const cookieMemberId = cookieUserData?.memberId;
+    const cookieEmail = cookieUserData?.loginEmail;
+    if (!cookieMemberId && !cookieEmail) return true;
+    if (authMember.memberId && cookieMemberId) {
+        return authMember.memberId === cookieMemberId;
+    }
+    if (authMember.loginEmail && cookieEmail) {
+        return authMember.loginEmail === cookieEmail;
+    }
+    return false;
+};
+
 /** Reset legacy app2.js d-none toggles so auth forms don't stack with 3D views. */
 export const resetSubmenuAuthForms = () => {
     if (typeof document === "undefined") return;
@@ -124,9 +139,11 @@ export const continue3dAccessAfterAuth = ({
     button,
     setToggleModal,
     setPending3dRequest,
+    setAuthMember,
 }) => {
     setPending3dRequest(false);
     resetSubmenuAuthForms();
+    setAuthMember?.(member || null);
 
     const permissions = member?.permissions?.map((p) => decryptField(p)) || [];
     if (permissions.includes(PERMISSIONS.SHOW_DOCUMENTS)) {
