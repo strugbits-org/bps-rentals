@@ -52,8 +52,7 @@ export const generateStaticParams = async () => {
     const categoriesData = await fetchAllCategoriesData();
     const slugs = getAllCategoriesPaths(categoriesData);
     const paths = slugs.map((slug) => ({ slug }));
-    // return paths;
-    return [];
+    return paths;
   } catch (error) {
     logError("Error generating static params(category page):", error);
     return [];
