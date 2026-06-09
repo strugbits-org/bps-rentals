@@ -26,6 +26,7 @@ const CartModalSimple = ({
   setProductSnapshots,
   setProductFilteredVariantData,
   bestSeller = [],
+  comingSoon = [],
   savedProductsData,
   setSavedProductsData,
 }) => {
@@ -35,6 +36,7 @@ const CartModalSimple = ({
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isBestSeller, setIsBestSeller] = useState(false);
+  const [isComingSoon, setIsComingSoon] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [cookies, setCookie] = useCookies(["location", "cartQuantity"]);
   const [cartQuantity, setCartQuantity] = useState(1);
@@ -62,11 +64,9 @@ const CartModalSimple = ({
 
   useEffect(() => {
     if (productData) {
-      const isBestSellerProduct = compareArray(
-        bestSeller,
-        productData.subCategoryData.map((x) => x._id)
-      );
-      setIsBestSeller(isBestSellerProduct);
+      const categoryIds = productData.subCategoryData.map((x) => x._id);
+      setIsBestSeller(compareArray(bestSeller, categoryIds));
+      setIsComingSoon(compareArray(comingSoon, categoryIds));
     }
   }, [productData]);
 
@@ -168,6 +168,11 @@ const CartModalSimple = ({
                                 {isBestSeller && (
                                   <div className="best-seller-tag">
                                     <span>Best Seller</span>
+                                  </div>
+                                )}
+                                {isComingSoon && (
+                                  <div className="coming-soon-tag">
+                                    <span>Coming Soon</span>
                                   </div>
                                 )}
                                 {productData && (

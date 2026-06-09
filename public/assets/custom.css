@@ -808,6 +808,90 @@ li.IMPORTANT.long-desc {
   margin-right: 0.6rem;
 }
 
+.product-link .container-tags .coming-soon,
+.sorting-product .coming-soon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  min-height: 3rem;
+  color: var(--white-1);
+  border-radius: 2.8rem;
+  background: var(--black-3);
+  padding: 0.5rem 1.3718rem;
+  margin-right: 0.6rem;
+  font-family: "GT Walsheim Pro Medium", sans-serif;
+  line-height: 1.2em;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  .product-link .container-tags .coming-soon,
+  .sorting-product .coming-soon {
+    font-size: clamp(10px, 1.2rem, 1.2rem);
+  }
+}
+
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  .product-link .container-tags .coming-soon,
+  .sorting-product .coming-soon {
+    font-size: clamp(10px, 1.2rem, 1.2rem);
+  }
+}
+
+@media only screen and (max-width: 767.98px) {
+  .product-link .container-tags .coming-soon,
+  .sorting-product .coming-soon {
+    font-size: 1.2rem;
+  }
+}
+
+.list-slider-product .wrapper-slider-product .slider-product .container-btn-top .coming-soon-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  background: var(--black-3);
+  color: var(--white-1);
+  border-radius: 2.8rem;
+  z-index: 5;
+  pointer-events: none;
+  margin-right: 0.6rem;
+  font-family: "GT Walsheim Pro Medium", sans-serif;
+  line-height: 1.22em;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+@media only screen and (min-width: 1025.1px) {
+  .list-slider-product .wrapper-slider-product .slider-product .container-btn-top .coming-soon-tag {
+    padding: 1.704rem 3.058rem;
+    margin-right: 1.1rem;
+    font-size: clamp(13px, 1.8rem, 1.8rem);
+  }
+}
+
+@media only screen and (min-width: 767.98px) and (max-width: 1025px) {
+  .list-slider-product .wrapper-slider-product .slider-product .container-btn-top .coming-soon-tag {
+    padding: 0.73rem 1.527rem;
+    font-size: 1.2rem;
+    margin-right: 0.6rem;
+  }
+}
+
+@media only screen and (max-width: 767.98px) {
+  .list-slider-product .wrapper-slider-product .slider-product .container-btn-top .coming-soon-tag {
+    padding: 0.7033rem 1.372rem;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+  }
+}
+
 .menu-my-account .list-menu-my-account .link-account span {
   flex-grow: 1;
   max-width: 80%;
@@ -2364,7 +2448,25 @@ button.btn-border-blue.red {
 }
 
 .submenu-login[data-form-active="3d-request"] .container-sign-in,
-.submenu-login[data-form-active="3d-confirmation"] .container-sign-in {
+.submenu-login[data-form-active="3d-confirmation"] .container-sign-in,
+.submenu-login[data-form-active="3d-request"] .container-create-account,
+.submenu-login[data-form-active="3d-confirmation"] .container-create-account,
+.submenu-login[data-form-active="3d-request"] .container-forgot-password,
+.submenu-login[data-form-active="3d-confirmation"] .container-forgot-password {
+  display: none !important;
+}
+
+.submenu-login[data-form-active="3d-request"] .container-create-account.d-none,
+.submenu-login[data-form-active="3d-confirmation"] .container-create-account.d-none {
+  display: none !important;
+}
+
+.submenu-login[data-form-active="login"] .container-request-access,
+.submenu-login[data-form-active="login"] .container-3d-confirm,
+.submenu-login[data-form-active="create-account"] .container-request-access,
+.submenu-login[data-form-active="create-account"] .container-3d-confirm,
+.submenu-login[data-form-active="forgot-password"] .container-request-access,
+.submenu-login[data-form-active="forgot-password"] .container-3d-confirm {
   display: none !important;
 }
 

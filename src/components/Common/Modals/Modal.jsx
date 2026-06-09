@@ -31,10 +31,14 @@ const Modal = ({
   }, [message]);
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       document.body.setAttribute("data-form-cart-state", "success");
       updatedWatched();
     }, 500);
+    return () => {
+      clearTimeout(timer);
+      document.body.setAttribute("data-form-cart-state", "");
+    };
   }, []);
   return (
     <div id="reloading-area">

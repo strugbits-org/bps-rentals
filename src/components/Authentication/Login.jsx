@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 
 import { pageLoadStart } from "@/Utils/AnimationFunctions";
 import { signInUser } from "@/Services/AuthApis";
-import { hasRequested } from "@/Utils/Request3dAccess";
-import { decryptField } from "@/Utils/Encrypt";
-import { PERMISSIONS } from "@/Utils/Schema/permissions";
+import {
+  continue3dAccessAfterAuth,
+  is3dRequestIntentActive,
+} from "@/Utils/Request3dAccess";
 import Disclaimer from "./Disclaimer";
 import logError from "@/Utils/ServerActions";
 
@@ -32,7 +33,8 @@ const Login = ({
     e.preventDefault();
     if (isButtonDisabled) return;
     setIsButtonDisabled(true);
-    if (pending3dRequest) {
+    const in3dFlow = pending3dRequest || is3dRequestIntentActive();
+    if (in3dFlow) {
       window.dispatchEvent(new CustomEvent("3d-request-view-open"));
     }
     const submenuLogin = document.querySelector(".submenu-login");
@@ -67,29 +69,14 @@ const Login = ({
           email: "",
           password: "",
         });
-        if (pending3dRequest) {
-          // Came from the "Get 3D library access" flow — stay in the submenu and
-          // continue to the request form (or confirmation if already requested)
-          // instead of redirecting to the dashboard.
-          setPending3dRequest(false);
-
-          const permissions =
-            response.member?.permissions?.map((p) => decryptField(p)) || [];
-          const hasDocumentsAccess = permissions.includes(PERMISSIONS.SHOW_DOCUMENTS);
-
-          if (hasDocumentsAccess) {
-            // Already has library access — close modal; product page will show files.
-            submenuLogin?.classList.remove("active");
-            button?.classList.remove("active");
-            setToggleModal("");
-            return;
-          }
-
-          submenuLogin?.classList.add("active");
-          const userKey = response.member?.memberId || response.member?.loginEmail;
-          const nextView = hasRequested(userKey) ? "3d-confirmation" : "3d-request";
-          setToggleModal(nextView);
-          window.dispatchEvent(new CustomEvent("3d-request-view-open"));
+        if (in3dFlow) {
+          continue3dAccessAfterAuth({
+            member: response.member,
+            submenuLogin,
+            button,
+            setToggleModal,
+            setPending3dRequest,
+          });
         } else {
           pageLoadStart();
           submenuLogin.classList.remove("active");

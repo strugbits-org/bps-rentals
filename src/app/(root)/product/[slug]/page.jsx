@@ -8,6 +8,7 @@ import {
   fetchAllProductsPaths,
   getAllProducts,
   fetchBestSellers,
+  fetchComingSoon,
   fetchAllProducts,
   fetchProductAtthachmentTypes
 } from '@/Services/ProductsApis';
@@ -57,7 +58,8 @@ export async function generateMetadata({ params }) {
 export const generateStaticParams = async () => {
   try {
     const paths = await fetchAllProductsPaths() || [];
-    return paths.slice(0, 1350);
+    // return paths.slice(0, 1350);
+    return [];
   } catch (error) {
     logError("Error generating static params(product page):", error);
     return [];
@@ -73,12 +75,14 @@ export default async function Page({ params }) {
       products,
       categoriesData,
       bestSeller,
+      comingSoon,
       attachmentTypes
     ] = await Promise.all([
       getPairWithData(),
       getAllProducts({}),
       getAllCategoriesData(),
       fetchBestSellers(),
+      fetchComingSoon(),
       fetchProductAtthachmentTypes()
     ]);
     const selectedProduct = products.find((x) => decodeURIComponent(x.product.slug) === slug);
@@ -124,6 +128,7 @@ export default async function Page({ params }) {
             blogsData={blogsData}
             portfolioData={portfolioData}
             bestSeller={bestSeller}
+            comingSoon={comingSoon}
             attachmentTypes={attachmentTypes}
           />
         ) : (
@@ -134,6 +139,7 @@ export default async function Page({ params }) {
             blogsData={blogsData}
             portfolioData={portfolioData}
             bestSeller={bestSeller}
+            comingSoon={comingSoon}
             attachmentTypes={attachmentTypes}
           />
         )}

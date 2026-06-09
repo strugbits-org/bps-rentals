@@ -4,6 +4,7 @@ import { getFilterLocations } from "@/Services/NavbarApis";
 import {
   fetchAllCategoriesData,
   fetchBestSellers,
+  fetchComingSoon,
   getAllColorsData,
   getAllProducts,
 } from "@/Services/ProductsApis";
@@ -51,7 +52,8 @@ export const generateStaticParams = async () => {
     const categoriesData = await fetchAllCategoriesData();
     const slugs = getAllCategoriesPaths(categoriesData);
     const paths = slugs.map((slug) => ({ slug }));
-    return paths;
+    // return paths;
+    return [];
   } catch (error) {
     logError("Error generating static params(category page):", error);
     return [];
@@ -79,6 +81,7 @@ export default async function Page({ params }) {
       marketsData,
       colorsData,
       bestSeller,
+      comingSoon,
       productsData
     ] = await Promise.all([
       getHomeSectionDetails(),
@@ -87,6 +90,7 @@ export default async function Page({ params }) {
       getMarketsData(),
       getAllColorsData(),
       fetchBestSellers(),
+      fetchComingSoon(),
       getAllProducts({ categories: categoryIds }),
     ]);
 
@@ -101,6 +105,7 @@ export default async function Page({ params }) {
         categoriesData={categoriesData}
         selectedCategoryData={selectedCategoryData}
         bestSeller={bestSeller}
+        comingSoon={comingSoon}
         productsData={productsData}
       />
     );

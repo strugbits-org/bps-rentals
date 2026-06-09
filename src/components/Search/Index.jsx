@@ -19,7 +19,8 @@ const SearchPage = ({
     locations,
     marketsData,
     colorsData,
-    bestSeller
+    bestSeller,
+    comingSoon
 }) => {
     let bannerIndex = -1;
     const pageSize = 6;
@@ -324,6 +325,7 @@ const SearchPage = ({
                 setProductSnapshots={setProductSnapshots}
                 setProductFilteredVariantData={setProductFilteredVariantData}
                 bestSeller={bestSeller}
+                comingSoon={comingSoon}
                 savedProductsData={savedProductsData}
                 setSavedProductsData={setSavedProductsData}
             />
@@ -400,6 +402,7 @@ const SearchPage = ({
                                                     <ProductCard
                                                         key={index}
                                                         bestSeller={bestSeller}
+                                                        comingSoon={comingSoon}
                                                         productData={data}
                                                         filteredProducts={filteredProducts}
                                                         getSelectedProductSnapShots={getSelectedProductSnapShots}
