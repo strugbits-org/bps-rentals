@@ -43,15 +43,17 @@ export const getAllProducts = async ({ categories = [], adminPage = false, optim
       throw new Error("Response does not contain _items", response);
     }
 
-    const products = response.items.map((x) => {
-      const baseProduct = {
-        subCategoryData: [],
-        ...x,
-        ...(x.subCategoryData && { subCategoryData: x.subCategoryData }),
-      };
+    const products = response.items
+      .filter((x) => x?.product?._id)
+      .map((x) => {
+        const baseProduct = {
+          subCategoryData: [],
+          ...x,
+          ...(x.subCategoryData && { subCategoryData: x.subCategoryData }),
+        };
 
-      return optimizeContent ? sanitizeProduct(baseProduct) : baseProduct;
-    });
+        return optimizeContent ? sanitizeProduct(baseProduct) : baseProduct;
+      });
 
     if (categories.length === 0) return products;
 
@@ -98,7 +100,7 @@ export const getProductsByCategory = async (categories = [], adminPage = false) 
     if (!response || !response.items) {
       throw new Error("Response does not contain _items", response);
     }
-    return response.items;
+    return response.items.filter((x) => x?.product?._id);
 
   } catch (error) {
     logError("Error fetching products(admin):", error);
@@ -135,11 +137,13 @@ export const fetchProductsByIds = async (products) => {
       increasedLimit: 700,
     });
     if (response && response.items) {
-      const products = response.items.map((x) => ({
-        subCategoryData: [],
-        ...x,
-        ...x.subCategoryData && { subCategoryData: x.subCategoryData }
-      }));
+      const products = response.items
+        .filter((x) => x?.product?._id)
+        .map((x) => ({
+          subCategoryData: [],
+          ...x,
+          ...x.subCategoryData && { subCategoryData: x.subCategoryData }
+        }));
       return products;
     } else {
       throw new Error("Response does not contain _items");
@@ -390,11 +394,13 @@ export const getBestSellerProducts = async (bestSeller, limit) => {
       limit: "infinite",
     });
     if (response && response.items) {
-      const products = response.items.map((x) => ({
-        subCategoryData: [],
-        ...x,
-        ...x.subCategoryData && { subCategoryData: x.subCategoryData }
-      }));
+      const products = response.items
+        .filter((x) => x?.product?._id)
+        .map((x) => ({
+          subCategoryData: [],
+          ...x,
+          ...x.subCategoryData && { subCategoryData: x.subCategoryData }
+        }));
 
       if (limit) {
         return products.slice(0, limit);

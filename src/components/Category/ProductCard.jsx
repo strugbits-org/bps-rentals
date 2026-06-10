@@ -18,7 +18,12 @@ const ProductCard = ({
   comingSoon = [],
   onProductRedirect,
 }) => {
-  const { product, variantData, defaultVariant } = productData;
+  const { product, variantData, defaultVariant } = productData || {};
+
+  if (!product?._id) {
+    return null;
+  }
+
   const categories = productData?.subCategoryData || [];
 
   const defaultVariantData = variantData.find(variant => variant.sku === defaultVariant) || variantData[0];

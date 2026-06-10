@@ -209,7 +209,7 @@ const getDataFetchFunction = async (payload) => {
       ]);
 
       data.items = data.items.map((product) => {
-        if (!product._id) return;
+        if (!product?._id || !product.product?._id) return product;
         const productId = product.product._id;
         product.productSnapshotData = productsVariantImagesData.filter(x => x.productId === productId);
         product.productVariantsData = productsVariantsData.filter(x => x.productId === productId);
@@ -263,6 +263,13 @@ const getDataFetchFunction = async (payload) => {
         }
         return val;
       });
+    }
+
+    if (
+      dataCollectionId === "locationFilteredVariant" &&
+      includeReferencedItems?.includes("product")
+    ) {
+      data.items = data.items.filter((item) => item?.product?._id);
     }
 
     return data;
