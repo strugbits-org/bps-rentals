@@ -1,20 +1,38 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { pageLoadStart } from "@/Utils/AnimationFunctions";
+import {
+  pageLoadEnd,
+  pageLoadStart,
+  resumeSmoothScroll,
+} from "@/Utils/AnimationFunctions";
 
 /**
  * Confirmation view of the login submenu (data-form-active="3d-confirmation").
  * Shown after a request is submitted.
  */
-const Request3dConfirmation = ({ setToggleModal }) => {
+const Request3dConfirmation = ({ onNavigateAway }) => {
   const router = useRouter();
 
   const handleGoToDashboard = () => {
     const submenuLogin = document.querySelector(".submenu-login");
+    const loginButton = document.querySelector(".new-login-button");
+
     if (submenuLogin) submenuLogin.classList.remove("active");
-    setToggleModal("");
-    pageLoadStart();
-    router.push("/my-account");
+    if (loginButton) loginButton.classList.remove("active");
+
+    // Let the Navbar MutationObserver fire modal:close, then fully restore scroll.
+    requestAnimationFrame(() => {
+      resumeSmoothScroll();
+      onNavigateAway?.();
+
+      pageLoadStart(false);
+      setTimeout(() => {
+        router.push("/my-account");
+        // Belt-and-suspenders: my-account also calls markPageLoaded, but this
+        // catches cases where page-leave-active or wrapper-no-transform linger.
+        setTimeout(() => pageLoadEnd(false), 600);
+      }, 400);
+    });
   };
 
   return (

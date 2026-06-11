@@ -194,6 +194,21 @@ export const pageLoadStart = (scrollToTop = true) => {
     }
   }
 };
+
+/** Resume ScrollSmoother after login submenu / modal closes. */
+export const resumeSmoothScroll = () => {
+  if (typeof window === "undefined") return;
+  document.dispatchEvent(new CustomEvent("modal:close"));
+  document.querySelector("[data-scroll-container]")?.classList.remove("wrapper-no-transform");
+  document.body.classList.remove("page-leave-active", "page-enter-active");
+  document.body.removeAttribute("data-form-cart-state");
+  try {
+    window.ScrollSmoother?.get?.()?.paused(false);
+  } catch {
+    /* ScrollSmoother not initialized (mobile) */
+  }
+};
+
 export const pageLoadEnd = (scrollToTop = true) => {
   if (typeof window !== "undefined") {
     const scrollContainer = document.querySelector("[data-scroll-container]");

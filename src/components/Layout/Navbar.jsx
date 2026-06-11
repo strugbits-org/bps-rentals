@@ -578,7 +578,14 @@ const Navbar = ({
                         setToggleModal={setToggleModal}
                         active={toggleModal === "3d-request"}
                       />
-                      <Request3dConfirmation setToggleModal={setToggleModal} />
+                      <Request3dConfirmation
+                        onNavigateAway={() => {
+                          setPending3dRequest(false);
+                          setAuthMember(null);
+                          clear3dRequestIntent();
+                          setToggleModal("");
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
