@@ -26,7 +26,7 @@ import { getProductsCart } from "@/Services/CartApis";
 import { calculateTotalCartQuantity } from "@/Utils/Utils";
 import logError from "@/Utils/ServerActions";
 import { fetchBlogsDataClient, fetchPortfoliosDataClient } from "@/Services/LayoutDataFetcher";
-import { AUTH_REQUIRED, clearAuthCookies } from "@/Utils/AuthSession";
+import { AUTH_REQUIRED } from "@/Utils/AuthSession";
 
 const Navbar = ({
   locations,
@@ -61,6 +61,12 @@ const Navbar = ({
   const [portfoliosData, setPortfoliosData] = useState([]);
   const [portfoliosLoading, setPortfoliosLoading] = useState(true);
 
+  const clearSubmenuAuthState = () => {
+    setPending3dRequest(false);
+    setAuthMember(null);
+    clear3dRequestIntent();
+  };
+
   const checkUser = () => {
     const submenuLogin = document.querySelector(".submenu-login");
     if (loggedIn && loggedIn !== "undefined") {
@@ -92,15 +98,9 @@ const Navbar = ({
   const getCartTotalQuantity = async () => {
     try {
       const response = await getProductsCart();
+      // Cart fetch can fail briefly after signup while Wix member data propagates.
+      // Don't treat that as a logged-out session — only skip updating the badge count.
       if (response === AUTH_REQUIRED) {
-        clearAuthCookies(removeCookie, cookies.userData);
-        setAuthMember(null);
-        // Don't yank the user to the homepage mid 3D access flow (e.g. right after signup).
-        if (!is3dRequestIntentActive()) {
-          setTimeout(() => {
-            router.push("/");
-          }, 500);
-        }
         return;
       }
       const total = response ? calculateTotalCartQuantity(response) : "0";
@@ -167,12 +167,9 @@ const Navbar = ({
       if (isActive === wasActive) return;
       wasActive = isActive;
       document.dispatchEvent(new CustomEvent(isActive ? "modal:open" : "modal:close"));
-      // Clear any leftover request intent on close so a later normal login can't
-      // briefly flash the 3D request form from a stale pending flag.
+      // Clear leftover 3D intent and in-memory member on any panel close path.
       if (!isActive) {
-        setPending3dRequest(false);
-        setAuthMember(null);
-        clear3dRequestIntent();
+        clearSubmenuAuthState();
       }
     });
     observer.observe(submenuLogin, { attributes: true, attributeFilter: ["class"] });
@@ -216,9 +213,7 @@ const Navbar = ({
     const close = () => {
       const submenuLogin = document.querySelector(".submenu-login");
       if (submenuLogin) submenuLogin.classList.remove("active");
-      setPending3dRequest(false);
-      setAuthMember(null);
-      clear3dRequestIntent();
+      // Auth state is cleared by the MutationObserver when active is removed.
       // Keep the 3D view rendered through the panel's slide-out so the login form
       // underneath doesn't flash into view; clear it once the panel is hidden.
       setTimeout(() => setToggleModal(""), 700);
@@ -579,12 +574,7 @@ const Navbar = ({
                         active={toggleModal === "3d-request"}
                       />
                       <Request3dConfirmation
-                        onNavigateAway={() => {
-                          setPending3dRequest(false);
-                          setAuthMember(null);
-                          clear3dRequestIntent();
-                          setToggleModal("");
-                        }}
+                        onNavigateAway={() => setToggleModal("")}
                       />
                     </div>
                   </div>

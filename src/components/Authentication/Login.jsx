@@ -50,17 +50,15 @@ const Login = ({
         throw new Error(response.message);
       }
       const authToken = response.jwtToken;
-      const userData = JSON.stringify(response.member);
-      const userTokens = JSON.stringify(response.userTokens);
       setCookie("authToken", authToken, {
         path: "/",
         expires: new Date("2099-01-01"),
       });
-      setCookie("userData", userData, {
+      setCookie("userData", response.member, {
         path: "/",
         expires: new Date("2099-01-01"),
       });
-      setCookie("userTokens", userTokens, {
+      setCookie("userTokens", response.userTokens, {
         path: "/",
         expires: new Date("2099-01-01"),
       });
@@ -80,7 +78,7 @@ const Login = ({
             setAuthMember,
           });
         } else {
-          setAuthMember?.(null);
+          setAuthMember?.(response.member);
           pageLoadStart();
           submenuLogin.classList.remove("active");
           button.classList.remove("active");

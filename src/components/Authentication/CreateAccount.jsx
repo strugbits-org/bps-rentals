@@ -86,18 +86,16 @@ const CreateAccount = ({
       });
 
       const authToken = response.jwtToken;
-      const newUserData = JSON.stringify(response.member);
-      const userTokens = JSON.stringify(response.userTokens);
 
       setCookie("authToken", authToken, {
         path: "/",
         expires: new Date("2099-01-01"),
       });
-      setCookie("userData", newUserData, {
+      setCookie("userData", response.member, {
         path: "/",
         expires: new Date("2099-01-01"),
       });
-      setCookie("userTokens", userTokens, {
+      setCookie("userTokens", response.userTokens, {
         path: "/",
         expires: new Date("2099-01-01"),
       });
@@ -118,7 +116,7 @@ const CreateAccount = ({
           });
           continued3dFlow = true;
         } else {
-          setAuthMember?.(null);
+          setAuthMember?.(response.member);
           pageLoadStart();
           submenuLogin.classList.remove("active");
           router.push("/my-account");

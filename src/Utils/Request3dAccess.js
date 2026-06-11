@@ -93,25 +93,33 @@ export const clearRequested = (userKey) => {
     }
 };
 
-export const getUserKeyFromUserData = (userData) => {
+export const parseUserDataCookie = (userData) => {
     if (!userData) return null;
-    let parsed = userData;
     if (typeof userData === "string") {
         try {
-            parsed = JSON.parse(userData);
+            return JSON.parse(userData);
         } catch {
             return null;
         }
     }
+    return userData;
+};
+
+export const getUserKeyFromUserData = (userData) => {
+    const parsed = parseUserDataCookie(userData);
     return parsed?.memberId || parsed?.loginEmail || null;
 };
 
 /** True when authMember matches the current session cookie (or cookie not synced yet). */
-export const isAuthMemberCurrent = (authMember, cookieUserData) => {
+export const isAuthMemberCurrent = (authMember, cookieUserData, hasAuthToken = false) => {
     if (!authMember) return false;
-    const cookieMemberId = cookieUserData?.memberId;
-    const cookieEmail = cookieUserData?.loginEmail;
-    if (!cookieMemberId && !cookieEmail) return true;
+    const parsedCookie = parseUserDataCookie(cookieUserData);
+    const cookieMemberId = parsedCookie?.memberId;
+    const cookieEmail = parsedCookie?.loginEmail;
+    if (!cookieMemberId && !cookieEmail) {
+        // Cookie may lag one render after signup; only trust authMember while a session exists.
+        return hasAuthToken;
+    }
     if (authMember.memberId && cookieMemberId) {
         return authMember.memberId === cookieMemberId;
     }

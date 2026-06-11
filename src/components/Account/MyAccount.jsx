@@ -59,7 +59,7 @@ const MyAccount = ({ myAccountPageContent }) => {
       }
       setModalState({ success: true, error: false });
 
-      const userData = JSON.stringify(response.updatedMember);
+      const userData = response.updatedMember;
 
       setCookie("userData", userData, {
         path: "/",

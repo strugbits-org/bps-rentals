@@ -4,7 +4,13 @@ import { useCookies } from "react-cookie";
 
 import useUserData from "@/Hooks/useUserData";
 import { trackEvent } from "@/Utils/Analytics";
-import { clear3dRequestIntent, get3dRequestIntentProduct, isAuthMemberCurrent, markRequested } from "@/Utils/Request3dAccess";
+import {
+  clear3dRequestIntent,
+  get3dRequestIntentProduct,
+  isAuthMemberCurrent,
+  markRequested,
+  parseUserDataCookie,
+} from "@/Utils/Request3dAccess";
 import { submit3dAccessRequest } from "@/Services/Request3dAccessApis";
 import logError from "@/Utils/ServerActions";
 
@@ -34,9 +40,16 @@ const emptyFormData = () => ({
  */
 const Request3dForm = ({ selectedProduct, authMember, setToggleModal, active }) => {
   const { firstName, lastName, memberId, email } = useUserData();
-  const [cookies] = useCookies(["userData"]);
-  const cookieUserData = cookies?.userData;
-  const currentAuthMember = isAuthMemberCurrent(authMember, cookieUserData)
+  const [cookies] = useCookies(["userData", "authToken"]);
+  const cookieUserData = parseUserDataCookie(cookies?.userData);
+  const hasAuthToken = Boolean(
+    cookies.authToken && cookies.authToken !== "undefined"
+  );
+  const currentAuthMember = isAuthMemberCurrent(
+    authMember,
+    cookieUserData,
+    hasAuthToken
+  )
     ? authMember
     : null;
   const sessionEmail =

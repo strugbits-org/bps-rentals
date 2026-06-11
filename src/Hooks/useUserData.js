@@ -1,10 +1,11 @@
 "use client";
 import { decryptField } from "@/Utils/Encrypt";
+import { parseUserDataCookie } from "@/Utils/Request3dAccess";
 import { useCookies } from "react-cookie";
 
 function useUserData() {
   const [cookies] = useCookies(["userData"]);
-  const signedUserData = cookies?.userData ?? null;
+  const signedUserData = parseUserDataCookie(cookies?.userData);
 
   return {
     signedUserData,

@@ -27,18 +27,27 @@ export const isAuthenticated = async (token) => {
     const authClient = await authWixClient();
     const wixClient = await createWixClient();
 
-    // Parallel queries for better performance
-    const [privateMemberData, memberData] = await Promise.all([
+    const queryPrivateMember = () =>
       authClient.items
         .query("Members/PrivateMembersData")
         .eq("loginEmail", decoded.email)
-        .find(),
+        .find();
 
-      wixClient.items
-        .query("membersPassword")
-        .eq("userEmail", decoded.email)
-        .find()
-    ]);
+    const memberData = await wixClient.items
+      .query("membersPassword")
+      .eq("userEmail", decoded.email)
+      .find();
+
+    // New members may not appear in PrivateMembersData immediately after signup.
+    let privateMemberData = await queryPrivateMember();
+    for (
+      let attempt = 0;
+      attempt < 3 && !privateMemberData.items?.[0]?._id;
+      attempt++
+    ) {
+      await new Promise((resolve) => setTimeout(resolve, 500 * (attempt + 1)));
+      privateMemberData = await queryPrivateMember();
+    }
 
     const id = privateMemberData.items?.[0]?._id;
     if (!id) {

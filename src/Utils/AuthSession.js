@@ -1,4 +1,4 @@
-import { clearRequested, getUserKeyFromUserData } from "@/Utils/Request3dAccess";
+import { clearRequested, parseUserDataCookie } from "@/Utils/Request3dAccess";
 
 export const AUTH_REQUIRED = "AUTH_REQUIRED";
 
@@ -15,7 +15,8 @@ export const isAuthErrorMessage = (message = "") => {
 export const isAuthError = (error) => isAuthErrorMessage(error?.message);
 
 export const clearAuthCookies = (removeCookie, userData) => {
-  const userKey = getUserKeyFromUserData(userData);
+  const parsed = parseUserDataCookie(userData);
+  const userKey = parsed?.memberId || parsed?.loginEmail || null;
   if (userKey) clearRequested(userKey);
 
   removeCookie("authToken", { path: "/" });
