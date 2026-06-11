@@ -12,6 +12,7 @@ const RevalidateButton = () => {
     const path = usePathname();
     const { permissions } = useUserData();
     const ADMIN_PANEL_ACCESS = permissions && permissions.includes(PERMISSIONS.ADMIN_PANEL_ACCESS);
+    const [mounted, setMounted] = useState(false);
 
     const [revalidationState, setRevalidationState] = useState({
         isRevalidatingPage: false,
@@ -30,11 +31,15 @@ const RevalidateButton = () => {
     });
 
     useEffect(() => {
-        if (!ADMIN_PANEL_ACCESS) return;
-        enableRevalidate();
-    }, [ADMIN_PANEL_ACCESS])
+        setMounted(true);
+    }, []);
 
-    if (!ADMIN_PANEL_ACCESS) return;
+    useEffect(() => {
+        if (!mounted || !ADMIN_PANEL_ACCESS) return;
+        enableRevalidate();
+    }, [mounted, ADMIN_PANEL_ACCESS]);
+
+    if (!mounted || !ADMIN_PANEL_ACCESS) return null;
     const handleRevalidate = async (type) => {
         const isPage = type === "page";
         const setStateKey = isPage ? "isRevalidatingPage" : "isRevalidatingSite";
