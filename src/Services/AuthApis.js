@@ -123,6 +123,31 @@ export const updateProfile = async (userData) => {
   }
 };
 
+// Background session re-sync. Unlike the other actions this never throws —
+// a failed refresh must not disrupt the user's current session, so it returns
+// an error descriptor the caller can quietly ignore.
+export const refreshSession = async () => {
+  try {
+    const authToken = await getAuthToken();
+    if (!authToken) return { error: true, status: 401 };
+
+    const response = await fetch(`${baseUrl}/api/auth/refresh-session`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authToken,
+      },
+    });
+
+    if (!response.ok) {
+      return { error: true, status: response.status };
+    }
+    return await response.json();
+  } catch {
+    return { error: true, status: 0 };
+  }
+};
+
 export const changePassword = async (userData) => {
   try {
     const authToken = await getAuthToken();

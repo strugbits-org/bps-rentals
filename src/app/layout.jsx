@@ -23,6 +23,7 @@ import CustomBodyScripts from "@/Services/CustomBodyScripts";
 import { ToastContainer } from 'react-toastify';
 import Chat from "@/components/Common/Chat";
 import BackButtonListener from "@/Utils/BackButtonListener";
+import SessionRefresher from "@/components/Common/SessionRefresher";
 
 export const metadata = {
   title: "Rent Event Furnishings - Blueprint Studios",
@@ -73,6 +74,7 @@ export default async function RootLayout({ children }) {
           className="overflow-hidden"
         >
           <ExternalTriggers />
+          <SessionRefresher />
           <Loader />
           <ToastContainer
             position="top-center"
