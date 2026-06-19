@@ -62,69 +62,72 @@ export const generateStaticParams = async () => {
 }
 
 export default async function Page({ params }) {
+  const slug = decodeURIComponent(params.slug);
+
+  let marketSection;
   try {
-    const slug = decodeURIComponent(params.slug);
-
-    const marketSection = await getMarketSection(slug);
-    if (!marketSection) {
-      throw new Error(`Market Data not found for slug: ${slug}`);
-    }
-
-    const bestSeller = await fetchBestSellers(slug);
-
-    const collectionIds = {
-      "tradeshows": "HighlightsTradeshow",
-      "social": "HighlightsSocial",
-      "weddings": "HighlightsWedding",
-      "corporate": "HighlightsCorporate",
-    }
-    const highlightsCollection = collectionIds[slug];
-
-    const [
-      homeNewArrivalSectionContent,
-      homeSectionDetails,
-      homeDreamBigSectionContent,
-      marketSliderData,
-      studiosData,
-      marketsData,
-      peopleReviewSliderData,
-      highlightsSectionData,
-      bestSellerProducts,
-      bestSellers,
-      comingSoon
-    ] = await Promise.all([
-      getNewArrivalSectionContent(slug),
-      getHomeSectionDetails(),
-      getDreamBigSectionContent(),
-      getMarketSliderData(marketSection._id),
-      getStudiosData(),
-      getMarketsData(),
-      getPeopleReviewSliderData(),
-      getHighlightsSection(highlightsCollection),
-      getBestSellerProducts(bestSeller),
-      fetchBestSellers(),
-      fetchComingSoon()
-    ]);
-
-    return (
-      <MarketPage
-        slug={slug}
-        marketSection={marketSection.rentalsMarket}
-        newArrivalSectionContent={homeNewArrivalSectionContent}
-        homeSectionDetails={homeSectionDetails}
-        highlightsSectionData={highlightsSectionData}
-        dreamBigSectionContent={homeDreamBigSectionContent}
-        marketSliderData={marketSliderData}
-        studiosData={studiosData}
-        marketsData={marketsData}
-        peopleReviewSliderData={peopleReviewSliderData}
-        bestSellerProducts={bestSellerProducts}
-        bestSellers={bestSellers}
-        comingSoon={comingSoon}
-      />
-    );
+    marketSection = await getMarketSection(slug, { throwOnError: true });
   } catch (error) {
-    logError("Error fetching market page data:", error);
+    logError("Upstream data fetch failed (market page):", error);
+    throw error;
+  }
+
+  // Lookup OK but no market with this slug => genuine 404.
+  if (!marketSection) {
     notFound();
   }
+
+  const bestSeller = await fetchBestSellers(slug);
+
+  const collectionIds = {
+    "tradeshows": "HighlightsTradeshow",
+    "social": "HighlightsSocial",
+    "weddings": "HighlightsWedding",
+    "corporate": "HighlightsCorporate",
+  }
+  const highlightsCollection = collectionIds[slug];
+
+  const [
+    homeNewArrivalSectionContent,
+    homeSectionDetails,
+    homeDreamBigSectionContent,
+    marketSliderData,
+    studiosData,
+    marketsData,
+    peopleReviewSliderData,
+    highlightsSectionData,
+    bestSellerProducts,
+    bestSellers,
+    comingSoon
+  ] = await Promise.all([
+    getNewArrivalSectionContent(slug),
+    getHomeSectionDetails(),
+    getDreamBigSectionContent(),
+    getMarketSliderData(marketSection._id),
+    getStudiosData(),
+    getMarketsData(),
+    getPeopleReviewSliderData(),
+    getHighlightsSection(highlightsCollection),
+    getBestSellerProducts(bestSeller),
+    fetchBestSellers(),
+    fetchComingSoon()
+  ]);
+
+  return (
+    <MarketPage
+      slug={slug}
+      marketSection={marketSection.rentalsMarket}
+      newArrivalSectionContent={homeNewArrivalSectionContent}
+      homeSectionDetails={homeSectionDetails}
+      highlightsSectionData={highlightsSectionData}
+      dreamBigSectionContent={homeDreamBigSectionContent}
+      marketSliderData={marketSliderData}
+      studiosData={studiosData}
+      marketsData={marketsData}
+      peopleReviewSliderData={peopleReviewSliderData}
+      bestSellerProducts={bestSellerProducts}
+      bestSellers={bestSellers}
+      comingSoon={comingSoon}
+    />
+  );
 }
