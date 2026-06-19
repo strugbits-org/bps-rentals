@@ -60,20 +60,28 @@ export const generateStaticParams = async () => {
 };
 
 export default async function Page({ params }) {
+  const slug = "/category/" + decodeURIComponent(params.slug);
+
+  let categoriesData;
   try {
-    const slug = "/category/" + decodeURIComponent(params.slug);
+    categoriesData = await fetchAllCategoriesData(true);
+  } catch (error) {
+    logError("Upstream data fetch failed (category page):", error);
+    throw error;
+  }
 
-    const categoriesData = await fetchAllCategoriesData();
+  const selectedCategoryData = findCategoryData(categoriesData, slug) || findCategoryData(categoriesData, "/category/" + params.slug);
 
-    const selectedCategoryData = findCategoryData(categoriesData, slug) || findCategoryData(categoriesData, "/category/" + params.slug);
+  // Categories fetched OK but slug not present => genuine 404.
+  if (!selectedCategoryData) {
+    notFound();
+  }
 
-    if (!selectedCategoryData) {
-      throw new Error(`Category Data not found for slug: ${slug}`);
-    }
+  const categoryIds = extractCategoryIds(selectedCategoryData);
 
-    const categoryIds = extractCategoryIds(selectedCategoryData);
-
-    const [
+  let homePageContent, bannersData, locations, marketsData, colorsData, bestSeller, comingSoon, productsData;
+  try {
+    [
       homePageContent,
       bannersData,
       locations,
@@ -90,26 +98,26 @@ export default async function Page({ params }) {
       getAllColorsData(),
       fetchBestSellers(),
       fetchComingSoon(),
-      getAllProducts({ categories: categoryIds }),
+      getAllProducts({ categories: categoryIds, throwOnError: true }),
     ]);
-
-    return (
-      <CategoryPage
-        slug={params.slug}
-        pageContent={homePageContent}
-        bannersData={bannersData}
-        locations={locations}
-        marketsData={marketsData}
-        colorsData={colorsData}
-        categoriesData={categoriesData}
-        selectedCategoryData={selectedCategoryData}
-        bestSeller={bestSeller}
-        comingSoon={comingSoon}
-        productsData={productsData}
-      />
-    );
   } catch (error) {
-    logError("Error fetching category page data:", error);
-    notFound();
+    logError("Upstream data fetch failed (category page content):", error);
+    throw error;
   }
+
+  return (
+    <CategoryPage
+      slug={params.slug}
+      pageContent={homePageContent}
+      bannersData={bannersData}
+      locations={locations}
+      marketsData={marketsData}
+      colorsData={colorsData}
+      categoriesData={categoriesData}
+      selectedCategoryData={selectedCategoryData}
+      bestSeller={bestSeller}
+      comingSoon={comingSoon}
+      productsData={productsData}
+    />
+  );
 }

@@ -1,6 +1,7 @@
 import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
 import { encryptField, encryptPriceFields } from "@/Utils/Encrypt";
+import { UpstreamDataError } from "@/Utils/UpstreamError";
 import logError from "@/Utils/ServerActions";
 import Fuse from 'fuse.js';
 import { filterProductColors, PRIMARY_COLORS } from "@/Utils/DetectColors";
@@ -204,8 +205,8 @@ const getDataFetchFunction = async (payload) => {
     // Include variants if needed
     if (includeVariants) {
       const [productsVariantImagesData, productsVariantsData] = await Promise.all([
-        getAllProductVariantsImages(),
-        getAllProductVariants()
+        getAllProductVariantsImages(true),
+        getAllProductVariants(true)
       ]);
 
       data.items = data.items.map((product) => {
@@ -276,7 +277,12 @@ const getDataFetchFunction = async (payload) => {
 
   } catch (error) {
     logError("Error in queryDataItems:", payload.dataCollectionId, error);
-    return { error: error.message, status: 500 };
+    // Throw typed so callers can tell a Wix failure from a genuine "not found".
+    if (error instanceof UpstreamDataError) throw error;
+    throw new UpstreamDataError(
+      `Wix data fetch failed for collection "${payload?.dataCollectionId}": ${error?.message}`,
+      error
+    );
   }
 };
 

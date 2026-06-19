@@ -4,6 +4,7 @@ import getDataFetchFunction from "./FetchFunction";
 import { getAuthToken } from "./GetAuthToken";
 import { sanitizeProduct } from "@/Utils/Utils";
 import { AUTH_REQUIRED, isAuthErrorMessage } from "@/Utils/AuthSession";
+import { isUpstreamDataError } from "@/Utils/UpstreamError";
 const baseUrl = process.env.BASE_URL;
 
 export const getProductsKeywords = async () => {
@@ -16,7 +17,7 @@ export const getProductsKeywords = async () => {
   }
 };
 
-export const getAllProducts = async ({ categories = [], adminPage = false, optimizeContent = true }) => {
+export const getAllProducts = async ({ categories = [], adminPage = false, optimizeContent = true, throwOnError = false }) => {
   try {
     const payload = {
       dataCollectionId: "locationFilteredVariant",
@@ -64,6 +65,7 @@ export const getAllProducts = async ({ categories = [], adminPage = false, optim
     return filteredProducts;
   } catch (error) {
     logError("Error fetching products:", error);
+    if (throwOnError && isUpstreamDataError(error)) throw error;
     return [];
   }
 };
@@ -334,7 +336,7 @@ export const getAllColorsData = async () => {
     logError("Error fetching colors:", error);
   }
 };
-export const getAllProductVariantsImages = async () => {
+export const getAllProductVariantsImages = async (throwOnError = false) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "BPSProductImages",
@@ -349,10 +351,11 @@ export const getAllProductVariantsImages = async () => {
     }
   } catch (error) {
     logError("Error fetching product variant images:", error);
+    if (throwOnError && isUpstreamDataError(error)) throw error;
     return [];
   }
 };
-export const getAllProductVariants = async () => {
+export const getAllProductVariants = async (throwOnError = false) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "Stores/Variants",
@@ -366,6 +369,7 @@ export const getAllProductVariants = async () => {
     }
   } catch (error) {
     logError("Error fetching product variants:", error);
+    if (throwOnError && isUpstreamDataError(error)) throw error;
     return [];
   }
 };
@@ -510,7 +514,7 @@ export const fetchAllCategoriesCollections = async () => {
   }
 };
 
-export const fetchAllCategoriesData = async () => {
+export const fetchAllCategoriesData = async (throwOnError = false) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "BPSCatalogStructure",
@@ -532,6 +536,7 @@ export const fetchAllCategoriesData = async () => {
     }
   } catch (error) {
     logError("Error fetching all categories:", error);
+    if (throwOnError && isUpstreamDataError(error)) throw error;
     return [];
   }
 };

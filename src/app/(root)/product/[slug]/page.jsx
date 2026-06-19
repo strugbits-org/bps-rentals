@@ -67,10 +67,11 @@ export const generateStaticParams = async () => {
 }
 
 export default async function Page({ params }) {
-  try {
-    const slug = decodeURIComponent(params.slug);
+  const slug = decodeURIComponent(params.slug);
 
-    const [
+  let pairWithData, products, categoriesData, bestSeller, comingSoon, attachmentTypes;
+  try {
+    [
       pairWithData,
       products,
       categoriesData,
@@ -79,74 +80,76 @@ export default async function Page({ params }) {
       attachmentTypes
     ] = await Promise.all([
       getPairWithData(),
-      getAllProducts({}),
+      getAllProducts({ throwOnError: true }),
       getAllCategoriesData(),
       fetchBestSellers(),
       fetchComingSoon(),
       fetchProductAtthachmentTypes()
     ]);
-    const selectedProduct = products.find((x) => decodeURIComponent(x.product.slug) === slug);
-    if (!selectedProduct) {
-      throw new Error(`Product Data not found for slug: ${slug}`);
-    }
-    const selectedProductId = selectedProduct.product._id;
-
-    const [
-      blogsData,
-      portfolioData
-    ] = await Promise.all([
-      getProductBlogsData(selectedProductId),
-      getProductPortfolioData(selectedProductId),
-    ]);
-
-    const dataMap = new Map(selectedProduct.productVariantsData.map(({ sku, _id }) => [sku, _id]));
-
-    selectedProduct.variantData = selectedProduct.variantData.reduce((acc, variant) => {
-      const variantId = dataMap.get(variant.sku);
-      if (variantId) {
-        variant.variant.variantId = variantId;
-        acc.push(variant);
-      }
-      return acc;
-    }, []);
-
-    if (selectedProduct.variantData.length === 0) {
-      throw new Error(`No Variants found for product/slug: ${slug}`);
-    }
-    if (selectedProduct.variantData.length === 0) notFound();
-
-    const pairedProductsIds = pairWithData.filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);
-    const matchedProducts = products.filter(product => pairedProductsIds.includes(product.product._id));
-
-    return (
-      <Suspense>
-        {selectedProduct?.productSets?.length ? (
-          <ProductCollectionPage
-            selectedProductDetails={selectedProduct}
-            matchedProductsData={matchedProducts}
-            categoriesData={categoriesData}
-            blogsData={blogsData}
-            portfolioData={portfolioData}
-            bestSeller={bestSeller}
-            comingSoon={comingSoon}
-            attachmentTypes={attachmentTypes}
-          />
-        ) : (
-          <ProductPostPage
-            selectedProductDetails={selectedProduct}
-            matchedProductsData={matchedProducts}
-            categoriesData={categoriesData}
-            blogsData={blogsData}
-            portfolioData={portfolioData}
-            bestSeller={bestSeller}
-            comingSoon={comingSoon}
-            attachmentTypes={attachmentTypes}
-          />
-        )}
-      </Suspense>
-    );
   } catch (error) {
-    logError("Error fetching product page data:", error);
+    logError("Upstream data fetch failed (product page):", error);
+    throw error;
+  }
+
+  const selectedProduct = products.find((x) => decodeURIComponent(x.product.slug) === slug);
+  // Catalog fetched OK but slug not present => genuine 404.
+  if (!selectedProduct) {
     notFound();
   }
+
+  const selectedProductId = selectedProduct.product._id;
+
+  const dataMap = new Map(selectedProduct.productVariantsData.map(({ sku, _id }) => [sku, _id]));
+
+  selectedProduct.variantData = selectedProduct.variantData.reduce((acc, variant) => {
+    const variantId = dataMap.get(variant.sku);
+    if (variantId) {
+      variant.variant.variantId = variantId;
+      acc.push(variant);
+    }
+    return acc;
+  }, []);
+
+  if (selectedProduct.variantData.length === 0) {
+    notFound();
+  }
+
+  const [
+    blogsData,
+    portfolioData
+  ] = await Promise.all([
+    getProductBlogsData(selectedProductId),
+    getProductPortfolioData(selectedProductId),
+  ]);
+
+  const pairedProductsIds = (pairWithData || []).filter((x) => x.productId === selectedProductId).map((x) => x.pairedProductId);
+  const matchedProducts = products.filter(product => pairedProductsIds.includes(product.product._id));
+
+  return (
+    <Suspense>
+      {selectedProduct?.productSets?.length ? (
+        <ProductCollectionPage
+          selectedProductDetails={selectedProduct}
+          matchedProductsData={matchedProducts}
+          categoriesData={categoriesData}
+          blogsData={blogsData}
+          portfolioData={portfolioData}
+          bestSeller={bestSeller}
+          comingSoon={comingSoon}
+          attachmentTypes={attachmentTypes}
+        />
+      ) : (
+        <ProductPostPage
+          selectedProductDetails={selectedProduct}
+          matchedProductsData={matchedProducts}
+          categoriesData={categoriesData}
+          blogsData={blogsData}
+          portfolioData={portfolioData}
+          bestSeller={bestSeller}
+          comingSoon={comingSoon}
+          attachmentTypes={attachmentTypes}
+        />
+      )}
+    </Suspense>
+  );
 }
