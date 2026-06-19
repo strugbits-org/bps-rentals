@@ -1,5 +1,6 @@
 import getDataFetchFunction from "./FetchFunction";
 import { fetchProductsByIds } from "./ProductsApis";
+import { isUpstreamDataError } from "@/Utils/UpstreamError";
 import logError from "@/Utils/ServerActions";
 
 export const getAllPagesMetaData = async () => {
@@ -208,7 +209,7 @@ export const getMarketsData = async () => {
     return [];
   }
 };
-export const getMarketSection = async (slug) => {
+export const getMarketSection = async (slug, { throwOnError = false } = {}) => {
   try {
     const response = await getDataFetchFunction({
       dataCollectionId: "MarketSection",
@@ -226,6 +227,7 @@ export const getMarketSection = async (slug) => {
     }
   } catch (error) {
     logError("Error fetching Market Section data:", error);
+    if (throwOnError && isUpstreamDataError(error)) throw error;
   }
 };
 export const getMarketSliderData = async (id) => {
