@@ -14,7 +14,7 @@ import {
 } from '@/Services/ProductsApis';
 import { getPageMetaData, getProductBlogsData, getProductPortfolioData } from "@/Services/SectionsApis";
 import { buildMetadata, removeHTMLTags } from '@/Utils/Utils';
-import logError from '@/Utils/ServerActions';
+import logError, { logUpstreamError } from '@/Utils/ServerActions';
 import { Suspense } from 'react';
 import ProductCollectionPage from '@/components/Product/ProductCollectionPage';
 
@@ -87,7 +87,7 @@ export default async function Page({ params }) {
       fetchProductAtthachmentTypes()
     ]);
   } catch (error) {
-    logError("Upstream data fetch failed (product page):", error);
+    logUpstreamError("Upstream data fetch failed (product page):", error);
     throw error;
   }
 

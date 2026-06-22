@@ -2,7 +2,7 @@ import { createWixClientApiStrategy } from "@/Utils/CreateWixClient";
 import { getAllProductVariants, getAllProductVariantsImages } from "./ProductsApis";
 import { encryptField, encryptPriceFields } from "@/Utils/Encrypt";
 import { UpstreamDataError } from "@/Utils/UpstreamError";
-import logError from "@/Utils/ServerActions";
+import logError, { logUpstreamError } from "@/Utils/ServerActions";
 import Fuse from 'fuse.js';
 import { filterProductColors, PRIMARY_COLORS } from "@/Utils/DetectColors";
 
@@ -16,13 +16,13 @@ async function retryAsyncOperation(operation, retries = 3, delayMs = 1000) {
     try {
       return await operation();
     } catch (error) {
-      logError(`Error fetching query data items: Attempt ${attempt} failed: ${error}`);
+      logUpstreamError(`Error fetching query data items: Attempt ${attempt} failed: ${error}`);
       attempt++;
       if (attempt < retries) {
-        logError(`Retrying in ${delayMs}ms...`);
+        logUpstreamError(`Retrying in ${delayMs}ms...`);
         await delay(delayMs);
       } else {
-        logError(`Attempt ${attempt} failed. No more retries left.`);
+        logUpstreamError(`Attempt ${attempt} failed. No more retries left.`);
         throw error;
       }
     }
@@ -276,7 +276,7 @@ const getDataFetchFunction = async (payload) => {
     return data;
 
   } catch (error) {
-    logError("Error in queryDataItems:", payload.dataCollectionId, error);
+    logUpstreamError("Error in queryDataItems:", payload.dataCollectionId, error);
     // Throw typed so callers can tell a Wix failure from a genuine "not found".
     if (error instanceof UpstreamDataError) throw error;
     throw new UpstreamDataError(

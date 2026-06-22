@@ -9,7 +9,7 @@ import {
   getAllProducts,
 } from "@/Services/ProductsApis";
 import { getHomeSectionDetails, getMarketsData, getPageMetaData } from "@/Services/SectionsApis";
-import logError from "@/Utils/ServerActions";
+import logError, { logUpstreamError } from "@/Utils/ServerActions";
 import { buildMetadata, extractCategoryIds, findCategoryData, getAllCategoriesPaths } from "@/Utils/Utils";
 import { notFound } from "next/navigation";
 
@@ -66,7 +66,7 @@ export default async function Page({ params }) {
   try {
     categoriesData = await fetchAllCategoriesData(true);
   } catch (error) {
-    logError("Upstream data fetch failed (category page):", error);
+    logUpstreamError("Upstream data fetch failed (category page):", error);
     throw error;
   }
 
@@ -101,7 +101,7 @@ export default async function Page({ params }) {
       getAllProducts({ categories: categoryIds, throwOnError: true }),
     ]);
   } catch (error) {
-    logError("Upstream data fetch failed (category page content):", error);
+    logUpstreamError("Upstream data fetch failed (category page content):", error);
     throw error;
   }
 
