@@ -12,7 +12,7 @@ import {
   getPeopleReviewSliderData,
   getStudiosData,
 } from "@/Services/SectionsApis";
-import logError from "@/Utils/ServerActions";
+import logError, { logUpstreamError } from "@/Utils/ServerActions";
 import { buildMetadata } from "@/Utils/Utils";
 import { notFound } from "next/navigation";
 
@@ -68,7 +68,7 @@ export default async function Page({ params }) {
   try {
     marketSection = await getMarketSection(slug, { throwOnError: true });
   } catch (error) {
-    logError("Upstream data fetch failed (market page):", error);
+    logUpstreamError("Upstream data fetch failed (market page):", error);
     throw error;
   }
 
