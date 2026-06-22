@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import { authWixClient, cartWixClient, createWixClient, createWixClientApiStrategy } from "@/Utils/CreateWixClient";
-import logError from "@/Utils/ServerActions";
+import logError, { logUpstreamError } from "@/Utils/ServerActions";
 import { extractPermissions } from "@/Utils/checkPermissions";
 import { getMemberPricingTier } from "@/Services/Index";
 
@@ -98,7 +98,7 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
-    logError("error", error);
+    logUpstreamError("Login failed (upstream/Wix error):", error);
 
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
