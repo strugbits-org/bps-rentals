@@ -7,6 +7,7 @@ import ProductCard from "./ProductCard";
 import {
   getSavedProductData,
 } from "@/Services/ProductsApis";
+import { resolveSavedList } from "@/Utils/AuthSession";
 import { useCookies } from "react-cookie";
 import CartModal from "../Common/Modals/CartModal";
 import { Banner } from "./Banner";
@@ -210,7 +211,7 @@ const CategoryPage = ({
     }
 
     const savedProducts = await getSavedProductData();
-    setSavedProductsData(savedProducts);
+    setSavedProductsData(resolveSavedList(savedProducts));
 
   };
   useEffect(() => {

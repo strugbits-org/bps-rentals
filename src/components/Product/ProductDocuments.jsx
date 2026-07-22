@@ -16,12 +16,13 @@ export const ProductDocuments = ({ selectedProductDetails, attachmentTypes }) =>
             return;
         }
 
-        if (!selectedProductDetails?.productDocuments) {
+        const docs = selectedProductDetails?.productDocuments;
+        if (!Array.isArray(docs)) {
             setProductDocuments([]);
             return;
         }
 
-        const filteredDocuments = selectedProductDetails.productDocuments.filter(doc => {
+        const filteredDocuments = docs.filter(doc => {
             if (doc.attachmentType === ATTACHMENT_TYPES.FIREPROOF) {
                 return SHOW_FIREPROOF_CERTIFICATES;
             }

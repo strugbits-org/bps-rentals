@@ -11,6 +11,7 @@ import { MarketIntroSection } from "./MarketIntroSection";
 import { MarketBestSeller } from "./MarketBestSeller";
 import { MarketSlider } from "./MarketSlider";
 import { getSavedProductData } from "@/Services/ProductsApis";
+import { resolveSavedList } from "@/Utils/AuthSession";
 import CartModal from "../Common/Modals/CartModal";
 import logError from "@/Utils/ServerActions";
 import { useCookies } from "react-cookie";
@@ -116,9 +117,10 @@ const MarketPage = ({
   const fetchSavedProducts = async () => {
     try {
       const savedProducts = await getSavedProductData();
-      setSavedProductsData(savedProducts);
+      setSavedProductsData(resolveSavedList(savedProducts));
     } catch (error) {
       logError("Error while fetching Saved Product", error);
+      setSavedProductsData([]);
     }
   };
 
