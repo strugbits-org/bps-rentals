@@ -9,6 +9,7 @@ import { getProductsCart, removeProductFromCart, updateProductsQuantityCart } fr
 
 import AnimateLink from "../Common/AnimateLink";
 import logError from "@/Utils/ServerActions";
+import { AUTH_REQUIRED } from "@/Utils/AuthSession";
 import { CartItem, CartItemGroup } from "./CartItem";
 import { debounce } from "lodash";
 import { getCartPricingTiersData } from "@/Services/ProductsApis";
@@ -87,6 +88,13 @@ const CartPage = () => {
   const fetchCart = async () => {
     try {
       const response = await getProductsCart();
+      if (response === AUTH_REQUIRED || !Array.isArray(response)) {
+        setCartItems([]);
+        setCookie("cartQuantity", "0", { path: "/" });
+        setTimeout(markPageLoaded, 200);
+        return;
+      }
+
       const cartItemsIds = response.map((product) => product.catalogReference.catalogItemId);
       const pricingTiersData = await getCartPricingTiersData(cartItemsIds);
 

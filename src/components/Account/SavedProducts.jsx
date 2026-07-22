@@ -120,10 +120,11 @@ const SavedProducts = () => {
         return;
       }
 
-      setSavedProductsData(savedProducts);
+      setSavedProductsData(Array.isArray(savedProducts) ? savedProducts : []);
       setTimeout(markPageLoaded, 200);
     } catch (error) {
       logError("Error while fetching Saved Product", error);
+      setSavedProductsData([]);
     }
   }
   useEffect(() => {

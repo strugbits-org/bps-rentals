@@ -26,7 +26,8 @@ export const Product3dModelBadge = ({ selectedProductDetails }) => {
     // Already has access — the files render in ProductDocuments, no upsell needed.
     if (SHOW_DOCUMENTS) return null;
 
-    const has3dModels = selectedProductDetails?.productDocuments?.some(
+    const productDocuments = selectedProductDetails?.productDocuments;
+    const has3dModels = Array.isArray(productDocuments) && productDocuments.some(
         (doc) => doc.attachmentType === ATTACHMENT_TYPES.THREE_D_MODELS
     );
     if (!has3dModels) return null;
