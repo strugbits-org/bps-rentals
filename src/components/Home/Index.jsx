@@ -10,6 +10,7 @@ import { markPageLoaded } from "@/Utils/AnimationFunctions";
 import BannerHome from "./BannerHome";
 import BestSellersHome from "./BestSellersHome";
 import { getSavedProductData } from "@/Services/ProductsApis";
+import { resolveSavedList } from "@/Utils/AuthSession";
 import CartModal from "../Common/Modals/CartModal";
 import logError from "@/Utils/ServerActions";
 import ClientsSection from "../Common/Sections/ClientsSection";
@@ -119,9 +120,10 @@ const HomePage = ({
   const fetchSavedProducts = async () => {
     try {
       const savedProducts = await getSavedProductData();
-      setSavedProductsData(savedProducts);
+      setSavedProductsData(resolveSavedList(savedProducts));
     } catch (error) {
       logError("Error while fetching Saved Product", error);
+      setSavedProductsData([]);
     }
   }
 

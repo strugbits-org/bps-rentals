@@ -26,7 +26,7 @@ import { getProductsCart } from "@/Services/CartApis";
 import { calculateTotalCartQuantity } from "@/Utils/Utils";
 import logError from "@/Utils/ServerActions";
 import { fetchBlogsDataClient, fetchPortfoliosDataClient } from "@/Services/LayoutDataFetcher";
-import { AUTH_REQUIRED } from "@/Utils/AuthSession";
+import { AUTH_REQUIRED, SESSION_EXPIRED_EVENT, clearAuthCookies } from "@/Utils/AuthSession";
 
 const Navbar = ({
   locations,
@@ -122,6 +122,21 @@ const Navbar = ({
       getCartTotalQuantity();
     }
   }, [cookies.authToken]);
+
+  // Single place that reacts to a dead session detected by any data call.
+  // Clears cookies once and bounces the user off private pages.
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      clearAuthCookies(removeCookie, cookies.userData);
+      setLoggedIn(false);
+      setAuthMember(null);
+      if (path?.startsWith("/my-account")) {
+        router.push("/");
+      }
+    };
+    window.addEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
+    return () => window.removeEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
+  }, [cookies.userData, path, removeCookie, router]);
 
   useEffect(() => {
     const quantity = cookies?.cartQuantity !== undefined

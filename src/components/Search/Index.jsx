@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { markPageLoaded, updatedWatched } from "@/Utils/AnimationFunctions";
 import Markets from "../Common/Sections/MarketSection";
 import { getProductVariants, getProductVariantsImages, getSavedProductData, searchProducts } from "@/Services/ProductsApis";
+import { resolveSavedList } from "@/Utils/AuthSession";
 import { useCookies } from "react-cookie";
 import CartModal from "../Common/Modals/CartModal";
 import { scoreBasedBanners } from "@/Utils/Utils";
@@ -164,7 +165,7 @@ const SearchPage = ({
 
 
         const savedProducts = await getSavedProductData();
-        setSavedProductsData(savedProducts);
+        setSavedProductsData(resolveSavedList(savedProducts));
     };
     useEffect(() => {
         setFilterLocations(

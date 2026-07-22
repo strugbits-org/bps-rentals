@@ -10,6 +10,7 @@ import QuoteConfirmedModal from "../Common/Modals/QuoteConfirmedModal";
 import Modal from "../Common/Modals/Modal";
 import useUserData from "@/Hooks/useUserData";
 import logError from "@/Utils/ServerActions";
+import { AUTH_REQUIRED } from "@/Utils/AuthSession";
 import { useCookies } from "react-cookie";
 import { getCartPricingTiersData } from "@/Services/ProductsApis";
 import { findPriceTier } from "@/Utils/Utils";
@@ -153,7 +154,7 @@ const QuoteRequest = ({ quoteRequestPageContent }) => {
   const getCart = async () => {
     try {
       const response = await getProductsCart();
-      if (!response.length) {
+      if (response === AUTH_REQUIRED || !Array.isArray(response) || !response.length) {
         handleEmptyCart();
         return;
       }

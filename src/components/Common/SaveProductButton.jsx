@@ -17,10 +17,12 @@ export const SaveProductButton = ({
   const [cookies, setCookie] = useCookies(["authToken"]);
 
   useEffect(() => {
-    if (savedProductsData?.length) {
-      setProductSaved(savedProductsData.some((i) => i?.product?._id === productId));
+    if (!Array.isArray(savedProductsData) || !savedProductsData.length) {
+      setProductSaved(false);
+      return;
     }
-  }, [memberId, savedProductsData]);
+    setProductSaved(savedProductsData.some((i) => i?.product?._id === productId));
+  }, [memberId, savedProductsData, productId]);
 
   const handleProductSaveToggle = async (productId, isSaving) => {
     try {
@@ -44,16 +46,12 @@ export const SaveProductButton = ({
   };
 
   const updateSavedProducts = (productId, isSaving) => {
-    if (setSavedProductsData) {
-      if (isSaving) {
-        const data = [...savedProductsData, { product: productData }];
-        setSavedProductsData(data);
-      } else {
-        const data = savedProductsData.filter(
-          (i) => i?.product?._id !== productId
-        );
-        setSavedProductsData(data);
-      }
+    if (!setSavedProductsData) return;
+    const current = Array.isArray(savedProductsData) ? savedProductsData : [];
+    if (isSaving) {
+      setSavedProductsData([...current, { product: productData }]);
+    } else {
+      setSavedProductsData(current.filter((i) => i?.product?._id !== productId));
     }
   };
 

@@ -42,6 +42,7 @@ export const extractSlugFromUrl = (url) => {
 }
 
 export const calculateTotalCartQuantity = (lineItems) => {
+  if (!Array.isArray(lineItems)) return 0;
   return lineItems
     .filter(item => !item?.catalogReference?.options.customTextFields.isProductSet)
     .reduce((total, currentItem) => total + currentItem.quantity, 0);

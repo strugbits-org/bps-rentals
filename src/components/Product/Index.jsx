@@ -13,6 +13,7 @@ import {
 import { calculateTotalCartQuantity, compareArray, findPriceTier } from "@/Utils/Utils";
 
 import { getSavedProductData } from "@/Services/ProductsApis";
+import { resolveSavedList } from "@/Utils/AuthSession";
 import { AddProductToCart } from "@/Services/CartApis";
 
 import PortfolioSection from "../Common/Sections/PortfolioSection";
@@ -237,9 +238,10 @@ const ProductPostPage = ({
   const fetchSavedProducts = async () => {
     try {
       const savedProducts = await getSavedProductData();
-      setSavedProductsData(savedProducts);
+      setSavedProductsData(resolveSavedList(savedProducts));
     } catch (error) {
       logError("Error while fetching Saved Product", error);
+      setSavedProductsData([]);
     }
   };
 
